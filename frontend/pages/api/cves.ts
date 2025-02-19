@@ -6,7 +6,7 @@ export default async function handler(
 ) {
   try {
     const response = await fetch(
-      'https://raw.githubusercontent.com/你的用户名/项目名/main/data/cves.json'
+      'https://raw.githubusercontent.com/adminlove520/CVE/main/data/cves.json'
     )
     const data = await response.json()
     res.status(200).json(data)
