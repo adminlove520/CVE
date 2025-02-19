@@ -14,7 +14,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.x'
+          python-version: '3.11'  # 使用 Python 3.11
           
       - name: Install system dependencies
         run: |
@@ -24,15 +24,16 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+          # 先安装预编译的 lxml
+          pip install --only-binary :all: lxml==4.9.3
+          # 安装其他依赖
           pip install -r requirements.txt
           
       - name: Update CVE data
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
         run: |
-          # 创建日志目录
           mkdir -p logs
-          # 运行更新脚本
           python scripts/update_cves.py
         
       - name: Commit and push if changed
