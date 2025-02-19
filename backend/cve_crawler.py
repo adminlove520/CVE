@@ -1,6 +1,6 @@
 import requests
 import json
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import os
 from typing import List, Dict, Any
 import time
@@ -21,21 +21,26 @@ class CVECrawler:
         self.base_url = "https://raw.githubusercontent.com/CVEProject/cvelistV5/main/cves"
         self.data_dir = "data"
         self.logger = Logger("CVECrawler")
-        self.max_workers = 5  # 并发线程数
+        self.max_workers = 20  # 并发线程数
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
         }
         
-    def fetch_cve_details(self, year: int, cve_id: str) -> Dict[str, Any]:
+    def fetch_cve_details(self, year: int, cve_id: str, github_link: str = None) -> Dict[str, Any]:
         """获取单个CVE的详细信息"""
         try:
             # 添加 0.1 秒延迟
             time.sleep(0.1)
-            prefix = cve_id.split('-')[2][:5] + "xxx"
-            url = f"{self.base_url}/{year}/{prefix}/{cve_id}.json"
-            self.logger.info(f"Fetching CVE details for {cve_id}")
             
-            # 使用 raw 内容 URL
+            # 使用提供的 github_link
+            if github_link:
+                url = github_link
+            else:
+                prefix = cve_id.split('-')[2][:5] + "xxx"
+                url = f"{self.base_url}/{year}/{prefix}/{cve_id}.json"
+            
+            self.logger.info(f"Fetching CVE details from {url}")
+            
             headers = {
                 'Accept': 'application/json',
                 'User-Agent': 'CVE-Monitor-Bot'
@@ -47,15 +52,32 @@ class CVECrawler:
             if response.status_code == 200:
                 try:
                     data = response.json()
+                    # 打印原始数据以便调试
+                    self.logger.debug(f"Raw CVE data: {json.dumps(data, indent=2)}")
+                    
+                    # 检查数据结构
+                    if 'cveMetadata' not in data:
+                        self.logger.error(f"Invalid data structure for {cve_id}: missing 'cveMetadata'")
+                        return None
+                    
+                    # 从 cveMetadata 中获取数据
+                    cve_metadata = data['cveMetadata']
+                    if 'cveId' not in cve_metadata:
+                        self.logger.error(f"Missing cveId in data for URL: {url}")
+                        return None
+                    
                     parsed_data = self._parse_cve_data(data)
                     if parsed_data:
                         self.logger.info(f"Successfully fetched and parsed CVE {cve_id}")
                         return parsed_data
+                    else:
+                        self.logger.error(f"Failed to parse CVE data for {cve_id}")
+                        return None
                 except json.JSONDecodeError as e:
                     self.logger.error(f"Failed to parse JSON for CVE {cve_id}: {e}")
                     return None
             
-            self.logger.error(f"Failed to fetch CVE {cve_id}: Status code {response.status_code}")
+            self.logger.error(f"Failed to fetch CVE {cve_id} from {url}: Status code {response.status_code}")
             return None
         except Exception as e:
             self.logger.error(f"Error fetching CVE {cve_id}: {e}")
@@ -64,19 +86,61 @@ class CVECrawler:
     def _parse_cve_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """解析CVE数据为标准格式"""
         try:
-            containers = data.get('containers', {})
-            cna = containers.get('cna', {})
-            
+            # 从 cveMetadata 中获取数据
+            cve_metadata = data.get('cveMetadata', {})
             parsed_data = {
-                'id': data.get('cveId'),
-                'publishedDate': data.get('datePublished', ''),
-                'lastModifiedDate': data.get('dateUpdated', ''),
-                'description': cna.get('descriptions', [{}])[0].get('value', ''),
-                'severity': self._get_severity(cna),
-                'references': self._get_references(cna),
-                'affected': cna.get('affected', []),
-                'problemType': self._get_problem_type(cna)
+                'id': cve_metadata.get('cveId', ''),
+                'publishedDate': cve_metadata.get('datePublished', ''),
+                'lastModifiedDate': cve_metadata.get('dateUpdated', ''),
+                'description': '',  # 默认空描述
+                'severity': 'N/A',  # 默认严重性
+                'references': [
+                    {
+                        'url': cve_metadata.get('cveOrgLink', ''),
+                        'type': 'reference'
+                    },
+                    {
+                        'url': cve_metadata.get('githubLink', ''),
+                        'type': 'reference'
+                    }
+                ],
+                'affected': [],
+                'problemType': []
             }
+            
+            # 检查日期字段
+            if not parsed_data['publishedDate']:
+                self.logger.warning(f"No published date found for CVE {parsed_data['id']}, using current time")
+                parsed_data['publishedDate'] = datetime.now(timezone.utc).isoformat()
+            
+            # 验证日期格式
+            try:
+                datetime.fromisoformat(parsed_data['publishedDate'].replace('Z', '+00:00'))
+            except ValueError as e:
+                self.logger.error(f"Invalid published date format for CVE {parsed_data['id']}: {e}")
+                return None
+            
+            # 如果有 CVE 详情数据，则更新这些字段
+            if 'containers' in data:
+                cna = data.get('containers', {}).get('cna', {})
+                if cna:
+                    parsed_data.update({
+                        'description': cna.get('descriptions', [{}])[0].get('value', ''),
+                        'severity': self._get_severity(cna),
+                        'references': self._get_references(cna),
+                        'affected': cna.get('affected', []),
+                        'problemType': self._get_problem_type(cna)
+                    })
+            
+            # 验证必要字段
+            if not parsed_data['id']:
+                self.logger.error("Missing CVE ID in data")
+                return None
+            
+            # 检查解析后的数据是否有效
+            if not parsed_data['description']:
+                self.logger.warning(f"No description found for CVE {parsed_data['id']}")
+            
             self.logger.info(f"Successfully parsed CVE {parsed_data['id']}")
             return parsed_data
         except Exception as e:
@@ -145,51 +209,83 @@ class CVECrawler:
     def fetch_latest_cves(self, days_back: int = 7) -> List[Dict[str, Any]]:
         """获取最近几天的CVE数据"""
         self.logger.info(f"Starting to fetch CVEs for the last {days_back} days")
-        current_year = datetime.now().year
         all_cves = []
-        cutoff_date = datetime.now() - timedelta(days=days_back)
+        cutoff_date = datetime.now(timezone.utc) - timedelta(days=days_back)
 
         if not os.path.exists(self.data_dir):
             os.makedirs(self.data_dir)
             self.logger.info(f"Created data directory: {self.data_dir}")
 
-        # 使用线程池处理CVE获取
-        with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
-            future_to_cve = {}
+        try:
+            # 首先获取 delta.json
+            delta_url = "https://raw.githubusercontent.com/CVEProject/cvelistV5/main/cves/delta.json"
+            headers = {
+                'Accept': 'application/json',
+                'User-Agent': 'CVE-Monitor-Bot'
+            }
+            if 'GITHUB_TOKEN' in os.environ:
+                headers['Authorization'] = f"Bearer {os.environ['GITHUB_TOKEN']}"
+                self.logger.info("Using GitHub token for authentication")
             
-            # 只获取当前年份的数据
-            year_url = f"{self.base_url}/{current_year}"
-            self.logger.info(f"Fetching CVEs for year: {current_year}")
-            year_dirs = self._get_directory_content(year_url)
+            self.logger.info(f"Fetching delta.json from {delta_url}")
+            response = requests.get(delta_url, headers=headers)
+            self.logger.info(f"Delta.json response status: {response.status_code}")
             
-            for prefix_dir in year_dirs:
-                if not prefix_dir.endswith('xxx'):
-                    continue
-                    
-                prefix_url = f"{year_url}/{prefix_dir}"
-                self.logger.info(f"Processing prefix directory: {prefix_url}")
+            if response.status_code == 200:
+                delta_data = response.json()
+                self.logger.info(f"Delta.json content: {json.dumps(delta_data, indent=2)}")
                 
-                cve_files = self._get_directory_content(prefix_url)
-                for cve_file in cve_files:
-                    if not cve_file.startswith('CVE-'):
-                        continue
-                        
-                    cve_id = cve_file.replace('.json', '')
-                    future = executor.submit(self.fetch_cve_details, current_year, cve_id)
-                    future_to_cve[future] = cve_id
+                # 收集所有需要获取的 CVE
+                cve_list = []
+                
+                # 处理新增的 CVE
+                new_cves = delta_data.get('new', [])
+                self.logger.info(f"Found {len(new_cves)} new CVEs")
+                for cve in new_cves:
+                    cve_list.append((cve['cveId'], cve['githubLink']))
+                
+                # 处理更新的 CVE
+                updated_cves = delta_data.get('updated', [])
+                self.logger.info(f"Found {len(updated_cves)} updated CVEs")
+                for cve in updated_cves:
+                    cve_list.append((cve['cveId'], cve['githubLink']))
+                
+                self.logger.info(f"Total CVEs to process: {len(cve_list)}")
+                
+                # 使用线程池获取 CVE 详情
+                with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
+                    future_to_cve = {}
+                    
+                    for cve_id, github_link in cve_list:
+                        year = int(cve_id.split('-')[1])
+                        self.logger.info(f"Submitting {cve_id} for processing")
+                        future = executor.submit(self.fetch_cve_details, year, cve_id, github_link)
+                        future_to_cve[future] = cve_id
 
-            for future in as_completed(future_to_cve):
-                cve_id = future_to_cve[future]
-                try:
-                    cve_data = future.result()
-                    if cve_data:
-                        published_date = datetime.fromisoformat(
-                            cve_data['publishedDate'].replace('Z', '+00:00')
-                        )
-                        if published_date >= cutoff_date:
-                            all_cves.append(cve_data)
-                except Exception as e:
-                    self.logger.error(f"Error processing CVE {cve_id}: {e}")
+                    for future in as_completed(future_to_cve):
+                        cve_id = future_to_cve[future]
+                        try:
+                            cve_data = future.result()
+                            if cve_data:
+                                # 确保 publishedDate 是带时区的
+                                published_date = datetime.fromisoformat(
+                                    cve_data['publishedDate'].replace('Z', '+00:00')
+                                ).astimezone(timezone.utc)
+                                if published_date >= cutoff_date:
+                                    all_cves.append(cve_data)
+                                    self.logger.info(f"Added CVE {cve_id} to results")
+                                else:
+                                    self.logger.info(f"Skipped CVE {cve_id} due to old publish date")
+                            else:
+                                self.logger.error(f"Failed to process CVE {cve_id}: No data returned")
+                        except Exception as e:
+                            self.logger.error(f"Error processing CVE {cve_id}: {e}")
+
+            else:
+                self.logger.error(f"Failed to fetch delta.json: {response.text}")
+
+        except Exception as e:
+            self.logger.error(f"Error fetching delta.json: {e}")
 
         # 按发布日期和严重性排序
         sorted_cves = self._sort_cves(all_cves)
@@ -238,12 +334,14 @@ class CVECrawler:
     def _save_cves(self, cves: List[Dict[str, Any]]) -> None:
         """保存CVE数据到文件，包含元数据"""
         output_data = {
-            'metadata': {
-                'total_count': len(cves),
-                'last_updated': datetime.now().isoformat(),
-                'severity_distribution': self._get_severity_distribution(cves)
+            "dataType": "CVE_RECORD",
+            "dataVersion": "5.1",
+            "cveMetadata": {
+                "total_count": len(cves),
+                "last_updated": datetime.now().isoformat(),
+                "severity_distribution": self._get_severity_distribution(cves)
             },
-            'cves': cves
+            "cves": cves
         }
         
         output_file = os.path.join(self.data_dir, 'cves.json')
