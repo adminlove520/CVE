@@ -99,11 +99,18 @@ class CVECrawler:
         """获取目录内容"""
         try:
             self.logger.info(f"Fetching directory: {url}")
-            response = requests.get(url, headers=self.headers)
+            # 使用 GitHub API 而不是直接访问 raw 内容
+            api_url = url.replace(
+                'https://raw.githubusercontent.com/CVEProject/cvelistV5/main',
+                'https://api.github.com/repos/CVEProject/cvelistV5/contents'
+            )
+            response = requests.get(api_url, headers=self.headers)
             if response.status_code == 200:
-                soup = BeautifulSoup(response.text, 'html.parser')
-                links = soup.find_all('a')
-                return [link.get('href') for link in links if link.get('href', '').endswith('.json')]
+                items = response.json()
+                if isinstance(items, list):
+                    return [item['name'] for item in items if item['name'].endswith('.json')]
+                self.logger.error(f"Unexpected response format from {url}")
+                return []
             self.logger.error(f"Failed to fetch directory {url}: Status code {response.status_code}")
             return []
         except Exception as e:
@@ -116,8 +123,8 @@ class CVECrawler:
         return self._get_directory_content(url)
 
     def fetch_latest_cves(self, days_back: int = 7, min_severity: float = 0.0) -> List[Dict[str, Any]]:
-        """获取最近几天的CVE数据，支持按严重性过滤"""
-        self.logger.info(f"Starting to fetch CVEs for the last {days_back} days (min severity: {min_severity})")
+        """获取最近几天的CVE数据"""
+        self.logger.info(f"Starting to fetch CVEs for the last {days_back} days")
         current_year = datetime.now().year
         all_cves = []
         cutoff_date = datetime.now() - timedelta(days=days_back)
@@ -130,18 +137,21 @@ class CVECrawler:
         with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
             future_to_cve = {}
             
-            for year in range(current_year, current_year-2, -1):
-                year_dirs = self._get_year_directories(year)
+            # 只处理当前年份
+            year = current_year
+            base_url = f"{self.base_url}/{year}"
+            
+            # 获取所有前缀目录
+            for i in range(0, 100):  # 假设每年最多100个前缀目录
+                prefix = f"{i:05d}xxx"
+                dir_url = f"{base_url}/{prefix}"
+                cve_files = self._get_directory_content(dir_url)
                 
-                for dir_name in year_dirs:
-                    dir_url = urljoin(f"{self.base_url}/{year}/", dir_name)
-                    cve_files = self._get_directory_content(dir_url)
-                    
-                    for cve_file in cve_files:
-                        cve_id = cve_file.replace('.json', '')
-                        if cve_id.startswith('CVE-'):
-                            future = executor.submit(self.fetch_cve_details, year, cve_id)
-                            future_to_cve[future] = cve_id
+                for cve_file in cve_files:
+                    cve_id = cve_file.replace('.json', '')
+                    if cve_id.startswith('CVE-'):
+                        future = executor.submit(self.fetch_cve_details, year, cve_id)
+                        future_to_cve[future] = cve_id
 
             for future in as_completed(future_to_cve):
                 cve_id = future_to_cve[future]
@@ -151,9 +161,7 @@ class CVECrawler:
                         published_date = datetime.fromisoformat(
                             cve_data['publishedDate'].replace('Z', '+00:00')
                         )
-                        severity = float(cve_data['severity']) if cve_data['severity'] != 'N/A' else 0.0
-                        
-                        if published_date >= cutoff_date and severity >= min_severity:
+                        if published_date >= cutoff_date:
                             all_cves.append(cve_data)
                 except Exception as e:
                     self.logger.error(f"Error processing CVE {cve_id}: {e}")

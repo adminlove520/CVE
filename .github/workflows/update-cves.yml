@@ -64,32 +64,25 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "CVE Monitor Github Action"
           
-          # 获取上次更新时间
-          if [ -f "$CVES_BASE_DIRECTORY/deltaLog.json" ]; then
-            export PREV_TS=$(jq -r '.[0].fetchTime' < $CVES_BASE_DIRECTORY/deltaLog.json)
-          else
-            # 如果没有 deltaLog.json，使用3小时前的时间
-            export PREV_TS=$(date -d '3 hours ago' -u +"%Y-%m-%dT%H:%M:%SZ")
-          fi
-          
           # 创建日志目录
           mkdir -p logs
           
           # 运行更新脚本
-          python scripts/update_cves.py --start=$PREV_TS
+          python scripts/update_cves.py
           
           # 更新 deltaLog.json
           if [ ! -f "$CVES_BASE_DIRECTORY/deltaLog.json" ]; then
-            echo "[]" > "$CVES_BASE_DIRECTORY/deltaLog.json"
+            echo '[{"fetchTime":"2024-02-19T00:00:00Z","count":0}]' > "$CVES_BASE_DIRECTORY/deltaLog.json"
           fi
           
           NOW_TS=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-          NEW_ENTRY="{\"fetchTime\":\"$NOW_TS\",\"count\":$(jq '.metadata.total_count' $CVES_BASE_DIRECTORY/cves.json)}"
+          TOTAL_COUNT=$(jq -r '.metadata.total_count' "$CVES_BASE_DIRECTORY/cves.json")
+          NEW_ENTRY="{\"fetchTime\":\"$NOW_TS\",\"count\":$TOTAL_COUNT}"
           
           # 保持最近30天的记录
-          jq --arg entry "$NEW_ENTRY" '. [($entry|fromjson)] + .[0:29]' \
-            $CVES_BASE_DIRECTORY/deltaLog.json > $CVES_BASE_DIRECTORY/deltaLog.json.tmp
-          mv $CVES_BASE_DIRECTORY/deltaLog.json.tmp $CVES_BASE_DIRECTORY/deltaLog.json
+          jq --argjson entry "$NEW_ENTRY" '. [($entry)] + .[0:29]' \
+            "$CVES_BASE_DIRECTORY/deltaLog.json" > "$CVES_BASE_DIRECTORY/deltaLog.json.tmp"
+          mv "$CVES_BASE_DIRECTORY/deltaLog.json.tmp" "$CVES_BASE_DIRECTORY/deltaLog.json"
 
       - name: Commit and push if changed
         run: |
