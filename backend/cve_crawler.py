@@ -35,28 +35,25 @@ class CVECrawler:
             url = f"{self.base_url}/{year}/{prefix}/{cve_id}.json"
             self.logger.info(f"Fetching CVE details for {cve_id}")
             
-            # 使用与目录获取相同的认证方式
-            api_url = url.replace(
-                'https://raw.githubusercontent.com/CVEProject/cvelistV5/main',
-                'https://api.github.com/repos/CVEProject/cvelistV5/contents'
-            )
+            # 使用 raw 内容 URL
             headers = {
-                'Accept': 'application/vnd.github.v3+json',
+                'Accept': 'application/json',
                 'User-Agent': 'CVE-Monitor-Bot'
             }
             if 'GITHUB_TOKEN' in os.environ:
                 headers['Authorization'] = f"Bearer {os.environ['GITHUB_TOKEN']}"
             
-            response = requests.get(api_url, headers=headers)
+            response = requests.get(url, headers=headers)
             if response.status_code == 200:
-                content = response.json()
-                if 'content' in content:
-                    # GitHub API 返回的是 Base64 编码的内容
-                    import base64
-                    data = json.loads(base64.b64decode(content['content']).decode('utf-8'))
-                    return self._parse_cve_data(data)
-                self.logger.error(f"No content found in response for {cve_id}")
-                return None
+                try:
+                    data = response.json()
+                    parsed_data = self._parse_cve_data(data)
+                    if parsed_data:
+                        self.logger.info(f"Successfully fetched and parsed CVE {cve_id}")
+                        return parsed_data
+                except json.JSONDecodeError as e:
+                    self.logger.error(f"Failed to parse JSON for CVE {cve_id}: {e}")
+                    return None
             
             self.logger.error(f"Failed to fetch CVE {cve_id}: Status code {response.status_code}")
             return None
