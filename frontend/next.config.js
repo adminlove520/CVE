@@ -3,7 +3,6 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   output: 'export',
-  basePath: '/CVE',
   images: {
     unoptimized: true,
   },
