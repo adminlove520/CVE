@@ -25,13 +25,15 @@ jobs:
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
         run: |
-          # 确保从项目根目录运行脚本
+          # 创建日志目录
+          mkdir -p logs
+          # 运行更新脚本
           python scripts/update_cves.py
         
       - name: Commit and push if changed
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
-          git add data/
-          git commit -m "Update CVE data" || exit 0
+          git add data/ logs/
+          git commit -m "Update CVE data and logs" || exit 0
           git push 
