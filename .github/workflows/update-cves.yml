@@ -65,25 +65,44 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "CVE Monitor Github Action"
           
-          # 创建日志目录
+          # 创建日志目录和数据目录
           mkdir -p logs
+          mkdir -p "$CVES_BASE_DIRECTORY"
           
           # 运行更新脚本
           python scripts/update_cves.py
           
-          # 更新 deltaLog.json
+          # 初始化或更新 deltaLog.json
           if [ ! -f "$CVES_BASE_DIRECTORY/deltaLog.json" ]; then
             echo '[{"fetchTime":"2024-02-19T00:00:00Z","count":0}]' > "$CVES_BASE_DIRECTORY/deltaLog.json"
           fi
           
+          # 获取当前时间和总数
           NOW_TS=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-          TOTAL_COUNT=$(jq -r '.metadata.total_count' "$CVES_BASE_DIRECTORY/cves.json")
+          if [ -f "$CVES_BASE_DIRECTORY/cves.json" ]; then
+            TOTAL_COUNT=$(jq -r '.metadata.total_count // 0' "$CVES_BASE_DIRECTORY/cves.json")
+          else
+            TOTAL_COUNT=0
+          fi
+          
+          # 创建新条目
           NEW_ENTRY="{\"fetchTime\":\"$NOW_TS\",\"count\":$TOTAL_COUNT}"
           
-          # 保持最近30天的记录
-          jq --argjson entry "$NEW_ENTRY" '. [($entry)] + .[0:29]' \
-            "$CVES_BASE_DIRECTORY/deltaLog.json" > "$CVES_BASE_DIRECTORY/deltaLog.json.tmp"
-          mv "$CVES_BASE_DIRECTORY/deltaLog.json.tmp" "$CVES_BASE_DIRECTORY/deltaLog.json"
+          # 读取现有日志并添加新条目
+          TEMP_FILE=$(mktemp)
+          if [ -s "$CVES_BASE_DIRECTORY/deltaLog.json" ]; then
+            # 如果文件存在且不为空，添加新条目并保留最近30条记录
+            jq --argjson entry "$NEW_ENTRY" \
+               --argjson limit 30 \
+               '[$entry] + (.[0:($limit-1)] // [])' \
+               "$CVES_BASE_DIRECTORY/deltaLog.json" > "$TEMP_FILE"
+          else
+            # 如果文件不存在或为空，创建只包含新条目的数组
+            echo "[$NEW_ENTRY]" > "$TEMP_FILE"
+          fi
+          
+          # 移动临时文件到目标位置
+          mv "$TEMP_FILE" "$CVES_BASE_DIRECTORY/deltaLog.json"
 
       - name: Commit and push if changed
         run: |
