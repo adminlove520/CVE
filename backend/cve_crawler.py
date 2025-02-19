@@ -109,13 +109,13 @@ class CVECrawler:
                 'User-Agent': 'CVE-Monitor-Bot'
             }
             if 'GITHUB_TOKEN' in os.environ:
-                headers['Authorization'] = f"token {os.environ['GITHUB_TOKEN']}"
+                headers['Authorization'] = f"Bearer {os.environ['GITHUB_TOKEN']}"
             
             response = requests.get(api_url, headers=headers)
             if response.status_code == 200:
                 items = response.json()
                 if isinstance(items, list):
-                    return [item['name'] for item in items if item['name'].endswith('.json')]
+                    return [item['name'] for item in items]
                 self.logger.error(f"Unexpected response format from {url}")
                 return []
             self.logger.error(f"Failed to fetch directory {url}: Status code {response.status_code}")
@@ -140,37 +140,39 @@ class CVECrawler:
             future_to_cve = {}
             
             # 获取年份目录
-            year_url = f"{self.base_url}/{current_year}"
-            year_dirs = self._get_directory_content(year_url)
-            
-            for prefix_dir in year_dirs:
-                if not prefix_dir.endswith('xxx'):
-                    continue
-                    
-                prefix_url = f"{year_url}/{prefix_dir}"
-                self.logger.info(f"Processing prefix directory: {prefix_url}")
+            years = [current_year, current_year - 1]  # 获取当前年和去年的数据
+            for year in years:
+                year_url = f"{self.base_url}/{year}"
+                year_dirs = self._get_directory_content(year_url)
                 
-                cve_files = self._get_directory_content(prefix_url)
-                for cve_file in cve_files:
-                    if not cve_file.startswith('CVE-'):
+                for prefix_dir in year_dirs:
+                    if not prefix_dir.endswith('xxx'):
                         continue
                         
-                    cve_id = cve_file.replace('.json', '')
-                    future = executor.submit(self.fetch_cve_details, current_year, cve_id)
-                    future_to_cve[future] = cve_id
+                    prefix_url = f"{year_url}/{prefix_dir}"
+                    self.logger.info(f"Processing prefix directory: {prefix_url}")
+                    
+                    cve_files = self._get_directory_content(prefix_url)
+                    for cve_file in cve_files:
+                        if not cve_file.startswith('CVE-'):
+                            continue
+                            
+                        cve_id = cve_file.replace('.json', '')
+                        future = executor.submit(self.fetch_cve_details, year, cve_id)
+                        future_to_cve[future] = cve_id
 
-            for future in as_completed(future_to_cve):
-                cve_id = future_to_cve[future]
-                try:
-                    cve_data = future.result()
-                    if cve_data:
-                        published_date = datetime.fromisoformat(
-                            cve_data['publishedDate'].replace('Z', '+00:00')
-                        )
-                        if published_date >= cutoff_date:
-                            all_cves.append(cve_data)
-                except Exception as e:
-                    self.logger.error(f"Error processing CVE {cve_id}: {e}")
+                for future in as_completed(future_to_cve):
+                    cve_id = future_to_cve[future]
+                    try:
+                        cve_data = future.result()
+                        if cve_data:
+                            published_date = datetime.fromisoformat(
+                                cve_data['publishedDate'].replace('Z', '+00:00')
+                            )
+                            if published_date >= cutoff_date:
+                                all_cves.append(cve_data)
+                    except Exception as e:
+                        self.logger.error(f"Error processing CVE {cve_id}: {e}")
 
         # 按发布日期和严重性排序
         sorted_cves = self._sort_cves(all_cves)
