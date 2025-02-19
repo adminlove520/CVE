@@ -99,12 +99,19 @@ class CVECrawler:
         """获取目录内容"""
         try:
             self.logger.info(f"Fetching directory: {url}")
-            # 使用 GitHub API 而不是直接访问 raw 内容
+            # 使用 GitHub API
             api_url = url.replace(
                 'https://raw.githubusercontent.com/CVEProject/cvelistV5/main',
                 'https://api.github.com/repos/CVEProject/cvelistV5/contents'
             )
-            response = requests.get(api_url, headers=self.headers)
+            headers = {
+                'Accept': 'application/vnd.github.v3+json',
+                'User-Agent': 'CVE-Monitor-Bot'
+            }
+            if 'GITHUB_TOKEN' in os.environ:
+                headers['Authorization'] = f"token {os.environ['GITHUB_TOKEN']}"
+            
+            response = requests.get(api_url, headers=headers)
             if response.status_code == 200:
                 items = response.json()
                 if isinstance(items, list):
@@ -117,12 +124,7 @@ class CVECrawler:
             self.logger.error(f"Error fetching directory {url}: {e}")
             return []
 
-    def _get_year_directories(self, year: int) -> List[str]:
-        """获取指定年份下的所有目录"""
-        url = f"{self.base_url}/{year}/"
-        return self._get_directory_content(url)
-
-    def fetch_latest_cves(self, days_back: int = 7, min_severity: float = 0.0) -> List[Dict[str, Any]]:
+    def fetch_latest_cves(self, days_back: int = 7) -> List[Dict[str, Any]]:
         """获取最近几天的CVE数据"""
         self.logger.info(f"Starting to fetch CVEs for the last {days_back} days")
         current_year = datetime.now().year
@@ -137,21 +139,25 @@ class CVECrawler:
         with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
             future_to_cve = {}
             
-            # 只处理当前年份
-            year = current_year
-            base_url = f"{self.base_url}/{year}"
+            # 获取年份目录
+            year_url = f"{self.base_url}/{current_year}"
+            year_dirs = self._get_directory_content(year_url)
             
-            # 获取所有前缀目录
-            for i in range(0, 100):  # 假设每年最多100个前缀目录
-                prefix = f"{i:05d}xxx"
-                dir_url = f"{base_url}/{prefix}"
-                cve_files = self._get_directory_content(dir_url)
+            for prefix_dir in year_dirs:
+                if not prefix_dir.endswith('xxx'):
+                    continue
+                    
+                prefix_url = f"{year_url}/{prefix_dir}"
+                self.logger.info(f"Processing prefix directory: {prefix_url}")
                 
+                cve_files = self._get_directory_content(prefix_url)
                 for cve_file in cve_files:
+                    if not cve_file.startswith('CVE-'):
+                        continue
+                        
                     cve_id = cve_file.replace('.json', '')
-                    if cve_id.startswith('CVE-'):
-                        future = executor.submit(self.fetch_cve_details, year, cve_id)
-                        future_to_cve[future] = cve_id
+                    future = executor.submit(self.fetch_cve_details, current_year, cve_id)
+                    future_to_cve[future] = cve_id
 
             for future in as_completed(future_to_cve):
                 cve_id = future_to_cve[future]

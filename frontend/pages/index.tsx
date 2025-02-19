@@ -8,12 +8,32 @@ import {
   TableRow,
 } from '@/components/ui/table'
 
+interface Reference {
+  url: string;
+  type: 'poc' | 'reference';
+}
+
 interface CVE {
   id: string;
   publishedDate: string;
   severity: string;
   fixSuggestion: string;
-  references: string[];
+  references: Reference[];
+}
+
+interface CVEResponse {
+  metadata: {
+    total_count: number;
+    last_updated: string;
+    severity_distribution: {
+      critical: number;
+      high: number;
+      medium: number;
+      low: number;
+      none: number;
+    };
+  };
+  cves: CVE[];
 }
 
 export default function Home() {
@@ -23,8 +43,12 @@ export default function Home() {
   useEffect(() => {
     fetch('/api/cves')
       .then((res) => res.json())
-      .then((data) => {
-        setCves(data);
+      .then((data: CVEResponse) => {
+        setCves(data.cves || []);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error('Error fetching CVEs:', error);
         setLoading(false);
       });
   }, []);
@@ -46,22 +70,22 @@ export default function Home() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {cves.map((cve) => (
+            {cves.map((cve: CVE) => (
               <TableRow key={cve.id}>
                 <TableCell>{cve.id}</TableCell>
                 <TableCell>{new Date(cve.publishedDate).toLocaleDateString()}</TableCell>
                 <TableCell>{cve.severity}</TableCell>
                 <TableCell>{cve.fixSuggestion}</TableCell>
                 <TableCell>
-                  {cve.references.map((ref, index) => (
+                  {cve.references.map((ref: Reference, index: number) => (
                     <a
                       key={index}
-                      href={ref}
+                      href={ref.url}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-blue-500 hover:underline block"
                     >
-                      {ref}
+                      {ref.type === 'poc' ? 'PoC' : 'Reference'}
                     </a>
                   ))}
                 </TableCell>

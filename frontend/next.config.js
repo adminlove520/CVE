@@ -9,6 +9,7 @@ const nextConfig = {
   },
   assetPrefix: process.env.NEXT_PUBLIC_BASE_PATH || '',
   trailingSlash: true,
+  distDir: 'out',
 }
 
 module.exports = nextConfig
