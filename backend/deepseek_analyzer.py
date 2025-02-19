@@ -1,7 +1,7 @@
 import os
 from typing import Dict
 import requests
-from utils.logger import Logger
+from backend.utils.logger import Logger
 
 class DeepSeekAnalyzer:
     def __init__(self):

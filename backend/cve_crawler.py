@@ -4,10 +4,17 @@ from datetime import datetime, timedelta
 import os
 from typing import List, Dict, Any
 import time
-from utils.logger import Logger
+import sys
+from pathlib import Path
+
+# 修改导入语句
+from backend.utils.logger import Logger  # 使用完整的导入路径
 from bs4 import BeautifulSoup
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from urllib.parse import urljoin
+
+ROOT_DIR = Path(__file__).parent.parent.absolute()
+sys.path.insert(0, str(ROOT_DIR))
 
 class CVECrawler:
     def __init__(self):

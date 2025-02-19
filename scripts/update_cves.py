@@ -2,8 +2,10 @@ import os
 import sys
 from pathlib import Path
 
-# 添加backend目录到Python路径
-sys.path.append(str(Path(__file__).parent.parent / 'backend'))
+# 获取项目根目录
+ROOT_DIR = Path(__file__).parent.parent.absolute()
+sys.path.insert(0, str(ROOT_DIR))
+print(ROOT_DIR)
 
 from backend.cve_crawler import CVECrawler
 from backend.deepseek_analyzer import DeepSeekAnalyzer
