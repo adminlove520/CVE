@@ -2,23 +2,128 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 1,
-    "last_updated": "2025-02-25T21:08:51.357904",
+    "total_count": 6,
+    "last_updated": "2025-02-25T21:28:02.413827",
     "severity_distribution": {
       "critical": 0,
-      "high": 0,
+      "high": 2,
       "medium": 0,
-      "low": 1,
+      "low": 4,
       "none": 0
     }
   },
   "cves": [
     {
-      "id": "CVE-2024-53878",
-      "publishedDate": "2025-02-25T20:38:59.240Z",
-      "lastModifiedDate": "2025-02-25T20:56:08.076Z",
-      "description": "NVIDIA CUDA toolkit for Linux and Windows contains a vulnerability in the cuobjdump binary, where a user could cause a crash by passing a malformed ELF file to cuobjdump. A successful exploit of this vulnerability might lead to a partial denial of service.",
-      "severity": 2.8,
+      "id": "CVE-2025-27148",
+      "publishedDate": "2025-02-25T20:13:51.578Z",
+      "lastModifiedDate": "2025-02-25T21:20:46.507Z",
+      "description": "Gradle is a build automation tool, and its native-platform tool provides Java bindings for native APIs. On Unix-like systems, the system temporary directory can be created with open permissions that allow multiple users to create and delete files within it. This library initialization could be vulnerable to a local privilege escalation from an attacker quickly deleting and recreating files in the system temporary directory. Gradle builds that rely on versions of net.rubygrapefruit:native-platform prior to 0.22-milestone-28 could be vulnerable to a local privilege escalation from an attacker quickly deleting and recreating files in the system temporary directory.\n\nIn net.rubygrapefruit:native-platform prior to version 0.22-milestone-28, if the `Native.get(Class<>)` method was called, without calling `Native.init(File)` first, with a non-`null` argument used as working file path, then the library would initialize itself using the system temporary directory and NativeLibraryLocator.java lines 68 through 78. Version 0.22-milestone-28 has been released with changes that fix the problem. Initialization is now mandatory and no longer uses the system temporary directory, unless such a path is passed for initialization. The only workaround for affected versions is to make sure to do a proper initialization, using a location that is safe.\n\nGradle 8.12, only that exact version, had codepaths where the initialization of the underlying native integration library took a default path, relying on copying the binaries to the system temporary directory. Any execution of Gradle exposed this exploit. Users of Windows or modern versions of macOS are not vulnerable, nor are users of a Unix-like operating system with the \"sticky\" bit set or `noexec` on their system temporary directory vulnerable. This problem was fixed in Gradle 8.12.1. Gradle 8.13 release also upgrades to a version of the native library that no longer has that bug. Some workarounds are available. On Unix-like operating systems, ensure that the \"sticky\" bit is set. This only allows the original user (or root) to delete a file. Mounting `/tmp` as `noexec` will prevent Gradle 8.12 from starting. Those who are are unable to change the permissions of the system temporary directory can move the Java temporary directory by setting the System Property java.io.tmpdir. The new path needs to limit permissions to the build user only.",
+      "severity": 8.8,
+      "references": [
+        {
+          "url": "https://github.com/gradle/gradle/security/advisories/GHSA-465q-w4mf-4f4r",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/gradle/gradle/security/advisories/GHSA-89qm-pxvm-p336",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/gradle/native-platform/security/advisories/GHSA-2xxp-vw2f-p3x8",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/gradle/gradle/pull/32025",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/gradle/native-platform/pull/353",
+          "type": "reference"
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Fstab#Options_common_to_all_filesystems",
+          "type": "reference"
+        },
+        {
+          "url": "https://en.wikipedia.org/wiki/Sticky_bit",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/gradle/native-platform/blob/574dfe8d9fb546c990436468d617ab81c140871d/native-platform/src/main/java/net/rubygrapefruit/platform/internal/NativeLibraryLocator.java#L68-L78",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "gradle",
+          "product": "gradle",
+          "versions": [
+            {
+              "version": "= 8.12",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-378: Creation of Temporary File With Insecure Permissions",
+        "CWE-379: Creation of Temporary File in Directory with Insecure Permissions"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2024-0148",
+      "publishedDate": "2025-02-25T20:11:21.328Z",
+      "lastModifiedDate": "2025-02-25T21:20:53.416Z",
+      "description": "NVIDIA Jetson Linux and IGX OS image contains a vulnerability in the UEFI firmware RCM boot mode, where an unprivileged attacker with physical access to the device could load untrusted code. A successful exploit might lead to code execution, escalation of privileges, data tampering, denial of service, and information disclosure. The scope of the impacts can extend to other components.",
+      "severity": 7.6,
+      "references": [
+        {
+          "url": "https://nvidia.custhelp.com/app/answers/detail/a_id/5617",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "platforms": [
+            "IGX OS"
+          ],
+          "product": "IGX Orin",
+          "vendor": "NVIDIA",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "All versions prior to IGX 1.1"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "platforms": [
+            "Jetson Linux"
+          ],
+          "product": "Jetson AGX Orin Series",
+          "vendor": "NVIDIA",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "All versions prior to 36.4.3"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-447"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2024-53873",
+      "publishedDate": "2025-02-25T20:28:37.201Z",
+      "lastModifiedDate": "2025-02-25T21:20:18.170Z",
+      "description": "NVIDIA CUDA toolkit for Windows contains a vulnerability in the cuobjdump binary, where a user could cause an out-of-bounds read by passing a malformed ELF file to cuobjdump. A successful exploit of this vulnerability might lead to a partial denial of service.",
+      "severity": 3.3,
       "references": [
         {
           "url": "https://nvidia.custhelp.com/app/answers/detail/a_id/5594",
@@ -43,7 +148,109 @@
         }
       ],
       "problemType": [
-        "CWE-1284 Improper Validation of Specified Quantity in Input"
+        "CWE-125 Out-of-bounds Read"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2024-53872",
+      "publishedDate": "2025-02-25T20:28:21.988Z",
+      "lastModifiedDate": "2025-02-25T21:20:27.313Z",
+      "description": "NVIDIA CUDA toolkit for all platforms contains a vulnerability in the cuobjdump binary, where a user could cause an out-of-bounds read by passing a malformed ELF file to cuobjdump. A successful exploit of this vulnerability might lead to a partial denial of service.",
+      "severity": 3.3,
+      "references": [
+        {
+          "url": "https://nvidia.custhelp.com/app/answers/detail/a_id/5594",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "platforms": [
+            "Windows",
+            "Linux"
+          ],
+          "product": "CUDA Toolkit",
+          "vendor": "NVIDIA",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "All versions up to CUDA Toolkit 12.8"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-125 Out-of-bounds Read"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2024-53871",
+      "publishedDate": "2025-02-25T20:28:03.753Z",
+      "lastModifiedDate": "2025-02-25T21:20:32.937Z",
+      "description": "NVIDIA CUDA toolkit for all platforms contains a vulnerability in the nvdisasm binary, where a user could cause an out-of-bounds read by passing a malformed ELF file to nvdisasm. A successful exploit of this vulnerability might lead to a partial denial of service.",
+      "severity": 3.3,
+      "references": [
+        {
+          "url": "https://nvidia.custhelp.com/app/answers/detail/a_id/5594",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "platforms": [
+            "Windows",
+            "Linux"
+          ],
+          "product": "CUDA Toolkit",
+          "vendor": "NVIDIA",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "All versions up to CUDA Toolkit 12.8"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-125 Out-of-bounds Read"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2024-53870",
+      "publishedDate": "2025-02-25T20:27:43.547Z",
+      "lastModifiedDate": "2025-02-25T21:20:39.884Z",
+      "description": "NVIDIA CUDA toolkit for all platforms contains a vulnerability in the cuobjdump binary, where a user could cause an out-of-bounds read by passing a malformed ELF file to cuobjdump. A successful exploit of this vulnerability might lead to a partial denial of service.",
+      "severity": 3.3,
+      "references": [
+        {
+          "url": "https://nvidia.custhelp.com/app/answers/detail/a_id/5594",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "platforms": [
+            "Windows",
+            "Linux"
+          ],
+          "product": "CUDA Toolkit",
+          "vendor": "NVIDIA",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "All versions up to CUDA Toolkit 12.8"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-125 Out-of-bounds Read"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
