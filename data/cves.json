@@ -3,7 +3,7 @@
   "dataVersion": "5.1",
   "cveMetadata": {
     "total_count": 2,
-    "last_updated": "2025-03-10T19:07:26.834460",
+    "last_updated": "2025-03-10T19:24:40.453684",
     "severity_distribution": {
       "critical": 0,
       "high": 0,
@@ -14,101 +14,76 @@
   },
   "cves": [
     {
-      "id": "CVE-2025-24813",
-      "publishedDate": "2025-03-10T16:44:03.715Z",
-      "lastModifiedDate": "2025-03-10T19:02:31.096Z",
-      "description": "Path Equivalence: 'file.Name' (Internal Dot) leading to Remote Code Execution and/or Information disclosure and/or malicious content added to uploaded files via write enabled Default Servlet in Apache Tomcat.\n\nThis issue affects Apache Tomcat: from 11.0.0-M1 through 11.0.2, from 10.1.0-M1 through 10.1.34, from 9.0.0.M1 through 9.0.98.\n\nIf all of the following were true, a malicious user was able to view       security sensitive files and/or inject content into those files:\n- writes enabled for the default servlet (disabled by default)\n- support for partial PUT (enabled by default)\n- a target URL for security sensitive uploads that was a sub-directory of a target URL for public uploads\n- attacker knowledge of the names of security sensitive files being uploaded\n- the security sensitive files also being uploaded via partial PUT\n\nIf all of the following were true, a malicious user was able to       perform remote code execution:\n- writes enabled for the default servlet (disabled by default)\n- support for partial PUT (enabled by default)\n- application was using Tomcat's file based session persistence with the default storage location\n- application included a library that may be leveraged in a deserialization attack\n\nUsers are recommended to upgrade to version 11.0.3, 10.1.35 or 9.0.98, which fixes the issue.",
+      "id": "CVE-2025-22603",
+      "publishedDate": "2025-03-10T18:09:51.419Z",
+      "lastModifiedDate": "2025-03-10T19:17:04.406Z",
+      "description": "AutoGPT is a platform that allows users to create, deploy, and manage continuous artificial intelligence agents that automate complex workflows. Versions prior to autogpt-platform-beta-v0.4.2 contains a server-side request forgery (SSRF) vulnerability inside component (or block) `Send Web Request`. The root cause is  that IPV6 address is not restricted or filtered, which allows attackers to perform a server side request forgery to visit an IPV6 service. autogpt-platform-beta-v0.4.2 fixes the issue.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://lists.apache.org/thread/j5fkjv2k477os90nczf2v9l61fb0kkgq",
+          "url": "https://github.com/Significant-Gravitas/AutoGPT/security/advisories/GHSA-4c8v-hwxc-2356",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/Significant-Gravitas/AutoGPT/commit/26214e1b2c6777e0fae866642b23420adaadd6c4",
+          "type": "reference"
+        },
+        {
+          "url": "https://boatneck-faucet-cba.notion.site/SSRF-of-AutoGPT-153b650a4d88804d923ad65a015a7d61",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/Significant-Gravitas/AutoGPT/blob/2121ffd06b26a438706bf642372cc46d81c94ddc/autogpt_platform/backend/backend/util/request.py#L11",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "unaffected",
-          "product": "Apache Tomcat",
-          "vendor": "Apache Software Foundation",
+          "vendor": "Significant-Gravitas",
+          "product": "AutoGPT",
           "versions": [
             {
-              "lessThanOrEqual": "11.0.2",
-              "status": "affected",
-              "version": "11.0.0-M1",
-              "versionType": "semver"
-            },
-            {
-              "lessThanOrEqual": "10.1.34",
-              "status": "affected",
-              "version": "10.1.0-M1",
-              "versionType": "semver"
-            },
-            {
-              "lessThanOrEqual": "9.0.98",
-              "status": "affected",
-              "version": "9.0.0.M1",
-              "versionType": "semver"
+              "version": "< autogpt-platform-beta-v0.4.2",
+              "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-44 Path Equivalence: 'file.name' (Internal Dot)",
-        "CWE-502 Deserialization of Untrusted Data"
+        "CWE-918: Server-Side Request Forgery (SSRF)"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-27636",
-      "publishedDate": "2025-03-09T12:09:58.619Z",
-      "lastModifiedDate": "2025-03-10T18:56:43.452Z",
-      "description": "Bypass/Injection vulnerability in Apache Camel-Bean component under particular conditions.\n\nThis issue affects Apache Camel: from 4.10.0 through <= 4.10.1, from 4.8.0 through <= 4.8.4, from 3.10.0 through <= 3.22.3.\n\nUsers are recommended to upgrade to version 4.10.2 for 4.10.x LTS, 4.8.5 for 4.8.x LTS and 3.22.4 for 3.x releases.\n\nThis vulnerability is only present in the following situation. The user is using one of the following HTTP Servers via one the of the following Camel components\n\n  *  camel-servlet\n  *  camel-jetty\n  *  camel-undertow\n  *  camel-platform-http\n  *  camel-netty-http\n\n\nand in the route, the exchange will be routed to a camel-bean producer. So ONLY camel-bean component is affected. In particular: \n\n  *  The bean invocation (is only affected if you use any of the above together with camel-bean component).\n\n  *  The bean that can be called, has more than 1 method implemented.\nIn these conditions an attacker could be able to forge a Camel header name and make the bean component invoking other methods in the same bean.\n\nThe vulnerability arises due to a bug in the default filtering mechanism that only blocks headers starting with \"Camel\", \"camel\", or \"org.apache.camel.\". \n\n\nMitigation: You can easily work around this in your Camel applications by removing the headers in your Camel routes. There are many ways of doing this, also globally or per route. This means you could use the removeHeaders EIP, to filter out anything like \"cAmel, cAMEL\" etc, or in general everything not starting with \"Camel\", \"camel\" or \"org.apache.camel.\".",
+      "id": "CVE-2025-25614",
+      "publishedDate": "2025-03-10T00:00:00.000Z",
+      "lastModifiedDate": "2025-03-10T19:17:30.257Z",
+      "description": "Incorrect Access Control in Unifiedtransform 2.0 leads to Privilege Escalation, which allows teachers to update the personal data of fellow teachers.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://lists.apache.org/thread/l3zcg3vts88bmc7w8172wkgw610y693z",
+          "url": "https://github.com/changeweb/Unifiedtransform",
           "type": "reference"
         },
         {
-          "url": "https://issues.apache.org/jira/browse/CAMEL-21828",
-          "type": "reference"
-        },
-        {
-          "url": "https://camel.apache.org/security/CVE-2025-27636.html",
+          "url": "https://github.com/armaansidana2003/CVE-2025-25614",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "collectionURL": "https://repo.maven.apache.org/maven2",
-          "defaultStatus": "unaffected",
-          "packageName": "org.apache.camel:camel-bean",
-          "product": "Apache Camel",
-          "vendor": "Apache Software Foundation",
+          "vendor": "n/a",
+          "product": "n/a",
           "versions": [
             {
-              "lessThan": "4.10.2",
-              "status": "affected",
-              "version": "4.10.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "4.8.5",
-              "status": "affected",
-              "version": "4.8.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.22.4",
-              "status": "affected",
-              "version": "3.10.0",
-              "versionType": "semver"
+              "version": "n/a",
+              "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "Bypass/Injection"
+        "n/a"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
