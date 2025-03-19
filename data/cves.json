@@ -2,66 +2,95 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 2,
-    "last_updated": "2025-03-19T15:20:36.033856",
+    "total_count": 5,
+    "last_updated": "2025-03-19T15:39:15.047984",
     "severity_distribution": {
-      "critical": 0,
-      "high": 1,
-      "medium": 1,
+      "critical": 1,
+      "high": 0,
+      "medium": 2,
       "low": 0,
-      "none": 0
+      "none": 2
     }
   },
   "cves": [
     {
-      "id": "CVE-2025-30154",
-      "publishedDate": "2025-03-19T15:15:29.113Z",
-      "lastModifiedDate": "2025-03-19T15:15:29.113Z",
-      "description": "reviewdog/action-setup is a GitHub action that installs reviewdog. reviewdog/action-setup@v1 was compromised March 11, 2025, between 18:42 and 20:31 UTC, with malicious code added that dumps exposed secrets to Github Actions Workflow Logs. Other reviewdog actions that use `reviewdog/action-setup@v1` that would also be compromised, regardless of version or pinning method, are reviewdog/action-shellcheck, reviewdog/action-composite-template, reviewdog/action-staticcheck, reviewdog/action-ast-grep, and reviewdog/action-typos.",
-      "severity": 8.6,
+      "id": "CVE-2025-29783",
+      "publishedDate": "2025-03-19T15:33:28.951Z",
+      "lastModifiedDate": "2025-03-19T15:33:28.951Z",
+      "description": "vLLM is a high-throughput and memory-efficient inference and serving engine for LLMs. When vLLM is configured to use Mooncake, unsafe deserialization exposed directly over ZMQ/TCP on all network interfaces will allow attackers to execute remote code on distributed hosts. This is a remote code execution vulnerability impacting any deployments using Mooncake to distribute KV across distributed hosts. This vulnerability is fixed in 0.8.0.",
+      "severity": 10,
       "references": [
         {
-          "url": "https://github.com/reviewdog/reviewdog/security/advisories/GHSA-qmg3-hpqr-gqvc",
+          "url": "https://github.com/vllm-project/vllm/security/advisories/GHSA-x3m8-f7g5-qhm7",
           "type": "reference"
         },
         {
-          "url": "https://github.com/reviewdog/reviewdog/issues/2079",
+          "url": "https://github.com/vllm-project/vllm/pull/14228",
           "type": "reference"
         },
         {
-          "url": "https://github.com/reviewdog/action-setup/commit/3f401fe1d58fe77e10d665ab713057375e39b887",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/reviewdog/action-setup/commit/f0d342d24037bb11d26b9bd8496e0808ba32e9ec",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.wiz.io/blog/new-github-action-supply-chain-attack-reviewdog-action-setup",
+          "url": "https://github.com/vllm-project/vllm/commit/288ca110f68d23909728627d3100e5a8db820aa2",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "reviewdog",
-          "product": "reviewdog",
+          "vendor": "vllm-project",
+          "product": "vllm",
           "versions": [
             {
-              "version": "= 1",
+              "version": "< 0.8.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-506: Embedded Malicious Code"
+        "CWE-502: Deserialization of Untrusted Data"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-29770",
+      "publishedDate": "2025-03-19T15:31:00.403Z",
+      "lastModifiedDate": "2025-03-19T15:31:00.403Z",
+      "description": "vLLM is a high-throughput and memory-efficient inference and serving engine for LLMs. The outlines library is one of the backends used by vLLM to support structured output (a.k.a. guided decoding). Outlines provides an optional cache for its compiled grammars on the local filesystem. This cache has been on by default in vLLM. Outlines is also available by default through the OpenAI compatible API server. The affected code in vLLM is vllm/model_executor/guided_decoding/outlines_logits_processors.py, which unconditionally uses the cache from outlines. A malicious user can send a stream of very short decoding requests with unique schemas, resulting in an addition to the cache for each request. This can result in a Denial of Service if the filesystem runs out of space. Note that even if vLLM was configured to use a different backend by default, it is still possible to choose outlines on a per-request basis using the guided_decoding_backend key of the extra_body field of the request. This issue applies only to the V0 engine and is fixed in 0.8.0.",
+      "severity": 6.5,
+      "references": [
+        {
+          "url": "https://github.com/vllm-project/vllm/security/advisories/GHSA-mgrm-fgjv-mhv8",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/vllm-project/vllm/pull/14837",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/vllm-project/vllm/blob/53be4a863486d02bd96a59c674bbec23eec508f6/vllm/model_executor/guided_decoding/outlines_logits_processors.py",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "vllm-project",
+          "product": "vllm",
+          "versions": [
+            {
+              "version": "< 0.8.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-770: Allocation of Resources Without Limits or Throttling"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
       "id": "CVE-2025-26475",
       "publishedDate": "2025-03-19T15:13:52.249Z",
-      "lastModifiedDate": "2025-03-19T15:13:52.249Z",
+      "lastModifiedDate": "2025-03-19T15:35:15.712Z",
       "description": "Dell Secure Connect Gateway (SCG) 5.0 Appliance - SRS, version(s) 5.26, Enables Live-Restore setting which enhances security by keeping containers running during daemon restarts, reducing attack exposure, preventing accidental misconfigurations, and ensuring security controls remain active.",
       "severity": 5.5,
       "references": [
@@ -86,6 +115,64 @@
       "problemType": [
         "CWE-287: Improper Authentication"
       ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-30197",
+      "publishedDate": "2025-03-19T15:38:13.360Z",
+      "lastModifiedDate": "2025-03-19T15:38:13.360Z",
+      "description": "Jenkins Zoho QEngine Plugin 1.0.29.vfa_cc23396502 and earlier does not mask the QEngine API Key form field, increasing the potential for attackers to observe and capture it.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.jenkins.io/security/advisory/2025-03-19/#SECURITY-3511",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Jenkins Project",
+          "product": "Jenkins Zoho QEngine Plugin",
+          "versions": [
+            {
+              "version": "0",
+              "versionType": "maven",
+              "lessThanOrEqual": "1.0.29.vfa_cc23396502",
+              "status": "affected"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-30196",
+      "publishedDate": "2025-03-19T15:38:12.623Z",
+      "lastModifiedDate": "2025-03-19T15:38:12.623Z",
+      "description": "Jenkins AnchorChain Plugin 1.0 does not limit URL schemes for links it creates based on workspace content, allowing the `javascript:` scheme, resulting in a stored cross-site scripting (XSS) vulnerability exploitable by attackers able to control the input file for the Anchor Chain post-build step.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.jenkins.io/security/advisory/2025-03-19/#SECURITY-3529",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Jenkins Project",
+          "product": "Jenkins AnchorChain Plugin",
+          "versions": [
+            {
+              "version": "1.0",
+              "status": "affected"
+            }
+          ],
+          "defaultStatus": "unknown"
+        }
+      ],
+      "problemType": [],
       "fix_suggestion": "无法生成修复建议"
     }
   ]
