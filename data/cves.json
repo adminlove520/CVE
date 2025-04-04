@@ -2,15 +2,58 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 0,
-    "last_updated": "2025-04-04T20:56:30.532528",
+    "total_count": 1,
+    "last_updated": "2025-04-04T21:22:51.268742",
     "severity_distribution": {
-      "critical": 0,
+      "critical": 1,
       "high": 0,
       "medium": 0,
       "low": 0,
       "none": 0
     }
   },
-  "cves": []
+  "cves": [
+    {
+      "id": "CVE-2025-31161",
+      "publishedDate": "2025-04-03T00:00:00.000Z",
+      "lastModifiedDate": "2025-04-04T21:20:48.434Z",
+      "description": "CrushFTP 10 before 10.8.4 and 11 before 11.3.1 allows authentication bypass and takeover of the crushadmin account (unless a DMZ proxy instance is used), as exploited in the wild in March and April 2025, aka \"Unauthenticated HTTP(S) port access.\" A race condition exists in the AWS4-HMAC (compatible with S3) authorization method of the HTTP component of the FTP server. The server first verifies the existence of the user by performing a call to login_user_pass() with no password requirement. This will authenticate the session through the HMAC verification process and up until the server checks for user verification once more. The vulnerability can be further stabilized, eliminating the need for successfully triggering a race condition, by sending a mangled AWS4-HMAC header. By providing only the username and a following slash (/), the server will successfully find a username, which triggers the successful anypass authentication process, but the server will fail to find the expected SignedHeaders entry, resulting in an index-out-of-bounds error that stops the code from reaching the session cleanup. Together, these issues make it trivial to authenticate as any known or guessable user (e.g., crushadmin), and can lead to a full compromise of the system by obtaining an administrative account.",
+      "severity": 9.8,
+      "references": [
+        {
+          "url": "https://outpost24.com/blog/crushftp-auth-bypass-vulnerability/",
+          "type": "reference"
+        },
+        {
+          "url": "https://crushftp.com/crush11wiki/Wiki.jsp?page=Update#section-Update-VulnerabilityInfo",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "CrushFTP",
+          "vendor": "CrushFTP",
+          "versions": [
+            {
+              "lessThan": "10.8.4",
+              "status": "affected",
+              "version": "10",
+              "versionType": "custom"
+            },
+            {
+              "lessThan": "11.3.1",
+              "status": "affected",
+              "version": "11",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-305 Authentication Bypass by Primary Weakness"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    }
+  ]
 }
