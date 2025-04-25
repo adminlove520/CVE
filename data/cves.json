@@ -2,146 +2,172 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 1,
-    "last_updated": "2025-04-25T10:59:20.174036",
+    "total_count": 4,
+    "last_updated": "2025-04-25T11:23:05.390875",
     "severity_distribution": {
-      "critical": 0,
-      "high": 0,
-      "medium": 0,
+      "critical": 1,
+      "high": 1,
+      "medium": 2,
       "low": 0,
-      "none": 1
+      "none": 0
     }
   },
   "cves": [
     {
-      "id": "CVE-2025-37838",
-      "publishedDate": "2025-04-18T14:20:55.389Z",
-      "lastModifiedDate": "2025-04-25T10:06:49.264Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nHSI: ssi_protocol: Fix use after free vulnerability in ssi_protocol Driver Due to Race Condition\n\nIn the ssi_protocol_probe() function, &ssi->work is bound with\nssip_xmit_work(), In ssip_pn_setup(), the ssip_pn_xmit() function\nwithin the ssip_pn_ops structure is capable of starting the\nwork.\n\nIf we remove the module which will call ssi_protocol_remove()\nto make a cleanup, it will free ssi through kfree(ssi),\nwhile the work mentioned above will be used. The sequence\nof operations that may lead to a UAF bug is as follows:\n\nCPU0                                    CPU1\n\n                        | ssip_xmit_work\nssi_protocol_remove     |\nkfree(ssi);             |\n                        | struct hsi_client *cl = ssi->cl;\n                        | // use ssi\n\nFix it by ensuring that the work is canceled before proceeding\nwith the cleanup in ssi_protocol_remove().",
-      "severity": "N/A",
+      "id": "CVE-2025-2470",
+      "publishedDate": "2025-04-25T11:12:53.066Z",
+      "lastModifiedDate": "2025-04-25T11:12:53.066Z",
+      "description": "The Service Finder Bookings plugin for WordPress, used by the Service Finder - Directory and Job Board WordPress Theme, is vulnerable to privilege escalation in all versions up to, and including, 5.1. This is due to a lack of restriction on user role in the 'nsl_registration_store_extra_input' function. This makes it possible for unauthenticated attackers to register an account on the site with an arbitrary role, including Administrator, when registering via a social login. The Nextend Social Login plugin must be installed and configured to exploit the vulnerability.",
+      "severity": 9.8,
       "references": [
         {
-          "url": "https://git.kernel.org/stable/c/d58493832e284f066e559b8da5ab20c15a2801d3",
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/a1f62cda-262b-46d9-a839-0a573813cfa1?source=cve",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/58eb29dba712ab0f13af59ca2fe545f5ce360e78",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/ae5a6a0b425e8f76a9f0677e50796e494e89b088",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/834e602d0cc7c743bfce734fad4a46cefc0f9ab1",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/4b4194c9a7a8f92db39e8e86c85f4fb12ebbec4f",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/e3f88665a78045fe35c7669d2926b8d97b892c11",
+          "url": "https://themeforest.net/item/service-finder-service-and-business-listing-wordpress-theme/15208793",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/hsi/clients/ssi_protocol.c"
-          ],
+          "vendor": "aonetheme",
+          "product": "Service Finder Bookings",
           "versions": [
             {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "d58493832e284f066e559b8da5ab20c15a2801d3",
+              "version": "*",
               "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "58eb29dba712ab0f13af59ca2fe545f5ce360e78",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "ae5a6a0b425e8f76a9f0677e50796e494e89b088",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "834e602d0cc7c743bfce734fad4a46cefc0f9ab1",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "4b4194c9a7a8f92db39e8e86c85f4fb12ebbec4f",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "e3f88665a78045fe35c7669d2926b8d97b892c11",
-              "status": "affected",
-              "versionType": "git"
+              "lessThanOrEqual": "5.1",
+              "versionType": "semver"
             }
-          ]
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-266 Incorrect Privilege Assignment"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2024-11917",
+      "publishedDate": "2025-04-25T11:12:52.609Z",
+      "lastModifiedDate": "2025-04-25T11:12:52.609Z",
+      "description": "The JobSearch WP Job Board plugin for WordPress is vulnerable to authentication bypass in all versions up to, and including, 2.8.8. This is due to improper configurations in the 'jobsearch_xing_response_data_callback', 'set_access_tokes', and 'google_callback' functions. This makes it possible for unauthenticated attackers to log in as the first connected Xing user, or any connected Xing user if the Xing id is known. It is also possible for unauthenticated attackers to log in as the first connected Google user if the user has logged in, without subsequently logging out, in thirty days. The vulnerability was partially patched in version 2.8.4.",
+      "severity": 8.1,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/6de8a608-8715-4f9c-9f2f-df60dd1cc579?source=cve",
+          "type": "reference"
         },
         {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/hsi/clients/ssi_protocol.c"
-          ],
+          "url": "https://codecanyon.net/item/jobsearch-wp-job-board-wordpress-plugin/21066856",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "eyecix",
+          "product": "JobSearch WP Job Board",
           "versions": [
             {
-              "version": "6.1.135",
-              "lessThanOrEqual": "6.1.*",
-              "status": "unaffected",
+              "version": "*",
+              "status": "affected",
+              "lessThanOrEqual": "2.8.8",
               "versionType": "semver"
-            },
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-287 Improper Authentication"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-2986",
+      "publishedDate": "2025-04-25T11:07:58.228Z",
+      "lastModifiedDate": "2025-04-25T11:07:58.228Z",
+      "description": "IBM Maximo Asset Management 7.6.1.3 is vulnerable to stored cross-site scripting. This vulnerability allows a privileged user to embed arbitrary JavaScript code in the Web UI thus altering the intended functionality potentially leading to credentials disclosure within a trusted session.",
+      "severity": 5.5,
+      "references": [
+        {
+          "url": "https://www.ibm.com/support/pages/node/7231785",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "cpes": [
+            "cpe:2.3:a:ibm:maximo_asset_management:7.6.1.3:*:*:*:*:*:*:*"
+          ],
+          "defaultStatus": "unaffected",
+          "product": "Maximo Asset Management",
+          "vendor": "IBM",
+          "versions": [
             {
-              "version": "6.6.88",
-              "lessThanOrEqual": "6.6.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.12.24",
-              "lessThanOrEqual": "6.12.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.13.12",
-              "lessThanOrEqual": "6.13.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.14.3",
-              "lessThanOrEqual": "6.14.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.15-rc1",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
+              "status": "affected",
+              "version": "7.6.1.3"
             }
           ]
         }
       ],
-      "problemType": [],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-3912",
+      "publishedDate": "2025-04-25T11:12:52.021Z",
+      "lastModifiedDate": "2025-04-25T11:12:52.021Z",
+      "description": "The WS Form LITE – Drag & Drop Contact Form Builder for WordPress plugin for WordPress is vulnerable to unauthorized access of data due to a missing capability check on the 'get_config' function in all versions up to, and including, 1.10.35. This makes it possible for unauthenticated attackers to read the value of the plugin's settings, including API keys for integrated services.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/3f6058e2-a5ec-43b2-9cb7-9efcf0853ffc?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/ws-form/trunk/ws-form.php",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/ws-form/trunk/api/class-ws-form-api.php",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/ws-form/trunk/includes/class-ws-form-config.php",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/ws-form/trunk/includes/class-ws-form-common.php",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset/3280355/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "westguard",
+          "product": "WS Form LITE – Drag & Drop Contact Form Builder for WordPress",
+          "versions": [
+            {
+              "version": "*",
+              "status": "affected",
+              "lessThanOrEqual": "1.10.35",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-862 Missing Authorization"
+      ],
       "fix_suggestion": "无法生成修复建议"
     }
   ]
