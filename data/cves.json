@@ -3,50 +3,145 @@
   "dataVersion": "5.1",
   "cveMetadata": {
     "total_count": 1,
-    "last_updated": "2025-04-25T09:56:49.336368",
+    "last_updated": "2025-04-25T10:28:30.390639",
     "severity_distribution": {
       "critical": 0,
-      "high": 1,
+      "high": 0,
       "medium": 0,
       "low": 0,
-      "none": 0
+      "none": 1
     }
   },
   "cves": [
     {
-      "id": "CVE-2025-1565",
-      "publishedDate": "2025-04-25T09:21:41.127Z",
-      "lastModifiedDate": "2025-04-25T09:21:41.127Z",
-      "description": "The Mayosis Core plugin for WordPress is vulnerable to Arbitrary File Read in all versions up to, and including, 5.4.1 via the library/wave-audio/peaks/remote_dl.php file. This makes it possible for unauthenticated attackers to read the contents of arbitrary files on the server, which can contain sensitive information.",
-      "severity": 7.5,
+      "id": "CVE-2025-37838",
+      "publishedDate": "2025-04-18T14:20:55.389Z",
+      "lastModifiedDate": "2025-04-25T10:06:49.264Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nHSI: ssi_protocol: Fix use after free vulnerability in ssi_protocol Driver Due to Race Condition\n\nIn the ssi_protocol_probe() function, &ssi->work is bound with\nssip_xmit_work(), In ssip_pn_setup(), the ssip_pn_xmit() function\nwithin the ssip_pn_ops structure is capable of starting the\nwork.\n\nIf we remove the module which will call ssi_protocol_remove()\nto make a cleanup, it will free ssi through kfree(ssi),\nwhile the work mentioned above will be used. The sequence\nof operations that may lead to a UAF bug is as follows:\n\nCPU0                                    CPU1\n\n                        | ssip_xmit_work\nssi_protocol_remove     |\nkfree(ssi);             |\n                        | struct hsi_client *cl = ssi->cl;\n                        | // use ssi\n\nFix it by ensuring that the work is canceled before proceeding\nwith the cleanup in ssi_protocol_remove().",
+      "severity": "N/A",
       "references": [
         {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/b967eb98-69f8-41c5-a19a-9d20979accb0?source=cve",
+          "url": "https://git.kernel.org/stable/c/d58493832e284f066e559b8da5ab20c15a2801d3",
           "type": "reference"
         },
         {
-          "url": "https://themeforest.net/item/mayosis-digital-marketplace-theme/20210200",
+          "url": "https://git.kernel.org/stable/c/58eb29dba712ab0f13af59ca2fe545f5ce360e78",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/ae5a6a0b425e8f76a9f0677e50796e494e89b088",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/834e602d0cc7c743bfce734fad4a46cefc0f9ab1",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/4b4194c9a7a8f92db39e8e86c85f4fb12ebbec4f",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/e3f88665a78045fe35c7669d2926b8d97b892c11",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "TeconceTheme",
-          "product": "Mayosis Core",
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "unaffected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "drivers/hsi/clients/ssi_protocol.c"
+          ],
           "versions": [
             {
-              "version": "*",
+              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
+              "lessThan": "d58493832e284f066e559b8da5ab20c15a2801d3",
               "status": "affected",
-              "lessThanOrEqual": "5.4.1",
-              "versionType": "semver"
+              "versionType": "git"
+            },
+            {
+              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
+              "lessThan": "58eb29dba712ab0f13af59ca2fe545f5ce360e78",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
+              "lessThan": "ae5a6a0b425e8f76a9f0677e50796e494e89b088",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
+              "lessThan": "834e602d0cc7c743bfce734fad4a46cefc0f9ab1",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
+              "lessThan": "4b4194c9a7a8f92db39e8e86c85f4fb12ebbec4f",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
+              "lessThan": "e3f88665a78045fe35c7669d2926b8d97b892c11",
+              "status": "affected",
+              "versionType": "git"
             }
+          ]
+        },
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "affected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "drivers/hsi/clients/ssi_protocol.c"
           ],
-          "defaultStatus": "unaffected"
+          "versions": [
+            {
+              "version": "6.1.135",
+              "lessThanOrEqual": "6.1.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.6.88",
+              "lessThanOrEqual": "6.6.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.12.24",
+              "lessThanOrEqual": "6.12.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.13.12",
+              "lessThanOrEqual": "6.13.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.14.3",
+              "lessThanOrEqual": "6.14.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.15-rc1",
+              "lessThanOrEqual": "*",
+              "status": "unaffected",
+              "versionType": "original_commit_for_fix"
+            }
+          ]
         }
       ],
-      "problemType": [
-        "CWE-22 Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
-      ],
+      "problemType": [],
       "fix_suggestion": "无法生成修复建议"
     }
   ]
