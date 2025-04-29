@@ -2,108 +2,117 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 1,
-    "last_updated": "2025-04-29T11:49:42.389501",
+    "total_count": 2,
+    "last_updated": "2025-04-29T12:23:10.436243",
     "severity_distribution": {
       "critical": 0,
       "high": 0,
-      "medium": 0,
+      "medium": 2,
       "low": 0,
-      "none": 1
+      "none": 0
     }
   },
   "cves": [
     {
-      "id": "CVE-2024-58099",
-      "publishedDate": "2025-04-29T11:45:30.997Z",
-      "lastModifiedDate": "2025-04-29T11:45:30.997Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nvmxnet3: Fix packet corruption in vmxnet3_xdp_xmit_frame\n\nAndrew and Nikolay reported connectivity issues with Cilium's service\nload-balancing in case of vmxnet3.\n\nIf a BPF program for native XDP adds an encapsulation header such as\nIPIP and transmits the packet out the same interface, then in case\nof vmxnet3 a corrupted packet is being sent and subsequently dropped\non the path.\n\nvmxnet3_xdp_xmit_frame() which is called e.g. via vmxnet3_run_xdp()\nthrough vmxnet3_xdp_xmit_back() calculates an incorrect DMA address:\n\n  page = virt_to_page(xdpf->data);\n  tbi->dma_addr = page_pool_get_dma_addr(page) +\n                  VMXNET3_XDP_HEADROOM;\n  dma_sync_single_for_device(&adapter->pdev->dev,\n                             tbi->dma_addr, buf_size,\n                             DMA_TO_DEVICE);\n\nThe above assumes a fixed offset (VMXNET3_XDP_HEADROOM), but the XDP\nBPF program could have moved xdp->data. While the passed buf_size is\ncorrect (xdpf->len), the dma_addr needs to have a dynamic offset which\ncan be calculated as xdpf->data - (void *)xdpf, that is, xdp->data -\nxdp->data_hard_start.",
-      "severity": "N/A",
+      "id": "CVE-2025-4059",
+      "publishedDate": "2025-04-29T12:00:05.762Z",
+      "lastModifiedDate": "2025-04-29T12:00:05.762Z",
+      "description": "A vulnerability classified as critical was found in code-projects Prison Management System 1.0. This vulnerability affects the function addrecord of the component Prison_Mgmt_Sys. The manipulation of the argument filename leads to stack-based buffer overflow. An attack has to be approached locally. The exploit has been disclosed to the public and may be used.",
+      "severity": 5.3,
       "references": [
         {
-          "url": "https://git.kernel.org/stable/c/59ba6cdadb9c26b606a365eb9c9b25eb2052622d",
+          "url": "https://vuldb.com/?id.306496",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/f82eb34fb59a8fb96c19f4f492c20eb774140bb5",
+          "url": "https://vuldb.com/?ctiid.306496",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/4678adf94da4a9e9683817b246b58ce15fb81782",
+          "url": "https://vuldb.com/?submit.559359",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/zzzxc643/cve/blob/main/Prison_Mgmt_Sys.md",
+          "type": "poc"
+        },
+        {
+          "url": "https://code-projects.org/",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/net/vmxnet3/vmxnet3_xdp.c"
-          ],
+          "vendor": "code-projects",
+          "product": "Prison Management System",
           "versions": [
             {
-              "version": "54f00cce11786742bd11e5e68c3bf85e6dc048c9",
-              "lessThan": "59ba6cdadb9c26b606a365eb9c9b25eb2052622d",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "54f00cce11786742bd11e5e68c3bf85e6dc048c9",
-              "lessThan": "f82eb34fb59a8fb96c19f4f492c20eb774140bb5",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "54f00cce11786742bd11e5e68c3bf85e6dc048c9",
-              "lessThan": "4678adf94da4a9e9683817b246b58ce15fb81782",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/net/vmxnet3/vmxnet3_xdp.c"
-          ],
-          "versions": [
-            {
-              "version": "6.6",
+              "version": "1.0",
               "status": "affected"
-            },
-            {
-              "version": "0",
-              "lessThan": "6.6",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.6.59",
-              "lessThanOrEqual": "6.6.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.11.6",
-              "lessThanOrEqual": "6.11.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.12",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
             }
+          ],
+          "modules": [
+            "Prison_Mgmt_Sys"
           ]
         }
       ],
-      "problemType": [],
+      "problemType": [
+        "Stack-based Buffer Overflow",
+        "Memory Corruption"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-3891",
+      "publishedDate": "2025-04-29T11:56:50.808Z",
+      "lastModifiedDate": "2025-04-29T11:56:50.808Z",
+      "description": "A flaw was found in the mod_auth_openidc module for Apache httpd. This flaw allows a remote, unauthenticated attacker to trigger a denial of service by sending an empty POST request when the OIDCPreservePost directive is enabled. The server crashes consistently, affecting availability.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://access.redhat.com/security/cve/CVE-2025-3891",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2361633",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 7",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "mod_auth_openidc",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:7"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 8",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "mod_auth_openidc",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:8"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 9",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "mod_auth_openidc",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:9"
+          ]
+        }
+      ],
+      "problemType": [
+        "Uncaught Exception"
+      ],
       "fix_suggestion": "无法生成修复建议"
     }
   ]
