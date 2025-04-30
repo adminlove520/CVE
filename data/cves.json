@@ -2,15 +2,127 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 0,
-    "last_updated": "2025-04-29T23:52:42.427544",
+    "total_count": 3,
+    "last_updated": "2025-04-30T01:24:30.318430",
     "severity_distribution": {
-      "critical": 0,
-      "high": 0,
-      "medium": 0,
+      "critical": 1,
+      "high": 1,
+      "medium": 1,
       "low": 0,
       "none": 0
     }
   },
-  "cves": []
+  "cves": [
+    {
+      "id": "CVE-2025-32444",
+      "publishedDate": "2025-04-30T00:25:00.655Z",
+      "lastModifiedDate": "2025-04-30T00:25:00.655Z",
+      "description": "vLLM is a high-throughput and memory-efficient inference and serving engine for LLMs. Versions starting from 0.6.5 and prior to 0.8.5, having vLLM integration with mooncake, are vulnerable to remote code execution due to using pickle based serialization over unsecured ZeroMQ sockets. The vulnerable sockets were set to listen on all network interfaces, increasing the likelihood that an attacker is able to reach the vulnerable ZeroMQ sockets to carry out an attack. vLLM instances that do not make use of the mooncake integration are not vulnerable. This issue has been patched in version 0.8.5.",
+      "severity": 10,
+      "references": [
+        {
+          "url": "https://github.com/vllm-project/vllm/security/advisories/GHSA-hj4w-hm2g-p6w5",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/vllm-project/vllm/security/advisories/GHSA-x3m8-f7g5-qhm7",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/vllm-project/vllm/commit/a5450f11c95847cf51a17207af9a3ca5ab569b2c",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/vllm-project/vllm/blob/32b14baf8a1f7195ca09484de3008063569b43c5/vllm/distributed/kv_transfer/kv_pipe/mooncake_pipe.py#L179",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "vllm-project",
+          "product": "vllm",
+          "versions": [
+            {
+              "version": ">= 0.6.5, < 0.8.5",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-502: Deserialization of Untrusted Data"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-30202",
+      "publishedDate": "2025-04-30T00:24:45.723Z",
+      "lastModifiedDate": "2025-04-30T00:24:45.723Z",
+      "description": "vLLM is a high-throughput and memory-efficient inference and serving engine for LLMs. Versions starting from 0.5.2 and prior to 0.8.5 are vulnerable to denial of service and data exposure via ZeroMQ on multi-node vLLM deployment. In a multi-node vLLM deployment, vLLM uses ZeroMQ for some multi-node communication purposes. The primary vLLM host opens an XPUB ZeroMQ socket and binds it to ALL interfaces. While the socket is always opened for a multi-node deployment, it is only used when doing tensor parallelism across multiple hosts. Any client with network access to this host can connect to this XPUB socket unless its port is blocked by a firewall. Once connected, these arbitrary clients will receive all of the same data broadcasted to all of the secondary vLLM hosts. This data is internal vLLM state information that is not useful to an attacker. By potentially connecting to this socket many times and not reading data published to them, an attacker can also cause a denial of service by slowing down or potentially blocking the publisher. This issue has been patched in version 0.8.5.",
+      "severity": 7.5,
+      "references": [
+        {
+          "url": "https://github.com/vllm-project/vllm/security/advisories/GHSA-9f8f-2vmf-885j",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/vllm-project/vllm/pull/6183",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/vllm-project/vllm/commit/a0304dc504c85f421d38ef47c64f83046a13641c",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "vllm-project",
+          "product": "vllm",
+          "versions": [
+            {
+              "version": ">= 0.5.2, < 0.8.5",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-770: Allocation of Resources Without Limits or Throttling"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-46560",
+      "publishedDate": "2025-04-30T00:24:53.750Z",
+      "lastModifiedDate": "2025-04-30T00:24:53.750Z",
+      "description": "vLLM is a high-throughput and memory-efficient inference and serving engine for LLMs. Versions starting from 0.8.0 and prior to 0.8.5 are affected by a critical performance vulnerability in the input preprocessing logic of the multimodal tokenizer. The code dynamically replaces placeholder tokens (e.g., <|audio_|>, <|image_|>) with repeated tokens based on precomputed lengths. Due to ​​inefficient list concatenation operations​​, the algorithm exhibits ​​quadratic time complexity (O(n²))​​, allowing malicious actors to trigger resource exhaustion via specially crafted inputs. This issue has been patched in version 0.8.5.",
+      "severity": 6.5,
+      "references": [
+        {
+          "url": "https://github.com/vllm-project/vllm/security/advisories/GHSA-vc6m-hm49-g9qg",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/vllm-project/vllm/blob/8cac35ba435906fb7eb07e44fe1a8c26e8744f4e/vllm/model_executor/models/phi4mm.py#L1182-L1197",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "vllm-project",
+          "product": "vllm",
+          "versions": [
+            {
+              "version": ">= 0.8.0, < 0.8.5",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-1333: Inefficient Regular Expression Complexity"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    }
+  ]
 }
