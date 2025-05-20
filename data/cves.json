@@ -2,1134 +2,248 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 9,
-    "last_updated": "2025-05-20T17:21:18.415074",
+    "total_count": 7,
+    "last_updated": "2025-05-20T17:41:00.545167",
     "severity_distribution": {
-      "critical": 0,
-      "high": 0,
-      "medium": 0,
+      "critical": 1,
+      "high": 1,
+      "medium": 5,
       "low": 0,
-      "none": 9
+      "none": 0
     }
   },
   "cves": [
     {
-      "id": "CVE-2025-37991",
-      "publishedDate": "2025-05-20T17:18:45.988Z",
-      "lastModifiedDate": "2025-05-20T17:18:45.988Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nparisc: Fix double SIGFPE crash\n\nCamm noticed that on parisc a SIGFPE exception will crash an application with\na second SIGFPE in the signal handler.  Dave analyzed it, and it happens\nbecause glibc uses a double-word floating-point store to atomically update\nfunction descriptors. As a result of lazy binding, we hit a floating-point\nstore in fpe_func almost immediately.\n\nWhen the T bit is set, an assist exception trap occurs when when the\nco-processor encounters *any* floating-point instruction except for a double\nstore of register %fr0.  The latter cancels all pending traps.  Let's fix this\nby clearing the Trap (T) bit in the FP status register before returning to the\nsignal handler in userspace.\n\nThe issue can be reproduced with this test program:\n\nroot@parisc:~# cat fpe.c\n\nstatic void fpe_func(int sig, siginfo_t *i, void *v) {\n        sigset_t set;\n        sigemptyset(&set);\n        sigaddset(&set, SIGFPE);\n        sigprocmask(SIG_UNBLOCK, &set, NULL);\n        printf(\"GOT signal %d with si_code %ld\\n\", sig, i->si_code);\n}\n\nint main() {\n        struct sigaction action = {\n                .sa_sigaction = fpe_func,\n                .sa_flags = SA_RESTART|SA_SIGINFO };\n        sigaction(SIGFPE, &action, 0);\n        feenableexcept(FE_OVERFLOW);\n        return printf(\"%lf\\n\",1.7976931348623158E308*1.7976931348623158E308);\n}\n\nroot@parisc:~# gcc fpe.c -lm\nroot@parisc:~# ./a.out\n Floating point exception\n\nroot@parisc:~# strace -f ./a.out\n execve(\"./a.out\", [\"./a.out\"], 0xf9ac7034 /* 20 vars */) = 0\n getrlimit(RLIMIT_STACK, {rlim_cur=8192*1024, rlim_max=RLIM_INFINITY}) = 0\n ...\n rt_sigaction(SIGFPE, {sa_handler=0x1110a, sa_mask=[], sa_flags=SA_RESTART|SA_SIGINFO}, NULL, 8) = 0\n --- SIGFPE {si_signo=SIGFPE, si_code=FPE_FLTOVF, si_addr=0x1078f} ---\n --- SIGFPE {si_signo=SIGFPE, si_code=FPE_FLTOVF, si_addr=0xf8f21237} ---\n +++ killed by SIGFPE +++\n Floating point exception",
-      "severity": "N/A",
+      "id": "CVE-2025-47277",
+      "publishedDate": "2025-05-20T17:32:27.034Z",
+      "lastModifiedDate": "2025-05-20T17:32:27.034Z",
+      "description": "vLLM, an inference and serving engine for large language models (LLMs), has an issue in versions 0.6.5 through 0.8.4 that ONLY impacts environments using the `PyNcclPipe` KV cache transfer integration with the V0 engine. No other configurations are affected. vLLM supports the use of the `PyNcclPipe` class to establish a peer-to-peer communication domain for data transmission between distributed nodes. The GPU-side KV-Cache transmission is implemented through the `PyNcclCommunicator` class, while CPU-side control message passing is handled via the `send_obj` and `recv_obj` methods on the CPU side.​ The intention was that this interface should only be exposed to a private network using the IP address specified by the `--kv-ip` CLI parameter. The vLLM documentation covers how this must be limited to a secured network. The default and intentional behavior from PyTorch is that the `TCPStore` interface listens on ALL interfaces, regardless of what IP address is provided. The IP address given was only used as a client-side address to use. vLLM was fixed to use a workaround to force the `TCPStore` instance to bind its socket to a specified private interface. As of version 0.8.5, vLLM limits the `TCPStore` socket to the private interface as configured.",
+      "severity": 9.8,
       "references": [
         {
-          "url": "https://git.kernel.org/stable/c/ec4584495868bd465fe60a3f771915c0e7ce7951",
+          "url": "https://github.com/vllm-project/vllm/security/advisories/GHSA-hjq4-87xh-g4fv",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/6c639af49e9e5615a8395981eaf5943fb40acd6f",
+          "url": "https://github.com/vllm-project/vllm/pull/15988",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/6a098c51d18ec99485668da44294565c43dbc106",
+          "url": "https://github.com/vllm-project/vllm/commit/0d6e187e88874c39cda7409cf673f9e6546893e7",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/cf21e890f56b7d0038ddaf25224e4f4c69ecd143",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/df3592e493d7f29bae4ffde9a9325de50ddf962e",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/de3629baf5a33af1919dec7136d643b0662e85ef",
+          "url": "https://docs.vllm.ai/en/latest/deployment/security.html",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "arch/parisc/math-emu/driver.c"
-          ],
+          "vendor": "vllm-project",
+          "product": "vllm",
           "versions": [
             {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "ec4584495868bd465fe60a3f771915c0e7ce7951",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "6c639af49e9e5615a8395981eaf5943fb40acd6f",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "6a098c51d18ec99485668da44294565c43dbc106",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "cf21e890f56b7d0038ddaf25224e4f4c69ecd143",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "df3592e493d7f29bae4ffde9a9325de50ddf962e",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "de3629baf5a33af1919dec7136d643b0662e85ef",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "arch/parisc/math-emu/driver.c"
-          ],
-          "versions": [
-            {
-              "version": "5.15.182",
-              "lessThanOrEqual": "5.15.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.1.138",
-              "lessThanOrEqual": "6.1.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.6.90",
-              "lessThanOrEqual": "6.6.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.12.28",
-              "lessThanOrEqual": "6.12.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.14.6",
-              "lessThanOrEqual": "6.14.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.15-rc5",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
+              "version": ">= 0.6.5, < 0.8.5",
+              "status": "affected"
             }
           ]
         }
       ],
-      "problemType": [],
+      "problemType": [
+        "CWE-502: Deserialization of Untrusted Data"
+      ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-37990",
-      "publishedDate": "2025-05-20T17:18:45.366Z",
-      "lastModifiedDate": "2025-05-20T17:18:45.366Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nwifi: brcm80211: fmac: Add error handling for brcmf_usb_dl_writeimage()\n\nThe function brcmf_usb_dl_writeimage() calls the function\nbrcmf_usb_dl_cmd() but dose not check its return value. The\n'state.state' and the 'state.bytes' are uninitialized if the\nfunction brcmf_usb_dl_cmd() fails. It is dangerous to use\nuninitialized variables in the conditions.\n\nAdd error handling for brcmf_usb_dl_cmd() to jump to error\nhandling path if the brcmf_usb_dl_cmd() fails and the\n'state.state' and the 'state.bytes' are uninitialized.\n\nImprove the error message to report more detailed error\ninformation.",
-      "severity": "N/A",
+      "id": "CVE-2025-48391",
+      "publishedDate": "2025-05-20T17:37:42.265Z",
+      "lastModifiedDate": "2025-05-20T17:37:42.265Z",
+      "description": "In JetBrains YouTrack before 2025.1.76253 deletion of issues was possible due to missing permission checks in API",
+      "severity": 7.7,
       "references": [
         {
-          "url": "https://git.kernel.org/stable/c/508be7c001437bacad7b9a43f08a723887bcd1ea",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/524b70441baba453b193c418e3142bd31059cc1f",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/08424a0922fb9e32a19b09d852ee87fb6c497538",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/bdb435ef9815b1ae28eefffa01c6959d0fcf1fa7",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/fa9b9f02212574ee1867fbefb0a675362a71b31d",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/8e089e7b585d95122c8122d732d1d5ef8f879396",
+          "url": "https://www.jetbrains.com/privacy-security/issues-fixed/",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c"
-          ],
+          "vendor": "JetBrains",
+          "product": "YouTrack",
           "versions": [
-            {
-              "version": "71bb244ba2fd5390eefe4ee9054abdb3f8b05922",
-              "lessThan": "508be7c001437bacad7b9a43f08a723887bcd1ea",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "71bb244ba2fd5390eefe4ee9054abdb3f8b05922",
-              "lessThan": "524b70441baba453b193c418e3142bd31059cc1f",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "71bb244ba2fd5390eefe4ee9054abdb3f8b05922",
-              "lessThan": "08424a0922fb9e32a19b09d852ee87fb6c497538",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "71bb244ba2fd5390eefe4ee9054abdb3f8b05922",
-              "lessThan": "bdb435ef9815b1ae28eefffa01c6959d0fcf1fa7",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "71bb244ba2fd5390eefe4ee9054abdb3f8b05922",
-              "lessThan": "fa9b9f02212574ee1867fbefb0a675362a71b31d",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "71bb244ba2fd5390eefe4ee9054abdb3f8b05922",
-              "lessThan": "8e089e7b585d95122c8122d732d1d5ef8f879396",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c"
-          ],
-          "versions": [
-            {
-              "version": "3.4",
-              "status": "affected"
-            },
             {
               "version": "0",
-              "lessThan": "3.4",
-              "status": "unaffected",
+              "status": "affected",
+              "lessThan": "2025.1.76253",
               "versionType": "semver"
-            },
-            {
-              "version": "5.15.182",
-              "lessThanOrEqual": "5.15.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.1.138",
-              "lessThanOrEqual": "6.1.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.6.90",
-              "lessThanOrEqual": "6.6.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.12.28",
-              "lessThanOrEqual": "6.12.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.14.6",
-              "lessThanOrEqual": "6.14.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.15-rc5",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
             }
-          ]
+          ],
+          "defaultStatus": "unaffected"
         }
       ],
-      "problemType": [],
+      "problemType": [
+        "CWE-306"
+      ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-37989",
-      "publishedDate": "2025-05-20T17:09:21.419Z",
-      "lastModifiedDate": "2025-05-20T17:09:21.419Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: phy: leds: fix memory leak\n\nA network restart test on a router led to an out-of-memory condition,\nwhich was traced to a memory leak in the PHY LED trigger code.\n\nThe root cause is misuse of the devm API. The registration function\n(phy_led_triggers_register) is called from phy_attach_direct, not\nphy_probe, and the unregister function (phy_led_triggers_unregister)\nis called from phy_detach, not phy_remove. This means the register and\nunregister functions can be called multiple times for the same PHY\ndevice, but devm-allocated memory is not freed until the driver is\nunbound.\n\nThis also prevents kmemleak from detecting the leak, as the devm API\ninternally stores the allocated pointer.\n\nFix this by replacing devm_kzalloc/devm_kcalloc with standard\nkzalloc/kcalloc, and add the corresponding kfree calls in the unregister\npath.",
-      "severity": "N/A",
+      "id": "CVE-2025-47853",
+      "publishedDate": "2025-05-20T17:37:45.475Z",
+      "lastModifiedDate": "2025-05-20T17:37:45.475Z",
+      "description": "In JetBrains TeamCity before 2025.03.2 stored XSS via Jira integration was possible",
+      "severity": 4.8,
       "references": [
         {
-          "url": "https://git.kernel.org/stable/c/966d6494e2ed9be9052fcd9815afba830896aaf8",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/95bed65cc0eb2a610550abf849a8b94374da80a7",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/663c3da86e807c6c07ed48f911c7526fad6fe1ff",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/f41f097f68a33d392579885426d0734a81219501",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/618541a6cc1511064dfa58c89b3445e21844092f",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/41143e71052a00d654c15dc924fda50c1e7357d0",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/7f3d5880800f962c347777c4f8358f29f5fc403c",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/b7f0ee992adf601aa00c252418266177eb7ac2bc",
+          "url": "https://www.jetbrains.com/privacy-security/issues-fixed/",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/net/phy/phy_led_triggers.c"
-          ],
+          "vendor": "JetBrains",
+          "product": "TeamCity",
           "versions": [
-            {
-              "version": "2e0bc452f4721520502575362a9cd3c1248d2337",
-              "lessThan": "966d6494e2ed9be9052fcd9815afba830896aaf8",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "2e0bc452f4721520502575362a9cd3c1248d2337",
-              "lessThan": "95bed65cc0eb2a610550abf849a8b94374da80a7",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "2e0bc452f4721520502575362a9cd3c1248d2337",
-              "lessThan": "663c3da86e807c6c07ed48f911c7526fad6fe1ff",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "2e0bc452f4721520502575362a9cd3c1248d2337",
-              "lessThan": "f41f097f68a33d392579885426d0734a81219501",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "2e0bc452f4721520502575362a9cd3c1248d2337",
-              "lessThan": "618541a6cc1511064dfa58c89b3445e21844092f",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "2e0bc452f4721520502575362a9cd3c1248d2337",
-              "lessThan": "41143e71052a00d654c15dc924fda50c1e7357d0",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "2e0bc452f4721520502575362a9cd3c1248d2337",
-              "lessThan": "7f3d5880800f962c347777c4f8358f29f5fc403c",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "2e0bc452f4721520502575362a9cd3c1248d2337",
-              "lessThan": "b7f0ee992adf601aa00c252418266177eb7ac2bc",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/net/phy/phy_led_triggers.c"
-          ],
-          "versions": [
-            {
-              "version": "4.10",
-              "status": "affected"
-            },
             {
               "version": "0",
-              "lessThan": "4.10",
-              "status": "unaffected",
+              "status": "affected",
+              "lessThan": "2025.03.2",
               "versionType": "semver"
-            },
-            {
-              "version": "5.4.293",
-              "lessThanOrEqual": "5.4.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "5.10.237",
-              "lessThanOrEqual": "5.10.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "5.15.181",
-              "lessThanOrEqual": "5.15.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.1.136",
-              "lessThanOrEqual": "6.1.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.6.89",
-              "lessThanOrEqual": "6.6.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.12.26",
-              "lessThanOrEqual": "6.12.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.14.5",
-              "lessThanOrEqual": "6.14.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.15-rc4",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
             }
-          ]
+          ],
+          "defaultStatus": "unaffected"
         }
       ],
-      "problemType": [],
+      "problemType": [
+        "CWE-79"
+      ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-37988",
-      "publishedDate": "2025-05-20T17:09:20.765Z",
-      "lastModifiedDate": "2025-05-20T17:09:20.765Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nfix a couple of races in MNT_TREE_BENEATH handling by do_move_mount()\n\nNormally do_lock_mount(path, _) is locking a mountpoint pinned by\n*path and at the time when matching unlock_mount() unlocks that\nlocation it is still pinned by the same thing.\n\nUnfortunately, for 'beneath' case it's no longer that simple -\nthe object being locked is not the one *path points to.  It's the\nmountpoint of path->mnt.  The thing is, without sufficient locking\n->mnt_parent may change under us and none of the locks are held\nat that point.  The rules are\n\t* mount_lock stabilizes m->mnt_parent for any mount m.\n\t* namespace_sem stabilizes m->mnt_parent, provided that\nm is mounted.\n\t* if either of the above holds and refcount of m is positive,\nwe are guaranteed the same for refcount of m->mnt_parent.\n\nnamespace_sem nests inside inode_lock(), so do_lock_mount() has\nto take inode_lock() before grabbing namespace_sem.  It does\nrecheck that path->mnt is still mounted in the same place after\ngetting namespace_sem, and it does take care to pin the dentry.\nIt is needed, since otherwise we might end up with racing mount --move\n(or umount) happening while we were getting locks; in that case\ndentry would no longer be a mountpoint and could've been evicted\non memory pressure along with its inode - not something you want\nwhen grabbing lock on that inode.\n\nHowever, pinning a dentry is not enough - the matching mount is\nalso pinned only by the fact that path->mnt is mounted on top it\nand at that point we are not holding any locks whatsoever, so\nthe same kind of races could end up with all references to\nthat mount gone just as we are about to enter inode_lock().\nIf that happens, we are left with filesystem being shut down while\nwe are holding a dentry reference on it; results are not pretty.\n\nWhat we need to do is grab both dentry and mount at the same time;\nthat makes inode_lock() safe *and* avoids the problem with fs getting\nshut down under us.  After taking namespace_sem we verify that\npath->mnt is still mounted (which stabilizes its ->mnt_parent) and\ncheck that it's still mounted at the same place.  From that point\non to the matching namespace_unlock() we are guaranteed that\nmount/dentry pair we'd grabbed are also pinned by being the mountpoint\nof path->mnt, so we can quietly drop both the dentry reference (as\nthe current code does) and mnt one - it's OK to do under namespace_sem,\nsince we are not dropping the final refs.\n\nThat solves the problem on do_lock_mount() side; unlock_mount()\nalso has one, since dentry is guaranteed to stay pinned only until\nthe namespace_unlock().  That's easy to fix - just have inode_unlock()\ndone earlier, while it's still pinned by mp->m_dentry.",
-      "severity": "N/A",
+      "id": "CVE-2025-47852",
+      "publishedDate": "2025-05-20T17:37:44.700Z",
+      "lastModifiedDate": "2025-05-20T17:37:44.700Z",
+      "description": "In JetBrains TeamCity before 2025.03.2 stored XSS via YouTrack integration was possible",
+      "severity": 4.8,
       "references": [
         {
-          "url": "https://git.kernel.org/stable/c/4f435c1f4c48ff84968e2d9159f6fa41f46cf998",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/a61afd54826ac24c2c93845c4f441dbc344875b1",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/d4b21e8cd3d7efa2deb9cff534f0133e84f35086",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/0d039eac6e5950f9d1ecc9e410c2fd1feaeab3b6",
+          "url": "https://www.jetbrains.com/privacy-security/issues-fixed/",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "fs/namespace.c"
-          ],
+          "vendor": "JetBrains",
+          "product": "TeamCity",
           "versions": [
-            {
-              "version": "6ac392815628f317fcfdca1a39df00b9cc4ebc8b",
-              "lessThan": "4f435c1f4c48ff84968e2d9159f6fa41f46cf998",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "6ac392815628f317fcfdca1a39df00b9cc4ebc8b",
-              "lessThan": "a61afd54826ac24c2c93845c4f441dbc344875b1",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "6ac392815628f317fcfdca1a39df00b9cc4ebc8b",
-              "lessThan": "d4b21e8cd3d7efa2deb9cff534f0133e84f35086",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "6ac392815628f317fcfdca1a39df00b9cc4ebc8b",
-              "lessThan": "0d039eac6e5950f9d1ecc9e410c2fd1feaeab3b6",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "fs/namespace.c"
-          ],
-          "versions": [
-            {
-              "version": "6.5",
-              "status": "affected"
-            },
             {
               "version": "0",
-              "lessThan": "6.5",
-              "status": "unaffected",
+              "status": "affected",
+              "lessThan": "2025.03.2",
               "versionType": "semver"
-            },
-            {
-              "version": "6.6.89",
-              "lessThanOrEqual": "6.6.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.12.26",
-              "lessThanOrEqual": "6.12.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.14.5",
-              "lessThanOrEqual": "6.14.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.15-rc4",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
             }
-          ]
+          ],
+          "defaultStatus": "unaffected"
         }
       ],
-      "problemType": [],
+      "problemType": [
+        "CWE-79"
+      ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-37987",
-      "publishedDate": "2025-05-20T17:09:20.166Z",
-      "lastModifiedDate": "2025-05-20T17:09:20.166Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\npds_core: Prevent possible adminq overflow/stuck condition\n\nThe pds_core's adminq is protected by the adminq_lock, which prevents\nmore than 1 command to be posted onto it at any one time. This makes it\nso the client drivers cannot simultaneously post adminq commands.\nHowever, the completions happen in a different context, which means\nmultiple adminq commands can be posted sequentially and all waiting\non completion.\n\nOn the FW side, the backing adminq request queue is only 16 entries\nlong and the retry mechanism and/or overflow/stuck prevention is\nlacking. This can cause the adminq to get stuck, so commands are no\nlonger processed and completions are no longer sent by the FW.\n\nAs an initial fix, prevent more than 16 outstanding adminq commands so\nthere's no way to cause the adminq from getting stuck. This works\nbecause the backing adminq request queue will never have more than 16\npending adminq commands, so it will never overflow. This is done by\nreducing the adminq depth to 16.",
-      "severity": "N/A",
+      "id": "CVE-2025-47851",
+      "publishedDate": "2025-05-20T17:37:44.096Z",
+      "lastModifiedDate": "2025-05-20T17:37:44.096Z",
+      "description": "In JetBrains TeamCity before 2025.03.2 stored XSS via GitHub Checks Webhook was possible",
+      "severity": 4.8,
       "references": [
         {
-          "url": "https://git.kernel.org/stable/c/2982e07ad72b48eb12c29a87a3f2126ea552688c",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/5e3dc65675faad846420d24762e4faadc12d9392",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/d9e2f070d8af60f2c8c02b2ddf0a9e90b4e9220c",
+          "url": "https://www.jetbrains.com/privacy-security/issues-fixed/",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/net/ethernet/amd/pds_core/core.c",
-            "drivers/net/ethernet/amd/pds_core/core.h"
-          ],
+          "vendor": "JetBrains",
+          "product": "TeamCity",
           "versions": [
-            {
-              "version": "45d76f492938cdc27ddadc16e1e75103f4cfbf56",
-              "lessThan": "2982e07ad72b48eb12c29a87a3f2126ea552688c",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "45d76f492938cdc27ddadc16e1e75103f4cfbf56",
-              "lessThan": "5e3dc65675faad846420d24762e4faadc12d9392",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "45d76f492938cdc27ddadc16e1e75103f4cfbf56",
-              "lessThan": "d9e2f070d8af60f2c8c02b2ddf0a9e90b4e9220c",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/net/ethernet/amd/pds_core/core.c",
-            "drivers/net/ethernet/amd/pds_core/core.h"
-          ],
-          "versions": [
-            {
-              "version": "6.4",
-              "status": "affected"
-            },
             {
               "version": "0",
-              "lessThan": "6.4",
-              "status": "unaffected",
+              "status": "affected",
+              "lessThan": "2025.03.2",
               "versionType": "semver"
-            },
-            {
-              "version": "6.12.26",
-              "lessThanOrEqual": "6.12.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.14.5",
-              "lessThanOrEqual": "6.14.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.15-rc4",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
             }
-          ]
+          ],
+          "defaultStatus": "unaffected"
         }
       ],
-      "problemType": [],
+      "problemType": [
+        "CWE-79"
+      ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-37986",
-      "publishedDate": "2025-05-20T17:09:19.584Z",
-      "lastModifiedDate": "2025-05-20T17:09:19.584Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nusb: typec: class: Invalidate USB device pointers on partner unregistration\n\nTo avoid using invalid USB device pointers after a Type-C partner\ndisconnects, this patch clears the pointers upon partner unregistration.\nThis ensures a clean state for future connections.",
-      "severity": "N/A",
+      "id": "CVE-2025-47854",
+      "publishedDate": "2025-05-20T17:37:46.240Z",
+      "lastModifiedDate": "2025-05-20T17:37:46.240Z",
+      "description": "In JetBrains TeamCity before 2025.03.2 open redirect was possible on editing VCS Root page",
+      "severity": 4.3,
       "references": [
         {
-          "url": "https://git.kernel.org/stable/c/40966fc9939e85677fdb489dfddfa205baaad03b",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/74911338f47c13d1b9470fc50718182bffad42e2",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/66e1a887273c6b89f09bc11a40d0a71d5a081a8e",
+          "url": "https://www.jetbrains.com/privacy-security/issues-fixed/",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/usb/typec/class.c"
-          ],
+          "vendor": "JetBrains",
+          "product": "TeamCity",
           "versions": [
-            {
-              "version": "59de2a56d127890cc610f3896d5fc31887c54ac2",
-              "lessThan": "40966fc9939e85677fdb489dfddfa205baaad03b",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "59de2a56d127890cc610f3896d5fc31887c54ac2",
-              "lessThan": "74911338f47c13d1b9470fc50718182bffad42e2",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "59de2a56d127890cc610f3896d5fc31887c54ac2",
-              "lessThan": "66e1a887273c6b89f09bc11a40d0a71d5a081a8e",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/usb/typec/class.c"
-          ],
-          "versions": [
-            {
-              "version": "6.7",
-              "status": "affected"
-            },
             {
               "version": "0",
-              "lessThan": "6.7",
-              "status": "unaffected",
+              "status": "affected",
+              "lessThan": "2025.03.2",
               "versionType": "semver"
-            },
-            {
-              "version": "6.12.26",
-              "lessThanOrEqual": "6.12.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.14.5",
-              "lessThanOrEqual": "6.14.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.15-rc4",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
             }
-          ]
+          ],
+          "defaultStatus": "unaffected"
         }
       ],
-      "problemType": [],
+      "problemType": [
+        "CWE-601"
+      ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-37985",
-      "publishedDate": "2025-05-20T17:09:18.963Z",
-      "lastModifiedDate": "2025-05-20T17:09:18.963Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nUSB: wdm: close race between wdm_open and wdm_wwan_port_stop\n\nClearing WDM_WWAN_IN_USE must be the last action or\nwe can open a chardev whose URBs are still poisoned",
-      "severity": "N/A",
+      "id": "CVE-2025-47850",
+      "publishedDate": "2025-05-20T17:37:43.234Z",
+      "lastModifiedDate": "2025-05-20T17:37:43.234Z",
+      "description": "In JetBrains YouTrack before 2025.1.74704 restricted attachments could become visible after issue cloning",
+      "severity": 4.3,
       "references": [
         {
-          "url": "https://git.kernel.org/stable/c/b02a3fef3e8c8fe5a0a266f7a14f38cc608fb167",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/217fe1fc7d112595a793e02b306710e702eac492",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/54f7f8978af19f899dec80bcc71c8d4855dfbd72",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/52ae15c665b5fe5876655aaccc3ef70560b0e314",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/e3c9adc69357fcbe6253a2bc2588ee4bbaaedbe9",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/c1846ed4eb527bdfe6b3b7dd2c78e2af4bf98f4f",
+          "url": "https://www.jetbrains.com/privacy-security/issues-fixed/",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/usb/class/cdc-wdm.c"
-          ],
+          "vendor": "JetBrains",
+          "product": "YouTrack",
           "versions": [
-            {
-              "version": "cac6fb015f719104e60b1c68c15ca5b734f57b9c",
-              "lessThan": "b02a3fef3e8c8fe5a0a266f7a14f38cc608fb167",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "cac6fb015f719104e60b1c68c15ca5b734f57b9c",
-              "lessThan": "217fe1fc7d112595a793e02b306710e702eac492",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "cac6fb015f719104e60b1c68c15ca5b734f57b9c",
-              "lessThan": "54f7f8978af19f899dec80bcc71c8d4855dfbd72",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "cac6fb015f719104e60b1c68c15ca5b734f57b9c",
-              "lessThan": "52ae15c665b5fe5876655aaccc3ef70560b0e314",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "cac6fb015f719104e60b1c68c15ca5b734f57b9c",
-              "lessThan": "e3c9adc69357fcbe6253a2bc2588ee4bbaaedbe9",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "cac6fb015f719104e60b1c68c15ca5b734f57b9c",
-              "lessThan": "c1846ed4eb527bdfe6b3b7dd2c78e2af4bf98f4f",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/usb/class/cdc-wdm.c"
-          ],
-          "versions": [
-            {
-              "version": "5.14",
-              "status": "affected"
-            },
             {
               "version": "0",
-              "lessThan": "5.14",
-              "status": "unaffected",
+              "status": "affected",
+              "lessThan": "2025.1.74704",
               "versionType": "semver"
-            },
-            {
-              "version": "5.15.181",
-              "lessThanOrEqual": "5.15.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.1.136",
-              "lessThanOrEqual": "6.1.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.6.89",
-              "lessThanOrEqual": "6.6.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.12.26",
-              "lessThanOrEqual": "6.12.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.14.5",
-              "lessThanOrEqual": "6.14.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.15-rc4",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
             }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-37984",
-      "publishedDate": "2025-05-20T17:09:18.321Z",
-      "lastModifiedDate": "2025-05-20T17:09:18.321Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\ncrypto: ecdsa - Harden against integer overflows in DIV_ROUND_UP()\n\nHerbert notes that DIV_ROUND_UP() may overflow unnecessarily if an ecdsa\nimplementation's ->key_size() callback returns an unusually large value.\nHerbert instead suggests (for a division by 8):\n\n  X / 8 + !!(X & 7)\n\nBased on this formula, introduce a generic DIV_ROUND_UP_POW2() macro and\nuse it in lieu of DIV_ROUND_UP() for ->key_size() return values.\n\nAdditionally, use the macro in ecc_digits_from_bytes(), whose \"nbytes\"\nparameter is a ->key_size() return value in some instances, or a\nuser-specified ASN.1 length in the case of ecdsa_get_signature_rs().",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://git.kernel.org/stable/c/921b8167f10708e38080f84e195cdc68a7a561f1",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/b16510a530d1e6ab9683f04f8fb34f2e0f538275",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "crypto/ecc.c",
-            "crypto/ecdsa-p1363.c",
-            "crypto/ecdsa-x962.c",
-            "include/linux/math.h"
           ],
-          "versions": [
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "921b8167f10708e38080f84e195cdc68a7a561f1",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "b16510a530d1e6ab9683f04f8fb34f2e0f538275",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "crypto/ecc.c",
-            "crypto/ecdsa-p1363.c",
-            "crypto/ecdsa-x962.c",
-            "include/linux/math.h"
-          ],
-          "versions": [
-            {
-              "version": "6.14.5",
-              "lessThanOrEqual": "6.14.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.15-rc1",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
-            }
-          ]
+          "defaultStatus": "unaffected"
         }
       ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-37983",
-      "publishedDate": "2025-05-20T17:09:17.666Z",
-      "lastModifiedDate": "2025-05-20T17:09:17.666Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nqibfs: fix _another_ leak\n\nfailure to allocate inode => leaked dentry...\n\nthis one had been there since the initial merge; to be fair,\nif we are that far OOM, the odds of failing at that particular\nallocation are low...",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://git.kernel.org/stable/c/5e280cce3a29b7fe7b828c6ccd5aa5ba87ceb6b6",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/3c2fde33e3e505dfd1a895d1f24bad650c655e14",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/5fe708c5e3c8b2152c6caaa67243e431a5d6cca3",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/545defa656568c74590317cd30068f85134a8216",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/5d53e88d8370b9ab14dd830abb410d9a2671edb6",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/47ab2caba495c1d6a899d284e541a8df656dcfe9",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/24faa6ea274a2b96d0a78a0996c3137c2b2a65f0",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/bdb43af4fdb39f844ede401bdb1258f67a580a27",
-          "type": "reference"
-        }
+      "problemType": [
+        "CWE-306"
       ],
-      "affected": [
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/infiniband/hw/qib/qib_fs.c"
-          ],
-          "versions": [
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "5e280cce3a29b7fe7b828c6ccd5aa5ba87ceb6b6",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "3c2fde33e3e505dfd1a895d1f24bad650c655e14",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "5fe708c5e3c8b2152c6caaa67243e431a5d6cca3",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "545defa656568c74590317cd30068f85134a8216",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "5d53e88d8370b9ab14dd830abb410d9a2671edb6",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "47ab2caba495c1d6a899d284e541a8df656dcfe9",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "24faa6ea274a2b96d0a78a0996c3137c2b2a65f0",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "bdb43af4fdb39f844ede401bdb1258f67a580a27",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/infiniband/hw/qib/qib_fs.c"
-          ],
-          "versions": [
-            {
-              "version": "5.4.293",
-              "lessThanOrEqual": "5.4.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "5.10.237",
-              "lessThanOrEqual": "5.10.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "5.15.181",
-              "lessThanOrEqual": "5.15.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.1.136",
-              "lessThanOrEqual": "6.1.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.6.89",
-              "lessThanOrEqual": "6.6.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.12.26",
-              "lessThanOrEqual": "6.12.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.14.5",
-              "lessThanOrEqual": "6.14.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.15-rc1",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
       "fix_suggestion": "无法生成修复建议"
     }
   ]
