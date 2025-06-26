@@ -3,7 +3,7 @@
   "dataVersion": "5.1",
   "cveMetadata": {
     "total_count": 2,
-    "last_updated": "2025-06-26T18:56:47.370565",
+    "last_updated": "2025-06-26T19:22:41.505616",
     "severity_distribution": {
       "critical": 0,
       "high": 0,
@@ -14,55 +14,57 @@
   },
   "cves": [
     {
-      "id": "CVE-2025-53013",
-      "publishedDate": "2025-06-26T18:02:31.828Z",
-      "lastModifiedDate": "2025-06-26T18:47:31.356Z",
-      "description": "Himmelblau is an interoperability suite for Microsoft Azure Entra ID and Intune. A vulnerability present in versions 0.9.10 through 0.9.16 allows a user to authenticate to a Linux host via Himmelblau using an *invalid* Linux Hello PIN, provided the host is offline. While the user gains access to the local system, Single Sign-On (SSO) fails due to the network being down and the inability to issue tokens (due to a failure to unlock the Hello key). The core issue lies in an incorrect assumption within the `acquire_token_by_hello_for_business_key` function: it was expected to return a `TPMFail` error for an invalid Hello key when offline, but instead, a preceding nonce request resulted in a `RequestFailed` error, leading the system to erroneously transition to an offline success state without validating the Hello key unlock. This impacts systems using Himmelblau for authentication when operating in an offline state with Hello PIN authentication enabled. Rocky Linux 8 (and variants) are not affected by this vulnerability. The problem is resolved in Himmelblau version 0.9.17. A workaround is available for users who cannot immediately upgrade. Disabling Hello PIN authentication by setting `enable_hello = false` in `/etc/himmelblau/himmelblau.conf` will mitigate the vulnerability.",
-      "severity": 5.2,
+      "id": "CVE-2024-11584",
+      "publishedDate": "2025-06-26T09:25:20.199Z",
+      "lastModifiedDate": "2025-06-26T19:14:46.084Z",
+      "description": "cloud-init through 25.1.2 includes the systemd socket unit cloud-init-hotplugd.socket with default SocketMode that grants 0666 permissions, making it world-writable. This is used for the \"/run/cloud-init/hook-hotplug-cmd\" FIFO. An unprivileged user could trigger hotplug-hook commands.",
+      "severity": 5.9,
       "references": [
         {
-          "url": "https://github.com/himmelblau-idm/himmelblau/security/advisories/GHSA-j93j-pwm6-p97j",
+          "url": "https://github.com/canonical/cloud-init/pull/6265/commits/6e10240a7f0a2d6110b398640b3fd46cfa9a7cf3",
           "type": "reference"
         },
         {
-          "url": "https://github.com/himmelblau-idm/himmelblau/commit/64b03739f1d5ee472b1cff3ed20ed9af1c65a6f8",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/himmelblau-idm/himmelblau/commit/78477d684df710d57c10091c87b92665cfac98ae",
+          "url": "https://github.com/canonical/cloud-init/releases/tag/25.1.3",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "himmelblau-idm",
-          "product": "himmelblau",
+          "defaultStatus": "unaffected",
+          "packageName": "cloud-init",
+          "platforms": [
+            "Linux"
+          ],
+          "product": "cloud-init",
+          "repo": "https://github.com/canonical/cloud-init",
+          "vendor": "Canonical",
           "versions": [
             {
-              "version": ">= 0.9.10, < 0.9.17",
-              "status": "affected"
+              "lessThan": "25.1.3",
+              "status": "affected",
+              "version": "21.3",
+              "versionType": "semver"
             }
           ]
         }
       ],
-      "problemType": [
-        "CWE-287: Improper Authentication"
-      ],
+      "problemType": [],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-53121",
-      "publishedDate": "2025-06-26T18:51:35.158Z",
-      "lastModifiedDate": "2025-06-26T18:51:35.158Z",
-      "description": "Multiple stored XSS were found on different nodes with unsanitized parameters in OpenMNS Horizon 33.0.8 and versions earlier than 33.1.6 on multiple platforms that allow an attacker to store on database and then inject HTML and/or Javascript on the page. The solution is to upgrade to Horizon 33.1.6, 33.1.7 or Meridian 2024.2.6, 2024.2.7 or newer. Meridian and Horizon installation instructions state that they are intended for installation within an organization's private networks and should not be directly accessible from the Internet. OpenNMS thanks Fábio Tomé for reporting this issue.",
+      "id": "CVE-2025-5995",
+      "publishedDate": "2025-06-26T19:13:48.305Z",
+      "lastModifiedDate": "2025-06-26T19:13:48.305Z",
+      "description": "Canon EOS Webcam Utility Pro for MAC OS version 2.3d\n(2.3.29) and earlier contains an improper directory permissions vulnerability.\nExploitation of this vulnerability requires administrator access by a malicious\nuser. An attacker could modify the directory, potentially resulting in code\nexecution and ultimately leading to privilege escalation.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/OpenNMS/opennms",
+          "url": "https://www.usa.canon.com/about-us/to-our-customers/vulnerability-mitigation-remediation-for-canon-eos-webcam-utility-pro-for-mac-os",
           "type": "reference"
         },
         {
-          "url": "https://github.com/OpenNMS/opennms/pull/7708",
+          "url": "https://www.canon-europe.com/psirt/advisory-information",
           "type": "reference"
         }
       ],
@@ -70,68 +72,22 @@
         {
           "defaultStatus": "unaffected",
           "platforms": [
-            "Windows",
-            "MacOS",
-            "Linux"
+            "MacOS"
           ],
-          "product": "Horizon",
-          "repo": "https://github.com/OpenNMS/opennms",
-          "vendor": "The OpenNMS Group",
+          "product": "Canon EOS Webcam Utility Pro",
+          "vendor": "Canon USA Inc.",
           "versions": [
             {
-              "lessThan": "33.1.6, 33.1.7",
+              "lessThanOrEqual": "2.3d (2.3.29) (including)",
               "status": "affected",
-              "version": "33.0.8",
-              "versionType": "maven"
-            },
-            {
-              "lessThan": "33.0.8",
-              "status": "unknown",
               "version": "0",
-              "versionType": "maven"
-            }
-          ]
-        },
-        {
-          "defaultStatus": "unaffected",
-          "platforms": [
-            "Windows",
-            "MacOS",
-            "Linux"
-          ],
-          "product": "Meridian",
-          "repo": "https://github.com/OpenNMS/opennms",
-          "vendor": "The OpenNMS Group",
-          "versions": [
-            {
-              "lessThan": "2024.2.6, 2024.2.7",
-              "status": "affected",
-              "version": "2024.1.4",
-              "versionType": "maven"
-            },
-            {
-              "lessThan": "2024.2.6, 2024.2.7",
-              "status": "affected",
-              "version": "2023.1.20",
-              "versionType": "maven"
-            },
-            {
-              "lessThanOrEqual": "2023.1.20",
-              "status": "unknown",
-              "version": "2023.0.0",
-              "versionType": "maven"
-            },
-            {
-              "lessThanOrEqual": "2024.1.4",
-              "status": "unknown",
-              "version": "2024.0.0",
-              "versionType": "maven"
+              "versionType": "custom"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting')"
+        "CWE-732: Incorrect Permission Assignment for Critical Resource"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
