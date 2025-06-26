@@ -3,91 +3,95 @@
   "dataVersion": "5.1",
   "cveMetadata": {
     "total_count": 2,
-    "last_updated": "2025-06-26T19:22:41.505616",
+    "last_updated": "2025-06-26T19:38:00.310428",
     "severity_distribution": {
       "critical": 0,
-      "high": 0,
-      "medium": 1,
+      "high": 2,
+      "medium": 0,
       "low": 0,
-      "none": 1
+      "none": 0
     }
   },
   "cves": [
     {
-      "id": "CVE-2024-11584",
-      "publishedDate": "2025-06-26T09:25:20.199Z",
-      "lastModifiedDate": "2025-06-26T19:14:46.084Z",
-      "description": "cloud-init through 25.1.2 includes the systemd socket unit cloud-init-hotplugd.socket with default SocketMode that grants 0666 permissions, making it world-writable. This is used for the \"/run/cloud-init/hook-hotplug-cmd\" FIFO. An unprivileged user could trigger hotplug-hook commands.",
-      "severity": 5.9,
+      "id": "CVE-2025-52904",
+      "publishedDate": "2025-06-26T18:21:03.284Z",
+      "lastModifiedDate": "2025-06-26T19:27:42.375Z",
+      "description": "File Browser provides a file managing interface within a specified directory and it can be used to upload, delete, preview, rename and edit files. In version 2.32.0 of the web application, all users have a scope assigned, and they only have access to the files within that scope. The Command Execution feature of Filebrowser allows the execution of shell commands which are not restricted to the scope, potentially giving an attacker read and write access to all files managed by the server. Until this issue is fixed, the maintainers recommend to completely disable `Execute commands` for all accounts. Since the command execution is an inherently dangerous feature that is not used by all deployments, it should be possible to completely disable it in the application's configuration. As a defense-in-depth measure, organizations not requiring command execution should operate the Filebrowser from a distroless container image. A patch version has been pushed to disable the feature for all existent installations, and making it opt-in. A warning has been added to the documentation and is printed on the console if the feature is enabled. Due to the project being in maintenance-only mode, the bug has not been fixed. Fix is tracked on pull request 5199.",
+      "severity": 8.1,
       "references": [
         {
-          "url": "https://github.com/canonical/cloud-init/pull/6265/commits/6e10240a7f0a2d6110b398640b3fd46cfa9a7cf3",
+          "url": "https://github.com/filebrowser/filebrowser/security/advisories/GHSA-hc8f-m8g5-8362",
           "type": "reference"
         },
         {
-          "url": "https://github.com/canonical/cloud-init/releases/tag/25.1.3",
+          "url": "https://github.com/filebrowser/filebrowser/issues/5199",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/GoogleContainerTools/distroless",
+          "type": "reference"
+        },
+        {
+          "url": "https://sloonz.github.io/posts/sandboxing-1",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "unaffected",
-          "packageName": "cloud-init",
-          "platforms": [
-            "Linux"
-          ],
-          "product": "cloud-init",
-          "repo": "https://github.com/canonical/cloud-init",
-          "vendor": "Canonical",
+          "vendor": "filebrowser",
+          "product": "filebrowser",
           "versions": [
             {
-              "lessThan": "25.1.3",
-              "status": "affected",
-              "version": "21.3",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-5995",
-      "publishedDate": "2025-06-26T19:13:48.305Z",
-      "lastModifiedDate": "2025-06-26T19:13:48.305Z",
-      "description": "Canon EOS Webcam Utility Pro for MAC OS version 2.3d\n(2.3.29) and earlier contains an improper directory permissions vulnerability.\nExploitation of this vulnerability requires administrator access by a malicious\nuser. An attacker could modify the directory, potentially resulting in code\nexecution and ultimately leading to privilege escalation.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://www.usa.canon.com/about-us/to-our-customers/vulnerability-mitigation-remediation-for-canon-eos-webcam-utility-pro-for-mac-os",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.canon-europe.com/psirt/advisory-information",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "platforms": [
-            "MacOS"
-          ],
-          "product": "Canon EOS Webcam Utility Pro",
-          "vendor": "Canon USA Inc.",
-          "versions": [
-            {
-              "lessThanOrEqual": "2.3d (2.3.29) (including)",
-              "status": "affected",
-              "version": "0",
-              "versionType": "custom"
+              "version": "= 2.32.0",
+              "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-732: Incorrect Permission Assignment for Critical Resource"
+        "CWE-77: Improper Neutralization of Special Elements used in a Command ('Command Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-52903",
+      "publishedDate": "2025-06-26T18:16:32.203Z",
+      "lastModifiedDate": "2025-06-26T19:32:27.851Z",
+      "description": "File Browser provides a file managing interface within a specified directory and it can be used to upload, delete, preview, rename and edit files. In version 2.32.0, the Command Execution feature of File Browser only allows the execution of shell command which have been predefined on a user-specific allowlist. Many tools allow the execution of arbitrary different commands, rendering this limitation void. The concrete impact depends on the commands being granted to the attacker, but the large number of standard commands allowing the execution of subcommands makes it likely that every user having the `Execute commands` permissions can exploit this vulnerability. Everyone who can exploit it will have full code execution rights with the uid of the server process. Until this issue is fixed, the maintainers recommend to completely disable `Execute commands` for all accounts. Since the command execution is an inherently dangerous feature that is not used by all deployments, it should be possible to completely disable it in the application's configuration. As a defense-in-depth measure, organizations not requiring command execution should operate the Filebrowser from a distroless container image. A patch version has been pushed to disable the feature for all existent installations, and making it opt-in. A warning has been added to the documentation and is printed on the console if the feature is enabled. Due to the project being in maintenance-only mode, the bug has not been fixed. The fix is tracked on pull request 5199.",
+      "severity": 8.1,
+      "references": [
+        {
+          "url": "https://github.com/filebrowser/filebrowser/security/advisories/GHSA-3q2w-42mv-cph4",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/filebrowser/filebrowser/issues/5199",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/GoogleContainerTools/distroless",
+          "type": "reference"
+        },
+        {
+          "url": "https://manpages.debian.org/bookworm/util-linux/prlimit.1.en.html",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "filebrowser",
+          "product": "filebrowser",
+          "versions": [
+            {
+              "version": "= 2.32.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-77: Improper Neutralization of Special Elements used in a Command ('Command Injection')"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
