@@ -2,91 +2,74 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 3,
-    "last_updated": "2025-07-02T20:15:03.544689",
+    "total_count": 7,
+    "last_updated": "2025-07-02T20:36:30.800810",
     "severity_distribution": {
       "critical": 0,
       "high": 0,
       "medium": 0,
       "low": 0,
-      "none": 3
+      "none": 7
     }
   },
   "cves": [
     {
-      "id": "CVE-2025-52842",
-      "publishedDate": "2025-07-02T19:49:29.962Z",
-      "lastModifiedDate": "2025-07-02T20:10:11.456Z",
-      "description": "Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting') vulnerability in Laundry on Linux, MacOS allows Account Takeover. This issue affects Laundry: 2.3.0.",
+      "id": "CVE-2025-34078",
+      "publishedDate": "2025-07-02T19:27:26.073Z",
+      "lastModifiedDate": "2025-07-02T20:32:01.677Z",
+      "description": "A local privilege escalation vulnerability exists in NSClient++ 0.5.2.35 when both the web interface and ExternalScripts features are enabled. The configuration file (nsclient.ini) stores the administrative password in plaintext and is readable by local users. By extracting this password, an attacker can authenticate to the NSClient++ web interface (typically accessible on port 8443) and abuse the ExternalScripts plugin to inject and execute arbitrary commands as SYSTEM by registering a custom script, saving the configuration, and triggering it via the API.\n\nThis behavior is documented but insecure, as the plaintext credential exposure undermines access isolation between local users and administrative functions.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://fluidattacks.com/advisories/winehouse",
-          "type": "reference"
+          "url": "https://raw.githubusercontent.com/rapid7/metasploit-framework/master/modules/exploits/windows/local/nscp_pe.rb",
+          "type": "poc"
         },
         {
-          "url": "https://github.com/mohaiminur/laundry",
+          "url": "https://www.exploit-db.com/exploits/48360",
+          "type": "poc"
+        },
+        {
+          "url": "https://www.exploit-db.com/exploits/46802",
+          "type": "poc"
+        },
+        {
+          "url": "https://vulncheck.com/advisories/nsclient-localtoremote-system-compromise",
           "type": "reference"
         }
       ],
       "affected": [
         {
           "defaultStatus": "unaffected",
-          "platforms": [
-            "Linux",
-            "MacOS"
+          "modules": [
+            "ExternalScripts",
+            "nsclient.ini",
+            "/settings/query.json"
           ],
-          "product": "Laundry",
-          "vendor": "Laundry",
+          "platforms": [
+            "Windows",
+            "64 bit"
+          ],
+          "product": "NSClient++",
+          "vendor": "NSClient++",
           "versions": [
             {
               "status": "affected",
-              "version": "2.3.0",
-              "versionType": "custom"
+              "version": "0.5.2.35"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting')"
+        "CWE-312 Cleartext Storage of Sensitive Information",
+        "CWE-269 Improper Privilege Management"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-43025",
-      "publishedDate": "2025-07-02T19:43:46.888Z",
-      "lastModifiedDate": "2025-07-02T20:08:18.601Z",
-      "description": "HP Universal Print Driver is potentially vulnerable to denial of service due to buffer overflow in versions of UPD 7.4 or older (e.g., v7.3.x, v7.2.x, v7.1.x, etc.).",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://support.hp.com/us-en/document/ish_12690576-12690598-16/hpsbpi04032",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Universal Print Driver",
-          "vendor": "HP Inc.",
-          "versions": [
-            {
-              "status": "unknown",
-              "version": "See HP Security Bulletin reference for affected versions."
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-121: Stack-based Buffer Overflow"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-34090",
-      "publishedDate": "2025-07-02T19:25:13.805Z",
-      "lastModifiedDate": "2025-07-02T20:05:51.062Z",
-      "description": "A security bypass vulnerability exists in Google Chrome AppBound cookie encryption mechanism due to insufficient validation of COM server paths during inter-process communication. A local low-privileged attacker can hijack the COM class identifier (CLSID) registration used by Chrome's elevation service and point it to a non-existent or malicious binary. When this hijack occurs, Chrome silently falls back to the legacy cookie encryption mechanism (protected only by user-DPAPI), thereby enabling cookie decryption by any user-context malware without SYSTEM-level access. This flaw bypasses the protections intended by the AppBound encryption design and allows cookie theft from Chromium-based browsers.\n\nConfirmed in Google Chrome with AppBound Encryption enabled. Other Chromium-based browsers may be affected if they implement similar COM-based encryption mechanisms.",
+      "id": "CVE-2025-34092",
+      "publishedDate": "2025-07-02T19:25:35.752Z",
+      "lastModifiedDate": "2025-07-02T20:31:30.369Z",
+      "description": "A cookie encryption bypass vulnerability exists in Google Chrome’s AppBound mechanism due to weak path validation logic within the elevation service. When Chrome encrypts a cookie key, it records its own executable path as validation metadata. Later, when decrypting, the elevation service compares the requesting process’s path to this stored path. However, due to path canonicalization inconsistencies, an attacker can impersonate Chrome (e.g., by naming their binary chrome.exe and placing it in a similar path) and successfully retrieve the encrypted cookie key. This allows malicious processes to retrieve cookies intended to be restricted to the Chrome process only.\n\nConfirmed in Google Chrome with AppBound Encryption enabled. Other Chromium-based browsers may be affected if they implement similar COM-based encryption mechanisms.",
       "severity": "N/A",
       "references": [
         {
@@ -100,9 +83,9 @@
       ],
       "affected": [
         {
-          "defaultStatus": "unaffected",
+          "defaultStatus": "unknown",
           "modules": [
-            "Google Chrome Elevation Service (COM registration logic)"
+            "Path validation logic in AppBound Elevation Service"
           ],
           "product": "Chrome",
           "vendor": "Google",
@@ -117,8 +100,214 @@
         }
       ],
       "problemType": [
-        "CWE-426 Untrusted Search Path",
-        "CWE-276 Incorrect Default Permissions"
+        "CWE-287 Improper Authentication",
+        "CWE-706 Use of Incorrectly-Resolved Name or Reference",
+        "CWE-290 Authentication Bypass by Spoofing"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-34073",
+      "publishedDate": "2025-07-02T13:46:59.778Z",
+      "lastModifiedDate": "2025-07-02T20:30:06.806Z",
+      "description": "An unauthenticated command injection vulnerability exists in stamparm/maltrail (Maltrail) versions <=0.54. A remote attacker can execute arbitrary operating system commands via the username parameter in a POST request to the /login endpoint. This occurs due to unsafe handling of user-supplied input passed to subprocess.check_output() in core/http.py, allowing injection of shell metacharacters. Exploitation does not require authentication and commands are executed with the privileges of the Maltrail process.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://raw.githubusercontent.com/rapid7/metasploit-framework/master/modules/exploits/unix/http/maltrail_rce.rb",
+          "type": "poc"
+        },
+        {
+          "url": "https://huntr.com/bounties/be3c5204-fbd9-448d-b97c-96a8d2941e87",
+          "type": "poc"
+        },
+        {
+          "url": "https://github.com/stamparm/maltrail",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/stamparm/maltrail/issues/19146",
+          "type": "reference"
+        },
+        {
+          "url": "https://vulncheck.com/advisories/stamparm-maltrail-rce",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "modules": [
+            "core/http.py – login request handler"
+          ],
+          "product": "Maltrail",
+          "vendor": "Stamparm",
+          "versions": [
+            {
+              "lessThanOrEqual": "0.54",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-78 Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')",
+        "CWE-306 Missing Authentication for Critical Function"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-34072",
+      "publishedDate": "2025-07-02T13:46:31.554Z",
+      "lastModifiedDate": "2025-07-02T20:29:17.261Z",
+      "description": "A data exfiltration vulnerability exists in Anthropic’s deprecated Slack Model Context Protocol (MCP) Server via automatic link unfurling. When an AI agent using the Slack MCP Server processes untrusted data, it can be manipulated to generate messages containing attacker-crafted hyperlinks embedding sensitive data. Slack’s link preview bots (e.g., Slack-LinkExpanding, Slackbot, Slack-ImgProxy) will then issue outbound requests to the attacker-controlled URL, resulting in zero-click exfiltration of private data.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://embracethered.com/blog/posts/2025/security-advisory-anthropic-slack-mcp-server-data-leakage/",
+          "type": "poc"
+        },
+        {
+          "url": "https://vulncheck.com/advisories/anthropic-slack-mcp-server-data-exfiltration",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "modules": [
+            "Anthropic Slack MCP Server",
+            "Message content (post/reply body)"
+          ],
+          "product": "Slack MCP Server",
+          "vendor": "Anthropic",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-200 Exposure of Sensitive Information to an Unauthorized Actor",
+        "CWE-20 Improper Input Validation"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-34071",
+      "publishedDate": "2025-07-02T13:45:11.305Z",
+      "lastModifiedDate": "2025-07-02T20:28:39.826Z",
+      "description": "A remote code execution vulnerability in GFI Kerio Control 9.4.5 allows attackers with administrative access to upload and execute arbitrary code through the firmware upgrade feature. The system upgrade mechanism accepts unsigned .img files, which can be modified to include malicious scripts within the upgrade.sh or disk image components. These modified upgrade images are not validated for authenticity or integrity, and are executed by the system post-upload, enabling root access.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://ssd-disclosure.com/ssd-advisory-kerio-control-authentication-bypass-and-rce/",
+          "type": "poc"
+        },
+        {
+          "url": "https://vulncheck.com/advisories/gfi-kerio-control-auth-bypass-rce",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "modules": [
+            "Firmware upgrade mechanism (kerio-control-upgrade-*.img processing)"
+          ],
+          "product": "Kerio Control",
+          "vendor": "GFI Software",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "9.4.5"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-306 Missing Authentication for Critical Function"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-34070",
+      "publishedDate": "2025-07-02T13:44:54.945Z",
+      "lastModifiedDate": "2025-07-02T20:27:33.232Z",
+      "description": "A missing authentication vulnerability in the GFIAgent component of GFI Kerio Control 9.4.5 allows unauthenticated remote attackers to perform privileged operations. The GFIAgent service, responsible for integration with GFI AppManager, exposes HTTP services on ports 7995 and 7996 without proper authentication. The /proxy handler on port 7996 allows arbitrary forwarding to administrative endpoints when provided with an Appliance UUID, which itself can be retrieved from port 7995. This results in a complete authentication bypass, permitting access to sensitive administrative APIs.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://ssd-disclosure.com/ssd-advisory-kerio-control-authentication-bypass-and-rce/",
+          "type": "poc"
+        },
+        {
+          "url": "https://vulncheck.com/advisories/gfi-kerio-control-auth-bypass-rce",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "modules": [
+            "GFIAgent service (/proxy handler on port 7996)",
+            "app-id header",
+            "/appliances endpoint on port 7995"
+          ],
+          "product": "Kerio Control",
+          "vendor": "GFI Software",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "9.4.5"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-306 Missing Authentication for Critical Function"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-34069",
+      "publishedDate": "2025-07-02T13:44:41.778Z",
+      "lastModifiedDate": "2025-07-02T20:26:39.881Z",
+      "description": "An authentication bypass vulnerability exists in GFI Kerio Control 9.4.5 due to insecure default proxy configuration and weak access control in the GFIAgent service. The non-transparent proxy on TCP port 3128 can be used to forward unauthenticated requests to internal services such as GFIAgent, bypassing firewall restrictions and exposing internal management endpoints. This enables unauthenticated attackers to access the GFIAgent service on ports 7995 and 7996, retrieve the appliance UUID, and issue administrative requests via the proxy. Exploitation results in full administrative access to the Kerio Control appliance.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://ssd-disclosure.com/ssd-advisory-kerio-control-authentication-bypass-and-rce/",
+          "type": "poc"
+        },
+        {
+          "url": "https://vulncheck.com/advisories/gfi-kerio-control-auth-bypass-rce",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "modules": [
+            "GFIAgent service (ports 7995/7996)",
+            "non-transparent proxy service (port 3128)"
+          ],
+          "product": "Kerio Control",
+          "vendor": "GFI Software",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "9.4.5"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-306 Missing Authentication for Critical Function"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
