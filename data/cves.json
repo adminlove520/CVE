@@ -3,129 +3,47 @@
   "dataVersion": "5.1",
   "cveMetadata": {
     "total_count": 1,
-    "last_updated": "2025-07-04T12:56:17.844779",
+    "last_updated": "2025-07-04T13:36:58.384063",
     "severity_distribution": {
       "critical": 0,
-      "high": 0,
+      "high": 1,
       "medium": 0,
       "low": 0,
-      "none": 1
+      "none": 0
     }
   },
   "cves": [
     {
-      "id": "CVE-2025-38177",
-      "publishedDate": "2025-07-04T12:47:09.127Z",
-      "lastModifiedDate": "2025-07-04T12:47:09.127Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nsch_hfsc: make hfsc_qlen_notify() idempotent\n\nhfsc_qlen_notify() is not idempotent either and not friendly\nto its callers, like fq_codel_dequeue(). Let's make it idempotent\nto ease qdisc_tree_reduce_backlog() callers' life:\n\n1. update_vf() decreases cl->cl_nactive, so we can check whether it is\nnon-zero before calling it.\n\n2. eltree_remove() always removes RB node cl->el_node, but we can use\n   RB_EMPTY_NODE() + RB_CLEAR_NODE() to make it safe.",
-      "severity": "N/A",
+      "id": "CVE-2025-46733",
+      "publishedDate": "2025-07-04T13:13:53.815Z",
+      "lastModifiedDate": "2025-07-04T13:13:53.815Z",
+      "description": "OP-TEE is a Trusted Execution Environment (TEE) designed as companion to a non-secure Linux kernel running on Arm; Cortex-A cores using the TrustZone technology. In version 4.5.0, using a specially crafted tee-supplicant binary running in REE userspace, an attacker can trigger a panic in a TA that uses the libutee Secure Storage API. Many functions in libutee, specifically those which make up the Secure Storage API, will panic if a system call returns an unexpected return code. This behavior is mandated by the TEE Internal Core API specification. However, in OP-TEE’s implementation, return codes of secure storage operations are passed through unsanitized from the REE tee-supplicant, through the Linux kernel tee-driver, through the OP-TEE kernel, back to libutee. Thus, an attacker with access to REE userspace, and the ability to stop tee-supplicant and replace it with their own process (generally trivial for a root user, and depending on the way permissions are set up, potentially available even to less privileged users) can run a malicious tee-supplicant process that responds to storage requests with unexpected response codes, triggering a panic in the requesting TA. This is particularly dangerous for TAs built with `TA_FLAG_SINGLE_INSTANCE` (corresponding to `gpd.ta.singleInstance` and `TA_FLAG_INSTANCE_KEEP_ALIVE` (corresponding to `gpd.ta.keepAlive`). The behavior of these TAs may depend on memory that is preserved between sessions, and the ability of an attacker to panic the TA and reload it with a clean memory space can compromise the behavior of those TAs. A critical example of this is the optee_ftpm TA. It uses the kept alive memory to hold PCR values, which crucially must be non-resettable. An attacker who can trigger a panic in the fTPM TA can reset the PCRs, and then extend them PCRs with whatever they choose, falsifying boot measurements, accessing sealed data, and potentially more. The impact of this issue depends significantly on the behavior of affected TAs. For some, it could manifest as a denial of service, while for others, like the fTPM TA, it can result in the disclosure of sensitive data. Anyone running the fTPM TA is affected, but similar attacks may be possible on other TAs that leverage the Secure Storage API. A fix is available in commit 941a58d78c99c4754fbd4ec3079ec9e1d596af8f.",
+      "severity": 7.9,
       "references": [
         {
-          "url": "https://git.kernel.org/stable/c/0475c85426b18eccdcb7f9fb58d8f8e9c6c58c87",
+          "url": "https://github.com/OP-TEE/optee_os/security/advisories/GHSA-f35r-hm2m-p6c3",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/9030a91235ae4845ec71902c3e0cecfc9ed1f2df",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/d06476714d2819b550e0cc39222347e2c8941c9d",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/c1175c4ad01dbc9c979d099861fa90a754f72059",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/51eb3b65544c9efd6a1026889ee5fb5aa62da3bb",
+          "url": "https://github.com/OP-TEE/optee_os/commit/941a58d78c99c4754fbd4ec3079ec9e1d596af8f",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "net/sched/sch_hfsc.c"
-          ],
+          "vendor": "OP-TEE",
+          "product": "optee_os",
           "versions": [
             {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "0475c85426b18eccdcb7f9fb58d8f8e9c6c58c87",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "9030a91235ae4845ec71902c3e0cecfc9ed1f2df",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "d06476714d2819b550e0cc39222347e2c8941c9d",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "c1175c4ad01dbc9c979d099861fa90a754f72059",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "51eb3b65544c9efd6a1026889ee5fb5aa62da3bb",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "net/sched/sch_hfsc.c"
-          ],
-          "versions": [
-            {
-              "version": "6.1.138",
-              "lessThanOrEqual": "6.1.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.6.90",
-              "lessThanOrEqual": "6.6.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.12.28",
-              "lessThanOrEqual": "6.12.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.14.6",
-              "lessThanOrEqual": "6.14.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.15",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
+              "version": "= 4.5.0",
+              "status": "affected"
             }
           ]
         }
       ],
-      "problemType": [],
+      "problemType": [
+        "CWE-755: Improper Handling of Exceptional Conditions"
+      ],
       "fix_suggestion": "无法生成修复建议"
     }
   ]
