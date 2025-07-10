@@ -2,15 +2,224 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 0,
-    "last_updated": "2025-07-10T07:30:46.165766",
+    "total_count": 2,
+    "last_updated": "2025-07-10T07:46:09.331381",
     "severity_distribution": {
       "critical": 0,
       "high": 0,
       "medium": 0,
       "low": 0,
-      "none": 0
+      "none": 2
     }
   },
-  "cves": []
+  "cves": [
+    {
+      "id": "CVE-2025-38266",
+      "publishedDate": "2025-07-10T07:37:34.431Z",
+      "lastModifiedDate": "2025-07-10T07:37:34.431Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\npinctrl: mediatek: eint: Fix invalid pointer dereference for v1 platforms\n\nCommit 3ef9f710efcb (\"pinctrl: mediatek: Add EINT support for multiple\naddresses\") introduced an access to the 'soc' field of struct\nmtk_pinctrl in mtk_eint_do_init() and for that an include of\npinctrl-mtk-common-v2.h.\n\nHowever, pinctrl drivers relying on the v1 common driver include\npinctrl-mtk-common.h instead, which provides another definition of\nstruct mtk_pinctrl that does not contain an 'soc' field.\n\nSince mtk_eint_do_init() can be called both by v1 and v2 drivers, it\nwill now try to dereference an invalid pointer when called on v1\nplatforms. This has been observed on Genio 350 EVK (MT8365), which\ncrashes very early in boot (the kernel trace can only be seen with\nearlycon).\n\nIn order to fix this, since 'struct mtk_pinctrl' was only needed to get\na 'struct mtk_eint_pin', make 'struct mtk_eint_pin' a parameter\nof mtk_eint_do_init() so that callers need to supply it, removing\nmtk_eint_do_init()'s dependency on any particular 'struct mtk_pinctrl'.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://git.kernel.org/stable/c/9ebe21ede792cef851847648962c363cac67d17f",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/1c9977b263475373b31bbf86af94a5c9ae2be42c",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "unaffected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "drivers/pinctrl/mediatek/mtk-eint.c",
+            "drivers/pinctrl/mediatek/mtk-eint.h",
+            "drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c",
+            "drivers/pinctrl/mediatek/pinctrl-mtk-common.c"
+          ],
+          "versions": [
+            {
+              "version": "3ef9f710efcb5cc1335b5b09c16c757f703d7e5f",
+              "lessThan": "9ebe21ede792cef851847648962c363cac67d17f",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "3ef9f710efcb5cc1335b5b09c16c757f703d7e5f",
+              "lessThan": "1c9977b263475373b31bbf86af94a5c9ae2be42c",
+              "status": "affected",
+              "versionType": "git"
+            }
+          ]
+        },
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "affected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "drivers/pinctrl/mediatek/mtk-eint.c",
+            "drivers/pinctrl/mediatek/mtk-eint.h",
+            "drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c",
+            "drivers/pinctrl/mediatek/pinctrl-mtk-common.c"
+          ],
+          "versions": [
+            {
+              "version": "6.15",
+              "status": "affected"
+            },
+            {
+              "version": "0",
+              "lessThan": "6.15",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.15.2",
+              "lessThanOrEqual": "6.15.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.16-rc1",
+              "lessThanOrEqual": "*",
+              "status": "unaffected",
+              "versionType": "original_commit_for_fix"
+            }
+          ]
+        }
+      ],
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-38265",
+      "publishedDate": "2025-07-10T07:37:33.778Z",
+      "lastModifiedDate": "2025-07-10T07:37:33.778Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nserial: jsm: fix NPE during jsm_uart_port_init\n\nNo device was set which caused serial_base_ctrl_add to crash.\n\n BUG: kernel NULL pointer dereference, address: 0000000000000050\n Oops: Oops: 0000 [#1] PREEMPT SMP NOPTI\n CPU: 16 UID: 0 PID: 368 Comm: (udev-worker) Not tainted 6.12.25-amd64 #1  Debian 6.12.25-1\n RIP: 0010:serial_base_ctrl_add+0x96/0x120\n Call Trace:\n  <TASK>\n  serial_core_register_port+0x1a0/0x580\n  ? __setup_irq+0x39c/0x660\n  ? __kmalloc_cache_noprof+0x111/0x310\n  jsm_uart_port_init+0xe8/0x180 [jsm]\n  jsm_probe_one+0x1f4/0x410 [jsm]\n  local_pci_probe+0x42/0x90\n  pci_device_probe+0x22f/0x270\n  really_probe+0xdb/0x340\n  ? pm_runtime_barrier+0x54/0x90\n  ? __pfx___driver_attach+0x10/0x10\n  __driver_probe_device+0x78/0x110\n  driver_probe_device+0x1f/0xa0\n  __driver_attach+0xba/0x1c0\n  bus_for_each_dev+0x8c/0xe0\n  bus_add_driver+0x112/0x1f0\n  driver_register+0x72/0xd0\n  jsm_init_module+0x36/0xff0 [jsm]\n  ? __pfx_jsm_init_module+0x10/0x10 [jsm]\n  do_one_initcall+0x58/0x310\n  do_init_module+0x60/0x230\n\nTested with Digi Neo PCIe 8 port card.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://git.kernel.org/stable/c/3258d7ff8ebfa451426662b23e8f2b51b129afe1",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/985961dd2688a527a4847300d41beaad475ab7af",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/a14c0d2eb3f0b1836fdec22908b87ecffd2ac844",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/abaecb2a4ad021c2f2426e9b2a9c020aef57aca9",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/e3975aa899c0a3bbc10d035e699b142cd1373a71",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "unaffected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "drivers/tty/serial/jsm/jsm_tty.c"
+          ],
+          "versions": [
+            {
+              "version": "84a9582fd203063cd4d301204971ff2cd8327f1a",
+              "lessThan": "3258d7ff8ebfa451426662b23e8f2b51b129afe1",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "84a9582fd203063cd4d301204971ff2cd8327f1a",
+              "lessThan": "985961dd2688a527a4847300d41beaad475ab7af",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "84a9582fd203063cd4d301204971ff2cd8327f1a",
+              "lessThan": "a14c0d2eb3f0b1836fdec22908b87ecffd2ac844",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "84a9582fd203063cd4d301204971ff2cd8327f1a",
+              "lessThan": "abaecb2a4ad021c2f2426e9b2a9c020aef57aca9",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "84a9582fd203063cd4d301204971ff2cd8327f1a",
+              "lessThan": "e3975aa899c0a3bbc10d035e699b142cd1373a71",
+              "status": "affected",
+              "versionType": "git"
+            }
+          ]
+        },
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "affected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "drivers/tty/serial/jsm/jsm_tty.c"
+          ],
+          "versions": [
+            {
+              "version": "6.5",
+              "status": "affected"
+            },
+            {
+              "version": "0",
+              "lessThan": "6.5",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.6.94",
+              "lessThanOrEqual": "6.6.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.12.33",
+              "lessThanOrEqual": "6.12.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.14.11",
+              "lessThanOrEqual": "6.14.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.15.2",
+              "lessThanOrEqual": "6.15.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.16-rc1",
+              "lessThanOrEqual": "*",
+              "status": "unaffected",
+              "versionType": "original_commit_for_fix"
+            }
+          ]
+        }
+      ],
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    }
+  ]
 }
