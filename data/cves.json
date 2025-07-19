@@ -3,7 +3,7 @@
   "dataVersion": "5.1",
   "cveMetadata": {
     "total_count": 1,
-    "last_updated": "2025-07-19T07:58:37.538897",
+    "last_updated": "2025-07-19T08:36:03.950618",
     "severity_distribution": {
       "critical": 0,
       "high": 0,
@@ -14,42 +14,26 @@
   },
   "cves": [
     {
-      "id": "CVE-2025-38350",
-      "publishedDate": "2025-07-19T06:46:29.849Z",
-      "lastModifiedDate": "2025-07-19T06:46:29.849Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet/sched: Always pass notifications when child class becomes empty\n\nCertain classful qdiscs may invoke their classes' dequeue handler on an\nenqueue operation. This may unexpectedly empty the child qdisc and thus\nmake an in-flight class passive via qlen_notify(). Most qdiscs do not\nexpect such behaviour at this point in time and may re-activate the\nclass eventually anyways which will lead to a use-after-free.\n\nThe referenced fix commit attempted to fix this behavior for the HFSC\ncase by moving the backlog accounting around, though this turned out to\nbe incomplete since the parent's parent may run into the issue too.\nThe following reproducer demonstrates this use-after-free:\n\n    tc qdisc add dev lo root handle 1: drr\n    tc filter add dev lo parent 1: basic classid 1:1\n    tc class add dev lo parent 1: classid 1:1 drr\n    tc qdisc add dev lo parent 1:1 handle 2: hfsc def 1\n    tc class add dev lo parent 2: classid 2:1 hfsc rt m1 8 d 1 m2 0\n    tc qdisc add dev lo parent 2:1 handle 3: netem\n    tc qdisc add dev lo parent 3:1 handle 4: blackhole\n\n    echo 1 | socat -u STDIN UDP4-DATAGRAM:127.0.0.1:8888\n    tc class delete dev lo classid 1:1\n    echo 1 | socat -u STDIN UDP4-DATAGRAM:127.0.0.1:8888\n\nSince backlog accounting issues leading to a use-after-frees on stale\nclass pointers is a recurring pattern at this point, this patch takes\na different approach. Instead of trying to fix the accounting, the patch\nensures that qdisc_tree_reduce_backlog always calls qlen_notify when\nthe child qdisc is empty. This solves the problem because deletion of\nqdiscs always involves a call to qdisc_reset() and / or\nqdisc_purge_queue() which ultimately resets its qlen to 0 thus causing\nthe following qdisc_tree_reduce_backlog() to report to the parent. Note\nthat this may call qlen_notify on passive classes multiple times. This\nis not a problem after the recent patch series that made all the\nclassful qdiscs qlen_notify() handlers idempotent.",
+      "id": "CVE-2025-38349",
+      "publishedDate": "2025-07-18T07:53:16.434Z",
+      "lastModifiedDate": "2025-07-19T08:22:12.611Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\neventpoll: don't decrement ep refcount while still holding the ep mutex\n\nJann Horn points out that epoll is decrementing the ep refcount and then\ndoing a\n\n    mutex_unlock(&ep->mtx);\n\nafterwards. That's very wrong, because it can lead to a use-after-free.\n\nThat pattern is actually fine for the very last reference, because the\ncode in question will delay the actual call to \"ep_free(ep)\" until after\nit has unlocked the mutex.\n\nBut it's wrong for the much subtler \"next to last\" case when somebody\n*else* may also be dropping their reference and free the ep while we're\nstill using the mutex.\n\nNote that this is true even if that other user is also using the same ep\nmutex: mutexes, unlike spinlocks, can not be used for object ownership,\neven if they guarantee mutual exclusion.\n\nA mutex \"unlock\" operation is not atomic, and as one user is still\naccessing the mutex as part of unlocking it, another user can come in\nand get the now released mutex and free the data structure while the\nfirst user is still cleaning up.\n\nSee our mutex documentation in Documentation/locking/mutex-design.rst,\nin particular the section [1] about semantics:\n\n\t\"mutex_unlock() may access the mutex structure even after it has\n\t internally released the lock already - so it's not safe for\n\t another context to acquire the mutex and assume that the\n\t mutex_unlock() context is not using the structure anymore\"\n\nSo if we drop our ep ref before the mutex unlock, but we weren't the\nlast one, we may then unlock the mutex, another user comes in, drops\n_their_ reference and releases the 'ep' as it now has no users - all\nwhile the mutex_unlock() is still accessing it.\n\nFix this by simply moving the ep refcount dropping to outside the mutex:\nthe refcount itself is atomic, and doesn't need mutex protection (that's\nthe whole _point_ of refcounts: unlike mutexes, they are inherently\nabout object lifetimes).",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://git.kernel.org/stable/c/3b290923ad2b23596208c1e29520badef4356a43",
+          "url": "https://git.kernel.org/stable/c/521e9ff0b67c66a17d6f9593dfccafaa984aae4c",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/e9921b57dca05ac5f4fa1fa8e993d4f0ee52e2b7",
+          "url": "https://git.kernel.org/stable/c/6dee745bd0aec9d399df674256e7b1ecdb615444",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/e269f29e9395527bc00c213c6b15da04ebb35070",
+          "url": "https://git.kernel.org/stable/c/605c18698ecfa99165f36b7f59d3ed503e169814",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/7874c9c132e906a52a187d045995b115973c93fb",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/f680a4643c6f71e758d8fe0431a958e9a6a4f59d",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/a553afd91f55ff39b1e8a1c4989a29394c9e0472",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/a44acdd9e84a211989ff4b9b92bf3545d8456ad5",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/103406b38c600fec1fe375a77b27d87e314aea09",
+          "url": "https://git.kernel.org/stable/c/8c2e52ebbe885c7eeaabd3b7ddcdc1246fc400d2",
           "type": "reference"
         }
       ],
@@ -60,59 +44,30 @@
           "defaultStatus": "unaffected",
           "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
           "programFiles": [
-            "net/sched/sch_api.c"
+            "fs/eventpoll.c"
           ],
           "versions": [
             {
-              "version": "1034e3310752e8675e313f7271b348914008719a",
-              "lessThan": "3b290923ad2b23596208c1e29520badef4356a43",
+              "version": "58c9b016e12855286370dfb704c08498edbc857a",
+              "lessThan": "521e9ff0b67c66a17d6f9593dfccafaa984aae4c",
               "status": "affected",
               "versionType": "git"
             },
             {
-              "version": "f9f593e34d2fb67644372c8f7b033bdc622ad228",
-              "lessThan": "e9921b57dca05ac5f4fa1fa8e993d4f0ee52e2b7",
+              "version": "58c9b016e12855286370dfb704c08498edbc857a",
+              "lessThan": "6dee745bd0aec9d399df674256e7b1ecdb615444",
               "status": "affected",
               "versionType": "git"
             },
             {
-              "version": "89c301e929a0db14ebd94b4d97764ce1d6981653",
-              "lessThan": "e269f29e9395527bc00c213c6b15da04ebb35070",
+              "version": "58c9b016e12855286370dfb704c08498edbc857a",
+              "lessThan": "605c18698ecfa99165f36b7f59d3ed503e169814",
               "status": "affected",
               "versionType": "git"
             },
             {
-              "version": "f1dde3eb17dc1b8bd07aed00004b1e05fc87a3d4",
-              "lessThan": "7874c9c132e906a52a187d045995b115973c93fb",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "93c276942e75de0e5bc91576300d292e968f5a02",
-              "lessThan": "f680a4643c6f71e758d8fe0431a958e9a6a4f59d",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "49b21795b8e5654a7df3d910a12e1060da4c04cf",
-              "lessThan": "a553afd91f55ff39b1e8a1c4989a29394c9e0472",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "3f981138109f63232a5fb7165938d4c945cc1b9d",
-              "lessThan": "a44acdd9e84a211989ff4b9b92bf3545d8456ad5",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "3f981138109f63232a5fb7165938d4c945cc1b9d",
-              "lessThan": "103406b38c600fec1fe375a77b27d87e314aea09",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "3f3a22eebbc32b4fa8ce9c1d5f9db214b45b9335",
+              "version": "58c9b016e12855286370dfb704c08498edbc857a",
+              "lessThan": "8c2e52ebbe885c7eeaabd3b7ddcdc1246fc400d2",
               "status": "affected",
               "versionType": "git"
             }
@@ -124,63 +79,39 @@
           "defaultStatus": "affected",
           "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
           "programFiles": [
-            "net/sched/sch_api.c"
+            "fs/eventpoll.c"
           ],
           "versions": [
             {
-              "version": "6.15",
+              "version": "6.4",
               "status": "affected"
             },
             {
               "version": "0",
-              "lessThan": "6.15",
+              "lessThan": "6.4",
               "status": "unaffected",
               "versionType": "semver"
             },
             {
-              "version": "5.4.296",
-              "lessThanOrEqual": "5.4.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "5.10.240",
-              "lessThanOrEqual": "5.10.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "5.15.187",
-              "lessThanOrEqual": "5.15.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.1.144",
-              "lessThanOrEqual": "6.1.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.6.97",
+              "version": "6.6.99",
               "lessThanOrEqual": "6.6.*",
               "status": "unaffected",
               "versionType": "semver"
             },
             {
-              "version": "6.12.37",
+              "version": "6.12.39",
               "lessThanOrEqual": "6.12.*",
               "status": "unaffected",
               "versionType": "semver"
             },
             {
-              "version": "6.15.6",
+              "version": "6.15.7",
               "lessThanOrEqual": "6.15.*",
               "status": "unaffected",
               "versionType": "semver"
             },
             {
-              "version": "6.16-rc5",
+              "version": "6.16-rc6",
               "lessThanOrEqual": "*",
               "status": "unaffected",
               "versionType": "original_commit_for_fix"
