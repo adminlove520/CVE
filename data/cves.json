@@ -2,95 +2,193 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 2,
-    "last_updated": "2025-07-19T06:49:42.883489",
+    "total_count": 1,
+    "last_updated": "2025-07-19T07:11:54.714190",
     "severity_distribution": {
       "critical": 0,
       "high": 0,
-      "medium": 2,
+      "medium": 0,
       "low": 0,
-      "none": 0
+      "none": 1
     }
   },
   "cves": [
     {
-      "id": "CVE-2025-6720",
-      "publishedDate": "2025-07-19T05:32:09.543Z",
-      "lastModifiedDate": "2025-07-19T05:32:09.543Z",
-      "description": "The Vchasno Kasa plugin for WordPress is vulnerable to unauthorized loss of data due to a missing capability check on the clear_all_log() function in all versions up to, and including, 1.0.3. This makes it possible for unauthenticated attackers to clear log files.",
-      "severity": 5.3,
+      "id": "CVE-2025-38350",
+      "publishedDate": "2025-07-19T06:46:29.849Z",
+      "lastModifiedDate": "2025-07-19T06:46:29.849Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet/sched: Always pass notifications when child class becomes empty\n\nCertain classful qdiscs may invoke their classes' dequeue handler on an\nenqueue operation. This may unexpectedly empty the child qdisc and thus\nmake an in-flight class passive via qlen_notify(). Most qdiscs do not\nexpect such behaviour at this point in time and may re-activate the\nclass eventually anyways which will lead to a use-after-free.\n\nThe referenced fix commit attempted to fix this behavior for the HFSC\ncase by moving the backlog accounting around, though this turned out to\nbe incomplete since the parent's parent may run into the issue too.\nThe following reproducer demonstrates this use-after-free:\n\n    tc qdisc add dev lo root handle 1: drr\n    tc filter add dev lo parent 1: basic classid 1:1\n    tc class add dev lo parent 1: classid 1:1 drr\n    tc qdisc add dev lo parent 1:1 handle 2: hfsc def 1\n    tc class add dev lo parent 2: classid 2:1 hfsc rt m1 8 d 1 m2 0\n    tc qdisc add dev lo parent 2:1 handle 3: netem\n    tc qdisc add dev lo parent 3:1 handle 4: blackhole\n\n    echo 1 | socat -u STDIN UDP4-DATAGRAM:127.0.0.1:8888\n    tc class delete dev lo classid 1:1\n    echo 1 | socat -u STDIN UDP4-DATAGRAM:127.0.0.1:8888\n\nSince backlog accounting issues leading to a use-after-frees on stale\nclass pointers is a recurring pattern at this point, this patch takes\na different approach. Instead of trying to fix the accounting, the patch\nensures that qdisc_tree_reduce_backlog always calls qlen_notify when\nthe child qdisc is empty. This solves the problem because deletion of\nqdiscs always involves a call to qdisc_reset() and / or\nqdisc_purge_queue() which ultimately resets its qlen to 0 thus causing\nthe following qdisc_tree_reduce_backlog() to report to the parent. Note\nthat this may call qlen_notify on passive classes multiple times. This\nis not a problem after the recent patch series that made all the\nclassful qdiscs qlen_notify() handlers idempotent.",
+      "severity": "N/A",
       "references": [
         {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/cd03483a-f46c-4e17-8b58-df87b0ad7fa3?source=cve",
+          "url": "https://git.kernel.org/stable/c/3b290923ad2b23596208c1e29520badef4356a43",
           "type": "reference"
         },
         {
-          "url": "https://plugins.trac.wordpress.org/browser/mrkv-vchasno-kasa/trunk/classes/mrkv-setup.php#L245",
+          "url": "https://git.kernel.org/stable/c/e9921b57dca05ac5f4fa1fa8e993d4f0ee52e2b7",
           "type": "reference"
         },
         {
-          "url": "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=3328827%40mrkv-vchasno-kasa&new=3328827%40mrkv-vchasno-kasa&sfp_email=&sfph_mail=",
+          "url": "https://git.kernel.org/stable/c/e269f29e9395527bc00c213c6b15da04ebb35070",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/7874c9c132e906a52a187d045995b115973c93fb",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/f680a4643c6f71e758d8fe0431a958e9a6a4f59d",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/a553afd91f55ff39b1e8a1c4989a29394c9e0472",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/a44acdd9e84a211989ff4b9b92bf3545d8456ad5",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/103406b38c600fec1fe375a77b27d87e314aea09",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "bandido",
-          "product": "MORKVA Vchasno Kasa Integration",
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "unaffected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "net/sched/sch_api.c"
+          ],
           "versions": [
             {
-              "version": "*",
+              "version": "1034e3310752e8675e313f7271b348914008719a",
+              "lessThan": "3b290923ad2b23596208c1e29520badef4356a43",
               "status": "affected",
-              "lessThanOrEqual": "1.0.3",
-              "versionType": "semver"
+              "versionType": "git"
+            },
+            {
+              "version": "f9f593e34d2fb67644372c8f7b033bdc622ad228",
+              "lessThan": "e9921b57dca05ac5f4fa1fa8e993d4f0ee52e2b7",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "89c301e929a0db14ebd94b4d97764ce1d6981653",
+              "lessThan": "e269f29e9395527bc00c213c6b15da04ebb35070",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "f1dde3eb17dc1b8bd07aed00004b1e05fc87a3d4",
+              "lessThan": "7874c9c132e906a52a187d045995b115973c93fb",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "93c276942e75de0e5bc91576300d292e968f5a02",
+              "lessThan": "f680a4643c6f71e758d8fe0431a958e9a6a4f59d",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "49b21795b8e5654a7df3d910a12e1060da4c04cf",
+              "lessThan": "a553afd91f55ff39b1e8a1c4989a29394c9e0472",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "3f981138109f63232a5fb7165938d4c945cc1b9d",
+              "lessThan": "a44acdd9e84a211989ff4b9b92bf3545d8456ad5",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "3f981138109f63232a5fb7165938d4c945cc1b9d",
+              "lessThan": "103406b38c600fec1fe375a77b27d87e314aea09",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "3f3a22eebbc32b4fa8ce9c1d5f9db214b45b9335",
+              "status": "affected",
+              "versionType": "git"
             }
+          ]
+        },
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "affected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "net/sched/sch_api.c"
           ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-862 Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-6721",
-      "publishedDate": "2025-07-19T05:32:08.936Z",
-      "lastModifiedDate": "2025-07-19T05:32:08.936Z",
-      "description": "The Vchasno Kasa plugin for WordPress is vulnerable to unauthorized access of data due to a missing capability check on the mrkv_vchasno_kasa_wc_do_metabox_action() function in all versions up to, and including, 1.0.3. This makes it possible for unauthenticated attackers to generate invoices for arbitrary orders.",
-      "severity": 5.3,
-      "references": [
-        {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/57ad3525-3257-4727-ba07-468bf13a94e2?source=cve",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/mrkv-vchasno-kasa/trunk/classes/mrkv-setup.php#L395",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=3328827%40mrkv-vchasno-kasa&new=3328827%40mrkv-vchasno-kasa&sfp_email=&sfph_mail=",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "bandido",
-          "product": "MORKVA Vchasno Kasa Integration",
           "versions": [
             {
-              "version": "*",
-              "status": "affected",
-              "lessThanOrEqual": "1.0.3",
+              "version": "6.15",
+              "status": "affected"
+            },
+            {
+              "version": "0",
+              "lessThan": "6.15",
+              "status": "unaffected",
               "versionType": "semver"
+            },
+            {
+              "version": "5.4.296",
+              "lessThanOrEqual": "5.4.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "5.10.240",
+              "lessThanOrEqual": "5.10.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "5.15.187",
+              "lessThanOrEqual": "5.15.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.1.144",
+              "lessThanOrEqual": "6.1.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.6.97",
+              "lessThanOrEqual": "6.6.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.12.37",
+              "lessThanOrEqual": "6.12.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.15.6",
+              "lessThanOrEqual": "6.15.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.16-rc5",
+              "lessThanOrEqual": "*",
+              "status": "unaffected",
+              "versionType": "original_commit_for_fix"
             }
-          ],
-          "defaultStatus": "unaffected"
+          ]
         }
       ],
-      "problemType": [
-        "CWE-862 Missing Authorization"
-      ],
+      "problemType": [],
       "fix_suggestion": "无法生成修复建议"
     }
   ]
