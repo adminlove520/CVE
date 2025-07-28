@@ -2,21 +2,70 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 4,
-    "last_updated": "2025-07-28T19:18:37.829540",
+    "total_count": 3,
+    "last_updated": "2025-07-28T19:37:01.224814",
     "severity_distribution": {
       "critical": 0,
-      "high": 0,
+      "high": 1,
       "medium": 0,
       "low": 0,
-      "none": 4
+      "none": 2
     }
   },
   "cves": [
     {
+      "id": "CVE-2025-8194",
+      "publishedDate": "2025-07-28T18:42:44.847Z",
+      "lastModifiedDate": "2025-07-28T19:30:55.878Z",
+      "description": "There is a defect in the CPython “tarfile” module affecting the “TarFile” extraction and entry enumeration APIs. The tar implementation would process tar archives with negative offsets without error, resulting in an infinite loop and deadlock during the parsing of maliciously crafted tar archives. \n\nThis vulnerability can be mitigated by including the following patch after importing the “tarfile” module:\n\n\n\nimport tarfile\n\ndef _block_patched(self, count):\n    if count < 0:  # pragma: no cover\n        raise tarfile.InvalidHeaderError(\"invalid offset\")\n    return _block_patched._orig_block(self, count)\n\n_block_patched._orig_block = tarfile.TarInfo._block\ntarfile.TarInfo._block = _block_patched",
+      "severity": 7.5,
+      "references": [
+        {
+          "url": "https://github.com/python/cpython/issues/130577",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/python/cpython/pull/137027",
+          "type": "reference"
+        },
+        {
+          "url": "https://mail.python.org/archives/list/security-announce@python.org/thread/ZULLF3IZ726XP5EY7XJ7YIN3K5MDYR2D/",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/python/cpython/commit/7040aa54f14676938970e10c5f74ea93cd56aa38",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/python/cpython/commit/cdae923ffe187d6ef916c0f665a31249619193fe",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "CPython",
+          "repo": "https://github.com/python/cpython",
+          "vendor": "Python Software Foundation",
+          "versions": [
+            {
+              "version": "0",
+              "lessThan": "3.14.0",
+              "status": "affected",
+              "versionType": "python"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-835 Loop with Unreachable Exit Condition ('Infinite Loop')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
       "id": "CVE-2025-50487",
       "publishedDate": "2025-07-28T00:00:00.000Z",
-      "lastModifiedDate": "2025-07-28T19:08:07.872Z",
+      "lastModifiedDate": "2025-07-28T19:23:07.469Z",
       "description": "Improper session invalidation in the component /bbdms/change-password.php of PHPGurukul Blood Bank & Donor Management System v2.4 allows attackers to execute a session hijacking attack.",
       "severity": "N/A",
       "references": [
@@ -51,157 +100,39 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2016-15046",
-      "publishedDate": "2025-07-25T15:53:44.379Z",
-      "lastModifiedDate": "2025-07-28T19:02:44.124Z",
-      "description": "A client-side remote code execution vulnerability exists in Samsung Security Manager versions 1.32 and 1.4, due to improper restrictions on the PUT method exposed by the bundled Apache ActiveMQ instance (running on port 8161). An attacker can exploit this flaw through a Cross-Origin Resource Sharing (CORS) bypass combined with JavaScript-triggered file uploads to the web server, ultimately resulting in arbitrary code execution with SYSTEM privileges. \n\nThis vulnerability bypasses the server-side mitigations introduced in ZDI-15-156 and ZDI-16-481 by shifting the exploitation to the client-side. \n\nThis product is now known as Hanwha Wisenet SSM and it is unknown if current versions are affected.",
+      "id": "CVE-2025-50484",
+      "publishedDate": "2025-07-28T00:00:00.000Z",
+      "lastModifiedDate": "2025-07-28T19:26:12.575Z",
+      "description": "Improper session invalidation in the component /crm/change-password.php of PHPGurukul Small CRM v3.0 allows attackers to execute a session hijacking attack.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://raw.githubusercontent.com/rapid7/metasploit-framework/master/modules/exploits/windows/browser/samsung_security_manager_put.rb",
-          "type": "poc"
-        },
-        {
-          "url": "http://www.zerodayinitiative.com/advisories/ZDI-15-156/",
+          "url": "http://phpgurukul.com",
           "type": "reference"
         },
         {
-          "url": "http://www.zerodayinitiative.com/advisories/ZDI-16-481/",
+          "url": "http://small.com",
           "type": "reference"
         },
         {
-          "url": "https://web.archive.org/web/20160518205411/http://security.hanwhatechwin.com/product/product_view.asp?idx=6779#FL080000",
-          "type": "reference"
-        },
-        {
-          "url": "https://srcincite.io/advisories/src-2016-0032/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/samsung-security-manager-activemq-file-upload-rce",
+          "url": "https://github.com/VasilVK/CVE/tree/main/CVE-2025-50484",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "unknown",
-          "modules": [
-            "ActiveMQ Broker Service"
-          ],
-          "product": "Security Manager",
-          "vendor": "Samsung",
+          "vendor": "n/a",
+          "product": "n/a",
           "versions": [
             {
-              "status": "affected",
-              "version": "1.32"
-            },
-            {
-              "status": "affected",
-              "version": "1.4"
+              "version": "n/a",
+              "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-434 Unrestricted Upload of File with Dangerous Type",
-        "CWE-306 Missing Authentication for Critical Function"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2014-125115",
-      "publishedDate": "2025-07-25T15:53:16.906Z",
-      "lastModifiedDate": "2025-07-28T19:04:54.483Z",
-      "description": "An unauthenticated SQL injection vulnerability exists in Pandora FMS version 5.0 SP2 and earlier. The mobile/index.php endpoint fails to properly sanitize user input in the loginhash_data parameter, allowing attackers to extract administrator credentials or active session tokens via crafted requests. This occurs because input is directly concatenated into an SQL query without adequate validation, enabling SQL injection. After authentication is bypassed, a second vulnerability in the File Manager component permits arbitrary PHP file uploads. The file upload functionality does not enforce MIME-type or file extension restrictions, allowing authenticated users to upload web shells into a publicly accessible directory and achieve remote code execution.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://www.exploit-db.com/exploits/35380",
-          "type": "poc"
-        },
-        {
-          "url": "https://raw.githubusercontent.com/rapid7/metasploit-framework/master/modules/exploits/linux/http/pandora_fms_sqli.rb",
-          "type": "poc"
-        },
-        {
-          "url": "https://web.archive.org/web/20140331231237/http://pandorafms.com/downloads/whats_new_5-SP3.pdf",
-          "type": "reference"
-        },
-        {
-          "url": "https://web.archive.org/web/20140304121149/http://blog.pandorafms.org/?p=2041",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/pandora-fms-default-creds-sqli-rce",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "modules": [
-            "index.php",
-            "mobile/index.php",
-            "godmode/setup/file_manager"
-          ],
-          "product": "Pandora FMS",
-          "vendor": "Artica ST",
-          "versions": [
-            {
-              "lessThanOrEqual": "5.0 SP2",
-              "status": "affected",
-              "version": "*",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-798 Use of Hard-coded Credentials",
-        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-34114",
-      "publishedDate": "2025-07-25T15:52:56.387Z",
-      "lastModifiedDate": "2025-07-28T19:05:55.332Z",
-      "description": "A client-side security misconfiguration vulnerability exists in OpenBlow whistleblowing platform across multiple versions and default deployments, due to the absence of critical HTTP response headers including Content-Security-Policy, Referrer-Policy, Permissions-Policy, Cross-Origin-Embedder-Policy, and Cross-Origin-Resource-Policy. This omission weakens browser-level defenses and exposes users to cross-site scripting (XSS), clickjacking, and referer leakage. Although some instances attempt to enforce CSP via HTML <meta> tags, this method is ineffective, as modern browsers rely on header-based enforcement to reliably block inline scripts and untrusted resources.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://seclists.org/fulldisclosure/2025/Jul/13",
-          "type": "poc"
-        },
-        {
-          "url": "https://www.openblow.it",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/openblow-missing-critical-security-headers",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "modules": [
-            "Web Application Layer",
-            "HTTP Response Header Handler"
-          ],
-          "product": "OpenBlow",
-          "vendor": "Laser Romae s.r.l.",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "*"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-749 Exposed Dangerous Method or Function",
-        "CWE-94 Improper Control of Generation of Code ('Code Injection')"
+        "n/a"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
