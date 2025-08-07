@@ -2,56 +2,107 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 1,
-    "last_updated": "2025-08-07T15:01:19.669160",
+    "total_count": 2,
+    "last_updated": "2025-08-07T15:35:40.332372",
     "severity_distribution": {
       "critical": 0,
       "high": 0,
       "medium": 0,
-      "low": 1,
-      "none": 0
+      "low": 0,
+      "none": 2
     }
   },
   "cves": [
     {
-      "id": "CVE-2025-8538",
-      "publishedDate": "2025-08-05T01:04:26.271Z",
-      "lastModifiedDate": "2025-08-07T14:51:22.809Z",
-      "description": "A vulnerability has been found in Portabilis i-Educar 2.10 and classified as problematic. Affected by this vulnerability is an unknown functionality of the file /usuarios/tipos/novo. The manipulation of the argument name/description leads to cross site scripting. The attack can be launched remotely. The exploit has been disclosed to the public and may be used. The vendor was contacted early about this disclosure but did not respond in any way.",
-      "severity": 2.4,
+      "id": "CVE-2025-47907",
+      "publishedDate": "2025-08-07T15:25:30.704Z",
+      "lastModifiedDate": "2025-08-07T15:25:30.704Z",
+      "description": "Cancelling a query (e.g. by cancelling the context passed to one of the query methods) during a call to the Scan method of the returned Rows can result in unexpected results if other queries are being made in parallel. This can result in a race condition that may overwrite the expected results with those of another query, causing the call to Scan to return either unexpected results from the other query or an error.",
+      "severity": "N/A",
       "references": [
         {
-          "url": "https://vuldb.com/?id.318667",
+          "url": "https://go.dev/cl/693735",
           "type": "reference"
         },
         {
-          "url": "https://vuldb.com/?ctiid.318667",
+          "url": "https://go.dev/issue/74831",
           "type": "reference"
         },
         {
-          "url": "https://vuldb.com/?submit.620451",
+          "url": "https://groups.google.com/g/golang-announce/c/x5MKroML2yM",
           "type": "reference"
         },
         {
-          "url": "https://karinagante.github.io/cve-2025-8538/",
-          "type": "poc"
+          "url": "https://pkg.go.dev/vuln/GO-2025-3849",
+          "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Portabilis",
-          "product": "i-Educar",
+          "vendor": "Go standard library",
+          "product": "database/sql",
+          "collectionURL": "https://pkg.go.dev",
+          "packageName": "database/sql",
           "versions": [
             {
-              "version": "2.10",
-              "status": "affected"
+              "version": "0",
+              "lessThan": "1.23.12",
+              "status": "affected",
+              "versionType": "semver"
+            },
+            {
+              "version": "1.24.0",
+              "lessThan": "1.24.6",
+              "status": "affected",
+              "versionType": "semver"
+            }
+          ],
+          "programRoutines": [
+            {
+              "name": "Rows.Scan"
+            },
+            {
+              "name": "Row.Scan"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-362: Concurrent Execution using Shared Resource with Improper Synchronization ('Race Condition')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-7054",
+      "publishedDate": "2025-08-07T15:19:29.542Z",
+      "lastModifiedDate": "2025-08-07T15:19:29.542Z",
+      "description": "Cloudflare quiche was discovered to be vulnerable to an infinite loop when sending packets containing RETIRE_CONNECTION_ID frames.\n\nQUIC connections possess a set of connection identifiers (IDs); see  Section 5.1 of RFC 9000 https://datatracker.ietf.org/doc/html/rfc9000#section-5.1 . Once the QUIC handshake completes, a local endpoint is responsible for issuing and retiring Connection IDs that are used by the remote peer to populate the Destination Connection ID field in packets sent from remote to local. Each Connection ID has a sequence number to ensure synchronization between peers.\n\nAn unauthenticated remote attacker can exploit this vulnerability by first completing a handshake and then sending a specially-crafted set of frames that trigger a connection ID retirement in the victim. When the victim attempts to send a packet containing RETIRE_CONNECTION_ID frames,  Section 19.16 of RFC 9000 https://datatracker.ietf.org/doc/html/rfc9000#section-19.6  requires that the sequence number of the retired connection ID must not be the same as the sequence number of the connection ID used by the packet. In other words, a packet cannot contain a frame that retires itself. In scenarios such as path migration, it is possible for there to be multiple active paths with different active connection IDs that could be used to retire each other. The exploit triggered an unintentional behaviour of a quiche design feature that supports retirement across paths while maintaining full connection ID synchronization, leading to an infinite loop.This issue affects quiche: from 0.15.0 before 0.24.5.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/cloudflare/quiche/security/advisories/GHSA-m3hh-f9gh-74c2",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "quiche",
+          "repo": "https://github.com/cloudflare/quiche",
+          "vendor": "Cloudflare",
+          "versions": [
+            {
+              "lessThan": "0.24.5",
+              "status": "affected",
+              "version": "0.15.0",
+              "versionType": "semver"
             }
           ]
         }
       ],
       "problemType": [
-        "Cross Site Scripting",
-        "Code Injection"
+        "CWE-835 Loop with Unreachable Exit Condition ('Infinite Loop')"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
