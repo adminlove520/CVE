@@ -2,30 +2,67 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 4,
-    "last_updated": "2025-08-09T02:17:49.414948",
+    "total_count": 11,
+    "last_updated": "2025-08-09T03:36:00.339811",
     "severity_distribution": {
-      "critical": 0,
-      "high": 1,
-      "medium": 1,
-      "low": 0,
-      "none": 2
+      "critical": 2,
+      "high": 2,
+      "medium": 5,
+      "low": 1,
+      "none": 1
     }
   },
   "cves": [
     {
-      "id": "CVE-2025-54996",
-      "publishedDate": "2025-08-09T01:32:09.953Z",
-      "lastModifiedDate": "2025-08-09T01:32:09.953Z",
-      "description": "OpenBao exists to provide a software solution to manage, store, and distribute sensitive data including secrets, certificates, and keys. In versions 2.3.1 and below, accounts with access to highly-privileged identity entity systems in root namespaces were able to increase their scope directly to the root policy. While the identity system allowed adding arbitrary policies, which in turn could contain capability grants on arbitrary paths, the root policy was restricted to manual generation using unseal or recovery key shares. The global root policy was not accessible from child namespaces. This issue is fixed in version 2.3.2. To workaround this vulnerability, use of denied_parameters in any policy which has access to the affected identity endpoints (on identity entities) may be sufficient to prohibit this type of attack.",
-      "severity": 7.2,
+      "id": "CVE-2025-55013",
+      "publishedDate": "2025-08-09T02:02:23.602Z",
+      "lastModifiedDate": "2025-08-09T02:02:23.602Z",
+      "description": "The Assemblyline 4 Service Client interfaces with the API to fetch tasks and publish the result for a service in Assemblyline 4. In versions below 4.6.1.dev138, the Assemblyline 4 Service Client (task_handler.py) accepts a SHA-256 value returned by the service server and uses it directly as a local file name.A malicious or compromised server (or any MITM that can speak to client) can return a path-traversal payload such as `../../../etc/cron.d/evil` and force the client to write the downloaded bytes to an arbitrary location on disk. This is fixed in version 4.6.1.dev138.",
+      "severity": 10,
       "references": [
         {
-          "url": "https://github.com/openbao/openbao/security/advisories/GHSA-vf84-mxrq-crqc",
+          "url": "https://github.com/CybercentreCanada/assemblyline/security/advisories/GHSA-75jv-vfxf-3865",
           "type": "reference"
         },
         {
-          "url": "https://github.com/openbao/openbao/pull/1627",
+          "url": "https://github.com/CybercentreCanada/assemblyline-service-client/commit/351414e7e96cc1f5640ae71ae51b939e8ba30900",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "CybercentreCanada",
+          "product": "assemblyline",
+          "versions": [
+            {
+              "version": "< 4.6.1.dev138",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-23: Relative Path Traversal"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-54997",
+      "publishedDate": "2025-08-09T01:56:45.634Z",
+      "lastModifiedDate": "2025-08-09T01:56:45.634Z",
+      "description": "OpenBao exists to provide a software solution to manage, store, and distribute sensitive data including secrets, certificates, and keys. In versions 2.3.1 and below, some OpenBao deployments intentionally limit privileged API operators from executing system code or making network connections. However, these operators can bypass both restrictions through the audit subsystem by manipulating log prefixes. This allows unauthorized code execution and network access that violates the intended security model. This issue is fixed in version 2.3.2. To workaround, users can block access to sys/audit/* endpoints using explicit deny policies, but root operators cannot be restricted this way.",
+      "severity": 9.1,
+      "references": [
+        {
+          "url": "https://github.com/openbao/openbao/security/advisories/GHSA-xp75-r577-cvhp",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/openbao/openbao/pull/1634",
+          "type": "reference"
+        },
+        {
+          "url": "https://discuss.hashicorp.com/t/hcsec-2025-14-privileged-vault-operator-may-execute-code-on-the-underlying-host/76033",
           "type": "reference"
         },
         {
@@ -46,132 +83,328 @@
         }
       ],
       "problemType": [
-        "CWE-269: Improper Privilege Management"
+        "CWE-94: Improper Control of Generation of Code ('Code Injection')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-55152",
-      "publishedDate": "2025-08-09T01:29:54.545Z",
-      "lastModifiedDate": "2025-08-09T01:29:54.545Z",
-      "description": "oak is a middleware framework for Deno's native HTTP server, Deno Deploy, Node.js 16.5 and later, Cloudflare Workers and Bun. In versions 17.1.5 and below, it's possible to significantly slow down an oak server with specially crafted values of the x-forwarded-proto or x-forwarded-for headers.",
+      "id": "CVE-2025-55008",
+      "publishedDate": "2025-08-09T02:02:14.950Z",
+      "lastModifiedDate": "2025-08-09T02:02:14.950Z",
+      "description": "The AuthKit library for React Router 7+ provides helpers for authentication and session management using WorkOS & AuthKit with React Router. In versions 0.6.1 and below, @workos-inc/authkit-react-router exposed sensitive authentication artifacts — specifically sealedSession and accessToken by returning them from the authkitLoader. This caused them to be rendered into the browser HTML. This issue is fixed in version 0.7.0.",
+      "severity": 7.1,
+      "references": [
+        {
+          "url": "https://github.com/workos/authkit-react-router/security/advisories/GHSA-vqvc-9q8x-vmq6",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/workos/authkit-react-router/commit/607caac658784962bab76e227f9c5820d0b9a9e5",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/workos/authkit-react-router/releases/tag/v0.7.0",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "workos",
+          "product": "authkit-react-router",
+          "versions": [
+            {
+              "version": "< 0.7.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-55009",
+      "publishedDate": "2025-08-09T02:02:07.611Z",
+      "lastModifiedDate": "2025-08-09T02:02:07.611Z",
+      "description": "The AuthKit library for Remix provides convenient helpers for authentication and session management using WorkOS & AuthKit with Remix. In versions 0.14.1 and below, @workos-inc/authkit-remix exposed sensitive authentication artifacts — specifically sealedSession and accessToken — by returning them from the authkitLoader. This caused them to be rendered into the browser HTML.",
+      "severity": 7.1,
+      "references": [
+        {
+          "url": "https://github.com/workos/authkit-remix/security/advisories/GHSA-v3gr-w9gf-23cx",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/workos/authkit-remix/commit/20102afc74bf3dd5150a975a098067fb406b90b6",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/workos/authkit-remix/releases/tag/v0.15.0",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "workos",
+          "product": "authkit-remix",
+          "versions": [
+            {
+              "version": "< 0.15.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-55001",
+      "publishedDate": "2025-08-09T02:01:29.056Z",
+      "lastModifiedDate": "2025-08-09T02:01:29.056Z",
+      "description": "OpenBao exists to provide a software solution to manage, store, and distribute sensitive data including secrets, certificates, and keys. In versions 2.3.1 and below, OpenBao allowed the assignment of policies and MFA attribution based upon entity aliases, chosen by the underlying auth method. When the username_as_alias=true parameter in the LDAP auth method was in use, the caller-supplied username was used verbatim without normalization, allowing an attacker to bypass alias-specific MFA requirements. This issue was fixed in version 2.3.2. To work around this, remove all usage of the username_as_alias=true parameter and update any entity aliases accordingly.",
+      "severity": 6.5,
+      "references": [
+        {
+          "url": "https://github.com/openbao/openbao/security/advisories/GHSA-2q8q-8fgw-9p6p",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/openbao/openbao/commit/c52795c1ef746c7f2c510f9225aa8ccbbd44f9fc",
+          "type": "reference"
+        },
+        {
+          "url": "https://discuss.hashicorp.com/t/hcsec-2025-20-vault-ldap-mfa-enforcement-bypass-when-using-username-as-alias/76092",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "openbao",
+          "product": "openbao",
+          "versions": [
+            {
+              "version": "< 2.3.2",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-156: Improper Neutralization of Whitespace"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-55000",
+      "publishedDate": "2025-08-09T02:01:16.409Z",
+      "lastModifiedDate": "2025-08-09T02:01:16.409Z",
+      "description": "OpenBao exists to provide a software solution to manage, store, and distribute sensitive data including secrets, certificates, and keys. In versions 0.1.0 through 2.3.1, OpenBao's TOTP secrets engine could accept valid codes multiple times rather than strictly-once. This was caused by unexpected normalization in the underlying TOTP library. To work around, ensure that all codes are first normalized before submitting to the OpenBao endpoint. TOTP code verification is a privileged action; only trusted systems should be verifying codes.",
+      "severity": 6.5,
+      "references": [
+        {
+          "url": "https://github.com/openbao/openbao/security/advisories/GHSA-f7c3-mhj2-9pvg",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/openbao/openbao/commit/183891f8d535d5b6eb3d79fda8200cade6de99e1",
+          "type": "reference"
+        },
+        {
+          "url": "https://discuss.hashicorp.com/t/hcsec-2025-17-vault-totp-secrets-engine-code-reuse/76036",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "openbao",
+          "product": "openbao",
+          "versions": [
+            {
+              "version": ">= 0.1.0, < 2.3.2",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-156: Improper Neutralization of Whitespace"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-55003",
+      "publishedDate": "2025-08-09T02:01:43.985Z",
+      "lastModifiedDate": "2025-08-09T02:01:43.985Z",
+      "description": "OpenBao exists to provide a software solution to manage, store, and distribute sensitive data including secrets, certificates, and keys. In versions 2.3.1 and below, OpenBao's Login Multi-Factor Authentication (MFA) system allows enforcing MFA using Time-based One Time Password (TOTP). Due to normalization applied by the underlying TOTP library, codes were accepted which could contain whitespace; this whitespace could bypass internal rate limiting of the MFA method and allow reuse of existing MFA codes. This issue was fixed in version 2.3.2. To work around this, use of rate-limiting quotas can limit an attacker's ability to exploit this: https://openbao.org/api-docs/system/rate-limit-quotas/.",
+      "severity": 5.7,
+      "references": [
+        {
+          "url": "https://github.com/openbao/openbao/security/advisories/GHSA-rxp7-9q75-vj3p",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/openbao/openbao/commit/8340a6918f6c41d8f75b6c3845c376d9dc32ed19",
+          "type": "reference"
+        },
+        {
+          "url": "https://discuss.hashicorp.com/t/hcsec-2025-19-vault-login-mfa-bypass-of-rate-limiting-and-totp-token-reuse/76038",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "openbao",
+          "product": "openbao",
+          "versions": [
+            {
+              "version": "< 2.3.2",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-307: Improper Restriction of Excessive Authentication Attempts"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-54998",
+      "publishedDate": "2025-08-09T02:00:27.597Z",
+      "lastModifiedDate": "2025-08-09T02:00:27.597Z",
+      "description": "OpenBao exists to provide a software solution to manage, store, and distribute sensitive data including secrets, certificates, and keys. In versions 0.1.0 through 2.3.1, attackers could bypass the automatic user lockout mechanisms in the OpenBao Userpass or LDAP auth systems. This was caused by different aliasing between pre-flight and full login request user entity alias attributions. This is fixed in version 2.3.2. To work around this issue, existing users may apply rate-limiting quotas on the authentication endpoints:, see https://openbao.org/api-docs/system/rate-limit-quotas/.",
       "severity": 5.3,
       "references": [
         {
-          "url": "https://github.com/oakserver/oak/security/advisories/GHSA-r3v7-pc4g-7xp9",
+          "url": "https://github.com/openbao/openbao/security/advisories/GHSA-j3xv-7fxp-gfhx",
           "type": "reference"
         },
         {
-          "url": "https://github.com/oakserver/oak/commit/b60e60330ef227707c4dc13ef0ea36192d894f44",
+          "url": "https://github.com/openbao/openbao/commit/c52795c1ef746c7f2c510f9225aa8ccbbd44f9fc",
+          "type": "reference"
+        },
+        {
+          "url": "https://discuss.hashicorp.com/t/hcsec-2025-16-vault-userpass-and-ldap-user-lockout-bypass/76035",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "oakserver",
-          "product": "oak",
+          "vendor": "openbao",
+          "product": "openbao",
           "versions": [
             {
-              "version": "< 17.1.6",
+              "version": ">= 0.1.0, < 2.3.2",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-400: Uncontrolled Resource Consumption",
-        "CWE-1333: Inefficient Regular Expression Complexity"
+        "CWE-307: Improper Restriction of Excessive Authentication Attempts"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-54888",
-      "publishedDate": "2025-08-09T01:31:53.319Z",
-      "lastModifiedDate": "2025-08-09T01:31:53.319Z",
-      "description": "Fedify is a TypeScript library for building federated server apps powered by ActivityPub. In versions below 1.3.20, 1.4.0-dev.585 through 1.4.12, 1.5.0-dev.636 through 1.5.4, 1.6.0-dev.754 through 1.6.7, 1.7.0-pr.251.885 through 1.7.8 and 1.8.0-dev.909 through 1.8.4, an authentication bypass vulnerability allows any unauthenticated attacker to impersonate any ActivityPub actor by sending forged activities signed with their own keys. Activities are processed before verifying the signing key belongs to the claimed actor, enabling complete actor impersonation across all Fedify instances. This is fixed in versions 1.3.20, 1.4.13, 1.5.5, 1.6.8, 1.7.9 and 1.8.5.",
-      "severity": "N/A",
+      "id": "CVE-2025-55006",
+      "publishedDate": "2025-08-09T02:01:57.136Z",
+      "lastModifiedDate": "2025-08-09T02:01:57.136Z",
+      "description": "Frappe Learning is a learning system that helps users structure their content. In versions 2.33.0 and below, the image upload functionality did not adequately sanitize uploaded SVG files. This allowed users to upload SVG files containing embedded JavaScript or other potentially malicious content. Malicious SVG files could be used to execute arbitrary scripts in the context of other users. A fix for this issue is planned for version 2.34.0.",
+      "severity": 4.3,
       "references": [
         {
-          "url": "https://github.com/fedify-dev/fedify/security/advisories/GHSA-6jcc-xgcr-q3h4",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/fedify-dev/fedify/commit/226d9b84dbec52172a70138bba8861454afde42b",
+          "url": "https://github.com/frappe/lms/security/advisories/GHSA-mvxw-r9x4-3vrr",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "fedify-dev",
-          "product": "fedify",
+          "vendor": "frappe",
+          "product": "lms",
           "versions": [
             {
-              "version": "< 1.3.20",
-              "status": "affected"
-            },
-            {
-              "version": ">= 1.4.0-dev.585, < 1.4.13",
-              "status": "affected"
-            },
-            {
-              "version": ">= 1.5.0-dev.636, < 1.5.5",
-              "status": "affected"
-            },
-            {
-              "version": ">= 1.6.0-dev.754, < 1.6.8",
-              "status": "affected"
-            },
-            {
-              "version": ">= 1.7.0-pr.251.885, < 1.7.9",
-              "status": "affected"
-            },
-            {
-              "version": ">= 1.8.0-dev.909, < 1.8.5",
+              "version": "<= 2.33.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-287: Improper Authentication",
-        "CWE-863: Incorrect Authorization"
+        "CWE-20: Improper Input Validation"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-54417",
-      "publishedDate": "2025-08-09T01:31:23.974Z",
-      "lastModifiedDate": "2025-08-09T01:31:23.974Z",
-      "description": "Craft is a platform for creating digital experiences. Versions 4.13.8 through 4.16.2 and 5.5.8 through 5.8.3 contain a vulnerability that can bypass CVE-2025-23209: \"Craft CMS has a potential RCE with a compromised security key\". To exploit this vulnerability, the project must meet these requirements: have a compromised security key and create an arbitrary file in Craft's /storage/backups folder. With those criteria in place, attackers could create a specific, malicious request to the /updater/restore-db endpoint and execute CLI commands remotely. This issue is fixed in versions 4.16.3 and 5.8.4.",
-      "severity": "N/A",
+      "id": "CVE-2025-54999",
+      "publishedDate": "2025-08-09T02:00:46.271Z",
+      "lastModifiedDate": "2025-08-09T02:00:46.271Z",
+      "description": "OpenBao exists to provide a software solution to manage, store, and distribute sensitive data including secrets, certificates, and keys. In versions 0.1.0 through 2.3.1, when using OpenBao's userpass auth method, user enumeration was possible due to timing difference between non-existent users and users with stored credentials. This is independent of whether the supplied credentials were valid for the given user. This issue was fixed in version 2.3.2. To work around this issue, users may use another auth method or apply rate limiting quotas to limit the number of requests in a period of time: https://openbao.org/api-docs/system/rate-limit-quotas/.",
+      "severity": 3.7,
       "references": [
         {
-          "url": "https://github.com/craftcms/cms/security/advisories/GHSA-2vcf-qxv3-2mgw",
+          "url": "https://github.com/openbao/openbao/security/advisories/GHSA-hh28-h22f-8357",
           "type": "reference"
         },
         {
-          "url": "https://github.com/craftcms/cms/commit/a19d46be78a9ca1ea474012a10e97bed0d787f57",
+          "url": "https://github.com/openbao/openbao/commit/4d9b5d3d6486ab9fbd5b644173fa0097015d6626",
+          "type": "reference"
+        },
+        {
+          "url": "https://discuss.hashicorp.com/t/hcsec-2025-15-timing-side-channel-in-vault-s-userpass-auth-method/76034",
+          "type": "reference"
+        },
+        {
+          "url": "https://discuss.hashicorp.com/t/hcsec-2025-21-vault-user-enumeration-in-userpass-auth-method/76095",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "craftcms",
-          "product": "cms",
+          "vendor": "openbao",
+          "product": "openbao",
           "versions": [
             {
-              "version": ">= 4.13.8, < 4.16.3",
-              "status": "affected"
-            },
-            {
-              "version": ">= 5.5.8, < 5.8.4",
+              "version": ">= 0.1.0, < 2.3.2",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-94: Improper Control of Generation of Code ('Code Injection')"
+        "CWE-203: Observable Discrepancy"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-55149",
+      "publishedDate": "2025-08-09T02:02:30.630Z",
+      "lastModifiedDate": "2025-08-09T02:02:30.630Z",
+      "description": "Tiny-Scientist is a lightweight framework for automating the entire lifecycle of scientific research—from ideation to implementation, writing, and review. In versions 0.1.1 and below, a critical path traversal vulnerability has been identified in the review_paper function in backend/app.py. The vulnerability allows malicious users to access arbitrary PDF files on the server by providing crafted file paths that bypass the intended security restrictions. This vulnerability allows attackers to: read any PDF file accessible to the server process, potentially access sensitive documents outside the intended directory and perform reconnaissance on the server's file system structure. This issue does not currently have a fix.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/ulab-uiuc/tiny-scientist/security/advisories/GHSA-rrgf-hcr9-jq6h",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "ulab-uiuc",
+          "product": "tiny-scientist",
+          "versions": [
+            {
+              "version": "<= 0.1.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
