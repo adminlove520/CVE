@@ -2,154 +2,62 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 4,
-    "last_updated": "2025-08-11T14:58:42.305376",
+    "total_count": 1,
+    "last_updated": "2025-08-11T15:33:35.294846",
     "severity_distribution": {
       "critical": 0,
       "high": 0,
-      "medium": 4,
+      "medium": 0,
       "low": 0,
-      "none": 0
+      "none": 1
     }
   },
   "cves": [
     {
-      "id": "CVE-2025-55001",
-      "publishedDate": "2025-08-09T02:01:29.056Z",
-      "lastModifiedDate": "2025-08-11T14:45:37.326Z",
-      "description": "OpenBao exists to provide a software solution to manage, store, and distribute sensitive data including secrets, certificates, and keys. In versions 2.3.1 and below, OpenBao allowed the assignment of policies and MFA attribution based upon entity aliases, chosen by the underlying auth method. When the username_as_alias=true parameter in the LDAP auth method was in use, the caller-supplied username was used verbatim without normalization, allowing an attacker to bypass alias-specific MFA requirements. This issue was fixed in version 2.3.2. To work around this, remove all usage of the username_as_alias=true parameter and update any entity aliases accordingly.",
-      "severity": 6.5,
+      "id": "CVE-2025-8672",
+      "publishedDate": "2025-08-11T12:21:48.487Z",
+      "lastModifiedDate": "2025-08-11T15:13:02.758Z",
+      "description": "MacOS version of GIMP bundles a Python interpreter that inherits the Transparency, Consent, and Control (TCC) permissions\ngranted by the user to the main application bundle. An attacker with local user access can\ninvoke this interpreter with arbitrary commands or scripts, leveraging the\napplication's previously granted TCC permissions to access user's files in privacy-protected folders without triggering user prompts. Accessing other resources beyond previously granted TCC permissions will prompt the user for approval in the name of GIMP, potentially disguising attacker's malicious intent.\n\nThis issue has been fixed in 3.1.4.2 version of GIMP.",
+      "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/openbao/openbao/security/advisories/GHSA-2q8q-8fgw-9p6p",
+          "url": "https://gitlab.gnome.org/Infrastructure/gimp-macos-build",
           "type": "reference"
         },
         {
-          "url": "https://github.com/openbao/openbao/commit/c52795c1ef746c7f2c510f9225aa8ccbbd44f9fc",
+          "url": "https://cert.pl/en/posts/2025/08/tcc-bypass/",
           "type": "reference"
         },
         {
-          "url": "https://discuss.hashicorp.com/t/hcsec-2025-20-vault-ldap-mfa-enforcement-bypass-when-using-username-as-alias/76092",
+          "url": "https://www.jamf.com/blog/zero-day-tcc-bypass-discovered-in-xcsset-malware/",
+          "type": "reference"
+        },
+        {
+          "url": "https://gitlab.gnome.org/GNOME/gimp/-/issues/13848",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "openbao",
-          "product": "openbao",
+          "defaultStatus": "unaffected",
+          "platforms": [
+            "MacOS"
+          ],
+          "product": "GIMP",
+          "repo": "https://gitlab.gnome.org/GNOME/gimp/",
+          "vendor": "GIMP",
           "versions": [
             {
-              "version": "< 2.3.2",
-              "status": "affected"
+              "lessThan": "3.1.4.2",
+              "status": "affected",
+              "version": "0",
+              "versionType": "custom"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-156: Improper Neutralization of Whitespace"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-55000",
-      "publishedDate": "2025-08-09T02:01:16.409Z",
-      "lastModifiedDate": "2025-08-11T14:43:10.004Z",
-      "description": "OpenBao exists to provide a software solution to manage, store, and distribute sensitive data including secrets, certificates, and keys. In versions 0.1.0 through 2.3.1, OpenBao's TOTP secrets engine could accept valid codes multiple times rather than strictly-once. This was caused by unexpected normalization in the underlying TOTP library. To work around, ensure that all codes are first normalized before submitting to the OpenBao endpoint. TOTP code verification is a privileged action; only trusted systems should be verifying codes.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://github.com/openbao/openbao/security/advisories/GHSA-f7c3-mhj2-9pvg",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openbao/openbao/commit/183891f8d535d5b6eb3d79fda8200cade6de99e1",
-          "type": "reference"
-        },
-        {
-          "url": "https://discuss.hashicorp.com/t/hcsec-2025-17-vault-totp-secrets-engine-code-reuse/76036",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "openbao",
-          "product": "openbao",
-          "versions": [
-            {
-              "version": ">= 0.1.0, < 2.3.2",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-156: Improper Neutralization of Whitespace"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-55003",
-      "publishedDate": "2025-08-09T02:01:43.985Z",
-      "lastModifiedDate": "2025-08-11T14:47:04.206Z",
-      "description": "OpenBao exists to provide a software solution to manage, store, and distribute sensitive data including secrets, certificates, and keys. In versions 2.3.1 and below, OpenBao's Login Multi-Factor Authentication (MFA) system allows enforcing MFA using Time-based One Time Password (TOTP). Due to normalization applied by the underlying TOTP library, codes were accepted which could contain whitespace; this whitespace could bypass internal rate limiting of the MFA method and allow reuse of existing MFA codes. This issue was fixed in version 2.3.2. To work around this, use of rate-limiting quotas can limit an attacker's ability to exploit this: https://openbao.org/api-docs/system/rate-limit-quotas/.",
-      "severity": 5.7,
-      "references": [
-        {
-          "url": "https://github.com/openbao/openbao/security/advisories/GHSA-rxp7-9q75-vj3p",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openbao/openbao/commit/8340a6918f6c41d8f75b6c3845c376d9dc32ed19",
-          "type": "reference"
-        },
-        {
-          "url": "https://discuss.hashicorp.com/t/hcsec-2025-19-vault-login-mfa-bypass-of-rate-limiting-and-totp-token-reuse/76038",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "openbao",
-          "product": "openbao",
-          "versions": [
-            {
-              "version": "< 2.3.2",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-307: Improper Restriction of Excessive Authentication Attempts"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-55006",
-      "publishedDate": "2025-08-09T02:01:57.136Z",
-      "lastModifiedDate": "2025-08-11T14:49:39.107Z",
-      "description": "Frappe Learning is a learning system that helps users structure their content. In versions 2.33.0 and below, the image upload functionality did not adequately sanitize uploaded SVG files. This allowed users to upload SVG files containing embedded JavaScript or other potentially malicious content. Malicious SVG files could be used to execute arbitrary scripts in the context of other users. A fix for this issue is planned for version 2.34.0.",
-      "severity": 4.3,
-      "references": [
-        {
-          "url": "https://github.com/frappe/lms/security/advisories/GHSA-mvxw-r9x4-3vrr",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "frappe",
-          "product": "lms",
-          "versions": [
-            {
-              "version": "<= 2.33.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-20: Improper Input Validation"
+        "CWE-276 Incorrect Default Permissions"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
