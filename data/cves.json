@@ -2,15 +2,242 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 0,
-    "last_updated": "2025-08-15T14:55:05.452695",
+    "total_count": 4,
+    "last_updated": "2025-08-15T15:25:24.102788",
     "severity_distribution": {
       "critical": 0,
-      "high": 0,
-      "medium": 0,
+      "high": 1,
+      "medium": 1,
       "low": 0,
-      "none": 0
+      "none": 2
     }
   },
-  "cves": []
+  "cves": [
+    {
+      "id": "CVE-2025-49897",
+      "publishedDate": "2025-08-15T15:13:13.206Z",
+      "lastModifiedDate": "2025-08-15T15:13:13.206Z",
+      "description": "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') vulnerability in gopiplus Vertical scroll slideshow gallery v2 allows Blind SQL Injection. This issue affects Vertical scroll slideshow gallery v2: from n/a through 9.1.",
+      "severity": 8.5,
+      "references": [
+        {
+          "url": "https://patchstack.com/database/wordpress/plugin/vertical-scroll-slideshow-gallery-v2/vulnerability/wordpress-vertical-scroll-slideshow-gallery-v2-plugin-9-1-sql-injection-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "gopiplus",
+          "collectionURL": "https://wordpress.org/plugins",
+          "defaultStatus": "unaffected",
+          "packageName": "vertical-scroll-slideshow-gallery-v2",
+          "product": "Vertical scroll slideshow gallery v2",
+          "versions": [
+            {
+              "lessThanOrEqual": "9.1",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-49432",
+      "publishedDate": "2025-08-15T15:13:13.782Z",
+      "lastModifiedDate": "2025-08-15T15:13:13.782Z",
+      "description": "Missing Authorization vulnerability in FWDesign Ultimate Video Player allows Exploiting Incorrectly Configured Access Control Security Levels. This issue affects Ultimate Video Player: from n/a through 10.1.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://patchstack.com/database/wordpress/plugin/fwduvp/vulnerability/wordpress-ultimate-video-player-plugin-plugin-10-1-broken-access-control-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "FWDesign",
+          "collectionURL": "https://codecanyon.net",
+          "defaultStatus": "unaffected",
+          "packageName": "fwduvp",
+          "product": "Ultimate Video Player",
+          "versions": [
+            {
+              "lessThanOrEqual": "10.1",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-862 Missing Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-55207",
+      "publishedDate": "2025-08-15T15:13:08.214Z",
+      "lastModifiedDate": "2025-08-15T15:13:08.214Z",
+      "description": "Astro is a web framework for content-driven websites. Following CVE-2025-54793 there's still an Open Redirect vulnerability in a subset of Astro deployment scenarios prior to version 9.4.1. Astro 5.12.8 addressed CVE-2025-54793 where https://example.com//astro.build/press would redirect to the external origin //astro.build/press. However, with the Node deployment adapter in standalone mode and trailingSlash set to \"always\" in the Astro configuration, https://example.com//astro.build/press still redirects to //astro.build/press. This affects any user who clicks on a specially crafted link pointing to the affected domain. Since the domain appears legitimate, victims may be tricked into trusting the redirected page, leading to possible credential theft, malware distribution, or other phishing-related attacks. This issue has been patched in version 9.4.1.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/withastro/astro/security/advisories/GHSA-9x9c-ghc5-jhw9",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/withastro/astro/commit/5fc3c599cacb0172cc7d8e1202a5f2e8685d7ef2",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "withastro",
+          "product": "astro",
+          "versions": [
+            {
+              "version": "< 9.4.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-601: URL Redirection to Untrusted Site ('Open Redirect')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-38500",
+      "publishedDate": "2025-08-12T16:02:42.363Z",
+      "lastModifiedDate": "2025-08-15T15:16:37.105Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nxfrm: interface: fix use-after-free after changing collect_md xfrm interface\n\ncollect_md property on xfrm interfaces can only be set on device creation,\nthus xfrmi_changelink() should fail when called on such interfaces.\n\nThe check to enforce this was done only in the case where the xi was\nreturned from xfrmi_locate() which doesn't look for the collect_md\ninterface, and thus the validation was never reached.\n\nCalling changelink would thus errornously place the special interface xi\nin the xfrmi_net->xfrmi hash, but since it also exists in the\nxfrmi_net->collect_md_xfrmi pointer it would lead to a double free when\nthe net namespace was taken down [1].\n\nChange the check to use the xi from netdev_priv which is available earlier\nin the function to prevent changes in xfrm collect_md interfaces.\n\n[1] resulting oops:\n[    8.516540] kernel BUG at net/core/dev.c:12029!\n[    8.516552] Oops: invalid opcode: 0000 [#1] SMP NOPTI\n[    8.516559] CPU: 0 UID: 0 PID: 12 Comm: kworker/u80:0 Not tainted 6.15.0-virtme #5 PREEMPT(voluntary)\n[    8.516565] Hardware name: QEMU Ubuntu 24.04 PC (i440FX + PIIX, 1996), BIOS 1.16.3-debian-1.16.3-2 04/01/2014\n[    8.516569] Workqueue: netns cleanup_net\n[    8.516579] RIP: 0010:unregister_netdevice_many_notify+0x101/0xab0\n[    8.516590] Code: 90 0f 0b 90 48 8b b0 78 01 00 00 48 8b 90 80 01 00 00 48 89 56 08 48 89 32 4c 89 80 78 01 00 00 48 89 b8 80 01 00 00 eb ac 90 <0f> 0b 48 8b 45 00 4c 8d a0 88 fe ff ff 48 39 c5 74 5c 41 80 bc 24\n[    8.516593] RSP: 0018:ffffa93b8006bd30 EFLAGS: 00010206\n[    8.516598] RAX: ffff98fe4226e000 RBX: ffffa93b8006bd58 RCX: ffffa93b8006bc60\n[    8.516601] RDX: 0000000000000004 RSI: 0000000000000000 RDI: dead000000000122\n[    8.516603] RBP: ffffa93b8006bdd8 R08: dead000000000100 R09: ffff98fe4133c100\n[    8.516605] R10: 0000000000000000 R11: 00000000000003d2 R12: ffffa93b8006be00\n[    8.516608] R13: ffffffff96c1a510 R14: ffffffff96c1a510 R15: ffffa93b8006be00\n[    8.516615] FS:  0000000000000000(0000) GS:ffff98fee73b7000(0000) knlGS:0000000000000000\n[    8.516619] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033\n[    8.516622] CR2: 00007fcd2abd0700 CR3: 000000003aa40000 CR4: 0000000000752ef0\n[    8.516625] PKRU: 55555554\n[    8.516627] Call Trace:\n[    8.516632]  <TASK>\n[    8.516635]  ? rtnl_is_locked+0x15/0x20\n[    8.516641]  ? unregister_netdevice_queue+0x29/0xf0\n[    8.516650]  ops_undo_list+0x1f2/0x220\n[    8.516659]  cleanup_net+0x1ad/0x2e0\n[    8.516664]  process_one_work+0x160/0x380\n[    8.516673]  worker_thread+0x2aa/0x3c0\n[    8.516679]  ? __pfx_worker_thread+0x10/0x10\n[    8.516686]  kthread+0xfb/0x200\n[    8.516690]  ? __pfx_kthread+0x10/0x10\n[    8.516693]  ? __pfx_kthread+0x10/0x10\n[    8.516697]  ret_from_fork+0x82/0xf0\n[    8.516705]  ? __pfx_kthread+0x10/0x10\n[    8.516709]  ret_from_fork_asm+0x1a/0x30\n[    8.516718]  </TASK>",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://git.kernel.org/stable/c/a8d4748b954584ab7bd800f1a4e46d5b0eeb5ce4",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/bfebdb85496e1da21d3cf05de099210915c3e706",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/5918c3f4800a3aef2173865e5903370f21e24f47",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/69a31f7a6a81f5ffd3812c442e09ff0be22960f1",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/a90b2a1aaacbcf0f91d7e4868ad6c51c5dee814b",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "unaffected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "net/xfrm/xfrm_interface_core.c"
+          ],
+          "versions": [
+            {
+              "version": "abc340b38ba25cd6c7aa2c0bd9150d30738c82d0",
+              "lessThan": "a8d4748b954584ab7bd800f1a4e46d5b0eeb5ce4",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "abc340b38ba25cd6c7aa2c0bd9150d30738c82d0",
+              "lessThan": "bfebdb85496e1da21d3cf05de099210915c3e706",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "abc340b38ba25cd6c7aa2c0bd9150d30738c82d0",
+              "lessThan": "5918c3f4800a3aef2173865e5903370f21e24f47",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "abc340b38ba25cd6c7aa2c0bd9150d30738c82d0",
+              "lessThan": "69a31f7a6a81f5ffd3812c442e09ff0be22960f1",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "abc340b38ba25cd6c7aa2c0bd9150d30738c82d0",
+              "lessThan": "a90b2a1aaacbcf0f91d7e4868ad6c51c5dee814b",
+              "status": "affected",
+              "versionType": "git"
+            }
+          ]
+        },
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "affected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "net/xfrm/xfrm_interface_core.c"
+          ],
+          "versions": [
+            {
+              "version": "6.1",
+              "status": "affected"
+            },
+            {
+              "version": "0",
+              "lessThan": "6.1",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.1.148",
+              "lessThanOrEqual": "6.1.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.6.101",
+              "lessThanOrEqual": "6.6.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.12.41",
+              "lessThanOrEqual": "6.12.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.15.9",
+              "lessThanOrEqual": "6.15.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.16",
+              "lessThanOrEqual": "*",
+              "status": "unaffected",
+              "versionType": "original_commit_for_fix"
+            }
+          ]
+        }
+      ],
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    }
+  ]
 }
