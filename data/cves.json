@@ -2,54 +2,38 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 7,
-    "last_updated": "2025-08-16T11:37:40.577212",
+    "total_count": 6,
+    "last_updated": "2025-08-16T11:49:54.256860",
     "severity_distribution": {
       "critical": 0,
       "high": 0,
       "medium": 0,
       "low": 0,
-      "none": 7
+      "none": 6
     }
   },
   "cves": [
     {
-      "id": "CVE-2025-38546",
-      "publishedDate": "2025-08-16T11:22:20.477Z",
-      "lastModifiedDate": "2025-08-16T11:22:20.477Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\natm: clip: Fix memory leak of struct clip_vcc.\n\nioctl(ATMARP_MKIP) allocates struct clip_vcc and set it to\nvcc->user_back.\n\nThe code assumes that vcc_destroy_socket() passes NULL skb\nto vcc->push() when the socket is close()d, and then clip_push()\nfrees clip_vcc.\n\nHowever, ioctl(ATMARPD_CTRL) sets NULL to vcc->push() in\natm_init_atmarp(), resulting in memory leak.\n\nLet's serialise two ioctl() by lock_sock() and check vcc->push()\nin atm_init_atmarp() to prevent memleak.",
+      "id": "CVE-2025-38552",
+      "publishedDate": "2025-08-16T11:34:20.455Z",
+      "lastModifiedDate": "2025-08-16T11:34:20.455Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nmptcp: plug races between subflow fail and subflow creation\n\nWe have races similar to the one addressed by the previous patch between\nsubflow failing and additional subflow creation. They are just harder to\ntrigger.\n\nThe solution is similar. Use a separate flag to track the condition\n'socket state prevent any additional subflow creation' protected by the\nfallback lock.\n\nThe socket fallback makes such flag true, and also receiving or sending\nan MP_FAIL option.\n\nThe field 'allow_infinite_fallback' is now always touched under the\nrelevant lock, we can drop the ONCE annotation on write.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://git.kernel.org/stable/c/2fb37ab3226606cbfc9b2b6f9e301b0b735734c5",
+          "url": "https://git.kernel.org/stable/c/7c96d519ee15a130842a6513530b4d20acd2bfcd",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/9e4dbeee56f614e3f1e166e5d0655a999ea185ef",
+          "url": "https://git.kernel.org/stable/c/f81b6fbe13c7fc413b5158cdffc6a59391a2a8db",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/1c075e88d5859a2c6b43b27e0e46fb281cef8039",
+          "url": "https://git.kernel.org/stable/c/659da22dee5ff316ba63bdaeeac7b58b5442f6c2",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/0c17ff462d98c997d707ee5cf4e4a9b1b52b9d90",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/1fb9fb5a4b5cec2d56e26525ef8c519de858fa60",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/9f771816f14da6d6157a8c30069091abf6b566fb",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/cb2e4a2f8f268d8fba6662f663a2e57846f14a8d",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/62dba28275a9a3104d4e33595c7b3328d4032d8d",
+          "url": "https://git.kernel.org/stable/c/def5b7b2643ebba696fc60ddf675dca13f073486",
           "type": "reference"
         }
       ],
@@ -60,54 +44,33 @@
           "defaultStatus": "unaffected",
           "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
           "programFiles": [
-            "net/atm/clip.c"
+            "net/mptcp/pm.c",
+            "net/mptcp/protocol.c",
+            "net/mptcp/protocol.h",
+            "net/mptcp/subflow.c"
           ],
           "versions": [
             {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "2fb37ab3226606cbfc9b2b6f9e301b0b735734c5",
+              "version": "478d770008b03ed9d74bdc8add2315b7fd124ecc",
+              "lessThan": "7c96d519ee15a130842a6513530b4d20acd2bfcd",
               "status": "affected",
               "versionType": "git"
             },
             {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "9e4dbeee56f614e3f1e166e5d0655a999ea185ef",
+              "version": "478d770008b03ed9d74bdc8add2315b7fd124ecc",
+              "lessThan": "f81b6fbe13c7fc413b5158cdffc6a59391a2a8db",
               "status": "affected",
               "versionType": "git"
             },
             {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "1c075e88d5859a2c6b43b27e0e46fb281cef8039",
+              "version": "478d770008b03ed9d74bdc8add2315b7fd124ecc",
+              "lessThan": "659da22dee5ff316ba63bdaeeac7b58b5442f6c2",
               "status": "affected",
               "versionType": "git"
             },
             {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "0c17ff462d98c997d707ee5cf4e4a9b1b52b9d90",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "1fb9fb5a4b5cec2d56e26525ef8c519de858fa60",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "9f771816f14da6d6157a8c30069091abf6b566fb",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "cb2e4a2f8f268d8fba6662f663a2e57846f14a8d",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "62dba28275a9a3104d4e33595c7b3328d4032d8d",
+              "version": "478d770008b03ed9d74bdc8add2315b7fd124ecc",
+              "lessThan": "def5b7b2643ebba696fc60ddf675dca13f073486",
               "status": "affected",
               "versionType": "git"
             }
@@ -119,57 +82,259 @@
           "defaultStatus": "affected",
           "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
           "programFiles": [
-            "net/atm/clip.c"
+            "net/mptcp/pm.c",
+            "net/mptcp/protocol.c",
+            "net/mptcp/protocol.h",
+            "net/mptcp/subflow.c"
           ],
           "versions": [
             {
-              "version": "2.6.12",
+              "version": "5.15",
               "status": "affected"
             },
             {
               "version": "0",
-              "lessThan": "2.6.12",
+              "lessThan": "5.15",
               "status": "unaffected",
               "versionType": "semver"
             },
             {
-              "version": "5.4.296",
-              "lessThanOrEqual": "5.4.*",
+              "version": "6.6.101",
+              "lessThanOrEqual": "6.6.*",
               "status": "unaffected",
               "versionType": "semver"
             },
             {
-              "version": "5.10.240",
-              "lessThanOrEqual": "5.10.*",
+              "version": "6.12.40",
+              "lessThanOrEqual": "6.12.*",
               "status": "unaffected",
               "versionType": "semver"
             },
             {
-              "version": "5.15.189",
-              "lessThanOrEqual": "5.15.*",
+              "version": "6.15.8",
+              "lessThanOrEqual": "6.15.*",
               "status": "unaffected",
               "versionType": "semver"
             },
             {
-              "version": "6.1.146",
+              "version": "6.16",
+              "lessThanOrEqual": "*",
+              "status": "unaffected",
+              "versionType": "original_commit_for_fix"
+            }
+          ]
+        }
+      ],
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-38551",
+      "publishedDate": "2025-08-16T11:34:19.544Z",
+      "lastModifiedDate": "2025-08-16T11:34:19.544Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nvirtio-net: fix recursived rtnl_lock() during probe()\n\nThe deadlock appears in a stack trace like:\n\n  virtnet_probe()\n    rtnl_lock()\n    virtio_config_changed_work()\n      netdev_notify_peers()\n        rtnl_lock()\n\nIt happens if the VMM sends a VIRTIO_NET_S_ANNOUNCE request while the\nvirtio-net driver is still probing.\n\nThe config_work in probe() will get scheduled until virtnet_open() enables\nthe config change notification via virtio_config_driver_enable().",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://git.kernel.org/stable/c/4e7c46362550b229354aeb52038f414e231b0037",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/3859f137b3c1fa1f0031d54263234566bdcdd7aa",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/be5dcaed694e4255dc02dd0acfe036708c535def",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "unaffected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "drivers/net/virtio_net.c"
+          ],
+          "versions": [
+            {
+              "version": "df28de7b00502761eba62490f413c65c9b175ed9",
+              "lessThan": "4e7c46362550b229354aeb52038f414e231b0037",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "df28de7b00502761eba62490f413c65c9b175ed9",
+              "lessThan": "3859f137b3c1fa1f0031d54263234566bdcdd7aa",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "df28de7b00502761eba62490f413c65c9b175ed9",
+              "lessThan": "be5dcaed694e4255dc02dd0acfe036708c535def",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "cb06b26bb2e6d2c6a32f65f7bb1b7dcbe033d675",
+              "status": "affected",
+              "versionType": "git"
+            }
+          ]
+        },
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "affected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "drivers/net/virtio_net.c"
+          ],
+          "versions": [
+            {
+              "version": "6.12",
+              "status": "affected"
+            },
+            {
+              "version": "0",
+              "lessThan": "6.12",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.12.40",
+              "lessThanOrEqual": "6.12.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.15.8",
+              "lessThanOrEqual": "6.15.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.16",
+              "lessThanOrEqual": "*",
+              "status": "unaffected",
+              "versionType": "original_commit_for_fix"
+            }
+          ]
+        }
+      ],
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-38550",
+      "publishedDate": "2025-08-16T11:34:18.619Z",
+      "lastModifiedDate": "2025-08-16T11:34:18.619Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nipv6: mcast: Delay put pmc->idev in mld_del_delrec()\n\npmc->idev is still used in ip6_mc_clear_src(), so as mld_clear_delrec()\ndoes, the reference should be put after ip6_mc_clear_src() return.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://git.kernel.org/stable/c/728db00a14cacb37f36e9382ab5fad55caf890cc",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/dcbc346f50a009d8b7f4e330f9f2e22d6442fa26",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/7929d27c747eafe8fca3eecd74a334503ee4c839",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/5f18e0130194550dff734e155029ae734378b5ea",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/ae3264a25a4635531264728859dbe9c659fad554",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "unaffected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "net/ipv6/mcast.c"
+          ],
+          "versions": [
+            {
+              "version": "63ed8de4be81b699ca727e9f8e3344bd487806d7",
+              "lessThan": "728db00a14cacb37f36e9382ab5fad55caf890cc",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "63ed8de4be81b699ca727e9f8e3344bd487806d7",
+              "lessThan": "dcbc346f50a009d8b7f4e330f9f2e22d6442fa26",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "63ed8de4be81b699ca727e9f8e3344bd487806d7",
+              "lessThan": "7929d27c747eafe8fca3eecd74a334503ee4c839",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "63ed8de4be81b699ca727e9f8e3344bd487806d7",
+              "lessThan": "5f18e0130194550dff734e155029ae734378b5ea",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "63ed8de4be81b699ca727e9f8e3344bd487806d7",
+              "lessThan": "ae3264a25a4635531264728859dbe9c659fad554",
+              "status": "affected",
+              "versionType": "git"
+            }
+          ]
+        },
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "affected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "net/ipv6/mcast.c"
+          ],
+          "versions": [
+            {
+              "version": "5.13",
+              "status": "affected"
+            },
+            {
+              "version": "0",
+              "lessThan": "5.13",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.1.147",
               "lessThanOrEqual": "6.1.*",
               "status": "unaffected",
               "versionType": "semver"
             },
             {
-              "version": "6.6.99",
+              "version": "6.6.100",
               "lessThanOrEqual": "6.6.*",
               "status": "unaffected",
               "versionType": "semver"
             },
             {
-              "version": "6.12.39",
+              "version": "6.12.40",
               "lessThanOrEqual": "6.12.*",
               "status": "unaffected",
               "versionType": "semver"
             },
             {
-              "version": "6.15.7",
+              "version": "6.15.8",
               "lessThanOrEqual": "6.15.*",
               "status": "unaffected",
               "versionType": "semver"
@@ -187,22 +352,22 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-38545",
-      "publishedDate": "2025-08-16T11:22:19.459Z",
-      "lastModifiedDate": "2025-08-16T11:22:19.459Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: ethernet: ti: am65-cpsw-nuss: Fix skb size by accounting for skb_shared_info\n\nWhile transitioning from netdev_alloc_ip_align() to build_skb(), memory\nfor the \"skb_shared_info\" member of an \"skb\" was not allocated. Fix this\nby allocating \"PAGE_SIZE\" as the skb length, accounting for the packet\nlength, headroom and tailroom, thereby including the required memory space\nfor skb_shared_info.",
+      "id": "CVE-2025-38549",
+      "publishedDate": "2025-08-16T11:34:17.699Z",
+      "lastModifiedDate": "2025-08-16T11:34:17.699Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nefivarfs: Fix memory leak of efivarfs_fs_info in fs_context error paths\n\nWhen processing mount options, efivarfs allocates efivarfs_fs_info (sfi)\nearly in fs_context initialization. However, sfi is associated with the\nsuperblock and typically freed when the superblock is destroyed. If the\nfs_context is released (final put) before fill_super is called—such as\non error paths or during reconfiguration—the sfi structure would leak,\nas ownership never transfers to the superblock.\n\nImplement the .free callback in efivarfs_context_ops to ensure any\nallocated sfi is properly freed if the fs_context is torn down before\nfill_super, preventing this memory leak.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://git.kernel.org/stable/c/fc2fffa2facac15ce711e95f98f954426e025bc5",
+          "url": "https://git.kernel.org/stable/c/816d36973467d1c9c08a48bdffe4675e219a2e84",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/7d6ca0c8c0caf9a13cae2de763bb1f2a9ea7eabb",
+          "url": "https://git.kernel.org/stable/c/e9fabe7036bb8be6071f39dc38605508f5f57b20",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/02c4d6c26f1f662da8885b299c224ca6628ad232",
+          "url": "https://git.kernel.org/stable/c/64e135f1eaba0bbb0cdee859af3328c68d5b9789",
           "type": "reference"
         }
       ],
@@ -213,24 +378,24 @@
           "defaultStatus": "unaffected",
           "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
           "programFiles": [
-            "drivers/net/ethernet/ti/am65-cpsw-nuss.c"
+            "fs/efivarfs/super.c"
           ],
           "versions": [
             {
-              "version": "8acacc40f7337527ff84cd901ed2ef0a2b95b2b6",
-              "lessThan": "fc2fffa2facac15ce711e95f98f954426e025bc5",
+              "version": "5329aa5101f73c451bcd48deaf3f296685849d9c",
+              "lessThan": "816d36973467d1c9c08a48bdffe4675e219a2e84",
               "status": "affected",
               "versionType": "git"
             },
             {
-              "version": "8acacc40f7337527ff84cd901ed2ef0a2b95b2b6",
-              "lessThan": "7d6ca0c8c0caf9a13cae2de763bb1f2a9ea7eabb",
+              "version": "5329aa5101f73c451bcd48deaf3f296685849d9c",
+              "lessThan": "e9fabe7036bb8be6071f39dc38605508f5f57b20",
               "status": "affected",
               "versionType": "git"
             },
             {
-              "version": "8acacc40f7337527ff84cd901ed2ef0a2b95b2b6",
-              "lessThan": "02c4d6c26f1f662da8885b299c224ca6628ad232",
+              "version": "5329aa5101f73c451bcd48deaf3f296685849d9c",
+              "lessThan": "64e135f1eaba0bbb0cdee859af3328c68d5b9789",
               "status": "affected",
               "versionType": "git"
             }
@@ -242,27 +407,27 @@
           "defaultStatus": "affected",
           "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
           "programFiles": [
-            "drivers/net/ethernet/ti/am65-cpsw-nuss.c"
+            "fs/efivarfs/super.c"
           ],
           "versions": [
             {
-              "version": "6.10",
+              "version": "6.7",
               "status": "affected"
             },
             {
               "version": "0",
-              "lessThan": "6.10",
+              "lessThan": "6.7",
               "status": "unaffected",
               "versionType": "semver"
             },
             {
-              "version": "6.12.39",
+              "version": "6.12.40",
               "lessThanOrEqual": "6.12.*",
               "status": "unaffected",
               "versionType": "semver"
             },
             {
-              "version": "6.15.7",
+              "version": "6.15.8",
               "lessThanOrEqual": "6.15.*",
               "status": "unaffected",
               "versionType": "semver"
@@ -280,26 +445,30 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-38544",
-      "publishedDate": "2025-08-16T11:22:18.541Z",
-      "lastModifiedDate": "2025-08-16T11:22:18.541Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nrxrpc: Fix bug due to prealloc collision\n\nWhen userspace is using AF_RXRPC to provide a server, it has to preallocate\nincoming calls and assign to them call IDs that will be used to thread\nrelated recvmsg() and sendmsg() together.  The preallocated call IDs will\nautomatically be attached to calls as they come in until the pool is empty.\n\nTo the kernel, the call IDs are just arbitrary numbers, but userspace can\nuse the call ID to hold a pointer to prepared structs.  In any case, the\nuser isn't permitted to create two calls with the same call ID (call IDs\nbecome available again when the call ends) and EBADSLT should result from\nsendmsg() if an attempt is made to preallocate a call with an in-use call\nID.\n\nHowever, the cleanup in the error handling will trigger both assertions in\nrxrpc_cleanup_call() because the call isn't marked complete and isn't\nmarked as having been released.\n\nFix this by setting the call state in rxrpc_service_prealloc_one() and then\nmarking it as being released before calling the cleanup function.",
+      "id": "CVE-2025-38548",
+      "publishedDate": "2025-08-16T11:34:16.889Z",
+      "lastModifiedDate": "2025-08-16T11:34:16.889Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nhwmon: (corsair-cpro) Validate the size of the received input buffer\n\nAdd buffer_recv_size to store the size of the received bytes.\nValidate buffer_recv_size in send_usb_cmd().",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://git.kernel.org/stable/c/432c5363cd6fe5a928bbc94524d28b05515684dd",
+          "url": "https://git.kernel.org/stable/c/0db770e2922389753ddbd6663a5516a32b97b743",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/5385ad53793de2ab11e396bdcdaa65bb04b4dad6",
+          "url": "https://git.kernel.org/stable/c/eda5e38cc4dd2dcb422840540374910ef2818494",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/d8ffb47a443919277cb093c3db1ec6c0a06880b1",
+          "url": "https://git.kernel.org/stable/c/3c4bdc8a852e446080adc8ceb90ddd67a56e1bb8",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/69e4186773c6445b258fb45b6e1df18df831ec45",
+          "url": "https://git.kernel.org/stable/c/2771d2ee3d95700f34e1e4df6a445c90565cd4e9",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/495a4f0dce9c8c4478c242209748f1ee9e4d5820",
           "type": "reference"
         }
       ],
@@ -310,30 +479,36 @@
           "defaultStatus": "unaffected",
           "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
           "programFiles": [
-            "net/rxrpc/call_accept.c"
+            "drivers/hwmon/corsair-cpro.c"
           ],
           "versions": [
             {
-              "version": "00e907127e6f86d0f9b122d9b4347a8aa09a8b61",
-              "lessThan": "432c5363cd6fe5a928bbc94524d28b05515684dd",
+              "version": "40c3a445422579db8ad96c234dbe6c0ab3f6b936",
+              "lessThan": "0db770e2922389753ddbd6663a5516a32b97b743",
               "status": "affected",
               "versionType": "git"
             },
             {
-              "version": "00e907127e6f86d0f9b122d9b4347a8aa09a8b61",
-              "lessThan": "5385ad53793de2ab11e396bdcdaa65bb04b4dad6",
+              "version": "40c3a445422579db8ad96c234dbe6c0ab3f6b936",
+              "lessThan": "eda5e38cc4dd2dcb422840540374910ef2818494",
               "status": "affected",
               "versionType": "git"
             },
             {
-              "version": "00e907127e6f86d0f9b122d9b4347a8aa09a8b61",
-              "lessThan": "d8ffb47a443919277cb093c3db1ec6c0a06880b1",
+              "version": "40c3a445422579db8ad96c234dbe6c0ab3f6b936",
+              "lessThan": "3c4bdc8a852e446080adc8ceb90ddd67a56e1bb8",
               "status": "affected",
               "versionType": "git"
             },
             {
-              "version": "00e907127e6f86d0f9b122d9b4347a8aa09a8b61",
-              "lessThan": "69e4186773c6445b258fb45b6e1df18df831ec45",
+              "version": "40c3a445422579db8ad96c234dbe6c0ab3f6b936",
+              "lessThan": "2771d2ee3d95700f34e1e4df6a445c90565cd4e9",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "40c3a445422579db8ad96c234dbe6c0ab3f6b936",
+              "lessThan": "495a4f0dce9c8c4478c242209748f1ee9e4d5820",
               "status": "affected",
               "versionType": "git"
             }
@@ -345,158 +520,39 @@
           "defaultStatus": "affected",
           "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
           "programFiles": [
-            "net/rxrpc/call_accept.c"
+            "drivers/hwmon/corsair-cpro.c"
           ],
           "versions": [
             {
-              "version": "4.9",
+              "version": "5.9",
               "status": "affected"
             },
             {
               "version": "0",
-              "lessThan": "4.9",
+              "lessThan": "5.9",
               "status": "unaffected",
               "versionType": "semver"
             },
             {
-              "version": "6.6.99",
-              "lessThanOrEqual": "6.6.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.12.39",
-              "lessThanOrEqual": "6.12.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.15.7",
-              "lessThanOrEqual": "6.15.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.16",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-38543",
-      "publishedDate": "2025-08-16T11:22:17.619Z",
-      "lastModifiedDate": "2025-08-16T11:22:17.619Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/tegra: nvdec: Fix dma_alloc_coherent error check\n\nCheck for NULL return value with dma_alloc_coherent, in line with\nRobin's fix for vic.c in 'drm/tegra: vic: Fix DMA API misuse'.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://git.kernel.org/stable/c/61b8d20962d00b7df117011c52f97cbb9c76a669",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/d1240029f97ac8c06db4dd4407bbbf83e8d08570",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/a560de522374af931fa994d161db3667b0bb2545",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/2e0812eedccd0629d73c9d0b1184a5db055df1da",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/44306a684cd1699b8562a54945ddc43e2abc9eab",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/gpu/drm/tegra/nvdec.c"
-          ],
-          "versions": [
-            {
-              "version": "46f226c93d35b936aeec6eb31da932dc2e86f413",
-              "lessThan": "61b8d20962d00b7df117011c52f97cbb9c76a669",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "46f226c93d35b936aeec6eb31da932dc2e86f413",
-              "lessThan": "d1240029f97ac8c06db4dd4407bbbf83e8d08570",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "46f226c93d35b936aeec6eb31da932dc2e86f413",
-              "lessThan": "a560de522374af931fa994d161db3667b0bb2545",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "46f226c93d35b936aeec6eb31da932dc2e86f413",
-              "lessThan": "2e0812eedccd0629d73c9d0b1184a5db055df1da",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "46f226c93d35b936aeec6eb31da932dc2e86f413",
-              "lessThan": "44306a684cd1699b8562a54945ddc43e2abc9eab",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/gpu/drm/tegra/nvdec.c"
-          ],
-          "versions": [
-            {
-              "version": "5.17",
-              "status": "affected"
-            },
-            {
-              "version": "0",
-              "lessThan": "5.17",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.1.146",
+              "version": "6.1.147",
               "lessThanOrEqual": "6.1.*",
               "status": "unaffected",
               "versionType": "semver"
             },
             {
-              "version": "6.6.99",
+              "version": "6.6.100",
               "lessThanOrEqual": "6.6.*",
               "status": "unaffected",
               "versionType": "semver"
             },
             {
-              "version": "6.12.39",
+              "version": "6.12.40",
               "lessThanOrEqual": "6.12.*",
               "status": "unaffected",
               "versionType": "semver"
             },
             {
-              "version": "6.15.7",
+              "version": "6.15.8",
               "lessThanOrEqual": "6.15.*",
               "status": "unaffected",
               "versionType": "semver"
@@ -514,42 +570,22 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-38542",
-      "publishedDate": "2025-08-16T11:22:16.689Z",
-      "lastModifiedDate": "2025-08-16T11:22:16.689Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: appletalk: Fix device refcount leak in atrtr_create()\n\nWhen updating an existing route entry in atrtr_create(), the old device\nreference was not being released before assigning the new device,\nleading to a device refcount leak. Fix this by calling dev_put() to\nrelease the old device reference before holding the new one.",
+      "id": "CVE-2025-38547",
+      "publishedDate": "2025-08-16T11:34:15.905Z",
+      "lastModifiedDate": "2025-08-16T11:34:15.905Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\niio: adc: axp20x_adc: Add missing sentinel to AXP717 ADC channel maps\n\nThe AXP717 ADC channel maps is missing a sentinel entry at the end. This\ncauses a KASAN warning.\n\nAdd the missing sentinel entry.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://git.kernel.org/stable/c/b92bedf71f25303e203a4e657489d76691a58119",
+          "url": "https://git.kernel.org/stable/c/086a76474121bf2351438e311376ec67b410b2ea",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/a7852b01793669248dce0348d14df89e77a32afd",
+          "url": "https://git.kernel.org/stable/c/0c0c01c88bb69951539539d2001e67f0c613001f",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/b2f5dfa87367fdce9f8b995bc6c38f64f9ea2c90",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/d2e9f50f0bdad73b64a871f25186b899624518c4",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/4a17370da6e476d3d275534e9e9cd2d02c57ca46",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/473f3eadfc73b0fb6d8dee5829d19a5772e387f7",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/64124cf0aab0dd1e18c0fb5ae66e45741e727f8b",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/711c80f7d8b163d3ecd463cd96f07230f488e750",
+          "url": "https://git.kernel.org/stable/c/3281ddcea6429f7bc1fdb39d407752dd1371aba9",
           "type": "reference"
         }
       ],
@@ -560,54 +596,24 @@
           "defaultStatus": "unaffected",
           "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
           "programFiles": [
-            "net/appletalk/ddp.c"
+            "drivers/iio/adc/axp20x_adc.c"
           ],
           "versions": [
             {
-              "version": "c7f905f0f6d49ed8c1aa4566c31f0383a0ba0c9d",
-              "lessThan": "b92bedf71f25303e203a4e657489d76691a58119",
+              "version": "5ba0cb92584ba5e107c97001e09013c1da0772a8",
+              "lessThan": "086a76474121bf2351438e311376ec67b410b2ea",
               "status": "affected",
               "versionType": "git"
             },
             {
-              "version": "c7f905f0f6d49ed8c1aa4566c31f0383a0ba0c9d",
-              "lessThan": "a7852b01793669248dce0348d14df89e77a32afd",
+              "version": "5ba0cb92584ba5e107c97001e09013c1da0772a8",
+              "lessThan": "0c0c01c88bb69951539539d2001e67f0c613001f",
               "status": "affected",
               "versionType": "git"
             },
             {
-              "version": "c7f905f0f6d49ed8c1aa4566c31f0383a0ba0c9d",
-              "lessThan": "b2f5dfa87367fdce9f8b995bc6c38f64f9ea2c90",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "c7f905f0f6d49ed8c1aa4566c31f0383a0ba0c9d",
-              "lessThan": "d2e9f50f0bdad73b64a871f25186b899624518c4",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "c7f905f0f6d49ed8c1aa4566c31f0383a0ba0c9d",
-              "lessThan": "4a17370da6e476d3d275534e9e9cd2d02c57ca46",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "c7f905f0f6d49ed8c1aa4566c31f0383a0ba0c9d",
-              "lessThan": "473f3eadfc73b0fb6d8dee5829d19a5772e387f7",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "c7f905f0f6d49ed8c1aa4566c31f0383a0ba0c9d",
-              "lessThan": "64124cf0aab0dd1e18c0fb5ae66e45741e727f8b",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "c7f905f0f6d49ed8c1aa4566c31f0383a0ba0c9d",
-              "lessThan": "711c80f7d8b163d3ecd463cd96f07230f488e750",
+              "version": "5ba0cb92584ba5e107c97001e09013c1da0772a8",
+              "lessThan": "3281ddcea6429f7bc1fdb39d407752dd1371aba9",
               "status": "affected",
               "versionType": "git"
             }
@@ -619,315 +625,27 @@
           "defaultStatus": "affected",
           "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
           "programFiles": [
-            "net/appletalk/ddp.c"
+            "drivers/iio/adc/axp20x_adc.c"
           ],
           "versions": [
             {
-              "version": "2.6.12",
+              "version": "6.12",
               "status": "affected"
             },
             {
               "version": "0",
-              "lessThan": "2.6.12",
+              "lessThan": "6.12",
               "status": "unaffected",
               "versionType": "semver"
             },
             {
-              "version": "5.4.296",
-              "lessThanOrEqual": "5.4.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "5.10.240",
-              "lessThanOrEqual": "5.10.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "5.15.189",
-              "lessThanOrEqual": "5.15.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.1.146",
-              "lessThanOrEqual": "6.1.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.6.99",
-              "lessThanOrEqual": "6.6.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.12.39",
+              "version": "6.12.40",
               "lessThanOrEqual": "6.12.*",
               "status": "unaffected",
               "versionType": "semver"
             },
             {
-              "version": "6.15.7",
-              "lessThanOrEqual": "6.15.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.16",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-38541",
-      "publishedDate": "2025-08-16T11:22:15.776Z",
-      "lastModifiedDate": "2025-08-16T11:22:15.776Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nwifi: mt76: mt7925: Fix null-ptr-deref in mt7925_thermal_init()\n\ndevm_kasprintf() returns NULL on error. Currently, mt7925_thermal_init()\ndoes not check for this case, which results in a NULL pointer\ndereference.\n\nAdd NULL check after devm_kasprintf() to prevent this issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://git.kernel.org/stable/c/1bbdf4213711bb6dc365e7628430a63dd3280794",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/2e99e9b34ece0b6d3e82cb757e9f60fa414da999",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/03ee8f73801a8f46d83dfc2bf73fb9ffa5a21602",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/net/wireless/mediatek/mt76/mt7925/init.c"
-          ],
-          "versions": [
-            {
-              "version": "396e41a74a88654f23e36c46d2995752c91654a5",
-              "lessThan": "1bbdf4213711bb6dc365e7628430a63dd3280794",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "396e41a74a88654f23e36c46d2995752c91654a5",
-              "lessThan": "2e99e9b34ece0b6d3e82cb757e9f60fa414da999",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "396e41a74a88654f23e36c46d2995752c91654a5",
-              "lessThan": "03ee8f73801a8f46d83dfc2bf73fb9ffa5a21602",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/net/wireless/mediatek/mt76/mt7925/init.c"
-          ],
-          "versions": [
-            {
-              "version": "6.9",
-              "status": "affected"
-            },
-            {
-              "version": "0",
-              "lessThan": "6.9",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.12.39",
-              "lessThanOrEqual": "6.12.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.15.7",
-              "lessThanOrEqual": "6.15.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.16",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-38540",
-      "publishedDate": "2025-08-16T11:22:14.773Z",
-      "lastModifiedDate": "2025-08-16T11:22:14.773Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nHID: quirks: Add quirk for 2 Chicony Electronics HP 5MP Cameras\n\nThe Chicony Electronics HP 5MP Cameras (USB ID 04F2:B824 & 04F2:B82C)\nreport a HID sensor interface that is not actually implemented.\nAttempting to access this non-functional sensor via iio_info causes\nsystem hangs as runtime PM tries to wake up an unresponsive sensor.\n\nAdd these 2 devices to the HID ignore list since the sensor interface is\nnon-functional by design and should not be exposed to userspace.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://git.kernel.org/stable/c/35f1a5360ac68d9629abbb3930a0a07901cba296",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/7ac00f019698f614a49cce34c198d0568ab0e1c2",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/1b297ab6f38ca60a4ca7298b297944ec6043b2f4",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/2b0931eee48208c25bb77486946dea8e96aa6a36",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/3ce1d87d1f5d80322757aa917182deb7370963b9",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/c72536350e82b53a1be0f3bfdf1511bba2827102",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/a2a91abd19c574b598b1c69ad76ad9c7eedaf062",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/54bae4c17c11688339eb73a04fd24203bb6e7494",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/hid/hid-ids.h",
-            "drivers/hid/hid-quirks.c"
-          ],
-          "versions": [
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "35f1a5360ac68d9629abbb3930a0a07901cba296",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "7ac00f019698f614a49cce34c198d0568ab0e1c2",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "1b297ab6f38ca60a4ca7298b297944ec6043b2f4",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "2b0931eee48208c25bb77486946dea8e96aa6a36",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "3ce1d87d1f5d80322757aa917182deb7370963b9",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "c72536350e82b53a1be0f3bfdf1511bba2827102",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "a2a91abd19c574b598b1c69ad76ad9c7eedaf062",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "54bae4c17c11688339eb73a04fd24203bb6e7494",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/hid/hid-ids.h",
-            "drivers/hid/hid-quirks.c"
-          ],
-          "versions": [
-            {
-              "version": "5.4.296",
-              "lessThanOrEqual": "5.4.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "5.10.240",
-              "lessThanOrEqual": "5.10.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "5.15.189",
-              "lessThanOrEqual": "5.15.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.1.146",
-              "lessThanOrEqual": "6.1.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.6.99",
-              "lessThanOrEqual": "6.6.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.12.39",
-              "lessThanOrEqual": "6.12.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.15.7",
+              "version": "6.15.8",
               "lessThanOrEqual": "6.15.*",
               "status": "unaffected",
               "versionType": "semver"
