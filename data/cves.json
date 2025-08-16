@@ -2,54 +2,149 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 1,
-    "last_updated": "2025-08-16T09:32:30.928133",
+    "total_count": 2,
+    "last_updated": "2025-08-16T09:45:46.140850",
     "severity_distribution": {
       "critical": 0,
       "high": 0,
-      "medium": 1,
+      "medium": 0,
       "low": 0,
-      "none": 0
+      "none": 2
     }
   },
   "cves": [
     {
-      "id": "CVE-2025-8719",
-      "publishedDate": "2025-08-16T08:27:06.935Z",
-      "lastModifiedDate": "2025-08-16T08:27:06.935Z",
-      "description": "The Translate This gTranslate Shortcode plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the ‘base_lang’ parameter in all versions up to, and including, 1.0 due to insufficient input sanitization and output escaping. This makes it possible for authenticated attackers, with Contributor-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page.",
-      "severity": 6.4,
+      "id": "CVE-2025-38502",
+      "publishedDate": "2025-08-16T09:34:25.135Z",
+      "lastModifiedDate": "2025-08-16T09:34:25.135Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nbpf: Fix oob access in cgroup local storage\n\nLonial reported that an out-of-bounds access in cgroup local storage\ncan be crafted via tail calls. Given two programs each utilizing a\ncgroup local storage with a different value size, and one program\ndoing a tail call into the other. The verifier will validate each of\nthe indivial programs just fine. However, in the runtime context\nthe bpf_cg_run_ctx holds an bpf_prog_array_item which contains the\nBPF program as well as any cgroup local storage flavor the program\nuses. Helpers such as bpf_get_local_storage() pick this up from the\nruntime context:\n\n  ctx = container_of(current->bpf_ctx, struct bpf_cg_run_ctx, run_ctx);\n  storage = ctx->prog_item->cgroup_storage[stype];\n\n  if (stype == BPF_CGROUP_STORAGE_SHARED)\n    ptr = &READ_ONCE(storage->buf)->data[0];\n  else\n    ptr = this_cpu_ptr(storage->percpu_buf);\n\nFor the second program which was called from the originally attached\none, this means bpf_get_local_storage() will pick up the former\nprogram's map, not its own. With mismatching sizes, this can result\nin an unintended out-of-bounds access.\n\nTo fix this issue, we need to extend bpf_map_owner with an array of\nstorage_cookie[] to match on i) the exact maps from the original\nprogram if the second program was using bpf_get_local_storage(), or\nii) allow the tail call combination if the second program was not\nusing any of the cgroup local storage maps.",
+      "severity": "N/A",
       "references": [
         {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/a7f1a21c-2de0-4f41-b61e-7c4742900762?source=cve",
+          "url": "https://git.kernel.org/stable/c/19341d5c59e8c7e8528e40f8663e99d67810473c",
           "type": "reference"
         },
         {
-          "url": "https://plugins.svn.wordpress.org/translate-this-google-translate-web-element-shortcode/trunk/translate_this_plugin.php",
-          "type": "reference"
-        },
-        {
-          "url": "https://wordpress.org/plugins/translate-this-google-translate-web-element-shortcode/#developers",
+          "url": "https://git.kernel.org/stable/c/abad3d0bad72a52137e0c350c59542d75ae4f513",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "reubenthiessen",
-          "product": "Translate This gTranslate Shortcode",
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "unaffected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "include/linux/bpf.h",
+            "kernel/bpf/core.c"
+          ],
           "versions": [
             {
-              "version": "*",
+              "version": "7d9c3427894fe70d1347b4820476bf37736d2ff0",
+              "lessThan": "19341d5c59e8c7e8528e40f8663e99d67810473c",
               "status": "affected",
-              "lessThanOrEqual": "1.0",
-              "versionType": "semver"
+              "versionType": "git"
+            },
+            {
+              "version": "7d9c3427894fe70d1347b4820476bf37736d2ff0",
+              "lessThan": "abad3d0bad72a52137e0c350c59542d75ae4f513",
+              "status": "affected",
+              "versionType": "git"
             }
+          ]
+        },
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "affected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "include/linux/bpf.h",
+            "kernel/bpf/core.c"
           ],
-          "defaultStatus": "unaffected"
+          "versions": [
+            {
+              "version": "5.9",
+              "status": "affected"
+            },
+            {
+              "version": "0",
+              "lessThan": "5.9",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.16.1",
+              "lessThanOrEqual": "6.16.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.17-rc1",
+              "lessThanOrEqual": "*",
+              "status": "unaffected",
+              "versionType": "original_commit_for_fix"
+            }
+          ]
+        }
+      ],
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-8885",
+      "publishedDate": "2025-08-12T09:13:42.770Z",
+      "lastModifiedDate": "2025-08-16T09:34:27.644Z",
+      "description": "Allocation of Resources Without Limits or Throttling vulnerability in Legion of the Bouncy Castle Inc. Bouncy Castle for Java bcprov, bc-fips on All (API modules) allows Excessive Allocation. This vulnerability is associated with program files https://github.Com/bcgit/bc-java/blob/main/core/src/main/java/org/bouncycastle/asn1/ASN1ObjectIdentifier.Java.\n\nThis issue affects Bouncy Castle for Java: from BC 1.0 through 1.77, from BC-FJA 1.0.0 through 1.0.2.5, from BC-FJA 2.0.0 through 2.0.0.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/bcgit/bc-java/wiki/CVE%E2%80%902025%E2%80%908885",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://repo1.maven.org/maven2/org/bouncycastle",
+          "defaultStatus": "unaffected",
+          "modules": [
+            "API"
+          ],
+          "packageName": "bcprov, bc-fips",
+          "platforms": [
+            "All"
+          ],
+          "product": "Bouncy Castle for Java",
+          "programFiles": [
+            "https://github.com/bcgit/bc-java/blob/main/core/src/main/java/org/bouncycastle/asn1/ASN1ObjectIdentifier.java"
+          ],
+          "repo": "https://github.com/bcgit/bc-java",
+          "vendor": "Legion of the Bouncy Castle Inc.",
+          "versions": [
+            {
+              "lessThanOrEqual": "1.77",
+              "status": "affected",
+              "version": "BC 1.0",
+              "versionType": "maven"
+            },
+            {
+              "lessThanOrEqual": "1.0.2.5",
+              "status": "affected",
+              "version": "BC-FJA 1.0.0",
+              "versionType": "maven"
+            },
+            {
+              "lessThanOrEqual": "2.0.0",
+              "status": "affected",
+              "version": "BC-FJA 2.0.0",
+              "versionType": "maven"
+            }
+          ]
         }
       ],
       "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+        "CWE-770 Allocation of Resources Without Limits or Throttling"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
