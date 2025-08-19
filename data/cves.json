@@ -2,38 +2,46 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 6,
-    "last_updated": "2025-08-19T05:55:41.377546",
+    "total_count": 1,
+    "last_updated": "2025-08-19T06:40:00.887289",
     "severity_distribution": {
       "critical": 0,
       "high": 0,
       "medium": 0,
       "low": 0,
-      "none": 6
+      "none": 1
     }
   },
   "cves": [
     {
-      "id": "CVE-2023-3867",
-      "publishedDate": "2025-08-16T13:29:51.946Z",
-      "lastModifiedDate": "2025-08-19T05:47:14.506Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nksmbd: fix out of bounds read in smb2_sess_setup\n\nksmbd does not consider the case of that smb2 session setup is\nin compound request. If this is the second payload of the compound,\nOOB read issue occurs while processing the first payload in\nthe smb2_sess_setup().",
+      "id": "CVE-2025-38553",
+      "publishedDate": "2025-08-19T06:06:53.204Z",
+      "lastModifiedDate": "2025-08-19T06:06:53.204Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet/sched: Restrict conditions for adding duplicating netems to qdisc tree\n\nnetem_enqueue's duplication prevention logic breaks when a netem\nresides in a qdisc tree with other netems - this can lead to a\nsoft lockup and OOM loop in netem_dequeue, as seen in [1].\nEnsure that a duplicating netem cannot exist in a tree with other\nnetems.\n\nPrevious approaches suggested in discussions in chronological order:\n\n1) Track duplication status or ttl in the sk_buff struct. Considered\ntoo specific a use case to extend such a struct, though this would\nbe a resilient fix and address other previous and potential future\nDOS bugs like the one described in loopy fun [2].\n\n2) Restrict netem_enqueue recursion depth like in act_mirred with a\nper cpu variable. However, netem_dequeue can call enqueue on its\nchild, and the depth restriction could be bypassed if the child is a\nnetem.\n\n3) Use the same approach as in 2, but add metadata in netem_skb_cb\nto handle the netem_dequeue case and track a packet's involvement\nin duplication. This is an overly complex approach, and Jamal\nnotes that the skb cb can be overwritten to circumvent this\nsafeguard.\n\n4) Prevent the addition of a netem to a qdisc tree if its ancestral\npath contains a netem. However, filters and actions can cause a\npacket to change paths when re-enqueued to the root from netem\nduplication, leading us to the current solution: prevent a\nduplicating netem from inhabiting the same tree as other netems.\n\n[1] https://lore.kernel.org/netdev/8DuRWwfqjoRDLDmBMlIfbrsZg9Gx50DHJc1ilxsEBNe2D6NMoigR_eIRIG0LOjMc3r10nUUZtArXx4oZBIdUfZQrwjcQhdinnMis_0G7VEk=@willsroot.io/\n[2] https://lwn.net/Articles/719297/",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://git.kernel.org/stable/c/676392184785ace61e939831e7ca44a03d438c3b",
+          "url": "https://git.kernel.org/stable/c/325f5ec67cc0a77f2d0d453445b9857f1cd06c76",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/ef572ffa8eb44111eed2925fbb2adca78bdcbf61",
+          "url": "https://git.kernel.org/stable/c/103c4e27ec9f5fe53022e46e976abf52c7221baf",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/2ba03cecb12ac7ac9e0170e251543c56832d9959",
+          "url": "https://git.kernel.org/stable/c/795cb393e38977aa991e70a9363da0ee734b2114",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/98422bdd4cb3ca4d08844046f6507d7ec2c2b8d8",
+          "url": "https://git.kernel.org/stable/c/250f8796006c0f2bc638ce545f601d49ae8d528b",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/09317dfb681ac5a96fc69bea0c54441cf91b8270",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/ec8e0e3d7adef940cdf9475e2352c0680189d14e",
           "type": "reference"
         }
       ],
@@ -44,30 +52,42 @@
           "defaultStatus": "unaffected",
           "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
           "programFiles": [
-            "fs/smb/server/smb2pdu.c"
+            "net/sched/sch_netem.c"
           ],
           "versions": [
             {
-              "version": "0626e6641f6b467447c81dd7678a69c66f7746cf",
-              "lessThan": "676392184785ace61e939831e7ca44a03d438c3b",
+              "version": "0afb51e72855971dba83b3c6b70c547c2d1161fd",
+              "lessThan": "325f5ec67cc0a77f2d0d453445b9857f1cd06c76",
               "status": "affected",
               "versionType": "git"
             },
             {
-              "version": "0626e6641f6b467447c81dd7678a69c66f7746cf",
-              "lessThan": "ef572ffa8eb44111eed2925fbb2adca78bdcbf61",
+              "version": "0afb51e72855971dba83b3c6b70c547c2d1161fd",
+              "lessThan": "103c4e27ec9f5fe53022e46e976abf52c7221baf",
               "status": "affected",
               "versionType": "git"
             },
             {
-              "version": "0626e6641f6b467447c81dd7678a69c66f7746cf",
-              "lessThan": "2ba03cecb12ac7ac9e0170e251543c56832d9959",
+              "version": "0afb51e72855971dba83b3c6b70c547c2d1161fd",
+              "lessThan": "795cb393e38977aa991e70a9363da0ee734b2114",
               "status": "affected",
               "versionType": "git"
             },
             {
-              "version": "0626e6641f6b467447c81dd7678a69c66f7746cf",
-              "lessThan": "98422bdd4cb3ca4d08844046f6507d7ec2c2b8d8",
+              "version": "0afb51e72855971dba83b3c6b70c547c2d1161fd",
+              "lessThan": "250f8796006c0f2bc638ce545f601d49ae8d528b",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "0afb51e72855971dba83b3c6b70c547c2d1161fd",
+              "lessThan": "09317dfb681ac5a96fc69bea0c54441cf91b8270",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "0afb51e72855971dba83b3c6b70c547c2d1161fd",
+              "lessThan": "ec8e0e3d7adef940cdf9475e2352c0680189d14e",
               "status": "affected",
               "versionType": "git"
             }
@@ -79,569 +99,16 @@
           "defaultStatus": "affected",
           "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
           "programFiles": [
-            "fs/smb/server/smb2pdu.c"
+            "net/sched/sch_netem.c"
           ],
           "versions": [
             {
-              "version": "5.15",
+              "version": "2.6.12",
               "status": "affected"
             },
             {
               "version": "0",
-              "lessThan": "5.15",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "5.15.145",
-              "lessThanOrEqual": "5.15.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.1.40",
-              "lessThanOrEqual": "6.1.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.4.5",
-              "lessThanOrEqual": "6.4.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.5",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2023-4130",
-      "publishedDate": "2025-08-16T13:27:58.227Z",
-      "lastModifiedDate": "2025-08-19T05:47:15.732Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nksmbd: fix wrong next length validation of ea buffer in smb2_set_ea()\n\nThere are multiple smb2_ea_info buffers in FILE_FULL_EA_INFORMATION request\nfrom client. ksmbd find next smb2_ea_info using ->NextEntryOffset of\ncurrent smb2_ea_info. ksmbd need to validate buffer length Before\naccessing the next ea. ksmbd should check buffer length using buf_len,\nnot next variable. next is the start offset of current ea that got from\nprevious ea.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://git.kernel.org/stable/c/aeb974907642be095e38ecb1a400ca583958b2b0",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/f339d76a3a972601d0738b881b099d49ebbdc3a2",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/4bf629262f9118ee91b1c3a518ebf2b3bcb22180",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/79ed288cef201f1f212dfb934bcaac75572fb8f6",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "fs/smb/server/smb2pdu.c"
-          ],
-          "versions": [
-            {
-              "version": "0626e6641f6b467447c81dd7678a69c66f7746cf",
-              "lessThan": "aeb974907642be095e38ecb1a400ca583958b2b0",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "0626e6641f6b467447c81dd7678a69c66f7746cf",
-              "lessThan": "f339d76a3a972601d0738b881b099d49ebbdc3a2",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "0626e6641f6b467447c81dd7678a69c66f7746cf",
-              "lessThan": "4bf629262f9118ee91b1c3a518ebf2b3bcb22180",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "0626e6641f6b467447c81dd7678a69c66f7746cf",
-              "lessThan": "79ed288cef201f1f212dfb934bcaac75572fb8f6",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "fs/smb/server/smb2pdu.c"
-          ],
-          "versions": [
-            {
-              "version": "5.15",
-              "status": "affected"
-            },
-            {
-              "version": "0",
-              "lessThan": "5.15",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "5.15.127",
-              "lessThanOrEqual": "5.15.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.1.46",
-              "lessThanOrEqual": "6.1.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.4.11",
-              "lessThanOrEqual": "6.4.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.5",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2023-3866",
-      "publishedDate": "2025-08-16T13:27:57.332Z",
-      "lastModifiedDate": "2025-08-19T05:47:13.303Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nksmbd: validate session id and tree id in the compound request\n\nThis patch validate session id and tree id in compound request.\nIf first operation in the compound is SMB2 ECHO request, ksmbd bypass\nsession and tree validation. So work->sess and work->tcon could be NULL.\nIf secound request in the compound access work->sess or tcon, It cause\nNULL pointer dereferecing error.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://git.kernel.org/stable/c/eb947403518ea3d93f6d89264bb1f5416bb0c7d0",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/854156d12caa9d36de1cf5f084591c7686cc8a9d",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/d1066c1b3663401cd23c0d6e60cdae750ce00c0f",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/5005bcb4219156f1bf7587b185080ec1da08518e",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "fs/smb/server/server.c",
-            "fs/smb/server/smb2pdu.c"
-          ],
-          "versions": [
-            {
-              "version": "0626e6641f6b467447c81dd7678a69c66f7746cf",
-              "lessThan": "eb947403518ea3d93f6d89264bb1f5416bb0c7d0",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "0626e6641f6b467447c81dd7678a69c66f7746cf",
-              "lessThan": "854156d12caa9d36de1cf5f084591c7686cc8a9d",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "0626e6641f6b467447c81dd7678a69c66f7746cf",
-              "lessThan": "d1066c1b3663401cd23c0d6e60cdae750ce00c0f",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "0626e6641f6b467447c81dd7678a69c66f7746cf",
-              "lessThan": "5005bcb4219156f1bf7587b185080ec1da08518e",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "fs/smb/server/server.c",
-            "fs/smb/server/smb2pdu.c"
-          ],
-          "versions": [
-            {
-              "version": "5.15",
-              "status": "affected"
-            },
-            {
-              "version": "0",
-              "lessThan": "5.15",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "5.15.121",
-              "lessThanOrEqual": "5.15.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.1.36",
-              "lessThanOrEqual": "6.1.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.3.10",
-              "lessThanOrEqual": "6.3.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.4",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2023-3865",
-      "publishedDate": "2025-08-16T13:27:56.403Z",
-      "lastModifiedDate": "2025-08-19T05:47:12.083Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nksmbd: fix out-of-bound read in smb2_write\n\nksmbd_smb2_check_message doesn't validate hdr->NextCommand. If\n->NextCommand is bigger than Offset + Length of smb2 write, It will\nallow oversized smb2 write length. It will cause OOB read in smb2_write.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://git.kernel.org/stable/c/3813eee5154d6a4c5875cb4444cb2b63bac8947f",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/c86211159bc3178b891e0d60e586a32c7b6a231b",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/58a9c41064df27632e780c5a3ae3e0e4284957d1",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/5fe7f7b78290638806211046a99f031ff26164e1",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "fs/smb/server/smb2misc.c"
-          ],
-          "versions": [
-            {
-              "version": "0626e6641f6b467447c81dd7678a69c66f7746cf",
-              "lessThan": "3813eee5154d6a4c5875cb4444cb2b63bac8947f",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "0626e6641f6b467447c81dd7678a69c66f7746cf",
-              "lessThan": "c86211159bc3178b891e0d60e586a32c7b6a231b",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "0626e6641f6b467447c81dd7678a69c66f7746cf",
-              "lessThan": "58a9c41064df27632e780c5a3ae3e0e4284957d1",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "0626e6641f6b467447c81dd7678a69c66f7746cf",
-              "lessThan": "5fe7f7b78290638806211046a99f031ff26164e1",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "fs/smb/server/smb2misc.c"
-          ],
-          "versions": [
-            {
-              "version": "5.15",
-              "status": "affected"
-            },
-            {
-              "version": "0",
-              "lessThan": "5.15",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "5.15.121",
-              "lessThanOrEqual": "5.15.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.1.36",
-              "lessThanOrEqual": "6.1.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.3.10",
-              "lessThanOrEqual": "6.3.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.4",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-38507",
-      "publishedDate": "2025-08-16T10:54:44.663Z",
-      "lastModifiedDate": "2025-08-19T05:47:18.176Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nHID: nintendo: avoid bluetooth suspend/resume stalls\n\nEnsure we don't stall or panic the kernel when using bluetooth-connected\ncontrollers. This was reported as an issue on android devices using\nkernel 6.6 due to the resume hook which had been added for usb joycons.\n\nFirst, set a new state value to JOYCON_CTLR_STATE_SUSPENDED in a\nnewly-added nintendo_hid_suspend. This makes sure we will not stall out\nthe kernel waiting for input reports during led classdev suspend. The\nstalls could happen if connectivity is unreliable or lost to the\ncontroller prior to suspend.\n\nSecond, since we lose connectivity during suspend, do not try\njoycon_init() for bluetooth controllers in the nintendo_hid_resume path.\n\nTested via multiple suspend/resume flows when using the controller both\nin USB and bluetooth modes.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://git.kernel.org/stable/c/7b4a026313529a487821ef6ab494a61f12c1db08",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/72cb7eef06a5cde42b324dea85fa11fd5bb6a08a",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/4a0381080397e77792a5168069f174d3e56175ff",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/hid/hid-nintendo.c"
-          ],
-          "versions": [
-            {
-              "version": "2af16c1f846bd60240745bbd3afa13d5f040c61a",
-              "lessThan": "7b4a026313529a487821ef6ab494a61f12c1db08",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "2af16c1f846bd60240745bbd3afa13d5f040c61a",
-              "lessThan": "72cb7eef06a5cde42b324dea85fa11fd5bb6a08a",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "2af16c1f846bd60240745bbd3afa13d5f040c61a",
-              "lessThan": "4a0381080397e77792a5168069f174d3e56175ff",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/hid/hid-nintendo.c"
-          ],
-          "versions": [
-            {
-              "version": "5.16",
-              "status": "affected"
-            },
-            {
-              "version": "0",
-              "lessThan": "5.16",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.12.39",
-              "lessThanOrEqual": "6.12.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.15.7",
-              "lessThanOrEqual": "6.15.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.16",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-38501",
-      "publishedDate": "2025-08-16T05:30:09.138Z",
-      "lastModifiedDate": "2025-08-19T05:47:16.990Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nksmbd: limit repeated connections from clients with the same IP\n\nRepeated connections from clients with the same IP address may exhaust\nthe max connections and prevent other normal client connections.\nThis patch limit repeated connections from clients with the same IP.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://git.kernel.org/stable/c/cb092fc3a62972a4aa47c9fe356c2c6a01cd840b",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/fa1c47af4ff641cf9197ecdb1f8240cbb30389c1",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/7e5d91d3e6c62a9755b36f29c35288f06c3cd86b",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/f1ce9258bcbce2491f9f71f7882b6eed0b33ec65",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/6073afe64510c302b7a0683a01e32c012eff715d",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/e6bb9193974059ddbb0ce7763fa3882bd60d4dc3",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "fs/smb/server/connection.h",
-            "fs/smb/server/transport_tcp.c"
-          ],
-          "versions": [
-            {
-              "version": "0626e6641f6b467447c81dd7678a69c66f7746cf",
-              "lessThan": "cb092fc3a62972a4aa47c9fe356c2c6a01cd840b",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "0626e6641f6b467447c81dd7678a69c66f7746cf",
-              "lessThan": "fa1c47af4ff641cf9197ecdb1f8240cbb30389c1",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "0626e6641f6b467447c81dd7678a69c66f7746cf",
-              "lessThan": "7e5d91d3e6c62a9755b36f29c35288f06c3cd86b",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "0626e6641f6b467447c81dd7678a69c66f7746cf",
-              "lessThan": "f1ce9258bcbce2491f9f71f7882b6eed0b33ec65",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "0626e6641f6b467447c81dd7678a69c66f7746cf",
-              "lessThan": "6073afe64510c302b7a0683a01e32c012eff715d",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "0626e6641f6b467447c81dd7678a69c66f7746cf",
-              "lessThan": "e6bb9193974059ddbb0ce7763fa3882bd60d4dc3",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "fs/smb/server/connection.h",
-            "fs/smb/server/transport_tcp.c"
-          ],
-          "versions": [
-            {
-              "version": "5.15",
-              "status": "affected"
-            },
-            {
-              "version": "0",
-              "lessThan": "5.15",
+              "lessThan": "2.6.12",
               "status": "unaffected",
               "versionType": "semver"
             },
