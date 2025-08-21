@@ -2,21 +2,21 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 3,
-    "last_updated": "2025-08-21T20:42:52.926803",
+    "total_count": 2,
+    "last_updated": "2025-08-21T20:56:13.170052",
     "severity_distribution": {
       "critical": 0,
       "high": 0,
       "medium": 0,
       "low": 0,
-      "none": 3
+      "none": 2
     }
   },
   "cves": [
     {
       "id": "CVE-2025-43747",
       "publishedDate": "2025-08-21T20:23:20.040Z",
-      "lastModifiedDate": "2025-08-21T20:23:20.040Z",
+      "lastModifiedDate": "2025-08-21T20:52:21.478Z",
       "description": "A server-side request forgery (SSRF) vulnerability exists in the Liferay DXP 2025.Q2.0 through 2025.Q2.3 due to insecure domain validation on analytics.cloud.domain.allowed, allowing an attacker to perform requests by change the domain and bypassing the validation method, this insecure validation is not distinguishing between trusted subdomains and malicious domains.",
       "severity": "N/A",
       "references": [
@@ -46,44 +46,52 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2010-20122",
-      "publishedDate": "2025-08-21T20:16:17.595Z",
-      "lastModifiedDate": "2025-08-21T20:28:52.429Z",
-      "description": "Xftp FTP Client version up to and including 3.0 (build 0238) contain a stack-based buffer overflow vulnerability triggered by a maliciously crafted PWD response from an FTP server. When the client connects to a server and receives an overly long directory string in response to the PWD command, the client fails to properly validate the length of the input before copying it into a fixed-size buffer. This results in memory corruption and allows remote attackers to execute arbitrary code on the client system.",
+      "id": "CVE-2010-20115",
+      "publishedDate": "2025-08-21T20:15:15.812Z",
+      "lastModifiedDate": "2025-08-21T20:53:36.121Z",
+      "description": "Arcane Software’s Vermillion FTP Daemon (vftpd) versions up to and including 1.31 contains a memory corruption vulnerability triggered by a malformed FTP PORT command. The flaw arises from an out-of-bounds array access during input parsing, allowing an attacker to manipulate stack memory and potentially execute arbitrary code. Exploitation requires direct access to the FTP service and is constrained by a single execution attempt if the daemon is installed as a Windows service.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://raw.githubusercontent.com/rapid7/metasploit-framework/master/modules/exploits/windows/ftp/xftp_client_pwd.rb",
+          "url": "https://raw.githubusercontent.com/rapid7/metasploit-framework/master/modules/exploits/windows/ftp/vermillion_ftpd_port.rb",
           "type": "poc"
         },
         {
-          "url": "https://www.exploit-db.com/exploits/12332",
+          "url": "https://www.exploit-db.com/exploits/11293",
           "type": "poc"
         },
         {
-          "url": "https://www.exploit-db.com/exploits/16739",
-          "type": "poc"
-        },
-        {
-          "url": "https://web.archive.org/web/20090312072219/http://www.netsarang.com/download/down_xft3.html",
+          "url": "https://www.broadcom.com/support/security-center/attacksignatures/detail?asid=23681",
           "type": "reference"
         },
         {
-          "url": "https://www.vulncheck.com/advisories/xftp-ftp-client-pwd-response-buffer-overflow",
+          "url": "https://www.juniper.net/us/en/threatlabs/ips-signatures/detail.FTP:EXPLOIT:VERMILLION-PORT-OF.html",
+          "type": "reference"
+        },
+        {
+          "url": "https://web.archive.org/web/20100416140657/http://www.global-evolution.info/news/files/vftpd/vftpd.txt",
+          "type": "poc"
+        },
+        {
+          "url": "https://web.archive.org/web/20100213162028/http://www.softsea.com/review/Vermillion-FTP-Daemon.html",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/vermillion-ftp-daemon-port-command-memory-corruption",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "unknown",
+          "defaultStatus": "unaffected",
           "modules": [
-            "FTP response parser (PWD command handling)"
+            "FTP PORT command parser"
           ],
-          "product": "Xftp FTP Client",
-          "vendor": "NetSarang Computer, Inc.",
+          "product": "Vermillion FTP Daemon",
+          "vendor": "Arcane Software",
           "versions": [
             {
-              "lessThanOrEqual": "3.0 (build 0238)",
+              "lessThanOrEqual": "1.31",
               "status": "affected",
               "version": "*",
               "versionType": "semver"
@@ -92,36 +100,8 @@
         }
       ],
       "problemType": [
-        "CWE-121 Stack-based Buffer Overflow"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-51606",
-      "publishedDate": "2025-08-21T00:00:00.000Z",
-      "lastModifiedDate": "2025-08-21T20:26:44.776Z",
-      "description": "hippo4j 1.0.0 to 1.5.0, uses a hard-coded secret key in its JWT (JSON Web Token) creation. This allows attackers with access to the source code or compiled binary to forge valid access tokens and impersonate any user, including privileged ones such as \"admin\". The vulnerability poses a critical security risk in systems where authentication and authorization rely on the integrity of JWTs.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/ShenxiuSec/cve-proofs/blob/main/POC-20250610-01.md",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n/a",
-          "product": "n/a",
-          "versions": [
-            {
-              "version": "n/a",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "n/a"
+        "CWE-787 Out-of-bounds Write",
+        "CWE-704 Incorrect Type Conversion or Cast"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
