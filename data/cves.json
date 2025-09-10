@@ -2,30 +2,30 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 16,
-    "last_updated": "2025-09-10T20:22:52.641056",
+    "total_count": 21,
+    "last_updated": "2025-09-10T20:38:11.991704",
     "severity_distribution": {
-      "critical": 0,
-      "high": 1,
-      "medium": 7,
+      "critical": 1,
+      "high": 5,
+      "medium": 6,
       "low": 0,
-      "none": 8
+      "none": 9
     }
   },
   "cves": [
     {
-      "id": "CVE-2025-58760",
-      "publishedDate": "2025-09-09T19:56:57.962Z",
-      "lastModifiedDate": "2025-09-10T20:18:02.075Z",
-      "description": "Tautulli is a Python based monitoring and tracking tool for Plex Media Server. The `/image` API endpoint in Tautulli v2.15.3 and earlier is vulnerable to path traversal, allowing unauthenticated attackers to read arbitrary files from the application server's filesystem. In Tautulli, the `/image` API endpoint is used to serve static images from the application's data directory to users. This endpoint can be accessed without authentication, and its intended purpose is for server background images and icons within the user interface. Attackers can exfiltrate files from the application file system, including the `tautulli.db` SQLite database containing active JWT tokens, as well as the `config.ini` file which contains the hashed admin password, the JWT token secret, and the Plex Media Server token and connection details. If the password is cracked, or if a valid JWT token is present in the database, an unauthenticated attacker can escalate their privileges to obtain administrative control over the application. Version 2.16.0 contains a fix for the issue.",
-      "severity": 8.6,
+      "id": "CVE-2025-58762",
+      "publishedDate": "2025-09-09T20:08:27.965Z",
+      "lastModifiedDate": "2025-09-10T20:20:35.507Z",
+      "description": "Tautulli is a Python based monitoring and tracking tool for Plex Media Server. In Tautulli v2.15.3 and earlier, an attacker with administrative access can use the `pms_image_proxy` endpoint to write arbitrary python scripts into the application filesystem. This leads to remote code execution when combined with the `Script` notification agent. If an attacker with administrative access changes the URL of the PMS to a server they control, they can then abuse the `pms_image_proxy` to obtain a file write into the application filesystem. This can be done by making a `pms_image_proxy` request with a URL in the `img` parameter and the desired file name in the `img_format` parameter. Tautulli then uses a hash of the desired metadata together with the `img_format` in order to construct a file path. Since the attacker controls `img_format` which occupies the end of the file path, and `img_format` is not sanitised, the attacker can then use path traversal characters to specify filename of their choosing. If the specified file does not exist, Tautaulli will then attempt to fetch the image from the configured PMS. Since the attacker controls the PMS, they can return arbitrary content in response to this request, which will then be written into the specified file. An attacker can write an arbitrary python script into a location on the application file system. The attacker can then make use of the built-in `Script` notification agent to run the local script, obtaining remote code execution on the application server. Users should upgrade to version 2.16.0 to receive a patch.",
+      "severity": 9.1,
       "references": [
         {
-          "url": "https://github.com/Tautulli/Tautulli/security/advisories/GHSA-8g4r-8f3f-hghp",
+          "url": "https://github.com/Tautulli/Tautulli/security/advisories/GHSA-pxhr-29gv-4j8v",
           "type": "reference"
         },
         {
-          "url": "https://github.com/Tautulli/Tautulli/commit/47566128e2e5dde98980d59b7a51b98173bc0b40",
+          "url": "https://github.com/Tautulli/Tautulli/commit/26e6b328112eb2cf35c164f981e0718f3a3d31a7",
           "type": "reference"
         }
       ],
@@ -42,299 +42,440 @@
         }
       ],
       "problemType": [
-        "CWE-23: Relative Path Traversal"
+        "CWE-73: External Control of File Name or Path"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2024-45669",
-      "publishedDate": "2025-09-10T20:06:58.159Z",
-      "lastModifiedDate": "2025-09-10T20:12:03.371Z",
-      "description": "IBM Security Verify Information Queue 10.0.5, 10.0.6, 10.0.7, and 10.0.8 could allow a remote user to cause a denial of service due to improper handling of special characters that could lead to uncontrolled resource consumption.",
-      "severity": 6.5,
+      "id": "CVE-2025-10171",
+      "publishedDate": "2025-09-09T21:32:05.636Z",
+      "lastModifiedDate": "2025-09-10T20:25:41.372Z",
+      "description": "A vulnerability was detected in UTT 1250GW up to 3.2.2-200710. This vulnerability affects the function sub_453DC of the file /goform/formConfigApConfTemp. Performing manipulation results in buffer overflow. Remote exploitation of the attack is possible. The exploit is now public and may be used. The vendor was contacted early about this disclosure but did not respond in any way.",
+      "severity": 8.8,
       "references": [
         {
-          "url": "https://www.ibm.com/support/pages/node/7244514",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "cpes": [
-            "cpe:2.3:a:ibm:security_verify_information_queue:10.0.5:*:*:*:*:*:*:*",
-            "cpe:2.3:a:ibm:security_verify_information_queue:10.0.6:*:*:*:*:*:*:*",
-            "cpe:2.3:a:ibm:security_verify_information_queue:10.0.7:*:*:*:*:*:*:*",
-            "cpe:2.3:a:ibm:security_verify_information_queue:10.0.8:*:*:*:*:*:*:*"
-          ],
-          "defaultStatus": "unaffected",
-          "product": "Security Verify Information Queue",
-          "vendor": "IBM",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "10.0.5"
-            },
-            {
-              "status": "affected",
-              "version": "10.0.6"
-            },
-            {
-              "status": "affected",
-              "version": "10.0.7"
-            },
-            {
-              "status": "affected",
-              "version": "10.0.8"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-770 Allocation of Resources Without Limits or Throttling"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2024-47120",
-      "publishedDate": "2025-09-10T20:04:19.307Z",
-      "lastModifiedDate": "2025-09-10T20:12:34.953Z",
-      "description": "IBM Security Verify Information Queue 10.0.5, 10.0.6, 10.0.7, and 10.0.8 could allow a privileged user to escalate their privileges and attack surface on the host due to the containers running with unnecessary privileges.",
-      "severity": 6.4,
-      "references": [
-        {
-          "url": "https://www.ibm.com/support/pages/node/7244514",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "cpes": [
-            "cpe:2.3:a:ibm:security_verify_information_queue:10.0.5:*:*:*:*:*:*:*",
-            "cpe:2.3:a:ibm:security_verify_information_queue:10.0.6:*:*:*:*:*:*:*",
-            "cpe:2.3:a:ibm:security_verify_information_queue:10.0.7:*:*:*:*:*:*:*",
-            "cpe:2.3:a:ibm:security_verify_information_queue:10.0.8:*:*:*:*:*:*:*"
-          ],
-          "defaultStatus": "unaffected",
-          "product": "Security Verify Information Queue",
-          "vendor": "IBM",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "10.0.5"
-            },
-            {
-              "status": "affected",
-              "version": "10.0.6"
-            },
-            {
-              "status": "affected",
-              "version": "10.0.7"
-            },
-            {
-              "status": "affected",
-              "version": "10.0.8"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-250 Execution with Unnecessary Privileges"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-10211",
-      "publishedDate": "2025-09-10T20:02:05.846Z",
-      "lastModifiedDate": "2025-09-10T20:14:34.320Z",
-      "description": "A security vulnerability has been detected in yanyutao0402 ChanCMS 3.3.0. The affected element is the function CollectController of the file /cms/collect/getArticle. The manipulation of the argument taskUrl leads to server-side request forgery. The attack may be initiated remotely. The exploit has been disclosed publicly and may be used. The vendor was contacted early about this disclosure but did not respond in any way.",
-      "severity": 6.3,
-      "references": [
-        {
-          "url": "https://vuldb.com/?id.323484",
+          "url": "https://vuldb.com/?id.323206",
           "type": "reference"
         },
         {
-          "url": "https://vuldb.com/?ctiid.323484",
+          "url": "https://vuldb.com/?ctiid.323206",
           "type": "reference"
         },
         {
-          "url": "https://vuldb.com/?submit.639779",
+          "url": "https://vuldb.com/?submit.636789",
           "type": "reference"
         },
         {
-          "url": "https://github.com/August829/Yu/blob/main/58ead8e7e08bfb0e7.md",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/August829/Yu/blob/main/58ead8e7e08bfb0e7.md#poc",
+          "url": "https://github.com/Aur0r3-zy/cve/blob/main/CVE.md",
           "type": "poc"
         }
       ],
       "affected": [
         {
-          "vendor": "yanyutao0402",
-          "product": "ChanCMS",
+          "vendor": "UTT",
+          "product": "1250GW",
           "versions": [
             {
-              "version": "3.3.0",
+              "version": "3.2.2-200710",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "Server-Side Request Forgery"
+        "Buffer Overflow",
+        "Memory Corruption"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2024-45671",
-      "publishedDate": "2025-09-10T20:08:17.525Z",
-      "lastModifiedDate": "2025-09-10T20:12:30.423Z",
-      "description": "IBM Security Verify Information Queue 10.0.5, 10.0.6, 10.0.7, and 10.0.8 \n\nuses weaker than expected cryptographic algorithms that could allow an attacker to decrypt highly sensitive information.",
-      "severity": 5.9,
+      "id": "CVE-2025-23342",
+      "publishedDate": "2025-09-09T21:02:30.077Z",
+      "lastModifiedDate": "2025-09-10T20:28:15.463Z",
+      "description": "The NVIDIA NVDebug tool contains a vulnerability that may allow an actor to gain access to a privileged account . A successful exploit of this vulnerability may lead to code execution, denial of service, escalation of privileges, information disclosure and data tampering.",
+      "severity": 8.2,
       "references": [
         {
-          "url": "https://www.ibm.com/support/pages/node/7244514",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "cpes": [
-            "cpe:2.3:a:ibm:security_verify_information_queue:10.0.5:*:*:*:*:*:*:*",
-            "cpe:2.3:a:ibm:security_verify_information_queue:10.0.6:*:*:*:*:*:*:*",
-            "cpe:2.3:a:ibm:security_verify_information_queue:10.0.7:*:*:*:*:*:*:*",
-            "cpe:2.3:a:ibm:security_verify_information_queue:10.0.8:*:*:*:*:*:*:*"
-          ],
-          "defaultStatus": "unaffected",
-          "product": "Security Verify Information Queue",
-          "vendor": "IBM",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "10.0.5"
-            },
-            {
-              "status": "affected",
-              "version": "10.0.6"
-            },
-            {
-              "status": "affected",
-              "version": "10.0.7"
-            },
-            {
-              "status": "affected",
-              "version": "10.0.8"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-327 Use of a Broken or Risky Cryptographic Algorithm"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-58759",
-      "publishedDate": "2025-09-09T19:52:39.014Z",
-      "lastModifiedDate": "2025-09-10T20:15:16.418Z",
-      "description": "TinyEnv is an environment variable loader for PHP applications. In versions 1.0.9 and 1.0.10, TinyEnv did not properly strip inline comments inside .env values. This could lead to unexpected behavior or misconfiguration, where variables contain unintended characters (including # or comment text). Applications depending on strict environment values may expose logic errors, insecure defaults, or failed authentication. The issue is fixed in v1.0.11. Users should upgrade to the latest patched version. As a temporary workaround, avoid using inline comments in .env files, or sanitize loaded values manually.",
-      "severity": 5.1,
-      "references": [
-        {
-          "url": "https://github.com/datahihi1/tiny-env/security/advisories/GHSA-72cm-7236-h43r",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "datahihi1",
-          "product": "tiny-env",
-          "versions": [
-            {
-              "version": ">= 1.0.9, < 1.0.11",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-20: Improper Input Validation"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-58758",
-      "publishedDate": "2025-09-09T19:50:18.518Z",
-      "lastModifiedDate": "2025-09-10T20:14:26.393Z",
-      "description": "TinyEnv is an environment variable loader for PHP applications. In versions 1.0.1, 1.0.2, 1.0.9, and 1.0.10, TinyEnv did not require the `.env` file to exist when loading environment variables. This could lead to unexpected behavior where the application silently ignores missing configuration, potentially causing insecure defaults or deployment misconfigurations. The issue has been fixed in version 1.0.11. All users should upgrade to 1.0.11 or later. As a workaround, users can manually verify the existence of the `.env` file before initializing TinyEnv.",
-      "severity": 5.1,
-      "references": [
-        {
-          "url": "https://github.com/datahihi1/tiny-env/security/advisories/GHSA-3j7m-5g4q-gfpc",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2025-23342",
           "type": "reference"
         },
         {
-          "url": "https://github.com/datahihi1/tiny-env/commit/69b7b885e6cfbf07f470fb3512360e0caa95521e",
+          "url": "https://www.cve.org/CVERecord?id=CVE-2025-23342",
           "type": "reference"
-        }
-      ],
-      "affected": [
+        },
         {
-          "vendor": "datahihi1",
-          "product": "tiny-env",
-          "versions": [
-            {
-              "version": ">= 1.0.1, < 1.0.3",
-              "status": "affected"
-            },
-            {
-              "version": ">= 1.0.9, < 1.0.11",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-703: Improper Check or Handling of Exceptional Conditions"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-55052",
-      "publishedDate": "2025-09-09T19:06:18.558Z",
-      "lastModifiedDate": "2025-09-10T20:13:26.229Z",
-      "description": "CWE-200 Exposure of Sensitive Information to an Unauthorized Actor",
-      "severity": 4.3,
-      "references": [
-        {
-          "url": "https://www.gov.il/en/departments/dynamiccollectors/cve_advisories_listing?skip=0",
+          "url": "https://nvidia.custhelp.com/app/answers/detail/a_id/5696",
           "type": "reference"
         }
       ],
       "affected": [
         {
           "defaultStatus": "unaffected",
-          "product": "NEUTRINO430, NOVA436Q, NOVA430e/430i, NOVA846, NOVA246, NOVA243, NOVA233, NOVA227",
-          "vendor": "Baicells",
+          "platforms": [
+            "x86_64 or arm64-SBSA architecture systems"
+          ],
+          "product": "NVDebug tool",
+          "vendor": "NVIDIA",
           "versions": [
             {
               "status": "affected",
-              "version": "BaiBS_RTS_3.. and older versions. BaiBS_RTD_3.. and older versions"
+              "version": "All versions prior to 1.7.0"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-200 Exposure of Sensitive Information to an Unauthorized Actor"
+        "CWE-522 Insufficiently Protected Credentials"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-49459",
+      "publishedDate": "2025-09-09T21:29:33.168Z",
+      "lastModifiedDate": "2025-09-10T20:26:12.146Z",
+      "description": "Missing authorization in the installer for Zoom Workplace for Windows on ARM before version 6.5.0 may allow an authenticated user to conduct an escalation of privilege via local access.",
+      "severity": 7.8,
+      "references": [
+        {
+          "url": "https://www.zoom.com/en/trust/security-bulletin/ZSB-25032",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "platforms": [
+            "Windows",
+            "ARM"
+          ],
+          "product": "Zoom Workplace for Windows on ARM",
+          "vendor": "Zoom Communications, Inc",
+          "versions": [
+            {
+              "lessThan": "6.6.0",
+              "status": "affected",
+              "version": "0",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-862 Missing Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-23343",
+      "publishedDate": "2025-09-09T21:02:50.631Z",
+      "lastModifiedDate": "2025-09-10T20:27:51.675Z",
+      "description": "The NVIDIA NVDebug tool contains a vulnerability that may allow an actor to write files to restricted components. A successful exploit of this vulnerability may lead to information disclosure, denial of service, and data tampering.",
+      "severity": 7.6,
+      "references": [
+        {
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2025-23343",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.cve.org/CVERecord?id=CVE-2025-23343",
+          "type": "reference"
+        },
+        {
+          "url": "https://nvidia.custhelp.com/app/answers/detail/a_id/5696",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "platforms": [
+            "x86_64 or arm64-SBSA architecture systems"
+          ],
+          "product": "NVDebug tool",
+          "vendor": "NVIDIA",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "All versions prior to 1.7.0"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-22 Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-23344",
+      "publishedDate": "2025-09-09T21:03:28.237Z",
+      "lastModifiedDate": "2025-09-10T20:27:22.616Z",
+      "description": "The NVIDIA NVDebug tool contains a vulnerability that may allow an actor to run code on the platform host as a non-privileged user. A successful exploit of this vulnerability may lead to code execution, denial of service, escalation of privileges, information disclosure and data tampering.",
+      "severity": 7.3,
+      "references": [
+        {
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2025-23344",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.cve.org/CVERecord?id=CVE-2025-23344",
+          "type": "reference"
+        },
+        {
+          "url": "https://nvidia.custhelp.com/app/answers/detail/a_id/5696",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "platforms": [
+            "x86_64 or arm64-SBSA architecture systems"
+          ],
+          "product": "NVDebug tool",
+          "vendor": "NVIDIA",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "All versions prior to 1.7.0"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-78 Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-7826",
+      "publishedDate": "2025-09-10T06:38:48.287Z",
+      "lastModifiedDate": "2025-09-10T20:29:36.216Z",
+      "description": "The Testimonial plugin for WordPress is vulnerable to SQL Injection via the 'iNICtestimonial' shortcode in all versions up to, and including, 2.3 due to insufficient escaping on the user supplied parameter and lack of sufficient preparation on the existing SQL query. This makes it possible for authenticated attackers, with Contributor-level access and above, to append additional SQL queries into already existing queries that can be used to extract sensitive information from the database.",
+      "severity": 6.5,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/840fefde-8c9d-413f-a6a6-1e796fb9e910?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://wordpress.org/plugins/indianic-testimonial/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "laki_patel",
+          "product": "Testimonial",
+          "versions": [
+            {
+              "version": "*",
+              "status": "affected",
+              "lessThanOrEqual": "2.3",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-7843",
+      "publishedDate": "2025-09-10T06:38:48.743Z",
+      "lastModifiedDate": "2025-09-10T20:30:12.979Z",
+      "description": "The Auto Save Remote Images (Drafts) plugin for WordPress is vulnerable to Server-Side Request Forgery in all versions up to, and including, 1.0.9 via the fetch_images() function. This makes it possible for authenticated attackers, with Contributor-level access and above, to make web requests to arbitrary locations originating from the web application and can be used to query and modify information from internal services.",
+      "severity": 6.4,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/93818487-739e-48ed-ac67-02469277c22d?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://wordpress.org/plugins/auto-save-remote-images-drafts/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "fernandiez",
+          "product": "Auto Save Remote Images (Drafts)",
+          "versions": [
+            {
+              "version": "*",
+              "status": "affected",
+              "lessThanOrEqual": "1.0.9",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-918 Server-Side Request Forgery (SSRF)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-9367",
+      "publishedDate": "2025-09-10T06:38:47.869Z",
+      "lastModifiedDate": "2025-09-10T20:29:07.323Z",
+      "description": "The Welcart e-Commerce plugin for WordPress is vulnerable to Stored Cross-Site Scripting via settings in all versions up to, and including, 2.11.20 due to insufficient input sanitization and output escaping. This makes it possible for authenticated attackers, with editor-level permissions and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page. This only affects multi-site installations and installations where unfiltered_html has been disabled.",
+      "severity": 5.5,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/829facc1-443d-481f-b23f-7a93938dd866?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://wordpress.org/plugins/usc-e-shop/#developers",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset/3357586/usc-e-shop/trunk/classes/usceshop.class.php",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "uscnanbu",
+          "product": "Welcart e-Commerce",
+          "versions": [
+            {
+              "version": "*",
+              "status": "affected",
+              "lessThanOrEqual": "2.11.20",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-58134",
+      "publishedDate": "2025-09-09T21:44:01.928Z",
+      "lastModifiedDate": "2025-09-10T20:24:12.585Z",
+      "description": "Incorrect authorization in certain Zoom Workplace Clients for Windows may allow an authenticated user to conduct an impact to integrity via network access.",
+      "severity": 4.3,
+      "references": [
+        {
+          "url": "https://www.zoom.com/en/trust/security-bulletin/ZSB-25035",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "platforms": [
+            "Windows"
+          ],
+          "product": "Zoom Workplace Clients for Windows",
+          "vendor": "Zoom Communications, Inc",
+          "versions": [
+            {
+              "lessThan": "see references",
+              "status": "affected",
+              "version": "0",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-863 Incorrect Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-49461",
+      "publishedDate": "2025-09-09T21:42:05.838Z",
+      "lastModifiedDate": "2025-09-10T20:24:36.497Z",
+      "description": "Cross-site scripting in certain Zoom Workplace Clients may allow an unauthenticated user to conduct a denial of service via network access.",
+      "severity": 4.3,
+      "references": [
+        {
+          "url": "https://www.zoom.com/en/trust/security-bulletin/ZSB-25034",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "platforms": [
+            "Windows",
+            "MacOS",
+            "Linux",
+            "iOS",
+            "Android"
+          ],
+          "product": "Zoom Workplace Clients",
+          "vendor": "Zoom Communications, Inc",
+          "versions": [
+            {
+              "lessThan": "see references",
+              "status": "affected",
+              "version": "0",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-49460",
+      "publishedDate": "2025-09-09T21:38:40.910Z",
+      "lastModifiedDate": "2025-09-10T20:25:08.077Z",
+      "description": "Uncontrolled resource consumption in certain Zoom Workplace Clients may allow an unauthenticated user to conduct a denial of service via network access.",
+      "severity": 4.3,
+      "references": [
+        {
+          "url": "https://www.zoom.com/en/trust/security-bulletin/ZSB-25033",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "platforms": [
+            "Windows",
+            "MacOS",
+            "Linux",
+            "iOS",
+            "Android"
+          ],
+          "product": "Zoom Workplace Clients",
+          "vendor": "Zoom Communications, Inc",
+          "versions": [
+            {
+              "lessThan": "see references",
+              "status": "affected",
+              "version": "0",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-400 Uncontrolled Resource Consumption"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
       "id": "CVE-2025-59052",
       "publishedDate": "2025-09-10T20:13:56.965Z",
-      "lastModifiedDate": "2025-09-10T20:13:56.965Z",
+      "lastModifiedDate": "2025-09-10T20:25:32.147Z",
       "description": "Angular is a development platform for building mobile and desktop web applications using TypeScript/JavaScript and other languages. Angular uses a DI container (the \"platform injector\") to hold request-specific state during server-side rendering. For historical reasons, the container was stored as a JavaScript module-scoped global variable. When multiple requests are processed concurrently, they could inadvertently share or overwrite the global injector state. In practical terms, this can lead to one request responding with data meant for a completely different request, leaking data or tokens included on the rendered page or in response headers. As long as an attacker had network access to send any traffic that received a rendered response, they may have been able to send a large number of requests and then inspect the responses for information leaks. The APIs `bootstrapApplication`, `getPlatform`, and `destroyPlatform` were vulnerable and required SSR-only breaking changes.\nThe issue has been patched in all active release lines as well as in the v21 prerelease. Patched packages include `@angular/platform-server` 21.0.0-next.3, 20.3.0, 19.2.15, and 18.2.14 and `@angular/ssr` 21.0.0-next.3, 20.3.0, 19.2.16, and 18.2.21. Several workarounds are available. Disable SSR via Server Routes or builder options, remove any asynchronous behavior from custom `bootstrap` functions, remove uses of `getPlatform()` in application code, and/or ensure that the server build defines `ngJitMode` as false.",
       "severity": "N/A",
       "references": [
@@ -401,342 +542,271 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-43783",
-      "publishedDate": "2025-09-10T20:03:33.594Z",
-      "lastModifiedDate": "2025-09-10T20:14:54.925Z",
-      "description": "Reflected cross-site scripting (XSS) vulnerability in Liferay Portal 7.4.3.73 through 7.4.3.128, and Liferay DXP 2024.Q3.0 through 2024.Q3.1, 2024.Q2.0 through 2024.Q2.13, 2024.Q1.1 through 2024.Q1.12, 7.4 update 73 through update 92 allows remote attackers to inject arbitrary web script or HTML via the /c/portal/comment/discussion/get_editor path.",
+      "id": "CVE-2025-10215",
+      "publishedDate": "2025-09-10T11:39:30.395Z",
+      "lastModifiedDate": "2025-09-10T20:22:06.791Z",
+      "description": "DLL search path hijacking vulnerability in the UPDF.exe executable for Windows version 1.8.5.0 allows attackers with local access to execute arbitrary code by placing a FREngine.dll file of their choice in the 'C:\\Users\\Public\\AppData\\Local\\UPDF\\FREngine\\Bin64\\' directory, which could lead to arbitrary code execution and persistence.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://liferay.dev/portal/security/known-vulnerabilities/-/asset_publisher/jekt/content/CVE-2025-43783",
+          "url": "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-updf",
           "type": "reference"
         }
       ],
       "affected": [
         {
           "defaultStatus": "unaffected",
-          "product": "Portal",
-          "vendor": "Liferay",
+          "product": "UPDF",
+          "vendor": "UPDF",
           "versions": [
             {
-              "lessThanOrEqual": "7.4.3.128",
               "status": "affected",
-              "version": "7.4.3.73",
-              "versionType": "maven"
+              "version": "1.8.5.0"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-427 Uncontrolled Search Path Element"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-10214",
+      "publishedDate": "2025-09-10T11:39:12.641Z",
+      "lastModifiedDate": "2025-09-10T20:22:38.145Z",
+      "description": "DLL search path hijacking vulnerability in the UPDF.exe executable for Windows version 1.8.5.0 allows attackers with local access to execute arbitrary code by placing a FREngine.dll file of their choice in the 'C:\\Users\\<user>\\AppData\\Local\\UPDF\\FREngine\\Bin64\\' directory, which could lead to arbitrary code execution and persistence.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-updf",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "UPDF",
+          "vendor": "UPDF",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "1.8.5.0"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-427 Uncontrolled Search Path Element"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-10213",
+      "publishedDate": "2025-09-10T11:38:37.847Z",
+      "lastModifiedDate": "2025-09-10T20:23:13.325Z",
+      "description": "DLL search path hijacking vulnerability in the UPDF.exe executable for Windows version 1.8.5.0 allows attackers with local access to execute arbitrary code by placing a dxtn.dll file of their choice in the 'C:\\Users\\<user>\\AppData\\Local\\Microsoft\\WindowsApps\\' directory, which could lead to arbitrary code execution and persistence.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-updf",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "UPDF",
+          "vendor": "UPDF",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "1.8.5.0"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-427 Uncontrolled Search Path Element"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-40979",
+      "publishedDate": "2025-09-10T11:35:57.252Z",
+      "lastModifiedDate": "2025-09-10T20:23:37.417Z",
+      "description": "DLL search order hijacking vulnerability in the wave.exe executable for Windows 11, version 1.27.8. Exploitation of this vulnerability could allow attackers with local access to execute arbitrary code by placing an arbitrary file in the 'C:\\Users<user>\\AppData\\Local\\Temp' directory, which could lead to arbitrary code execution and persistence. This vulnerability is only replicable in versions of Windows 11 and does not affect earlier versions.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.incibe.es/en/incibe-cert/notices/aviso/dll-search-order-hijack-wave-grandstream-networks",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Wave",
+          "vendor": "Grandstream Networks",
+          "versions": [
+            {
+              "lessThan": "1.27.11",
+              "status": "affected",
+              "version": "0",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-427 Uncontrolled Search Path Element"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-57570",
+      "publishedDate": "2025-09-10T00:00:00.000Z",
+      "lastModifiedDate": "2025-09-10T20:26:43.077Z",
+      "description": "Tenda F3 V12.01.01.48_multi and after is vulnerable to Buffer Overflow via the QosList parameter in goform/setQoS.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "http://tenda.com",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/arashiclustar/PingX-md/blob/main/F3/2025-57570/C.V.E-2025-57570.md",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "n/a",
+          "versions": [
+            {
+              "version": "n/a",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "n/a"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-57572",
+      "publishedDate": "2025-09-10T00:00:00.000Z",
+      "lastModifiedDate": "2025-09-10T20:29:38.563Z",
+      "description": "Tenda F3 V12.01.01.48_multi and after is vulnerable to Buffer Overflow via the onlineList parameter in goform/setParentControl.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "http://tenda.com",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/arashiclustar/PingX-md/blob/main/F3/2025-57572/C.V.E-2025-57572.md",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "n/a",
+          "versions": [
+            {
+              "version": "n/a",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "n/a"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-9996",
+      "publishedDate": "2025-09-09T21:11:15.034Z",
+      "lastModifiedDate": "2025-09-10T20:26:45.764Z",
+      "description": "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') vulnerability exists that could cause the execution of any shell command when executing a netstat command using BLMon Console in an SSH session.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://download.schneider-electric.com/files?p_Doc_Ref=SEVD-2025-252-02&p_enDocType=Security+and+Safety+Notice&p_File_Name=SEVD-2025-252-02.pdf",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Saitel DR RTU",
+          "vendor": "Schneider Electric",
+          "versions": [
+            {
+              "lessThanOrEqual": "11.06.29",
+              "status": "affected",
+              "version": "all versions",
+              "versionType": "version"
             }
           ]
         },
         {
           "defaultStatus": "unaffected",
-          "product": "DXP",
-          "vendor": "Liferay",
+          "product": "Saitel DP RTU",
+          "vendor": "Schneider Electric",
           "versions": [
             {
-              "lessThanOrEqual": "7.4.13-u92",
+              "lessThanOrEqual": "11.06.33",
               "status": "affected",
-              "version": "7.4.13-u73",
-              "versionType": "maven"
-            },
+              "version": "all versions",
+              "versionType": "version"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-78 Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-34174",
+      "publishedDate": "2025-09-09T20:02:05.701Z",
+      "lastModifiedDate": "2025-09-10T20:19:56.046Z",
+      "description": "In pfSense CE /usr/local/www/status_traffic_totals.php, the value of the start-day parameter is not ensured to be a numeric value or sanitized of HTML-related characters/strings before being directly displayed in the input box. This value can be saved as the default value to be displayed to all users when visiting the Status Traffic Totals page, resulting in stored cross-site scripting. The attacker must be authenticated with at least \"WebCfg - Status: Traffic Totals\" permissions.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/pfsense/FreeBSD-ports/commit/9e412edf62113303c36c7f7d5a48b0a3fb0be893",
+          "type": "reference"
+        },
+        {
+          "url": "https://redmine.pfsense.org/issues/16413",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "packageName": "Status_Traffic_Totals",
+          "product": "pfSense CE",
+          "vendor": "Netgate",
+          "versions": [
             {
-              "lessThanOrEqual": "2024.Q1.12",
               "status": "affected",
-              "version": "2024.Q1.1",
-              "versionType": "maven"
-            },
-            {
-              "lessThanOrEqual": "2024.Q2.13",
-              "status": "affected",
-              "version": "2024.Q2.0",
-              "versionType": "maven"
-            },
-            {
-              "lessThanOrEqual": "2024.Q3.1",
-              "status": "affected",
-              "version": "2024.Q3.0",
-              "versionType": "maven"
+              "version": "2.3.2_7",
+              "versionType": "custom"
             }
           ]
         }
       ],
       "problemType": [
         "CWE-79 Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-57569",
-      "publishedDate": "2025-09-10T00:00:00.000Z",
-      "lastModifiedDate": "2025-09-10T20:10:00.622Z",
-      "description": "Tenda F3 V12.01.01.48_multi and after is vulnerable to Buffer Overflow via the portList parameter in /goform/setNAT.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "http://tenda.com",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/arashiclustar/PingX-md/blob/main/F3/2025-57569/C.V.E-2025-57569.md",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n/a",
-          "product": "n/a",
-          "versions": [
-            {
-              "version": "n/a",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "n/a"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-57573",
-      "publishedDate": "2025-09-10T00:00:00.000Z",
-      "lastModifiedDate": "2025-09-10T20:18:50.491Z",
-      "description": "Tenda F3 V12.01.01.48_multi and after is vulnerable to Buffer Overflow via the wifiTimeClose parameter in goform/setWifi.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "http://tenda.com",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/arashiclustar/PingX-md/blob/main/F3/2025-57573/C.V.E-2025-57573.md",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n/a",
-          "product": "n/a",
-          "versions": [
-            {
-              "version": "n/a",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "n/a"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-53914",
-      "publishedDate": "2025-09-09T19:59:27.381Z",
-      "lastModifiedDate": "2025-09-10T20:19:24.548Z",
-      "description": "Excessive Privileges vulnerability in Calix GigaCenter ONT (Broadcom SoC modules) allows Privilege Abuse.This issue affects GigaCenter ONT: 844E, 844G, 844GE, 854GE, 812G, 813G, 818G.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://fluidattacks.com/advisories/sheivi",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.calix.com",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "modules": [
-            "Broadcom SoC"
-          ],
-          "product": "GigaCenter ONT",
-          "vendor": "Calix",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "844E",
-              "versionType": "custom"
-            },
-            {
-              "status": "affected",
-              "version": "844G",
-              "versionType": "custom"
-            },
-            {
-              "status": "affected",
-              "version": "844GE",
-              "versionType": "custom"
-            },
-            {
-              "status": "affected",
-              "version": "854GE",
-              "versionType": "custom"
-            },
-            {
-              "status": "affected",
-              "version": "812G",
-              "versionType": "custom"
-            },
-            {
-              "status": "affected",
-              "version": "813G",
-              "versionType": "custom"
-            },
-            {
-              "status": "affected",
-              "version": "818G",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-269 Improper Privilege Management"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-34173",
-      "publishedDate": "2025-09-09T19:59:14.136Z",
-      "lastModifiedDate": "2025-09-10T20:18:41.304Z",
-      "description": "In pfSense CE /usr/local/www/snort/snort_ip_reputation.php, the value of the iplist parameter is not sanitized of directory traversal-related characters/strings before being used to check if a file exists. While the contents of the file cannot be read, the server reveals whether a file exists, which allows an attacker to enumerate files on the target. The attacker must be authenticated with at least \"WebCfg - Services: Snort package\" permissions.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/pfsense/FreeBSD-ports/commit/d6f462bcc446969f8955c16cfde300d5c9ab7435",
-          "type": "reference"
-        },
-        {
-          "url": "https://redmine.pfsense.org/issues/16412",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "packageName": "Snort",
-          "product": "pfSense CE",
-          "repo": "https://github.com/pfsense/FreeBSD-ports/tree/main",
-          "vendor": "Netgate",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "4.1.6_25",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-22 Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-58753",
-      "publishedDate": "2025-09-09T19:54:36.056Z",
-      "lastModifiedDate": "2025-09-10T20:17:30.500Z",
-      "description": "Copyparty is a portable file server. In versions prior to 1.19.8, there was a missing permission-check in the shares feature (the `shr` global-option). When a share was created for just one file inside a folder, it was possible to access the other files inside that folder by guessing the filenames. It was not possible to descend into subdirectories in this manner; only the sibling files were accessible. This issue did not affect filekeys or dirkeys. Version 1.19.8 fixes the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/9001/copyparty/security/advisories/GHSA-pxvw-4w88-6x95",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/9001/copyparty/commit/e0a92ba72d46074209a9c304eb2a01ca0429e60c",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/9001/copyparty/releases/tag/v1.19.8",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "9001",
-          "product": "copyparty",
-          "versions": [
-            {
-              "version": "< 1.19.8",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-862: Missing Authorization",
-        "CWE-552: Files or Directories Accessible to External Parties"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-53913",
-      "publishedDate": "2025-09-09T19:54:01.838Z",
-      "lastModifiedDate": "2025-09-10T20:16:37.761Z",
-      "description": "Excessive Privileges vulnerability in Calix GigaCenter ONT (Quantenna SoC modules) allows Privilege Abuse.This issue affects GigaCenter ONT: 844E, 844G, 844GE, 854GE, 812G, 813G, 818G.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://fluidattacks.com/advisories/forty",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.calix.com",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "modules": [
-            "Quantenna SoC"
-          ],
-          "product": "GigaCenter ONT",
-          "vendor": "Calix",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "844E",
-              "versionType": "custom"
-            },
-            {
-              "status": "affected",
-              "version": "844G",
-              "versionType": "custom"
-            },
-            {
-              "status": "affected",
-              "version": "844GE",
-              "versionType": "custom"
-            },
-            {
-              "status": "affected",
-              "version": "854GE",
-              "versionType": "custom"
-            },
-            {
-              "status": "affected",
-              "version": "812G",
-              "versionType": "custom"
-            },
-            {
-              "status": "affected",
-              "version": "813G",
-              "versionType": "custom"
-            },
-            {
-              "status": "affected",
-              "version": "818G",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-269 Improper Privilege Management"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
