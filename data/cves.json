@@ -2,346 +2,145 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 6,
-    "last_updated": "2025-09-30T14:55:33.185114",
+    "total_count": 2,
+    "last_updated": "2025-09-30T15:23:25.753585",
     "severity_distribution": {
       "critical": 0,
       "high": 0,
       "medium": 0,
       "low": 0,
-      "none": 6
+      "none": 2
     }
   },
   "cves": [
     {
-      "id": "CVE-2025-56301",
-      "publishedDate": "2025-09-30T00:00:00.000Z",
-      "lastModifiedDate": "2025-09-30T14:43:36.782Z",
-      "description": "An issue was discovered in Chipsalliance Rocket-Chip commit f517abbf41abb65cea37421d3559f9739efd00a9 (2025-01-29) allowing attackers to corrupt exception handling and privilege state transitions via a flawed interaction between exception handling and MRET return mechanisms in the CSR logic when an exception is triggered during MRET execution. The Control and Status Register (CSR) logic has a flawed interaction between exception handling and exception return (MRET) mechanisms which can cause faulty trap behavior. When the MRET instruction is executed in machine mode without being in an exception state, an Instruction Access Fault may be triggered. This results in both the exception handling logic and the exception return logic activating simultaneously, leading to conflicting updates to the control and status registers.",
+      "id": "CVE-2025-34221",
+      "publishedDate": "2025-09-29T20:43:36.637Z",
+      "lastModifiedDate": "2025-09-30T15:13:36.287Z",
+      "description": "Vasion Print (formerly PrinterLogic) Virtual Appliance Host prior to version 25.2.169 and Application prior to version 25.2.1518 (VA/SaaS deployments) expose every internal Docker container to the network because firewall rules allow unrestricted traffic to the Docker bridge network. Because no authentication, ACL or client‑side identifier is required, the attacker can interact with any internal API, bypassing the product’s authentication mechanisms entirely. The result is unauthenticated remote access to internal services, allowing credential theft, configuration manipulation and potential remote code execution. This vulnerability has been identified by the vendor as: V-2025-002 — Authentication Bypass - Docker Instances.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://lf-riscv.atlassian.net/wiki/spaces/HOME/pages/16154769/RISC-V+Technical+Specifications#ISA-Specifications",
+          "url": "https://pierrekim.github.io/blog/2025-04-08-vasion-printerlogic-83-vulnerabilities.html#va-auth-bypass",
           "type": "reference"
         },
         {
-          "url": "https://github.com/chipsalliance/rocket-chip",
+          "url": "https://help.printerlogic.com/va/Print/Security/Security-Bulletins.htm",
           "type": "reference"
         },
         {
-          "url": "https://github.com/chipsalliance/rocket-chip/blob/master/src/main/scala/rocket/CSR.scala",
+          "url": "https://help.printerlogic.com/saas/Print/Security/Security-Bulletins.htm",
           "type": "reference"
         },
         {
-          "url": "https://github.com/chipsalliance/rocket-chip/blob/f517abbf41abb65cea37421d3559f9739efd00a9/src/main/scala/rocket/CSR.scala",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/heyfenny/Vulnerability_disclosure/blob/main/RISCV/Rocket-chip/CVE-2025-56301/details.md",
+          "url": "https://www.vulncheck.com/advisories/vasion-print-printerlogic-unrestriced-access-to-docker-bridge-network",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "n/a",
-          "product": "n/a",
+          "defaultStatus": "unaffected",
+          "modules": [
+            "Underlying Docker bridge network (172.17.0.0/16)"
+          ],
+          "product": "Print Virtual Appliance Host",
+          "vendor": "Vasion",
           "versions": [
             {
-              "version": "n/a",
-              "status": "affected"
+              "lessThan": "25.2.169",
+              "status": "affected",
+              "version": "*",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "modules": [
+            "Underlying Docker bridge network (172.17.0.0/16)"
+          ],
+          "product": "Print Application",
+          "vendor": "Vasion",
+          "versions": [
+            {
+              "lessThan": "25.2.1518",
+              "status": "affected",
+              "version": "*",
+              "versionType": "semver"
             }
           ]
         }
       ],
       "problemType": [
-        "n/a"
+        "CWE-306 Missing Authentication for Critical Function"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-59937",
-      "publishedDate": "2025-09-29T22:21:02.484Z",
-      "lastModifiedDate": "2025-09-30T14:44:35.194Z",
-      "description": "go-mail is a comprehensive library for sending mails with Go. In versions 0.7.0 and below, due to incorrect handling of the mail.Address values when a sender- or recipient address is passed to the corresponding MAIL FROM or RCPT TO commands of the SMTP client, there is a possibility of wrong address routing or even ESMTP parameter smuggling. For successful exploitation, it is required that the user's code allows for arbitrary mail address input (i. e. through a web form or similar). If only static mail addresses are used (i. e. in a config file) and the mail addresses in use do not consist of quoted local parts, this should not affect users. This issue is fixed in version 0.7.1",
+      "id": "CVE-2025-34215",
+      "publishedDate": "2025-09-29T20:43:12.104Z",
+      "lastModifiedDate": "2025-09-30T15:19:34.437Z",
+      "description": "Vasion Print (formerly PrinterLogic) Virtual Appliance Host prior to version 22.0.1026 and Application prior to version 20.0.2702 (only VA deployments) expose an unauthenticated firmware-upload flow: a public page returns a signed token usable at va-api/v1/update, and every Docker image contains the appliance’s private GPG key and hard-coded passphrase. An attacker who extracts the key and obtains a token can decrypt, modify, re-sign, upload, and trigger malicious firmware, gaining remote code execution.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/wneessen/go-mail/security/advisories/GHSA-wpwj-69cm-q9c5",
+          "url": "https://pierrekim.github.io/blog/2025-04-08-vasion-printerlogic-83-vulnerabilities.html#va-rce-02",
           "type": "reference"
         },
         {
-          "url": "https://github.com/wneessen/go-mail/issues/495",
+          "url": "https://help.printerlogic.com/va/Print/Security/Security-Bulletins.htm",
           "type": "reference"
         },
         {
-          "url": "https://github.com/wneessen/go-mail/pull/496",
+          "url": "https://help.printerlogic.com/saas/Print/Security/Security-Bulletins.htm",
           "type": "reference"
         },
         {
-          "url": "https://github.com/wneessen/go-mail/commit/42e92cfe027be04aff72921adb0f72f11d517479",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "wneessen",
-          "product": "go-mail",
-          "versions": [
-            {
-              "version": "< 0.7.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-88: Improper Neutralization of Argument Delimiters in a Command ('Argument Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-43813",
-      "publishedDate": "2025-09-29T22:19:02.876Z",
-      "lastModifiedDate": "2025-09-30T14:45:24.180Z",
-      "description": "Possible path traversal vulnerability and denial-of-service in the ComboServlet in Liferay Portal 7.4.0 through 7.4.3.107, and older unsupported versions, and Liferay DXP 2023.Q4.0 through 2023.Q4.4, 2023.Q3.1 through 2023.Q3.8, 7.4 GA through update 92, 7.3 GA through update 35, and older unsupported versions allows remote attackers to access arbitrary CSS and JSS files and load the files multiple times via the query string in a URL.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://liferay.dev/portal/security/known-vulnerabilities/-/asset_publisher/jekt/content/CVE-2025-43813",
+          "url": "https://www.vulncheck.com/advisories/vasion-print-printerlogic-unauth-firmware-update-endpoint-rce",
           "type": "reference"
         }
       ],
       "affected": [
         {
           "defaultStatus": "unaffected",
-          "product": "Portal",
-          "vendor": "Liferay",
+          "modules": [
+            "/admin/design/management_accountts_pcabout.php",
+            "/va‑api/v1/update",
+            "private key embedded in the appliance"
+          ],
+          "product": "Print Virtual Appliance Host",
+          "vendor": "Vasion",
           "versions": [
             {
-              "lessThanOrEqual": "7.4.3.107",
+              "lessThan": "22.0.1026",
               "status": "affected",
-              "version": "7.4.0",
-              "versionType": "maven"
+              "version": "*",
+              "versionType": "semver"
             }
           ]
         },
         {
           "defaultStatus": "unaffected",
-          "product": "DXP",
-          "vendor": "Liferay",
+          "modules": [
+            "/admin/design/management_accountts_pcabout.php",
+            "/va‑api/v1/update",
+            "private key embedded in the appliance"
+          ],
+          "product": "Print Application",
+          "vendor": "Vasion",
           "versions": [
             {
-              "lessThanOrEqual": "7.3.10-u35",
+              "lessThan": "20.0.2702",
               "status": "affected",
-              "version": "7.3.10",
-              "versionType": "maven"
-            },
-            {
-              "lessThanOrEqual": "7.4.13-u92",
-              "status": "affected",
-              "version": "7.4.13",
-              "versionType": "maven"
-            },
-            {
-              "lessThanOrEqual": "2023.Q3.8",
-              "status": "affected",
-              "version": "2023.Q3.1",
-              "versionType": "maven"
-            },
-            {
-              "lessThanOrEqual": "2023.Q4.4",
-              "status": "affected",
-              "version": "2023.Q4.0",
-              "versionType": "maven"
+              "version": "*",
+              "versionType": "semver"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-22: Path Traversal"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-43812",
-      "publishedDate": "2025-09-29T22:09:29.895Z",
-      "lastModifiedDate": "2025-09-30T14:45:51.855Z",
-      "description": "Cross-site scripting (XSS) vulnerability in web content template in Liferay Portal 7.4.3.4 through 7.4.3.111, and Liferay DXP 2023.Q4.0 through 2023.Q4.4, 2023.Q3.1 through 2023.Q3.8, and 7.4 GA through update 92 allows remote authenticated users to inject arbitrary web script or HTML via a crafted payload injected into a web content structure's Name text field",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://liferay.dev/portal/security/known-vulnerabilities/-/asset_publisher/jekt/content/CVE-2025-43812",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Portal",
-          "vendor": "Liferay",
-          "versions": [
-            {
-              "lessThanOrEqual": "7.4.3.111",
-              "status": "affected",
-              "version": "7.4.0",
-              "versionType": "maven"
-            }
-          ]
-        },
-        {
-          "defaultStatus": "unaffected",
-          "product": "DXP",
-          "vendor": "Liferay",
-          "versions": [
-            {
-              "lessThanOrEqual": "7.4.13-u92",
-              "status": "affected",
-              "version": "7.4.13",
-              "versionType": "maven"
-            },
-            {
-              "lessThanOrEqual": "2023.Q3.8",
-              "status": "affected",
-              "version": "2023.Q3.1",
-              "versionType": "maven"
-            },
-            {
-              "lessThanOrEqual": "2023.Q4.4",
-              "status": "affected",
-              "version": "2023.Q4.0",
-              "versionType": "maven"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-79: Cross-site Scripting"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-43820",
-      "publishedDate": "2025-09-29T21:48:52.306Z",
-      "lastModifiedDate": "2025-09-30T14:46:25.387Z",
-      "description": "Multiple cross-site scripting (XSS) vulnerabilities in the Calendar widget when inviting users to a event in Liferay Portal 7.4.3.35 through 7.4.3.110, and Liferay DXP 2023.Q4.0 through 2023.Q4.4, 2023.Q3.1 through 2023.Q3.6, 7.4 update 35 through update 92, and 7.3 update 25 through update 35 allow remote attackers to inject arbitrary web script or HTML via a crafted payload injected into a user’s (1) First Name, (2) Middle text, or (3) Last Name text fields.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://liferay.dev/portal/security/known-vulnerabilities/-/asset_publisher/jekt/content/CVE-2025-43820",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Portal",
-          "vendor": "Liferay",
-          "versions": [
-            {
-              "lessThanOrEqual": "7.4.3.110",
-              "status": "affected",
-              "version": "7.4.3.35",
-              "versionType": "maven"
-            }
-          ]
-        },
-        {
-          "defaultStatus": "unaffected",
-          "product": "DXP",
-          "vendor": "Liferay",
-          "versions": [
-            {
-              "lessThanOrEqual": "7.3.10-u36",
-              "status": "affected",
-              "version": "7.3.10-u25",
-              "versionType": "maven"
-            },
-            {
-              "lessThanOrEqual": "7.4.13-u92",
-              "status": "affected",
-              "version": "7.4.13-u35",
-              "versionType": "maven"
-            },
-            {
-              "lessThanOrEqual": "2023.Q3.6",
-              "status": "affected",
-              "version": "2023.Q3.1",
-              "versionType": "maven"
-            },
-            {
-              "lessThanOrEqual": "2023.Q4.4",
-              "status": "affected",
-              "version": "2023.Q4.0",
-              "versionType": "maven"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-79: Cross-site Scripting"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-43818",
-      "publishedDate": "2025-09-29T21:38:59.859Z",
-      "lastModifiedDate": "2025-09-30T14:46:36.584Z",
-      "description": "Cross-site scripting (XSS) vulnerability in the Calendar widget in Liferay Portal 7.4.3.35 through 7.4.3.110, and Liferay DXP 2023.Q4.0 through 2023.Q4.4, 2023.Q3.1 through 2023.Q3.6, 7.4 update 35 through update 92, and 7.3 update 25 through update 36 allows remote attackers to inject arbitrary web script or HTML via a crafted payload injected into a Calendar's “Name” text field",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://liferay.dev/portal/security/known-vulnerabilities/-/asset_publisher/jekt/content/CVE-2025-43818",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Portal",
-          "vendor": "Liferay",
-          "versions": [
-            {
-              "lessThanOrEqual": "7.4.3.110",
-              "status": "affected",
-              "version": "7.4.3.35",
-              "versionType": "maven"
-            }
-          ]
-        },
-        {
-          "defaultStatus": "unaffected",
-          "product": "DXP",
-          "vendor": "Liferay",
-          "versions": [
-            {
-              "lessThanOrEqual": "7.3.10-u36",
-              "status": "affected",
-              "version": "7.3.10-u25",
-              "versionType": "maven"
-            },
-            {
-              "lessThanOrEqual": "7.4.13-u92",
-              "status": "affected",
-              "version": "7.4.13-u35",
-              "versionType": "maven"
-            },
-            {
-              "lessThanOrEqual": "2023.Q3.6",
-              "status": "affected",
-              "version": "2023.Q3.1",
-              "versionType": "maven"
-            },
-            {
-              "lessThanOrEqual": "2023.Q4.4",
-              "status": "affected",
-              "version": "2023.Q4.0",
-              "versionType": "maven"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-79: Cross-site Scripting"
+        "CWE-306 Missing Authentication for Critical Function",
+        "CWE-321 Use of Hard-coded Cryptographic Key"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
