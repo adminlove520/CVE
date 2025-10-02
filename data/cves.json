@@ -2,47 +2,314 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 1,
-    "last_updated": "2025-10-02T21:23:47.516044",
+    "total_count": 5,
+    "last_updated": "2025-10-02T21:37:07.408730",
     "severity_distribution": {
       "critical": 0,
-      "high": 0,
+      "high": 1,
       "medium": 0,
       "low": 0,
-      "none": 1
+      "none": 4
     }
   },
   "cves": [
     {
-      "id": "CVE-2025-61666",
-      "publishedDate": "2025-10-02T21:15:47.047Z",
-      "lastModifiedDate": "2025-10-02T21:15:47.047Z",
-      "description": "Traccar is an open source GPS tracking system. Default installs of Traccar on Windows between versions 6.1-  6.8.1 and non default installs between versions 5.8 - 6.0 are vulnerable to unauthenticated local file inclusion attacks which can lead to leakage of passwords or any file on the file system including the Traccar configuration file. Versions 5.8 - 6.0 are only vulnerable if <entry key='web.override'>./override</entry> is set in the configuration file. Versions 6.1 - 6.8.1 are vulnerable by default as the web override is enabled by default. The vulnerable code is removed in version 6.9.0.",
-      "severity": "N/A",
+      "id": "CVE-2025-61600",
+      "publishedDate": "2025-10-02T21:30:52.203Z",
+      "lastModifiedDate": "2025-10-02T21:30:52.203Z",
+      "description": "Stalwart is a mail and collaboration server. Versions 0.13.3 and below contain an unbounded memory allocation vulnerability in the IMAP protocol parser which allows remote attackers to exhaust server memory, potentially triggering the system's out-of-memory (OOM) killer and causing a denial of service. The CommandParser implementation enforces size limits on its dynamic buffer in most parsing states, but several state handlers omit these validation checks. This issue is fixed in version 0.13.4. A workaround for this issue is to implement rate limiting and connection monitoring at the network level, however this does not provide complete protection.",
+      "severity": 7.5,
       "references": [
         {
-          "url": "https://github.com/traccar/traccar/security/advisories/GHSA-hprc-rph8-fj87",
+          "url": "https://github.com/stalwartlabs/stalwart/security/advisories/GHSA-8jqj-qj5p-v5rr",
           "type": "reference"
         },
         {
-          "url": "https://github.com/traccar/traccar/blob/v6.8.1/src/main/java/org/traccar/web/DefaultOverrideServlet.java",
+          "url": "https://github.com/stalwartlabs/stalwart/commit/a8e631e881bded8128358732f18e02ca94a4e677",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/stalwartlabs/stalwart/releases/tag/v0.13.4",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "traccar",
-          "product": "traccar",
+          "vendor": "stalwartlabs",
+          "product": "stalwart",
           "versions": [
             {
-              "version": ">= 5.8, < 6.9.0",
+              "version": "< 0.13.4",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+        "CWE-400: Uncontrolled Resource Consumption",
+        "CWE-789: Memory Allocation with Excessive Size Value"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-34215",
+      "publishedDate": "2025-09-29T20:43:12.104Z",
+      "lastModifiedDate": "2025-10-02T21:32:38.790Z",
+      "description": "Vasion Print (formerly PrinterLogic) Virtual Appliance Host prior to version 22.0.1026 and Application prior to version 20.0.2702 (only VA deployments) expose an unauthenticated firmware-upload flow: a public page returns a signed token usable at va-api/v1/update, and every Docker image contains the appliance’s private GPG key and hard-coded passphrase. An attacker who extracts the key and obtains a token can decrypt, modify, re-sign, upload, and trigger malicious firmware, gaining remote code execution. This vulnerability has been identified by the vendor as: V-2024-020 — Remote Code Execution.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://pierrekim.github.io/blog/2025-04-08-vasion-printerlogic-83-vulnerabilities.html#va-rce-02",
+          "type": "reference"
+        },
+        {
+          "url": "https://help.printerlogic.com/va/Print/Security/Security-Bulletins.htm",
+          "type": "reference"
+        },
+        {
+          "url": "https://help.printerlogic.com/saas/Print/Security/Security-Bulletins.htm",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/vasion-print-printerlogic-unauth-firmware-update-endpoint-rce",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "modules": [
+            "/admin/design/management_accountts_pcabout.php",
+            "/va‑api/v1/update",
+            "private key embedded in the appliance"
+          ],
+          "product": "Print Virtual Appliance Host",
+          "vendor": "Vasion",
+          "versions": [
+            {
+              "lessThan": "22.0.1026",
+              "status": "affected",
+              "version": "*",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "modules": [
+            "/admin/design/management_accountts_pcabout.php",
+            "/va‑api/v1/update",
+            "private key embedded in the appliance"
+          ],
+          "product": "Print Application",
+          "vendor": "Vasion",
+          "versions": [
+            {
+              "lessThan": "20.0.2702",
+              "status": "affected",
+              "version": "*",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-306 Missing Authentication for Critical Function",
+        "CWE-321 Use of Hard-coded Cryptographic Key"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-34207",
+      "publishedDate": "2025-09-29T20:38:29.682Z",
+      "lastModifiedDate": "2025-10-02T21:30:13.394Z",
+      "description": "Vasion Print (formerly PrinterLogic) Virtual Appliance Host prior to 22.0.1049 and Application prior to 20.0.2786 (VA and SaaS deployments) configure the SSH client within Docker instances with the following options: `UserKnownHostsFile=/dev/null`, `StrictHostKeyChecking=no`, and `ForwardAgent yes`.  These settings disable verification of the remote host’s SSH key and automatically forward the developer’s SSH‑agent to any host that matches the configured wildcard patterns.  As a result, an attacker who can reach a single compromised container can cause the container to connect to a malicious SSH server, capture the forwarded private keys, and use those keys for unrestricted lateral movement across the environment. This vulnerability has been identified by the vendor as: V-2024-027 — Insecure Secure Shell (SSH) Configuration.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://pierrekim.github.io/blog/2025-04-08-vasion-printerlogic-83-vulnerabilities.html#va-insecure-ssh-config",
+          "type": "reference"
+        },
+        {
+          "url": "https://help.printerlogic.com/va/Print/Security/Security-Bulletins.htm",
+          "type": "reference"
+        },
+        {
+          "url": "https://help.printerlogic.com/saas/Print/Security/Security-Bulletins.htm",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/vasion-print-printerlogic-insecure-ssh-client-config",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "modules": [
+            "Docker container scripts"
+          ],
+          "product": "Print Virtual Appliance Host",
+          "vendor": "Vasion",
+          "versions": [
+            {
+              "lessThan": "22.0.1049",
+              "status": "affected",
+              "version": "*",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "modules": [
+            "Docker container scripts"
+          ],
+          "product": "Print Application",
+          "vendor": "Vasion",
+          "versions": [
+            {
+              "lessThan": "20.0.2786",
+              "status": "affected",
+              "version": "*",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-522 Insufficiently Protected Credentials",
+        "CWE-306 Missing Authentication for Critical Function"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-34211",
+      "publishedDate": "2025-09-29T20:36:26.157Z",
+      "lastModifiedDate": "2025-10-02T21:31:33.101Z",
+      "description": "Vasion Print (formerly PrinterLogic) Virtual Appliance Host prior to version 22.0.1049 and Application prior to version 20.0.2786 (VA and SaaS deployments) contain a private SSL key and matching public certificate stored in cleartext. The key belongs to the hostname `pl‑local.com` and is used by the appliance to terminate TLS connections on ports 80/443. Because the key is hardcoded, any attacker who can gain container-level access can simply read the files and obtain the private key. With the private key, the attacker can decrypt TLS traffic, perform man-in-the-middle attacks, or forge TLS certificates. This enables impersonation of the appliance’s web UI, interception of credentials, and unrestricted access to any services that trust the certificate. The same key is identical across all deployed appliances meaning a single theft compromises the confidentiality of every Vasion Print installation. This vulnerability has been identified by the vendor as: V-2024-025 — Hardcoded SSL Certificate & Private Keys.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://pierrekim.github.io/blog/2025-04-08-vasion-printerlogic-83-vulnerabilities.html#va-hardcoded-ssl-private-key",
+          "type": "reference"
+        },
+        {
+          "url": "https://help.printerlogic.com/va/Print/Security/Security-Bulletins.htm",
+          "type": "reference"
+        },
+        {
+          "url": "https://help.printerlogic.com/saas/Print/Security/Security-Bulletins.htm",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/vasion-print-printerlogic-hardcoded-ssl-certificate-and-private-keys",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "modules": [
+            "/etc/ssl/private/pl‑local.com.key",
+            "/etc/ssl/certs/pl‑local.com.pe"
+          ],
+          "product": "Print Virtual Appliance Host",
+          "vendor": "Vasion",
+          "versions": [
+            {
+              "lessThan": "22.0.1049",
+              "status": "affected",
+              "version": "*",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "modules": [
+            "/etc/ssl/private/pl‑local.com.key",
+            "/etc/ssl/certs/pl‑local.com.pe"
+          ],
+          "product": "Print Application",
+          "vendor": "Vasion",
+          "versions": [
+            {
+              "lessThan": "20.0.2786",
+              "status": "affected",
+              "version": "*",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-321 Use of Hard-coded Cryptographic Key"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-34209",
+      "publishedDate": "2025-09-29T20:35:11.366Z",
+      "lastModifiedDate": "2025-10-02T21:30:41.990Z",
+      "description": "Vasion Print (formerly PrinterLogic) Virtual Appliance Host prior to 22.0.862 and Application prior to 20.0.2014 (VA and SaaS deployments) contain Docker images with the private GPG key and passphrase for the account *no‑reply+virtual‑appliance@printerlogic.com*. The key is stored in cleartext and the passphrase is hardcoded in files. An attacker with administrative access to the appliance can extract the private key, import it into their own system, and subsequently decrypt GPG-encrypted files and sign arbitrary firmware update packages. A maliciously signed update can be uploaded by an admin‑level attacker and will be executed by the appliance, giving the attacker full control of the virtual appliance. This vulnerability has been identified by the vendor as: V-2023-010 — Hardcoded Private Key.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://pierrekim.github.io/blog/2025-04-08-vasion-printerlogic-83-vulnerabilities.html#va-private-gpg-key",
+          "type": "reference"
+        },
+        {
+          "url": "https://help.printerlogic.com/va/Print/Security/Security-Bulletins.htm",
+          "type": "reference"
+        },
+        {
+          "url": "https://help.printerlogic.com/saas/Print/Security/Security-Bulletins.htm",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/vasion-print-printerlogic-hardcoded-gpg-private-key",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "modules": [
+            "Docker images – embedded GPG key pair",
+            "Firmware‑update signing workflow"
+          ],
+          "product": "Print Virtual Appliance Host",
+          "vendor": "Vasion",
+          "versions": [
+            {
+              "lessThan": "22.0.862",
+              "status": "affected",
+              "version": "*",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "modules": [
+            "Docker images – embedded GPG key pair",
+            "Firmware‑update signing workflow"
+          ],
+          "product": "Print Application",
+          "vendor": "Vasion",
+          "versions": [
+            {
+              "lessThan": "20.0.2014",
+              "status": "affected",
+              "version": "*",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-798 Use of Hard-coded Credentials"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
