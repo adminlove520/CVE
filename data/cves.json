@@ -2,92 +2,26 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 3,
-    "last_updated": "2025-10-02T17:42:38.684176",
+    "total_count": 2,
+    "last_updated": "2025-10-02T17:56:20.609496",
     "severity_distribution": {
       "critical": 0,
-      "high": 2,
+      "high": 0,
       "medium": 0,
       "low": 0,
-      "none": 1
+      "none": 2
     }
   },
   "cves": [
     {
-      "id": "CVE-2025-61690",
-      "publishedDate": "2025-10-02T05:51:41.355Z",
-      "lastModifiedDate": "2025-10-02T17:32:42.278Z",
-      "description": "KV STUDIO versions 12.23 and prior contain a buffer underflow vulnerability. If the product uses a specially crafted file, arbitrary code may be executed on the affected product.",
-      "severity": 7.8,
-      "references": [
-        {
-          "url": "https://www.keyence.com/kv_vulnerability2509302",
-          "type": "reference"
-        },
-        {
-          "url": "https://jvn.jp/en/vu/JVNVU97069449/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "KEYENCE CORPORATION",
-          "product": "KV STUDIO",
-          "versions": [
-            {
-              "version": "12.23 and prior",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Buffer underwrite ('Buffer underflow')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-61692",
-      "publishedDate": "2025-10-02T05:51:26.096Z",
-      "lastModifiedDate": "2025-10-02T17:33:11.276Z",
-      "description": "VT STUDIO versions 8.53 and prior contain a use after free vulnerability. If the product uses a specially crafted file, arbitrary code may be executed on the affected product.",
-      "severity": 7.8,
-      "references": [
-        {
-          "url": "https://www.keyence.com/vt_vulnerability250930",
-          "type": "reference"
-        },
-        {
-          "url": "https://jvn.jp/en/vu/JVNVU97069449/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "KEYENCE CORPORATION",
-          "product": "VT STUDIO",
-          "versions": [
-            {
-              "version": "8.53 and prior",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Use after free"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-34208",
-      "publishedDate": "2025-10-02T16:13:06.735Z",
-      "lastModifiedDate": "2025-10-02T17:37:25.234Z",
-      "description": "Vasion Print (formerly PrinterLogic) Virtual Appliance Host and Application (VA/SaaS deployments) store user passwords using unsalted SHA-512 hashes with a fall-back to unsalted SHA-1. The hashing is performed via PHP's `hash()` function in multiple files (server_write_requests_users.php, update_database.php, legacy/Login.php, tests/Unit/Api/IdpControllerTest.php). No per-user salt is used and the fast hash algorithms are unsuitable for password storage. An attacker who obtains the password database can recover cleartext passwords via offline dictionary or rainbow table attacks. The vulnerable code also contains logic that migrates legacy SHA-1 hashes to SHA-512 on login, further exposing users still on the old hash. This vulnerability was partially resolved, but still present within the legacy authentication platform.",
+      "id": "CVE-2025-34210",
+      "publishedDate": "2025-10-02T16:13:28.964Z",
+      "lastModifiedDate": "2025-10-02T17:38:45.120Z",
+      "description": "Vasion Print (formerly PrinterLogic) Virtual Appliance Host and Application (VA/SaaS deployments) store a large number of sensitive credentials (database passwords, MySQL root password, SaaS keys, Portainer admin password, etc.) in cleartext files that are world-readable. Any local user - or any process that can read the host filesystem - can retrieve all of these secrets in plain text, leading to credential theft and full compromise of the appliance. The vendor does not consider this to be a security vulnerability as this product \"follows a shared responsibility model, where administrators are expected to configure persistent storage encryption.\"",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://pierrekim.github.io/blog/2025-04-08-vasion-printerlogic-83-vulnerabilities.html#va-incorrect-encryption-algorithms-password",
+          "url": "https://pierrekim.github.io/blog/2025-04-08-vasion-printerlogic-83-vulnerabilities.html#va-readable-passwords",
           "type": "reference"
         },
         {
@@ -99,7 +33,7 @@
           "type": "reference"
         },
         {
-          "url": "https://www.vulncheck.com/advisories/vasion-print-printerlogic-insecure-password-hashing",
+          "url": "https://www.vulncheck.com/advisories/vasion-print-printerlogic-readble-cleartext-passwords",
           "type": "reference"
         }
       ],
@@ -107,10 +41,11 @@
         {
           "defaultStatus": "unknown",
           "modules": [
-            "/var/www/app/admin/query/server_write_requests_users.php",
-            "/var/www/app/admin/query/update_database.php",
-            "/var/www/app/legacy/Login.php",
-            "/var/www/app/tests/Unit/Api/IdP/IdpControllerTest.php"
+            "/etc/printercloud/network.env",
+            "/etc/printercloud/appliance.env",
+            "/etc/printercloud/previous-db-password.txt",
+            "/var/www/efs_storage/secrets.env",
+            "/var/lib/docker/swarm/worker/tasks.db"
           ],
           "product": "Print Virtual Appliance Host",
           "vendor": "Vasion",
@@ -124,10 +59,11 @@
         {
           "defaultStatus": "unknown",
           "modules": [
-            "/var/www/app/admin/query/server_write_requests_users.php",
-            "/var/www/app/admin/query/update_database.php",
-            "/var/www/app/legacy/Login.php",
-            "/var/www/app/tests/Unit/Api/IdP/IdpControllerTest.php"
+            "/etc/printercloud/network.env",
+            "/etc/printercloud/appliance.env",
+            "/etc/printercloud/previous-db-password.txt",
+            "/var/www/efs_storage/secrets.env",
+            "/var/lib/docker/swarm/worker/tasks.db"
           ],
           "product": "Print Application",
           "vendor": "Vasion",
@@ -140,8 +76,40 @@
         }
       ],
       "problemType": [
-        "CWE-327 Use of a Broken or Risky Cryptographic Algorithm",
-        "CWE-759 Use of a One-Way Hash without a Salt"
+        "CWE-256: Plaintext Storage of a Password"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-53881",
+      "publishedDate": "2025-10-02T13:51:56.848Z",
+      "lastModifiedDate": "2025-10-02T17:38:57.426Z",
+      "description": "A UNIX Symbolic Link (Symlink) Following vulnerability in logrotate config in the exim package allowed privilege escalation from mail user/group to root.This issue affects Tumbleweed: from ? before 4.98.2-lp156.248.1.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://bugzilla.suse.com/show_bug.cgi?id=CVE-2025-53881",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "packageName": "exim",
+          "product": "Tumbleweed",
+          "vendor": "openSUSE",
+          "versions": [
+            {
+              "lessThan": "4.98.2-lp156.248.1",
+              "status": "affected",
+              "version": "?",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-61: UNIX Symbolic Link (Symlink) Following"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
