@@ -2,38 +2,38 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 8,
-    "last_updated": "2025-10-06T08:25:30.310715",
+    "total_count": 1,
+    "last_updated": "2025-10-06T08:47:06.469921",
     "severity_distribution": {
       "critical": 0,
       "high": 1,
       "medium": 0,
       "low": 0,
-      "none": 7
+      "none": 0
     }
   },
   "cves": [
     {
-      "id": "CVE-2025-11327",
-      "publishedDate": "2025-10-06T08:02:06.994Z",
-      "lastModifiedDate": "2025-10-06T08:02:06.994Z",
-      "description": "A security vulnerability has been detected in Tenda AC18 15.03.05.19(6318). This vulnerability affects unknown code of the file /goform/SetUpnpCfg. The manipulation of the argument upnpEn leads to stack-based buffer overflow. It is possible to initiate the attack remotely. The exploit has been disclosed publicly and may be used.",
+      "id": "CVE-2025-11328",
+      "publishedDate": "2025-10-06T08:32:07.978Z",
+      "lastModifiedDate": "2025-10-06T08:32:07.978Z",
+      "description": "A vulnerability was detected in Tenda AC18 15.03.05.19(6318). This issue affects some unknown processing of the file /goform/SetDDNSCfg. The manipulation of the argument ddnsEn results in stack-based buffer overflow. It is possible to launch the attack remotely. The exploit is now public and may be used.",
       "severity": 8.8,
       "references": [
         {
-          "url": "https://vuldb.com/?id.327210",
+          "url": "https://vuldb.com/?id.327211",
           "type": "reference"
         },
         {
-          "url": "https://vuldb.com/?ctiid.327210",
+          "url": "https://vuldb.com/?ctiid.327211",
           "type": "reference"
         },
         {
-          "url": "https://vuldb.com/?submit.664532",
+          "url": "https://vuldb.com/?submit.664533",
           "type": "reference"
         },
         {
-          "url": "https://github.com/noahze01/IoT-vulnerable/blob/main/Tenda/AC18/SetUpnpCfg.md",
+          "url": "https://github.com/noahze01/IoT-vulnerable/blob/main/Tenda/AC18/SetDDNSCfg.md",
           "type": "poc"
         },
         {
@@ -56,283 +56,6 @@
       "problemType": [
         "Stack-based Buffer Overflow",
         "Memory Corruption"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-59734",
-      "publishedDate": "2025-10-06T08:09:44.280Z",
-      "lastModifiedDate": "2025-10-06T08:09:44.280Z",
-      "description": "It is possible to cause an use-after-free write in SANM decoding with a carefully crafted animation using subversion <2.\n\nWhen a STOR chunk is present, a subsequent FOBJ chunk will be saved in ctx->stored_frame. Stored frames can later be referenced by FTCH chunks. For files using subversion < 2, the undecoded frame is stored, and decoded again when the FTCH chunks are parsed. However, in process_frame_obj if the frame has an invalid size, there’s an early return, with a value of 0. \n\nThis causes the code in decode_frame to still store the raw frame buffer into ctx->stored_frame. Leaving ctx->has_dimensions set to false.\n\nA subsequent chunk with type FTCH would call process_ftch and decode that frame obj again, adding to the top/left values and calling process_frame_obj again.\nGiven that we never set ctx->have_dimensions before, this time we set the dimensions, calling init_buffers, which can reallocate the buffer in ctx->stored_frame, freeing the previous one. However, the GetByteContext object gb still holds a reference to the old buffer.\n\n\n\n\nFinally, when the code tries to decode the frame, codecs that accept a GetByteContext as a parameter will trigger a use-after-free read when using gb.\n\nGetByteContext is only used for reading bytes, so at most one could read invalid data. There are no heap allocations between the free and when the object is accessed. However, upon returning to process_ftch, the code restores the original values for top/left in stored_frame, writing 4 bytes to the freed data at offset 6, potentially corrupting the allocator’s metadata.\n\nThis issue can be triggered just by probing whether a file has the sanm format.\n\n\n\n\n\n\n\nWe recommend upgrading to version 8.0 or beyond.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://b.corp.google.com/issues/440183164",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://git.ffmpeg.org/ffmpeg.git",
-          "defaultStatus": "unaffected",
-          "packageName": "SANM",
-          "product": "FFmpeg",
-          "repo": "https://git.ffmpeg.org/ffmpeg.git",
-          "vendor": "FFmpeg",
-          "versions": [
-            {
-              "lessThan": "8.0",
-              "status": "affected",
-              "version": "4d7c609be37dc57d31527c8c9e5945dc9491a7cd",
-              "versionType": "custom"
-            },
-            {
-              "lessThan": "8.0",
-              "status": "affected",
-              "version": "7.1.1",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-416 Use After Free"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-59733",
-      "publishedDate": "2025-10-06T08:09:37.290Z",
-      "lastModifiedDate": "2025-10-06T08:09:37.290Z",
-      "description": "When decoding an OpenEXR file that uses DWAA or DWAB compression, there's an implicit assumption that all image channels have the same pixel type (and size), and that if there are four channels, the first four are \"B\", \"G\", \"R\" and \"A\". The channel parsing code can be found in decode_header. The buffer td->uncompressed_data is allocated in decode_block based on the xsize, ysize and computed current_channel_offset.\n\nThe function dwa_uncompress then assumes at [5] that if there are 4 channels, these are \"B\", \"G\", \"R\" and \"A\", and in the calculations at [6] and [7] that all channels are of the same type, which matches the type of the main color channels.\n\nIf we set the main color channels to a 4-byte type and add duplicate or unknown channels of the 2-byte EXR_HALF type, then the addition at [7] will increment the pointer by 4-bytes * xsize * nb_channels, which will exceed the allocated buffer.\n\n\n\n\n\nWe recommend upgrading to version 8.0 or beyond.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://b.corp.google.com/issues/436511754",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://git.ffmpeg.org/ffmpeg.git",
-          "defaultStatus": "unaffected",
-          "packageName": "EXR",
-          "product": "FFmpeg",
-          "repo": "https://git.ffmpeg.org/ffmpeg.git",
-          "vendor": "FFmpeg",
-          "versions": [
-            {
-              "lessThan": "8.0",
-              "status": "affected",
-              "version": "9a32b863074ed4140141e0d3613905c6f1fe61c5",
-              "versionType": "custom"
-            },
-            {
-              "lessThan": "8.0",
-              "status": "affected",
-              "version": "7.1.1",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-787 Out-of-bounds Write"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-59732",
-      "publishedDate": "2025-10-06T08:09:31.276Z",
-      "lastModifiedDate": "2025-10-06T08:09:31.276Z",
-      "description": "When decoding an OpenEXR file that uses DWAA or DWAB compression, there's an implicit assumption that the height and width are divisible by 8.\n\nIf the height or width of the image is not divisible by 8, the copy loops at [0] and [1] will continue to write until the next multiple of 8.\n\nThe buffer td->uncompressed_data is allocated in decode_block based on the precise height and width of the image, so the \"rounded-up\" multiple of 8 in the copy loop can exceed the buffer bounds, and the write block starting at [2] can corrupt following heap memory.\n\n\n\nWe recommend upgrading to version 8.0 or beyond.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://b.corp.google.com/issues/436510316",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://git.ffmpeg.org/ffmpeg.git",
-          "defaultStatus": "unaffected",
-          "packageName": "EXR",
-          "product": "FFmpeg",
-          "repo": "https://git.ffmpeg.org/ffmpeg.git",
-          "vendor": "FFmpeg",
-          "versions": [
-            {
-              "lessThan": "8.0",
-              "status": "affected",
-              "version": "9a32b863074ed4140141e0d3613905c6f1fe61c5",
-              "versionType": "custom"
-            },
-            {
-              "lessThan": "8.0",
-              "status": "affected",
-              "version": "7.1.1",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-787 Out-of-bounds Write"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-59731",
-      "publishedDate": "2025-10-06T08:09:23.410Z",
-      "lastModifiedDate": "2025-10-06T08:09:23.410Z",
-      "description": "When decoding an OpenEXR file that uses DWAA or DWAB compression, the specified raw length of run-length-encoded data is not checked when using it to calculate the output data.\n\nWe read rle_raw_size from the input file at [0], we decompress and decode into the buffer td->rle_raw_data of size rle_raw_size at [1], and then at [2] we will access entries in this buffer up to (td->xsize - 1) * (td->ysize - 1) + rle_raw_size / 2, which may exceed rle_raw_size.\n\n\n\n\nWe recommend upgrading to version 8.0 or beyond.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://b.corp.google.com/issues/436510153",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://git.ffmpeg.org/ffmpeg.git",
-          "defaultStatus": "unaffected",
-          "packageName": "EXR",
-          "product": "FFmpeg",
-          "repo": "https://git.ffmpeg.org/ffmpeg.git",
-          "vendor": "FFmpeg",
-          "versions": [
-            {
-              "lessThan": "8.0",
-              "status": "affected",
-              "version": "9a32b863074ed4140141e0d3613905c6f1fe61c5",
-              "versionType": "custom"
-            },
-            {
-              "lessThan": "8.0",
-              "status": "affected",
-              "version": "7.1.1",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-787 Out-of-bounds Write"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-59730",
-      "publishedDate": "2025-10-06T08:09:11.029Z",
-      "lastModifiedDate": "2025-10-06T08:09:11.029Z",
-      "description": "When decoding a frame for a SANM file (ANIM v0 variant), the decoded data can be larger than the buffer allocated for it.\n\nFrames encoded with codec 48 can specify their resolution (width x height). A buffer of appropriate size is allocated depending on the resolution.\n\nThis codec can encode the frame contents using a run-length encoding algorithm. There are no checks that the decoded frame fits in the allocated buffer, leading to a heap-buffer-overflow.\n\nprocess_frame_obj initializes the buffers based on the frame resolution:\n\n\n\nWe recommend upgrading to version 8.0 or beyond.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://issuetracker.google.com/434637586",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://git.ffmpeg.org/ffmpeg.git",
-          "defaultStatus": "unaffected",
-          "packageName": "SANM",
-          "product": "FFmpeg",
-          "repo": "https://git.ffmpeg.org/ffmpeg.git",
-          "vendor": "FFmpeg",
-          "versions": [
-            {
-              "lessThan": "8.0",
-              "status": "affected",
-              "version": "829680f96a7a7ff02d1543895ec0fb713309d5c0",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-787 Out-of-bounds Write"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-59729",
-      "publishedDate": "2025-10-06T08:08:46.060Z",
-      "lastModifiedDate": "2025-10-06T08:08:46.060Z",
-      "description": "When parsing the header for a DHAV file, there's an integer underflow in offset calculation that leads to reading the duration from before the start of the allocated buffer.\n\nIf we load a DHAV file that is larger than MAX_DURATION_BUFFER_SIZE bytes (0x100000) for example 0x101000 bytes, then at [0] we have size = 0x101000. At [1] we have end_buffer_size = 0x100000, and at [2] we have end_buffer_pos = 0x1000.\n\nThe loop then scans backwards through the buffer looking for the dhav tag; when it is found, we'll calculate end_pos based on a 32-bit offset read from the buffer.\n\nThere is subsequently a check [3] that end_pos is within the section of the file that has been copied into end_buffer, but it only correctly handles the cases where end_pos is before the start of the file or after the section copied into end_buffer, and not the case where end_pos is within the the file, but before the section copied into end_buffer. If we provide such an offset, (end_pos - end_buffer_pos) can underflow, resulting in the subsequent access at [4] occurring before the beginning of the allocation.\n\nWe recommend upgrading to version 8.0 or beyond.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://issuetracker.google.com/433513232",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://git.ffmpeg.org/ffmpeg.git",
-          "defaultStatus": "unaffected",
-          "modules": [
-            "get_duration"
-          ],
-          "packageName": "DHAV",
-          "product": "FFmpeg",
-          "repo": "https://git.ffmpeg.org/ffmpeg.git",
-          "vendor": "FFmpeg",
-          "versions": [
-            {
-              "lessThan": "8.0",
-              "status": "affected",
-              "version": "a218cafe4d3be005ab0c61130f90db4d21afb5db",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-787 Out-of-bounds Write"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-59728",
-      "publishedDate": "2025-10-06T08:08:27.410Z",
-      "lastModifiedDate": "2025-10-06T08:08:27.410Z",
-      "description": "When calculating the content path in handling of MPEG-DASH manifests, there's an out-of-bounds NUL-byte write one byte past the end of the buffer.When we call xmlNodeGetContent below [0], it returns a buffer precisely allocated to match the string length, using strdup internally. If this buffer is not an empty string, it is assigned to root_url at [1].If the last (non-NUL) byte in this buffer is not '/' then we append '/' in-place at [2]. This will write two bytes into the buffer, starting at the last valid byte in the buffer, writing the NUL byte beyond the end of the allocated buffer.\nWe recommend upgrading to version 8.0 or beyond.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://issuetracker.google.com/433502298",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://git.ffmpeg.org/ffmpeg.git",
-          "defaultStatus": "unaffected",
-          "product": "MPEG-DASH",
-          "repo": "https://git.ffmpeg.org/ffmpeg.git",
-          "vendor": "FFmpeg",
-          "versions": [
-            {
-              "lessThan": "8.0",
-              "status": "affected",
-              "version": "7.1.1",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "8.0",
-              "status": "affected",
-              "version": "a218cafe4d3be005ab0c61130f90db4d21afb5db",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-787 Out-of-bounds Write"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
