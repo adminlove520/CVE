@@ -2,26 +2,59 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 2,
-    "last_updated": "2025-10-07T19:23:40.984976",
+    "total_count": 3,
+    "last_updated": "2025-10-07T19:36:45.746875",
     "severity_distribution": {
       "critical": 0,
-      "high": 0,
-      "medium": 0,
-      "low": 1,
-      "none": 1
+      "high": 1,
+      "medium": 2,
+      "low": 0,
+      "none": 0
     }
   },
   "cves": [
     {
-      "id": "CVE-2025-43910",
-      "publishedDate": "2025-10-07T19:16:21.656Z",
-      "lastModifiedDate": "2025-10-07T19:16:21.656Z",
-      "description": "Dell PowerProtect Data Domain with Data Domain Operating System (DD OS) of Feature Release versions 7.7.1.0 through 8.3.0.15, LTS2025 release version 8.3.1.0, LTS2024 release versions 7.13.1.0 through 7.13.1.30, LTS 2023 release versions 7.10.1.0 through 7.10.1.60, contain a Stack-based Buffer Overflow vulnerability in the DDSH CLI. A high privileged attacker with local access could potentially exploit this vulnerability, leading to Denial of service.",
-      "severity": 2.3,
+      "id": "CVE-2025-61910",
+      "publishedDate": "2025-10-07T19:31:33.358Z",
+      "lastModifiedDate": "2025-10-07T19:31:33.358Z",
+      "description": "The NASA’s Interplanetary Overlay Network (ION) is an implementation of Delay/Disruption Tolerant Networking (DTN). A BPv7 bundle with a malformed extension block causes uncontrolled memory allocation inside ION-DTN 4.1.3s, leading to receiver thread termination and a Denial-of-Service (DoS). The triggering bundle contains an extension block starting at `0x85070201005bbb0e20b4ea001a000927c0...`. The first byte in the extension block (0x85) indicates a CBOR array of five elements of which the first four are numbers (0x07, 0x02, 0x01, 0x00) but the fifth element is a byte string of length 27 (`0x5bbb0e20b4ea001a000927c0...`). The vulnerability seems to be due to processing the fifth element of the array (i.e., the byte string) as replacing it with a number makes the vulnerability no longer be triggered. While parsing this extension block, ION obtains a very large block length, which in the code in `bei.c`:764) seems to be passed from `blockLength` which is an unsigned int, to a 32 bit signed integer `blkSize`. The unsigned to signed conversion causes `blkSize` to hold the value of -369092043, which is then converted into a 64-bit unsigned value inside `MTAKE(blkSize)`, resulting in an attempt to allocate an unrealistic amount of memory, causing the error. As of time of publication, no known patched versions of BPv7 exist.",
+      "severity": 7.5,
       "references": [
         {
-          "url": "https://www.dell.com/support/kbdoc/en-us/000376224/dsa-2025-333-security-update-for-dell-powerprotect-data-domain-multiple-vulnerabilities",
+          "url": "https://github.com/nasa-jpl/ION-DTN/security/advisories/GHSA-xm96-38vj-h28h",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/nasa-jpl/ION-DTN/blob/ion-open-source-4.1.3s/bpv7/library/bei.c#L758-L769",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "nasa-jpl",
+          "product": "ION-DTN",
+          "versions": [
+            {
+              "version": "= 4.1.3s",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-789: Memory Allocation with Excessive Size Value"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-36567",
+      "publishedDate": "2025-10-07T19:32:05.000Z",
+      "lastModifiedDate": "2025-10-07T19:32:05.000Z",
+      "description": "Dell PowerProtect Data Domain with Data Domain Operating System (DD OS) of Feature Release versions 7.7.1.0 through 8.1.0.10, LTS2024 release Versions 7.13.1.0 through 7.13.1.25, LTS 2023 release versions 7.10.1.0 through 7.10.1.50, contain an Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') vulnerability. A high privileged attacker with local access could potentially exploit this vulnerability, leading to arbitrary command execution. Exploitation may allow privilege escalation to root.",
+      "severity": 6.7,
+      "references": [
+        {
+          "url": "https://www.dell.com/support/kbdoc/en-us/000348708/dsa-2025-159-security-update-for-dell-powerprotect-data-domain-multiple-vulnerabilities",
           "type": "reference"
         }
       ],
@@ -32,22 +65,9 @@
           "vendor": "Dell",
           "versions": [
             {
-              "lessThan": "8.4.0.0",
+              "lessThan": "8.3.0.10",
               "status": "affected",
               "version": "7.7.1.0",
-              "versionType": "semver"
-            }
-          ]
-        },
-        {
-          "defaultStatus": "unaffected",
-          "product": "PowerProtect Data Domain with Data Domain Operating System (DD OS) LTS2025",
-          "vendor": "Dell",
-          "versions": [
-            {
-              "lessThan": "8.3.1.10",
-              "status": "affected",
-              "version": "8.3.1.0",
               "versionType": "semver"
             }
           ]
@@ -58,7 +78,7 @@
           "vendor": "Dell",
           "versions": [
             {
-              "lessThan": "7.13.1.40",
+              "lessThan": "7.13.1.30",
               "status": "affected",
               "version": "7.13.1.0",
               "versionType": "semver"
@@ -71,7 +91,7 @@
           "vendor": "Dell",
           "versions": [
             {
-              "lessThan": "7.10.1.70",
+              "lessThan": "7.10.1.60",
               "status": "affected",
               "version": "7.10.1.0",
               "versionType": "semver"
@@ -80,44 +100,49 @@
         }
       ],
       "problemType": [
-        "CWE-121: Stack-based Buffer Overflow"
+        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-61670",
-      "publishedDate": "2025-10-07T18:49:53.869Z",
-      "lastModifiedDate": "2025-10-07T19:16:40.499Z",
-      "description": "Wasmtime is a runtime for WebAssembly. Wasmtime 37.0.0 and 37.0.1 have memory leaks in the C/C++ API when using bindings for the `anyref` or `externref` WebAssembly values. This is caused by a regression introduced during the development of 37.0.0 and all prior versions of Wasmtime are unaffected. If `anyref` or `externref` is not used in the C/C++ API then embeddings are also unaffected by the leaky behavior. The `wasmtime` Rust crate is unaffected by this leak.\n\nDevelopment of Wasmtime 37.0.0 included a refactoring in Rust of changing the old `ManuallyRooted<T>` type to a new `OwnedRooted<T>` type. This change was integrated into Wasmtime's C API but left the C API in a state which had memory leaks. Additionally the new ownership semantics around this type were not reflected into the C++ API, making it leak-prone. A short version of the change is that previously `ManuallyRooted<T>`, as the name implies, required manual calls to an \"unroot\" operation. If this was forgotten then the memory was still cleaned up when the `wasmtime_store_t` itself was destroyed eventually. Documentation of when to \"unroot\" was sparse and there were already situations prior to 37.0.0 where memory would be leaked until the store was destroyed anyway. All memory, though, was always bound by the store, and destroying the store would guarantee that there were no memory leaks.\n\nIn migrating to `OwnedRooted<T>` the usage of the type in Rust changed. A manual \"unroot\" operation is no longer required and it happens naturally as a destructor of the `OwnedRooted<T>` type in Rust itself. These new resource ownership semantics were not fully integrated into the preexisting semantics of the C/C++ APIs in Wasmtime. A crucial distinction of `OwnedRooted<T>` vs `ManuallyRooted<T>` is that the `OwnedRooted<T>` type allocates host memory outside of the store. This means that if an `OwnedRooted<T>` is leaked then destroying a store does not release this memory and it's a permanent memory leak on the host.\n\nThis led to a few distinct, but related, issues arising: A typo in the `wasmtime_val_unroot` function in the C API meant that it did not actually unroot anything. This meant that even if embedders faithfully call the function then memory will be leaked. If a host-defined function returned a `wasmtime_{externref,anyref}_t` value then the value was never unrooted. The C/C++ API no longer has access to the value and the Rust implementation did not unroot. This meant that any values returned this way were never unrooted. The goal of the C++ API of Wasmtime is to encode automatic memory management in the type system, but the C++ API was not updated when `OwnedRooted<T>` was added. This meant that idiomatic usage of the C++ API would leak memory due to a lack of destructors on values.\n\nThese issues have all been fixed in a 37.0.2 release of Wasmtime. The implementation of the C and C++ APIs have been updated accordingly and respectively to account for the changes of ownership here. For example `wasmtime_val_unroot` has been fixed to unroot, the Rust-side implementation of calling an embedder-defined function will unroot return values, and the C++ API now has destructors on the `ExternRef`, `AnyRef`, and `Val` types. These changes have been made to the 37.0.x release branch in a non-API-breaking fashion. Changes to the 38.0.0 release branch (and `main` in the Wasmtime repository) include minor API updates to better accommodate the API semantic changes. The only known workaround at this time is to avoid using `externref` and `anyref` in the C/C++ API of Wasmtime. If avoiding those types is not possible then it's required for users to update to mitigate the leak issue.",
-      "severity": "N/A",
+      "id": "CVE-2025-11406",
+      "publishedDate": "2025-10-07T19:32:07.378Z",
+      "lastModifiedDate": "2025-10-07T19:32:07.378Z",
+      "description": "A security flaw has been discovered in kaifangqian kaifangqian-base up to 7b3faecda13848b3ced6c17c7423b76c5b47b8ab. This issue affects the function getAllUsers of the file kaifangqian-parent/kaifangqian-system/src/main/java/com/kaifangqian/modules/system/controller/SysUserController.java. The manipulation results in information disclosure. The attack can be launched remotely. The exploit has been released to the public and may be exploited. This product does not use versioning. This is why information about affected and unaffected releases are unavailable.",
+      "severity": 4.3,
       "references": [
         {
-          "url": "https://github.com/bytecodealliance/wasmtime/security/advisories/GHSA-vvp9-h8p2-xwfc",
+          "url": "https://vuldb.com/?id.327343",
           "type": "reference"
         },
         {
-          "url": "https://github.com/bytecodealliance/wasmtime/commit/adff9d9d0f09569203709d5687e5a7dc8e1ad0a3",
+          "url": "https://vuldb.com/?ctiid.327343",
           "type": "reference"
         },
         {
-          "url": "https://github.com/bytecodealliance/wasmtime/releases/tag/v37.0.2",
+          "url": "https://vuldb.com/?submit.665162",
           "type": "reference"
+        },
+        {
+          "url": "https://flowus.cn/share/71182903-2a36-488f-ac3f-4f94c725f545?code=6HT9ZE",
+          "type": "poc"
         }
       ],
       "affected": [
         {
-          "vendor": "bytecodealliance",
-          "product": "wasmtime",
+          "vendor": "kaifangqian",
+          "product": "kaifangqian-base",
           "versions": [
             {
-              "version": ">= 37.0.0, < 37.0.2",
+              "version": "7b3faecda13848b3ced6c17c7423b76c5b47b8ab",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-772: Missing Release of Resource after Effective Lifetime"
+        "Information Disclosure",
+        "Improper Access Controls"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
