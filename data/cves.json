@@ -3,53 +3,652 @@
   "dataVersion": "5.1",
   "cveMetadata": {
     "total_count": 3,
-    "last_updated": "2025-10-07T19:36:45.746875",
+    "last_updated": "2025-10-07T19:50:53.380610",
     "severity_distribution": {
       "critical": 0,
-      "high": 1,
-      "medium": 2,
+      "high": 2,
+      "medium": 1,
       "low": 0,
       "none": 0
     }
   },
   "cves": [
     {
-      "id": "CVE-2025-61910",
-      "publishedDate": "2025-10-07T19:31:33.358Z",
-      "lastModifiedDate": "2025-10-07T19:31:33.358Z",
-      "description": "The NASA’s Interplanetary Overlay Network (ION) is an implementation of Delay/Disruption Tolerant Networking (DTN). A BPv7 bundle with a malformed extension block causes uncontrolled memory allocation inside ION-DTN 4.1.3s, leading to receiver thread termination and a Denial-of-Service (DoS). The triggering bundle contains an extension block starting at `0x85070201005bbb0e20b4ea001a000927c0...`. The first byte in the extension block (0x85) indicates a CBOR array of five elements of which the first four are numbers (0x07, 0x02, 0x01, 0x00) but the fifth element is a byte string of length 27 (`0x5bbb0e20b4ea001a000927c0...`). The vulnerability seems to be due to processing the fifth element of the array (i.e., the byte string) as replacing it with a number makes the vulnerability no longer be triggered. While parsing this extension block, ION obtains a very large block length, which in the code in `bei.c`:764) seems to be passed from `blockLength` which is an unsigned int, to a 32 bit signed integer `blkSize`. The unsigned to signed conversion causes `blkSize` to hold the value of -369092043, which is then converted into a 64-bit unsigned value inside `MTAKE(blkSize)`, resulting in an attempt to allocate an unrealistic amount of memory, causing the error. As of time of publication, no known patched versions of BPv7 exist.",
-      "severity": 7.5,
+      "id": "CVE-2025-11462",
+      "publishedDate": "2025-10-07T19:44:25.608Z",
+      "lastModifiedDate": "2025-10-07T19:44:25.608Z",
+      "description": "Improper Link Resolution Before File Access in the AWS VPN Client for macOS versions 1.3.2- 5.2.0 allows a local user to execute code with elevated privileges. Insufficient validation checks on the log destination directory during log rotation could allow a non-administrator user to create a symlink from a client log file to a privileged location. On log rotation, this could lead to code execution with root privileges if the user made crafted API calls which injected arbitrary code into the log file. We recommend users upgrade to AWS VPN Client for macOS 5.2.1 or the latest version.",
+      "severity": 7.8,
       "references": [
         {
-          "url": "https://github.com/nasa-jpl/ION-DTN/security/advisories/GHSA-xm96-38vj-h28h",
+          "url": "https://aws.amazon.com/vpn/client-vpn-download/",
           "type": "reference"
         },
         {
-          "url": "https://github.com/nasa-jpl/ION-DTN/blob/ion-open-source-4.1.3s/bpv7/library/bei.c#L758-L769",
+          "url": "https://aws.amazon.com/security/security-bulletins/AWS-2025-020/",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "nasa-jpl",
-          "product": "ION-DTN",
+          "defaultStatus": "unaffected",
+          "platforms": [
+            "MacOS"
+          ],
+          "product": "Client VPN",
+          "vendor": "AWS",
           "versions": [
             {
-              "version": "= 4.1.3s",
-              "status": "affected"
+              "lessThan": "5.2.1",
+              "status": "affected",
+              "version": "1.3.2",
+              "versionType": "semver"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-789: Memory Allocation with Excessive Size Value"
+        "CWE-59 Improper Link Resolution Before File Access ('Link Following')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-36567",
-      "publishedDate": "2025-10-07T19:32:05.000Z",
-      "lastModifiedDate": "2025-10-07T19:32:05.000Z",
+      "id": "CVE-2025-6242",
+      "publishedDate": "2025-10-07T19:45:18.082Z",
+      "lastModifiedDate": "2025-10-07T19:45:18.082Z",
+      "description": "A Server-Side Request Forgery (SSRF) vulnerability exists in the MediaConnector class within the vLLM project's multimodal feature set. The load_from_url and load_from_url_async methods fetch and process media from user-provided URLs without adequate restrictions on the target hosts. This allows an attacker to coerce the vLLM server into making arbitrary requests to internal network resources.",
+      "severity": 7.1,
+      "references": [
+        {
+          "url": "https://access.redhat.com/security/cve/CVE-2025-6242",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2373716",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat AI Inference Server",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhaiis-preview/vllm-cuda-rhel9",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:ai_inference_server:3"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat AI Inference Server",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhaiis/vllm-cuda-rhel9",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:ai_inference_server:3"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat AI Inference Server",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhaiis/vllm-rocm-rhel9",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:ai_inference_server:3"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat AI Inference Server",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhaiis/vllm-tpu-rhel9",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:ai_inference_server:3"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/bootc-amd-rhel9",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/bootc-aws-nvidia-rhel9",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/bootc-azure-amd-rhel9",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/bootc-azure-nvidia-rhel9",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/bootc-gcp-nvidia-rhel9",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/bootc-intel-rhel9",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/bootc-nvidia-rhel9",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/disk-image-nvidia-rhel9",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/docling-serve-rhel9",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/gemma-2-9b-it",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/gemma-2-9b-it-fp8",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/granite-3.1-8b-lab-v1",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/granite-3.1-8b-lab-v2.1",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/granite-3.1-8b-starter-v1",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/granite-3.1-8b-starter-v2.1",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/granite-7b-redhat-lab",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/granite-7b-starter",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/granite-8b-code-base",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/granite-8b-code-instruct",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/granite-8b-lab-v1",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/granite-8b-lab-v2-preview",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/granite-8b-starter-v1",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/instructlab-amd-rhel9",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/instructlab-intel-rhel9",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/instructlab-nvidia-rhel9",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/knowledge-adapter-v3",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/mixtral-8x7b-instruct-v0-1",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/modelcar-docling-layout",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/modelcar-docling-tableformer",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/modelcar-gemma-2-9b-it",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/modelcar-gemma-2-9b-it-fp8",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/modelcar-granite-3-1-8b-lab-v1",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/modelcar-granite-3-1-8b-lab-v2",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/modelcar-granite-3-1-8b-lab-v2-1",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/modelcar-granite-3-1-8b-starter-v1",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/modelcar-granite-3-1-8b-starter-v2",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/modelcar-granite-3-1-8b-starter-v2-1",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/modelcar-granite-7b-redhat-lab",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/modelcar-granite-7b-starter",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/modelcar-granite-8b-code-base",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/modelcar-granite-8b-code-instruct",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/modelcar-granite-8b-lab-v1",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/modelcar-granite-8b-lab-v2-preview",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/modelcar-granite-8b-starter-v1",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/modelcar-knowledge-adapter-v3",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/modelcar-mixtral-8x7b-instruct-v0-1",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/modelcar-prometheus-8x7b-v2-0",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/modelcar-skills-adapter-v3",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/modelcar-snowflake-arctic-embed-l-v2.0",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/pathservice-rhel9",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/prometheus-8x7b-v2-0",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/skills-adapter-v3",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux AI (RHEL AI)",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhelai1/ui-rhel9",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:enterprise_linux_ai:1"
+          ]
+        }
+      ],
+      "problemType": [
+        "Server-Side Request Forgery (SSRF)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-36566",
+      "publishedDate": "2025-10-07T19:44:11.728Z",
+      "lastModifiedDate": "2025-10-07T19:44:11.728Z",
       "description": "Dell PowerProtect Data Domain with Data Domain Operating System (DD OS) of Feature Release versions 7.7.1.0 through 8.1.0.10, LTS2024 release Versions 7.13.1.0 through 7.13.1.25, LTS 2023 release versions 7.10.1.0 through 7.10.1.50, contain an Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') vulnerability. A high privileged attacker with local access could potentially exploit this vulnerability, leading to arbitrary command execution. Exploitation may allow privilege escalation to root.",
       "severity": 6.7,
       "references": [
@@ -101,48 +700,6 @@
       ],
       "problemType": [
         "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-11406",
-      "publishedDate": "2025-10-07T19:32:07.378Z",
-      "lastModifiedDate": "2025-10-07T19:32:07.378Z",
-      "description": "A security flaw has been discovered in kaifangqian kaifangqian-base up to 7b3faecda13848b3ced6c17c7423b76c5b47b8ab. This issue affects the function getAllUsers of the file kaifangqian-parent/kaifangqian-system/src/main/java/com/kaifangqian/modules/system/controller/SysUserController.java. The manipulation results in information disclosure. The attack can be launched remotely. The exploit has been released to the public and may be exploited. This product does not use versioning. This is why information about affected and unaffected releases are unavailable.",
-      "severity": 4.3,
-      "references": [
-        {
-          "url": "https://vuldb.com/?id.327343",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/?ctiid.327343",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/?submit.665162",
-          "type": "reference"
-        },
-        {
-          "url": "https://flowus.cn/share/71182903-2a36-488f-ac3f-4f94c725f545?code=6HT9ZE",
-          "type": "poc"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "kaifangqian",
-          "product": "kaifangqian-base",
-          "versions": [
-            {
-              "version": "7b3faecda13848b3ced6c17c7423b76c5b47b8ab",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Information Disclosure",
-        "Improper Access Controls"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
