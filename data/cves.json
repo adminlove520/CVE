@@ -2,53 +2,272 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 1,
-    "last_updated": "2025-10-13T13:51:29.664719",
+    "total_count": 2,
+    "last_updated": "2025-10-13T14:14:07.689403",
     "severity_distribution": {
-      "critical": 1,
+      "critical": 0,
       "high": 0,
       "medium": 0,
       "low": 0,
-      "none": 0
+      "none": 2
     }
   },
   "cves": [
     {
-      "id": "CVE-2025-37729",
-      "publishedDate": "2025-10-13T13:47:08.907Z",
-      "lastModifiedDate": "2025-10-13T13:47:08.907Z",
-      "description": "Improper neutralization of special elements used in a template engine in Elastic Cloud Enterprise (ECE) can lead to a malicious actor with Admin access exfiltrating sensitive information and issuing commands via a specially crafted string where Jinjava variables are evaluated.",
-      "severity": 9.1,
+      "id": "CVE-2025-39965",
+      "publishedDate": "2025-10-13T13:48:31.033Z",
+      "lastModifiedDate": "2025-10-13T13:48:31.033Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nxfrm: xfrm_alloc_spi shouldn't use 0 as SPI\n\nx->id.spi == 0 means \"no SPI assigned\", but since commit\n94f39804d891 (\"xfrm: Duplicate SPI Handling\"), we now create states\nand add them to the byspi list with this value.\n\n__xfrm_state_delete doesn't remove those states from the byspi list,\nsince they shouldn't be there, and this shows up as a UAF the next\ntime we go through the byspi list.",
+      "severity": "N/A",
       "references": [
         {
-          "url": "https://discuss.elastic.co/t/elastic-cloud-enterprise-ece-3-8-2-and-4-0-2-security-update-esa-2025-21/382641",
+          "url": "https://git.kernel.org/stable/c/0baf92d0b1590b903c1f4ead75e61715e50e8146",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/9fcedabaae0096f712bbb4ccca6a8538af1cd1c8",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/a78e55776522373c446f18d5002a8de4b09e6bf7",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/cd8ae32e4e4652db55bce6b9c79267d8946765a9",
           "type": "reference"
         }
       ],
       "affected": [
         {
+          "product": "Linux",
+          "vendor": "Linux",
           "defaultStatus": "unaffected",
-          "product": "Elastic Cloud Enterprise (ECE)",
-          "vendor": "Elastic",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "net/xfrm/xfrm_state.c"
+          ],
           "versions": [
             {
-              "lessThanOrEqual": "3.8.1",
+              "version": "3d8090bb53424432fa788fe9a49e8ceca74f0544",
+              "lessThan": "0baf92d0b1590b903c1f4ead75e61715e50e8146",
               "status": "affected",
-              "version": "2.5.0",
+              "versionType": "git"
+            },
+            {
+              "version": "2fc5b54368a1bf1d2d74b4d3b8eea5309a653e38",
+              "lessThan": "9fcedabaae0096f712bbb4ccca6a8538af1cd1c8",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "29e9158f91f99057dbd35db5e8674d93b38549fe",
+              "lessThan": "a78e55776522373c446f18d5002a8de4b09e6bf7",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "94f39804d891cffe4ce17737d295f3b195bc7299",
+              "lessThan": "cd8ae32e4e4652db55bce6b9c79267d8946765a9",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "c67d4e7a8f90fb6361ca89d4d5c9a28f4e935e47",
+              "status": "affected",
+              "versionType": "git"
+            }
+          ]
+        },
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "unaffected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "net/xfrm/xfrm_state.c"
+          ],
+          "versions": [
+            {
+              "version": "6.6.103",
+              "lessThan": "6.6.109",
+              "status": "affected",
               "versionType": "semver"
             },
             {
-              "lessThanOrEqual": "4.0.1",
+              "version": "6.12.43",
+              "lessThan": "6.12.50",
               "status": "affected",
-              "version": "4.0.0",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.16.2",
+              "lessThan": "6.16.10",
+              "status": "affected",
               "versionType": "semver"
             }
           ]
         }
       ],
-      "problemType": [
-        "CWE-1336"
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-39964",
+      "publishedDate": "2025-10-13T13:48:30.334Z",
+      "lastModifiedDate": "2025-10-13T13:48:30.334Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\ncrypto: af_alg - Disallow concurrent writes in af_alg_sendmsg\n\nIssuing two writes to the same af_alg socket is bogus as the\ndata will be interleaved in an unpredictable fashion.  Furthermore,\nconcurrent writes may create inconsistencies in the internal\nsocket state.\n\nDisallow this by adding a new ctx->write field that indiciates\nexclusive ownership for writing.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://git.kernel.org/stable/c/0f28c4adbc4a97437874c9b669fd7958a8c6d6ce",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/e4c1ec11132ec466f7362a95f36a506ce4dc08c9",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/1f323a48e9b5ebfe6dc7d130fdf5c3c0e92a07c8",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/7c4491b5644e3a3708f3dbd7591be0a570135b84",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/9aee87da5572b3a14075f501752e209801160d3d",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/45bcf60fe49b37daab1acee57b27211ad1574042",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/1b34cbbf4f011a121ef7b2d7d6e6920a036d5285",
+          "type": "reference"
+        }
       ],
+      "affected": [
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "unaffected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "crypto/af_alg.c",
+            "include/crypto/if_alg.h"
+          ],
+          "versions": [
+            {
+              "version": "8ff590903d5fc7f5a0a988c38267a3d08e6393a2",
+              "lessThan": "0f28c4adbc4a97437874c9b669fd7958a8c6d6ce",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "8ff590903d5fc7f5a0a988c38267a3d08e6393a2",
+              "lessThan": "e4c1ec11132ec466f7362a95f36a506ce4dc08c9",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "8ff590903d5fc7f5a0a988c38267a3d08e6393a2",
+              "lessThan": "1f323a48e9b5ebfe6dc7d130fdf5c3c0e92a07c8",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "8ff590903d5fc7f5a0a988c38267a3d08e6393a2",
+              "lessThan": "7c4491b5644e3a3708f3dbd7591be0a570135b84",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "8ff590903d5fc7f5a0a988c38267a3d08e6393a2",
+              "lessThan": "9aee87da5572b3a14075f501752e209801160d3d",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "8ff590903d5fc7f5a0a988c38267a3d08e6393a2",
+              "lessThan": "45bcf60fe49b37daab1acee57b27211ad1574042",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "8ff590903d5fc7f5a0a988c38267a3d08e6393a2",
+              "lessThan": "1b34cbbf4f011a121ef7b2d7d6e6920a036d5285",
+              "status": "affected",
+              "versionType": "git"
+            }
+          ]
+        },
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "affected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "crypto/af_alg.c",
+            "include/crypto/if_alg.h"
+          ],
+          "versions": [
+            {
+              "version": "2.6.38",
+              "status": "affected"
+            },
+            {
+              "version": "0",
+              "lessThan": "2.6.38",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "5.10.245",
+              "lessThanOrEqual": "5.10.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "5.15.194",
+              "lessThanOrEqual": "5.15.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.1.154",
+              "lessThanOrEqual": "6.1.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.6.108",
+              "lessThanOrEqual": "6.6.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.12.49",
+              "lessThanOrEqual": "6.12.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.16.9",
+              "lessThanOrEqual": "6.16.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.17",
+              "lessThanOrEqual": "*",
+              "status": "unaffected",
+              "versionType": "original_commit_for_fix"
+            }
+          ]
+        }
+      ],
+      "problemType": [],
       "fix_suggestion": "无法生成修复建议"
     }
   ]
