@@ -2,431 +2,280 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 11,
-    "last_updated": "2025-10-16T15:44:32.575171",
+    "total_count": 7,
+    "last_updated": "2025-10-16T15:58:34.650483",
     "severity_distribution": {
-      "critical": 2,
-      "high": 2,
-      "medium": 1,
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
       "low": 0,
-      "none": 6
+      "none": 7
     }
   },
   "cves": [
     {
-      "id": "CVE-2025-10850",
-      "publishedDate": "2025-10-16T06:47:30.221Z",
-      "lastModifiedDate": "2025-10-16T15:37:09.849Z",
-      "description": "The Felan Framework plugin for WordPress is vulnerable to improper authentication in versions up to, and including, 1.1.4. This is due to the hardcoded password in the 'fb_ajax_login_or_register' function and in the 'google_ajax_login_or_register' function. This makes it possible for unauthenticated attackers to log in as any existing user on the site, if they registered with facebook or google social login and did not change their password.",
-      "severity": 9.8,
+      "id": "CVE-2025-62496",
+      "publishedDate": "2025-10-16T15:52:05.654Z",
+      "lastModifiedDate": "2025-10-16T15:52:05.654Z",
+      "description": "A vulnerability exists in the QuickJS engine's BigInt string parsing logic (js_bigint_from_string) when attempting to create a BigInt from a string with an excessively large number of digits.\n\nThe function calculates the necessary number of bits (n_bits) required to store the BigInt using the formula:\n\n$$\\text{n\\_bits} = (\\text{n\\_digits} \\times 27 + 7) / 8 \\quad (\\text{for radix 10})$$\n\n  *  For large input strings (e.g., $79,536,432$ digits or more for base 10), the intermediate calculation $(\\text{n\\_digits} \\times 27 + 7)$ exceeds the maximum value of a standard signed 32-bit integer, resulting in an Integer Overflow.\n\n\n  *  The resulting n_bits value becomes unexpectedly small or even negative due to this wrap-around.\n\n\n  *  This flawed n_bits is then used to compute n_limbs, the number of memory \"limbs\" needed for the BigInt object. Since n_bits is too small, the calculated n_limbs is also significantly underestimated.\n\n\n  *  The function proceeds to allocate a JSBigInt object using this underestimated n_limbs.\n\n\n  *  When the function later attempts to write the actual BigInt data into the allocated object, the small buffer size is quickly exceeded, leading to a Heap Out-of-Bounds Write as data is written past the end of the allocated r->tab array.",
+      "severity": "N/A",
       "references": [
         {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/ab4c7656-544c-4f2f-a42f-264ac90e3b61?source=cve",
+          "url": "https://bellard.org/quickjs/Changelog",
           "type": "reference"
         },
         {
-          "url": "https://themeforest.net/item/felan-freelance-marketplace-and-job-board-wordpress-theme/53612955",
+          "url": "https://issuetracker.google.com/434193016",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "RiceTheme",
-          "product": "Felan Framework",
-          "versions": [
-            {
-              "version": "*",
-              "status": "affected",
-              "lessThanOrEqual": "1.1.4",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-798 Use of Hard-coded Credentials"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-10742",
-      "publishedDate": "2025-10-16T06:47:29.826Z",
-      "lastModifiedDate": "2025-10-16T15:37:17.180Z",
-      "description": "The Truelysell Core plugin for WordPress is vulnerable to Arbitrary User Password Change in versions up to, and including, 1.8.6. This is due to the plugin providing user-controlled access to objects, letting a user bypass authorization and access system resources. This makes it possible for unauthenticated attackers to change user passwords and potentially take over administrator accounts. Note: This can only be exploited unauthenticated if the attacker knows which page contains the 'truelysell_edit_staff' shortcode.",
-      "severity": 9.8,
-      "references": [
-        {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/a636e865-9556-4afb-8726-4537a160f379?source=cve",
-          "type": "reference"
-        },
-        {
-          "url": "https://themeforest.net/item/truelysell-service-booking-wordpress-theme/43398124",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "dreamstechnologies",
-          "product": "Truelysell Core",
-          "versions": [
-            {
-              "version": "*",
-              "status": "affected",
-              "lessThanOrEqual": "1.8.6",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-639 Authorization Bypass Through User-Controlled Key"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-58073",
-      "publishedDate": "2025-10-16T08:44:26.158Z",
-      "lastModifiedDate": "2025-10-16T15:36:31.018Z",
-      "description": "Mattermost versions 10.11.x <= 10.11.1, 10.10.x <= 10.10.2, 10.5.x <= 10.5.10 fail to verify a user has permission to join a Mattermost team using the original invite token which allows any attacked to join any team on a Mattermost server regardless of restrictions via manipulating the OAuth state.",
-      "severity": 8.1,
-      "references": [
-        {
-          "url": "https://mattermost.com/security-updates",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
+          "collectionURL": "https://bellard.org/quickjs/",
           "defaultStatus": "unaffected",
-          "product": "Mattermost",
-          "vendor": "Mattermost",
+          "packageName": "js_bigint_from_string",
+          "product": "QuickJS",
+          "vendor": "QuickJS",
           "versions": [
             {
-              "lessThanOrEqual": "10.11.1",
+              "lessThan": "2025-09-13",
               "status": "affected",
-              "version": "10.11.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThanOrEqual": "10.10.2",
-              "status": "affected",
-              "version": "10.10.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThanOrEqual": "10.5.10",
-              "status": "affected",
-              "version": "10.5.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "10.12.0",
-              "status": "unaffected"
-            },
-            {
-              "version": "10.11.2",
-              "status": "unaffected"
-            },
-            {
-              "version": "10.10.3",
-              "status": "unaffected"
-            },
-            {
-              "version": "10.5.11",
-              "status": "unaffected"
+              "version": "2025-04-26",
+              "versionType": "date"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-862: Missing Authorization"
+        "CWE-190 Integer Overflow or Wraparound"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-58075",
-      "publishedDate": "2025-10-16T08:20:06.939Z",
-      "lastModifiedDate": "2025-10-16T15:36:37.084Z",
-      "description": "Mattermost versions 10.11.x <= 10.11.1, 10.10.x <= 10.10.2, 10.5.x <= 10.5.10 fail to verify a user has permission to join a Mattermost team using the original invite token which allows any attacked to join any team on a Mattermost server regardless of restrictions via manipulating the RelayState",
-      "severity": 8.1,
+      "id": "CVE-2025-62495",
+      "publishedDate": "2025-10-16T15:51:58.953Z",
+      "lastModifiedDate": "2025-10-16T15:51:58.953Z",
+      "description": "An integer overflow vulnerability exists in the QuickJS regular expression engine (libregexp) due to an inconsistent representation of the bytecode buffer size.\n\n  *  The regular expression bytecode is stored in a DynBuf structure, which correctly uses a $\\text{size}\\_\\text{t}$ (an unsigned type, typically 64-bit) for its size member.\n\n\n  *  However, several functions, such as re_emit_op_u32 and other internal parsing routines, incorrectly cast or store this DynBuf $\\text{size}\\_\\text{t}$ value into a signed int (typically 32-bit).\n\n\n  *  When a large or complex regular expression (such as those generated by a recursive pattern in a Proof-of-Concept) causes the bytecode size to exceed $2^{31}$ bytes (the maximum positive value for a signed 32-bit integer), the size value wraps around, resulting in a negative integer when stored in the int variable (Integer Overflow).\n\n\n  *  This negative value is subsequently used in offset calculations. For example, within functions like re_parse_disjunction, the negative size is used to compute an offset (pos) for patching a jump instruction.\n\n\n  *  This negative offset is then incorrectly added to the buffer pointer (s->byte\\_code.buf + pos), leading to an out-of-bounds write on the first line of the snippet below:\n\nput_u32(s->byte_code.buf + pos, len);",
+      "severity": "N/A",
       "references": [
         {
-          "url": "https://mattermost.com/security-updates",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Mattermost",
-          "vendor": "Mattermost",
-          "versions": [
-            {
-              "lessThanOrEqual": "10.11.1",
-              "status": "affected",
-              "version": "10.11.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThanOrEqual": "10.10.2",
-              "status": "affected",
-              "version": "10.10.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThanOrEqual": "10.5.10",
-              "status": "affected",
-              "version": "10.5.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "10.12.0",
-              "status": "unaffected"
-            },
-            {
-              "version": "10.11.2",
-              "status": "unaffected"
-            },
-            {
-              "version": "10.10.3",
-              "status": "unaffected"
-            },
-            {
-              "version": "10.5.11",
-              "status": "unaffected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-862: Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-10849",
-      "publishedDate": "2025-10-16T06:47:30.601Z",
-      "lastModifiedDate": "2025-10-16T15:37:03.528Z",
-      "description": "The Felan Framework plugin for WordPress is vulnerable to unauthorized modification of data due to a missing capability check on the 'process_plugin_actions' function called via an AJAX action in versions up to, and including, 1.1.4. This makes it possible for unauthenticated attackers to activate or deactivate arbitrary plugins.",
-      "severity": 5.3,
-      "references": [
-        {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/c5abd601-132a-4d8b-bfcc-afd5c6ed9947?source=cve",
+          "url": "https://bellard.org/quickjs/Changelog",
           "type": "reference"
         },
         {
-          "url": "https://themeforest.net/item/felan-freelance-marketplace-and-job-board-wordpress-theme/53612955",
+          "url": "https://issuetracker.google.com/434196926",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "RiceTheme",
-          "product": "Felan Framework",
+          "collectionURL": "https://bellard.org/quickjs/",
+          "defaultStatus": "unaffected",
+          "packageName": "libregexp",
+          "product": "QuickJS",
+          "vendor": "QuickJS",
           "versions": [
             {
-              "version": "*",
+              "lessThan": "2025-09-13",
               "status": "affected",
-              "lessThanOrEqual": "1.1.4",
-              "versionType": "semver"
+              "version": "2025-04-26",
+              "versionType": "date"
             }
-          ],
-          "defaultStatus": "unaffected"
+          ]
         }
       ],
       "problemType": [
-        "CWE-862 Missing Authorization"
+        "CWE-191 Integer Underflow (Wrap or Wraparound)"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-58115",
-      "publishedDate": "2025-10-16T08:55:14.283Z",
-      "lastModifiedDate": "2025-10-16T15:35:37.661Z",
-      "description": "ChatLuck contains a cross-site scripting vulnerability in Guest User Sign-up. If exploited, an arbitrary script may be executed on the web browser of the user who is accessing the product.",
+      "id": "CVE-2025-62494",
+      "publishedDate": "2025-10-16T15:51:50.977Z",
+      "lastModifiedDate": "2025-10-16T15:51:50.977Z",
+      "description": "A type confusion vulnerability exists in the handling of the string addition (+) operation within the QuickJS engine.\n\n  *  The code first checks if the left-hand operand is a string.\n\n\n  *  It then attempts to convert the right-hand operand to a primitive value using JS_ToPrimitiveFree. This conversion can trigger a callback (e.g., toString or valueOf).\n\n\n  *  During this callback, an attacker can modify the type of the left-hand operand in memory, changing it from a string to a different type (e.g., an object or an array).\n\n\n  *  The code then proceeds to call JS_ConcatStringInPlace, which still treats the modified left-hand value as a string.\n\n\nThis mismatch between the assumed type (string) and the actual type allows an attacker to control the data structure being processed by the concatenation logic, resulting in a type confusion condition. This can lead to out-of-bounds memory access, potentially resulting in memory corruption and arbitrary code execution in the context of the QuickJS runtime.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://www.chatluck.com/support/package/mainte/pchatluck-%e8%a3%bd%e5%93%81%e3%81%ab%e3%81%8a%e3%81%91%e3%82%8b%e3%80%81%e8%a4%87%e6%95%b0%e3%81%ae%e3%82%bb%e3%82%ad%e3%83%a5%e3%83%aa%e3%83%86%e3%82%a3%e4%b8%8a%e3%81%ae%e5%95%8f%e9%a1%8c%e3%81%ab/",
+          "url": "https://bellard.org/quickjs/Changelog",
           "type": "reference"
         },
         {
-          "url": "https://jvn.jp/en/jp/JVN13030751/",
+          "url": "https://issuetracker.google.com/434193023",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "NEOJAPAN Inc.",
-          "product": "ChatLuck",
+          "collectionURL": "https://bellard.org/quickjs/",
+          "defaultStatus": "unaffected",
+          "packageName": "JS_ConcatStringInPlace",
+          "product": "QuickJS",
+          "vendor": "QuickJS",
           "versions": [
             {
-              "version": "V3.6 R1.0 to V6.6 R1.0",
-              "status": "affected"
+              "lessThan": "2025-09-13",
+              "status": "affected",
+              "version": "2025-04-26",
+              "versionType": "date"
             }
           ]
         }
       ],
       "problemType": [
-        "Cross-site scripting (XSS)"
+        "CWE-704 Incorrect Type Conversion or Cast"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-54461",
-      "publishedDate": "2025-10-16T08:55:03.769Z",
-      "lastModifiedDate": "2025-10-16T15:35:43.756Z",
-      "description": "ChatLuck contains an insufficient granularity of access control vulnerability in Invitation of Guest Users. If exploited, an uninvited guest user may register itself as a guest user.",
+      "id": "CVE-2025-62493",
+      "publishedDate": "2025-10-16T15:51:42.952Z",
+      "lastModifiedDate": "2025-10-16T15:51:42.952Z",
+      "description": "A vulnerability exists in the QuickJS engine's BigInt string conversion logic (js_bigint_to_string1) due to an incorrect calculation of the required number of digits, which in turn leads to reading memory past the allocated BigInt structure.\n\n  *  The function determines the number of characters (n_digits) needed for the string representation by calculating:\n\n$$ \\\\ \\text{n\\_digits} = (\\text{n\\_bits} + \\text{log2\\_radix} - 1) / \\text{log2\\_radix}$$\n\n$$$$This formula is off-by-one in certain edge cases when calculating the necessary memory limbs. For instance, a 127-bit BigInt using radix 32 (where $\\text{log2\\_radix}=5$) is calculated to need $\\text{n\\_digits}=26$.\n\n\n  *  The maximum number of bits actually stored is $\\text{n\\_bits}=127$, which requires only two 64-bit limbs ($\\text{JS\\_LIMB\\_BITS}=64$).\n\n\n  *  The conversion loop iterates $\\text{n\\_digits}=26$ times, attempting to read 5 bits in each iteration, totaling $26 \\times 5 = 130$ bits.\n\n\n  *  In the final iterations of the loop, the code attempts to read data that spans two limbs:\n\nC\n\n\n\nc = (r->tab[pos] >> shift) | (r->tab[pos + 1] << (JS_LIMB_BITS - shift));\n\n\n\n\n\n\n\n\n\n  *  Since the BigInt was only allocated two limbs, the read operation for r->tab[pos + 1] becomes an Out-of-Bounds Read when pos points to the last valid limb (e.g., $pos=1$).\n\n\nThis vulnerability allows an attacker to cause the engine to read and process data from the memory immediately following the BigInt buffer. This can lead to Information Disclosure of sensitive data stored on the heap adjacent to the BigInt object.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://www.chatluck.com/support/package/mainte/pchatluck-%e8%a3%bd%e5%93%81%e3%81%ab%e3%81%8a%e3%81%91%e3%82%8b%e3%80%81%e8%a4%87%e6%95%b0%e3%81%ae%e3%82%bb%e3%82%ad%e3%83%a5%e3%83%aa%e3%83%86%e3%82%a3%e4%b8%8a%e3%81%ae%e5%95%8f%e9%a1%8c%e3%81%ab/",
+          "url": "https://bellard.org/quickjs/Changelog",
           "type": "reference"
         },
         {
-          "url": "https://jvn.jp/en/jp/JVN13030751/",
+          "url": "https://issuetracker.google.com/434193024",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "NEOJAPAN Inc.",
-          "product": "ChatLuck",
+          "collectionURL": "https://bellard.org/quickjs/",
+          "defaultStatus": "unaffected",
+          "packageName": "js_bigint_to_string1",
+          "product": "QuickJS",
+          "vendor": "QuickJS",
           "versions": [
             {
-              "version": "V6.6 R2.0 and earlier",
-              "status": "affected"
+              "lessThan": "2025-09-13",
+              "status": "affected",
+              "version": "2025-04-26",
+              "versionType": "date"
             }
           ]
         }
       ],
       "problemType": [
-        "Insufficient Granularity of Access Control"
+        "CWE-125 Out-of-bounds Read"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-53858",
-      "publishedDate": "2025-10-16T08:54:46.989Z",
-      "lastModifiedDate": "2025-10-16T15:36:24.416Z",
-      "description": "ChatLuck contains a cross-site scripting vulnerability in Chat Rooms. If exploited, an arbitrary script may be executed on the web browser of the user who is accessing the product.",
+      "id": "CVE-2025-62492",
+      "publishedDate": "2025-10-16T15:51:34.445Z",
+      "lastModifiedDate": "2025-10-16T15:51:34.445Z",
+      "description": "A vulnerability stemming from floating-point arithmetic precision errors exists in the QuickJS engine's implementation of TypedArray.prototype.indexOf() when a negative fromIndex argument is supplied.\n\n  *  The fromIndex argument (read as a double variable, $d$) is used to calculate the starting position for the search.\n\n\n  *  If d is negative, the index is calculated relative to the end of the array by adding the array's length (len) to d:\n\n\n\n$$d_{new} = d + \\text{len}$$\n\n\n  *  Due to the inherent limitations of floating-point arithmetic, if the negative value $d$ is extremely small (e.g., $-1 \\times 10^{-20}$), the addition $d + \\text{len}$ can result in a loss of precision, yielding an outcome that is exactly equal to $\\text{len}$.\n\n\n  *  The result is then converted to an integer index $k$: $k = \\text{len}$.\n\n\n  *  The search function proceeds to read array elements starting from index $k$. Since valid indices are $0$ to $\\text{len}-1$, starting the read at index $\\text{len}$ is one element past the end of the array.\n\n\nThis allows an attacker to cause an Out-of-Bounds Read of one element immediately following the buffer. While the scope of this read is small (one element), it can potentially lead to Information Disclosure of adjacent memory contents, depending on the execution environment.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://www.chatluck.com/support/package/mainte/pchatluck-%e8%a3%bd%e5%93%81%e3%81%ab%e3%81%8a%e3%81%91%e3%82%8b%e3%80%81%e8%a4%87%e6%95%b0%e3%81%ae%e3%82%bb%e3%82%ad%e3%83%a5%e3%83%aa%e3%83%86%e3%82%a3%e4%b8%8a%e3%81%ae%e5%95%8f%e9%a1%8c%e3%81%ab/",
+          "url": "https://bellard.org/quickjs/Changelog",
           "type": "reference"
         },
         {
-          "url": "https://jvn.jp/en/jp/JVN13030751/",
+          "url": "https://issuetracker.google.com/434194797",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "NEOJAPAN Inc.",
-          "product": "ChatLuck",
+          "collectionURL": "https://bellard.org/quickjs/",
+          "defaultStatus": "unaffected",
+          "packageName": "js_typed_array_indexOf",
+          "product": "QuickJS",
+          "vendor": "QuickJS",
           "versions": [
             {
-              "version": "V6.6 R2.0 and earlier",
-              "status": "affected"
+              "lessThan": "2025-09-13",
+              "status": "affected",
+              "version": "2025-04-26",
+              "versionType": "date"
             }
           ]
         }
       ],
       "problemType": [
-        "Cross-site scripting (XSS)"
+        "CWE-125 Out-of-bounds Read"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-41021",
-      "publishedDate": "2025-10-16T08:00:39.666Z",
-      "lastModifiedDate": "2025-10-16T15:36:43.731Z",
-      "description": "Stored Cross-Site Scripting (XSS) in Sergestec's Exito v8.0, consisting of a stored XSS due to a lack of proper validation of user input by sending a POST request using the 'obs' parameter in '/admin/index.php?action=product_update'. This vulnerability could allow a remote user to send a specially crafted query to an authenticated user and steal their cookie session details.",
+      "id": "CVE-2025-62491",
+      "publishedDate": "2025-10-16T15:51:24.238Z",
+      "lastModifiedDate": "2025-10-16T15:51:24.238Z",
+      "description": "A Use-After-Free (UAF) vulnerability exists in the QuickJS engine's standard library when iterating over the global list of unhandled rejected promises (ts->rejected_promise_list).\n\n  *  The function js_std_promise_rejection_check attempts to iterate over the rejected_promise_list to report unhandled rejections using a standard list loop.\n\n\n  *  The reason for a promise rejection is processed inside the loop, including calling js_std_dump_error1(ctx, rp->reason).\n\n\n  *  If the promise rejection reason is an Error object that defines a custom property getter (e.g., via Object.defineProperty), this getter is executed during the error dumping process.\n\n\n  *  The malicious custom getter can execute JavaScript code that calls catch() on the same rejected promise being processed.\n\n\n  *  Calling catch() internally triggers js_std_promise_rejection_tracker, which then removes and frees the current promise entry (JSRejectedPromiseEntry) from the rejected_promise_list.\n\n\n  *  Since the list iteration continues using the now-freed memory pointer (el), the subsequent loop access results in a Use-After-Free condition.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-sergestec-products",
+          "url": "https://bellard.org/quickjs/Changelog",
+          "type": "reference"
+        },
+        {
+          "url": "https://issuetracker.google.com/434195203",
           "type": "reference"
         }
       ],
       "affected": [
         {
+          "collectionURL": "https://bellard.org/quickjs/",
           "defaultStatus": "unaffected",
-          "product": "SISTICK",
-          "vendor": "Sergestec",
+          "packageName": "js_std_promise_rejection_check",
+          "product": "QuickJS",
+          "vendor": "QuickJS",
           "versions": [
             {
+              "lessThan": "2025-09-13",
               "status": "affected",
-              "version": "7.2"
+              "version": "2025-04-26",
+              "versionType": "date"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting')"
+        "CWE-416 Use After Free"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-41020",
-      "publishedDate": "2025-10-16T07:59:06.798Z",
-      "lastModifiedDate": "2025-10-16T15:36:50.159Z",
-      "description": "Insecure direct object reference (IDOR) vulnerability in Sergestec's Exito v8.0. This vulnerability allows an attacker to access data belonging to other customers through the 'id' parameter in '/admin/ticket_a4.php'.",
+      "id": "CVE-2025-62490",
+      "publishedDate": "2025-10-16T15:51:06.100Z",
+      "lastModifiedDate": "2025-10-16T15:51:06.100Z",
+      "description": "In quickjs, in js_print_object, when printing an array, the function first fetches the array length and then loops over it. The issue is, printing a value is not side-effect free. An attacker-defined callback could run during js_print_value, during which the array could get resized and len1 become out of bounds. This results in a use-after-free.A second instance occurs in the same function during printing of a map or set objects. The code iterates over ms->records list, but once again, elements could be removed from the list during js_print_value call.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-sergestec-products",
+          "url": "https://bellard.org/quickjs/Changelog",
+          "type": "reference"
+        },
+        {
+          "url": "https://issuetracker.google.com/434196651",
           "type": "reference"
         }
       ],
       "affected": [
         {
+          "collectionURL": "https://bellard.org/quickjs/",
           "defaultStatus": "unaffected",
-          "product": "Exito",
-          "vendor": "Sergestec",
+          "packageName": "js_print_object",
+          "product": "QuickJS",
+          "vendor": "QuickJS",
           "versions": [
             {
+              "lessThan": "2025-09-13",
               "status": "affected",
-              "version": "8.0"
+              "version": "2025-04-26",
+              "versionType": "date"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-639 Authorization Bypass Through User-Controlled Key"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-41019",
-      "publishedDate": "2025-10-16T07:56:47.121Z",
-      "lastModifiedDate": "2025-10-16T15:36:56.185Z",
-      "description": "SQL injection in Sergestec's SISTICK v7.2. This vulnerability allows an attacker to retrieve, create, update, and delete databases through the 'id' parameter in '/index.php?view=ticket_detail'.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-sergestec-products",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "SISTICK",
-          "vendor": "Sergestec",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "7.2"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+        "CWE-416 Use After Free"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
