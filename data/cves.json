@@ -2,30 +2,30 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 2,
-    "last_updated": "2025-10-17T17:46:04.083038",
+    "total_count": 3,
+    "last_updated": "2025-10-17T17:59:21.444242",
     "severity_distribution": {
       "critical": 0,
       "high": 0,
       "medium": 1,
       "low": 0,
-      "none": 1
+      "none": 2
     }
   },
   "cves": [
     {
-      "id": "CVE-2025-62424",
-      "publishedDate": "2025-10-17T17:23:27.596Z",
-      "lastModifiedDate": "2025-10-17T17:35:28.377Z",
-      "description": "ClipBucket is a web-based video-sharing platform. In ClipBucket version 5.5.2 - #146 and earlier, the /admin_area/template_editor.php endpoint is vulnerable to path traversal. The validation of the file-loading path is inadequate, allowing authenticated administrators to read and write arbitrary files outside the intended template directory by inserting path traversal sequences into the folder parameter. An attacker with administrator privileges can exploit this vulnerability to read sensitive files such as /etc/passwd and modify writable files on the system, potentially leading to sensitive information disclosure and compromise of the application or server. This issue is fixed in version 5.5.2 - #147.",
-      "severity": 6.7,
+      "id": "CVE-2025-62430",
+      "publishedDate": "2025-10-17T17:50:23.507Z",
+      "lastModifiedDate": "2025-10-17T17:50:23.507Z",
+      "description": "ClipBucket v5 is an open source video sharing platform. ClipBucket v5 through build 5.5.2 #145 allows stored cross-site scripting (XSS) in multiple video and photo metadata fields. For videos the Tags field and the Genre, Actors, Producer, Executive Producer, and Director fields in Movieinfos accept user supplied values without adequate sanitization. For photos the Photo Title and Photo Tags fields accept user supplied values without adequate sanitization. A regular user who can edit a video or photo can inject script (for example by supplying a value such as a closing delimiter followed by a script element). The injected script executes when any user, including an unauthenticated visitor or an administrator, views the affected video or photo page. Although cookies are set with the HttpOnly attribute and cannot be read directly, the injected script can issue fetch requests to endpoints such as admin_area pages and exfiltrate their contents or trigger unintended actions. Version 5.5.2 build #146 and later contain a fix. Update to build 5.5.2 #146 or later. No known workarounds exist.",
+      "severity": 5.4,
       "references": [
         {
-          "url": "https://github.com/MacWarrior/clipbucket-v5/security/advisories/GHSA-3v2p-rfwx-52qj",
+          "url": "https://github.com/MacWarrior/clipbucket-v5/security/advisories/GHSA-qrqq-hpf3-9mc9",
           "type": "reference"
         },
         {
-          "url": "https://github.com/MacWarrior/clipbucket-v5/commit/c06d0f2e69c9acb008cebbd34fd5f29da3191a28",
+          "url": "https://github.com/MacWarrior/clipbucket-v5/commit/8e3cf79ce2721fbebde68a05a9a1a6319f086bcc",
           "type": "reference"
         }
       ],
@@ -35,30 +35,26 @@
           "product": "clipbucket-v5",
           "versions": [
             {
-              "version": "< 5.5.2 - #147",
+              "version": "< 5.5.2 - #146",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-62420",
-      "publishedDate": "2025-10-17T17:11:18.388Z",
-      "lastModifiedDate": "2025-10-17T17:34:52.863Z",
-      "description": "DataEase is a data visualization and analytics platform. In DataEase versions through 2.10.13, a JDBC driver bypass vulnerability exists in the H2 database connection handler. The getJdbc function in H2.java checks if the jdbcUrl starts with jdbc:h2 but returns a separate jdbc field as the actual connection URL. An attacker can provide a jdbcUrl that starts with jdbc:h2 while supplying a different jdbc field with an arbitrary JDBC driver and connection string. This allows an authenticated attacker to trigger arbitrary JDBC connections with malicious drivers, potentially leading to remote code execution. The vulnerability is fixed in version 2.10.14. No known workarounds exist.",
+      "id": "CVE-2025-62421",
+      "publishedDate": "2025-10-17T17:11:14.624Z",
+      "lastModifiedDate": "2025-10-17T17:52:47.512Z",
+      "description": "DataEase is a data visualization and analytics platform. In DataEase versions through 2.10.13, a stored cross-site scripting vulnerability exists due to improper file upload validation and authentication bypass. The StaticResourceApi interface defines a route upload/{fileId} that uses a URL path parameter where both the filename and extension of uploaded files are controllable by users. During permission validation, the TokenFilter invokes the WhitelistUtils#match method to determine if the URL path is in the allowlist. If the requestURI ends with .js or similar extensions, it is directly deemed safe and bypasses permission checks. This allows an attacker to access \"upload/1.js\" while specifying arbitrary file extensions, enabling the upload of HTML files containing malicious JavaScript. The vulnerability is fixed in version 2.10.14. No known workarounds exist.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/dataease/dataease/security/advisories/GHSA-7wcv-j6gc-qc7q",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/dataease/dataease/commit/bb320e42bf2cf862b9c4b438c1517547b53ed67b",
+          "url": "https://github.com/dataease/dataease/security/advisories/GHSA-2wmv-rr3p-pf43",
           "type": "reference"
         }
       ],
@@ -75,7 +71,44 @@
         }
       ],
       "problemType": [
-        "CWE-502: Deserialization of Untrusted Data"
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-57164",
+      "publishedDate": "2025-10-17T00:00:00.000Z",
+      "lastModifiedDate": "2025-10-17T17:51:16.325Z",
+      "description": "Flowise through v3.0.4 is vulnerable to remote code execution via unsanitized evaluation of user input in the \"Supabase RPC Filter\" field.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/FlowiseAI/Flowise",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/FlowiseAI/Flowise/blob/main/packages/components/nodes/vectorstores/Supabase/Supabase.ts#L237",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/FlowiseAI/Flowise/security/advisories/GHSA-7944-7c6r-55vv",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "n/a",
+          "versions": [
+            {
+              "version": "n/a",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "n/a"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
