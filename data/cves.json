@@ -2,271 +2,55 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 4,
-    "last_updated": "2025-10-18T08:19:26.534183",
+    "total_count": 1,
+    "last_updated": "2025-10-18T08:45:46.311980",
     "severity_distribution": {
       "critical": 0,
       "high": 1,
       "medium": 0,
       "low": 0,
-      "none": 3
+      "none": 0
     }
   },
   "cves": [
     {
-      "id": "CVE-2025-5555",
-      "publishedDate": "2025-10-18T08:02:06.128Z",
-      "lastModifiedDate": "2025-10-18T08:02:06.128Z",
-      "description": "A vulnerability has been found in Nixdorf Wincor PORT IO Driver up to 1.0.0.1. This affects the function sub_11100 in the library wnport.sys of the component IOCTL Handler. Such manipulation leads to stack-based buffer overflow. Local access is required to approach this attack. The exploit has been disclosed to the public and may be used. Upgrading to version 3.0.0.1 is able to mitigate this issue. Upgrading the affected component is recommended. The vendor was contacted beforehand and was able to provide a patch very early.",
-      "severity": 7.8,
+      "id": "CVE-2025-9890",
+      "publishedDate": "2025-10-18T08:25:35.623Z",
+      "lastModifiedDate": "2025-10-18T08:25:35.623Z",
+      "description": "The Theme Editor plugin for WordPress is vulnerable to Cross-Site Request Forgery in all versions up to, and including, 3.0. This is due to missing or incorrect nonce validation on the 'theme_editor_theme' page. This makes it possible for unauthenticated attackers to achieve remote code execution via a forged request granted they can trick a site administrator into performing an action such as clicking on a link.",
+      "severity": 8.8,
       "references": [
         {
-          "url": "https://vuldb.com/?id.329013",
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/77189684-b794-41a0-8fc0-3320032c2f69?source=cve",
           "type": "reference"
         },
         {
-          "url": "https://vuldb.com/?ctiid.329013",
+          "url": "https://plugins.trac.wordpress.org/browser/theme-editor/trunk/app/controller/theme_controller.php#L87",
           "type": "reference"
         },
         {
-          "url": "https://vuldb.com/?submit.604823",
-          "type": "reference"
-        },
-        {
-          "url": "https://b.iakb.org/2025/06/26/Wincor-Nixdorf-PORT-IO-Driver-Buffer-Overflow/",
-          "type": "poc"
-        },
-        {
-          "url": "https://download.dieboldnixdorf.com/",
+          "url": "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=3379404%40theme-editor&new=3379404%40theme-editor&sfp_email=&sfph_mail=",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Nixdorf Wincor",
-          "product": "PORT IO Driver",
+          "vendor": "mndpsingh287",
+          "product": "Theme Editor",
           "versions": [
             {
-              "version": "1.0.0.0",
-              "status": "affected"
-            },
-            {
-              "version": "1.0.0.1",
-              "status": "affected"
-            },
-            {
-              "version": "3.0.0.1",
-              "status": "unaffected"
+              "version": "*",
+              "status": "affected",
+              "lessThanOrEqual": "3.0",
+              "versionType": "semver"
             }
           ],
-          "modules": [
-            "IOCTL Handler"
-          ]
+          "defaultStatus": "unaffected"
         }
       ],
       "problemType": [
-        "Stack-based Buffer Overflow",
-        "Memory Corruption"
+        "CWE-352 Cross-Site Request Forgery (CSRF)"
       ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-40003",
-      "publishedDate": "2025-10-18T08:03:23.529Z",
-      "lastModifiedDate": "2025-10-18T08:03:23.529Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: mscc: ocelot: Fix use-after-free caused by cyclic delayed work\n\nThe origin code calls cancel_delayed_work() in ocelot_stats_deinit()\nto cancel the cyclic delayed work item ocelot->stats_work. However,\ncancel_delayed_work() may fail to cancel the work item if it is already\nexecuting. While destroy_workqueue() does wait for all pending work items\nin the work queue to complete before destroying the work queue, it cannot\nprevent the delayed work item from being rescheduled within the\nocelot_check_stats_work() function. This limitation exists because the\ndelayed work item is only enqueued into the work queue after its timer\nexpires. Before the timer expiration, destroy_workqueue() has no visibility\nof this pending work item. Once the work queue appears empty,\ndestroy_workqueue() proceeds with destruction. When the timer eventually\nexpires, the delayed work item gets queued again, leading to the following\nwarning:\n\nworkqueue: cannot queue ocelot_check_stats_work on wq ocelot-switch-stats\nWARNING: CPU: 2 PID: 0 at kernel/workqueue.c:2255 __queue_work+0x875/0xaf0\n...\nRIP: 0010:__queue_work+0x875/0xaf0\n...\nRSP: 0018:ffff88806d108b10 EFLAGS: 00010086\nRAX: 0000000000000000 RBX: 0000000000000101 RCX: 0000000000000027\nRDX: 0000000000000027 RSI: 0000000000000004 RDI: ffff88806d123e88\nRBP: ffffffff813c3170 R08: 0000000000000000 R09: ffffed100da247d2\nR10: ffffed100da247d1 R11: ffff88806d123e8b R12: ffff88800c00f000\nR13: ffff88800d7285c0 R14: ffff88806d0a5580 R15: ffff88800d7285a0\nFS:  0000000000000000(0000) GS:ffff8880e5725000(0000) knlGS:0000000000000000\nCS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033\nCR2: 00007fe18e45ea10 CR3: 0000000005e6c000 CR4: 00000000000006f0\nCall Trace:\n <IRQ>\n ? kasan_report+0xc6/0xf0\n ? __pfx_delayed_work_timer_fn+0x10/0x10\n ? __pfx_delayed_work_timer_fn+0x10/0x10\n call_timer_fn+0x25/0x1c0\n __run_timer_base.part.0+0x3be/0x8c0\n ? __pfx_delayed_work_timer_fn+0x10/0x10\n ? rcu_sched_clock_irq+0xb06/0x27d0\n ? __pfx___run_timer_base.part.0+0x10/0x10\n ? try_to_wake_up+0xb15/0x1960\n ? _raw_spin_lock_irq+0x80/0xe0\n ? __pfx__raw_spin_lock_irq+0x10/0x10\n tmigr_handle_remote_up+0x603/0x7e0\n ? __pfx_tmigr_handle_remote_up+0x10/0x10\n ? sched_balance_trigger+0x1c0/0x9f0\n ? sched_tick+0x221/0x5a0\n ? _raw_spin_lock_irq+0x80/0xe0\n ? __pfx__raw_spin_lock_irq+0x10/0x10\n ? tick_nohz_handler+0x339/0x440\n ? __pfx_tmigr_handle_remote_up+0x10/0x10\n __walk_groups.isra.0+0x42/0x150\n tmigr_handle_remote+0x1f4/0x2e0\n ? __pfx_tmigr_handle_remote+0x10/0x10\n ? ktime_get+0x60/0x140\n ? lapic_next_event+0x11/0x20\n ? clockevents_program_event+0x1d4/0x2a0\n ? hrtimer_interrupt+0x322/0x780\n handle_softirqs+0x16a/0x550\n irq_exit_rcu+0xaf/0xe0\n sysvec_apic_timer_interrupt+0x70/0x80\n </IRQ>\n...\n\nThe following diagram reveals the cause of the above warning:\n\nCPU 0 (remove)             | CPU 1 (delayed work callback)\nmscc_ocelot_remove()       |\n  ocelot_deinit()          | ocelot_check_stats_work()\n    ocelot_stats_deinit()  |\n      cancel_delayed_work()|   ...\n                           |   queue_delayed_work()\n      destroy_workqueue()  | (wait a time)\n                           | __queue_work() //UAF\n\nThe above scenario actually constitutes a UAF vulnerability.\n\nThe ocelot_stats_deinit() is only invoked when initialization\nfailure or resource destruction, so we must ensure that any\ndelayed work items cannot be rescheduled.\n\nReplace cancel_delayed_work() with disable_delayed_work_sync()\nto guarantee proper cancellation of the delayed work item and\nensure completion of any currently executing work before the\nworkqueue is deallocated.\n\nA deadlock concern was considered: ocelot_stats_deinit() is called\nin a process context and is not holding any locks that the delayed\nwork item might also need. Therefore, the use of the _sync() variant\nis safe here.\n\nThis bug was identified through static analysis. To reproduce the\nissue and validate the fix, I simulated ocelot-swit\n---truncated---",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://git.kernel.org/stable/c/bc9ea787079671cb19a8b25ff9f02be5ef6bfcf5",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/net/ethernet/mscc/ocelot_stats.c"
-          ],
-          "versions": [
-            {
-              "version": "a556c76adc052c979ef9e80f0cd3fa1379ff4943",
-              "lessThan": "bc9ea787079671cb19a8b25ff9f02be5ef6bfcf5",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/net/ethernet/mscc/ocelot_stats.c"
-          ],
-          "versions": [
-            {
-              "version": "4.18",
-              "status": "affected"
-            },
-            {
-              "version": "0",
-              "lessThan": "4.18",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.18-rc1",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-40002",
-      "publishedDate": "2025-10-18T08:03:22.718Z",
-      "lastModifiedDate": "2025-10-18T08:03:22.718Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nthunderbolt: Fix use-after-free in tb_dp_dprx_work\n\nThe original code relies on cancel_delayed_work() in tb_dp_dprx_stop(),\nwhich does not ensure that the delayed work item tunnel->dprx_work has\nfully completed if it was already running. This leads to use-after-free\nscenarios where tb_tunnel is deallocated by tb_tunnel_put(), while\ntunnel->dprx_work remains active and attempts to dereference tb_tunnel\nin tb_dp_dprx_work().\n\nA typical race condition is illustrated below:\n\nCPU 0                            | CPU 1\ntb_dp_tunnel_active()            |\n  tb_deactivate_and_free_tunnel()| tb_dp_dprx_start()\n    tb_tunnel_deactivate()       |   queue_delayed_work()\n      tb_dp_activate()           |\n        tb_dp_dprx_stop()        | tb_dp_dprx_work() //delayed worker\n          cancel_delayed_work()  |\n    tb_tunnel_put(tunnel);       |\n                                 |   tunnel = container_of(...); //UAF\n                                 |   tunnel-> //UAF\n\nReplacing cancel_delayed_work() with cancel_delayed_work_sync() is\nnot feasible as it would introduce a deadlock: both tb_dp_dprx_work()\nand the cleanup path acquire tb->lock, and cancel_delayed_work_sync()\nwould wait indefinitely for the work item that cannot proceed.\n\nInstead, implement proper reference counting:\n- If cancel_delayed_work() returns true (work is pending), we release\n  the reference in the stop function.\n- If it returns false (work is executing or already completed), the\n  reference is released in delayed work function itself.\n\nThis ensures the tb_tunnel remains valid during work item execution\nwhile preventing memory leaks.\n\nThis bug was found by static analysis.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://git.kernel.org/stable/c/c07923f6a8729fc27ee652221a51702ff6654097",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/67600ccfc4f38ebd331b9332ac94717bfbc87ea7",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/thunderbolt/tunnel.c"
-          ],
-          "versions": [
-            {
-              "version": "d6d458d42e1e1544a18f37f1d5c840e00d5261b9",
-              "lessThan": "c07923f6a8729fc27ee652221a51702ff6654097",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "d6d458d42e1e1544a18f37f1d5c840e00d5261b9",
-              "lessThan": "67600ccfc4f38ebd331b9332ac94717bfbc87ea7",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/thunderbolt/tunnel.c"
-          ],
-          "versions": [
-            {
-              "version": "6.14",
-              "status": "affected"
-            },
-            {
-              "version": "0",
-              "lessThan": "6.14",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.17.3",
-              "lessThanOrEqual": "6.17.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.18-rc1",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-40001",
-      "publishedDate": "2025-10-18T08:03:21.935Z",
-      "lastModifiedDate": "2025-10-18T08:03:21.935Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nscsi: mvsas: Fix use-after-free bugs in mvs_work_queue\n\nDuring the detaching of Marvell's SAS/SATA controller, the original code\ncalls cancel_delayed_work() in mvs_free() to cancel the delayed work\nitem mwq->work_q. However, if mwq->work_q is already running, the\ncancel_delayed_work() may fail to cancel it. This can lead to\nuse-after-free scenarios where mvs_free() frees the mvs_info while\nmvs_work_queue() is still executing and attempts to access the\nalready-freed mvs_info.\n\nA typical race condition is illustrated below:\n\nCPU 0 (remove)            | CPU 1 (delayed work callback)\nmvs_pci_remove()          |\n  mvs_free()              | mvs_work_queue()\n    cancel_delayed_work() |\n      kfree(mvi)          |\n                          |   mvi-> // UAF\n\nReplace cancel_delayed_work() with cancel_delayed_work_sync() to ensure\nthat the delayed work item is properly canceled and any executing\ndelayed work item completes before the mvs_info is deallocated.\n\nThis bug was found by static analysis.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://git.kernel.org/stable/c/60cd16a3b7439ccb699d0bf533799eeb894fd217",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/scsi/mvsas/mv_init.c"
-          ],
-          "versions": [
-            {
-              "version": "20b09c2992fefbe78f8cede7b404fb143a413c52",
-              "lessThan": "60cd16a3b7439ccb699d0bf533799eeb894fd217",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/scsi/mvsas/mv_init.c"
-          ],
-          "versions": [
-            {
-              "version": "2.6.31",
-              "status": "affected"
-            },
-            {
-              "version": "0",
-              "lessThan": "2.6.31",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.18-rc1",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
       "fix_suggestion": "无法生成修复建议"
     }
   ]
