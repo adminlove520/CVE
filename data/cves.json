@@ -2,45 +2,517 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 1,
-    "last_updated": "2025-10-28T09:25:42.877546",
+    "total_count": 4,
+    "last_updated": "2025-10-28T09:43:18.652792",
     "severity_distribution": {
       "critical": 0,
       "high": 0,
       "medium": 0,
       "low": 0,
-      "none": 1
+      "none": 4
     }
   },
   "cves": [
     {
-      "id": "CVE-2025-41090",
-      "publishedDate": "2025-10-28T09:17:08.128Z",
-      "lastModifiedDate": "2025-10-28T09:18:40.093Z",
-      "description": "microCLAUDIA in v3.2.0 and prior has an improper access control vulnerability.\n\nThis flaw allows an authenticated user to perform unauthorized actions on other organizations' systems by sending direct API requests. To do so, the attacker can use organization identifiers obtained through a compromised endpoint or deduced manually.\n\nThis vulnerability allows access between tenants, enabling an attacker to list and manage remote assets, uninstall agents, and even delete vaccines configurations.",
+      "id": "CVE-2025-40028",
+      "publishedDate": "2025-10-28T09:32:35.681Z",
+      "lastModifiedDate": "2025-10-28T09:32:35.681Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nbinder: fix double-free in dbitmap\n\nA process might fail to allocate a new bitmap when trying to expand its\nproc->dmap. In that case, dbitmap_grow() fails and frees the old bitmap\nvia dbitmap_free(). However, the driver calls dbitmap_free() again when\nthe same process terminates, leading to a double-free error:\n\n  ==================================================================\n  BUG: KASAN: double-free in binder_proc_dec_tmpref+0x2e0/0x55c\n  Free of addr ffff00000b7c1420 by task kworker/9:1/209\n\n  CPU: 9 UID: 0 PID: 209 Comm: kworker/9:1 Not tainted 6.17.0-rc6-dirty #5 PREEMPT\n  Hardware name: linux,dummy-virt (DT)\n  Workqueue: events binder_deferred_func\n  Call trace:\n   kfree+0x164/0x31c\n   binder_proc_dec_tmpref+0x2e0/0x55c\n   binder_deferred_func+0xc24/0x1120\n   process_one_work+0x520/0xba4\n  [...]\n\n  Allocated by task 448:\n   __kmalloc_noprof+0x178/0x3c0\n   bitmap_zalloc+0x24/0x30\n   binder_open+0x14c/0xc10\n  [...]\n\n  Freed by task 449:\n   kfree+0x184/0x31c\n   binder_inc_ref_for_node+0xb44/0xe44\n   binder_transaction+0x29b4/0x7fbc\n   binder_thread_write+0x1708/0x442c\n   binder_ioctl+0x1b50/0x2900\n  [...]\n  ==================================================================\n\nFix this issue by marking proc->map NULL in dbitmap_free().",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://www.incibe.es/en/incibe-cert/notices/aviso/improper-access-control-ccn-cert-microclaudia",
+          "url": "https://git.kernel.org/stable/c/c301ec61ce6f16e21a36b99225ca8a20c1591e10",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/0390633979969c54c0ce6a198d6f45cdbe2c84b1",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/b781e5635a3398e2b64440371233c2c5102cd6cb",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/3ebcd3460cad351f198c39c6edb4af519a0ed934",
           "type": "reference"
         }
       ],
       "affected": [
         {
+          "product": "Linux",
+          "vendor": "Linux",
           "defaultStatus": "unaffected",
-          "product": "microCLAUDIA",
-          "vendor": "CCN-CERT",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "drivers/android/dbitmap.h"
+          ],
           "versions": [
             {
+              "version": "15d9da3f818cae676f822a04407d3c17b53357d2",
+              "lessThan": "c301ec61ce6f16e21a36b99225ca8a20c1591e10",
               "status": "affected",
-              "version": "3.2.2"
+              "versionType": "git"
+            },
+            {
+              "version": "15d9da3f818cae676f822a04407d3c17b53357d2",
+              "lessThan": "0390633979969c54c0ce6a198d6f45cdbe2c84b1",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "15d9da3f818cae676f822a04407d3c17b53357d2",
+              "lessThan": "b781e5635a3398e2b64440371233c2c5102cd6cb",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "15d9da3f818cae676f822a04407d3c17b53357d2",
+              "lessThan": "3ebcd3460cad351f198c39c6edb4af519a0ed934",
+              "status": "affected",
+              "versionType": "git"
+            }
+          ]
+        },
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "affected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "drivers/android/dbitmap.h"
+          ],
+          "versions": [
+            {
+              "version": "6.11",
+              "status": "affected"
+            },
+            {
+              "version": "0",
+              "lessThan": "6.11",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.12.52",
+              "lessThanOrEqual": "6.12.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.16.12",
+              "lessThanOrEqual": "6.16.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.17.2",
+              "lessThanOrEqual": "6.17.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.18-rc1",
+              "lessThanOrEqual": "*",
+              "status": "unaffected",
+              "versionType": "original_commit_for_fix"
             }
           ]
         }
       ],
-      "problemType": [
-        "CWE-306 Missing Authentication for Critical Function"
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-40027",
+      "publishedDate": "2025-10-28T09:32:34.162Z",
+      "lastModifiedDate": "2025-10-28T09:32:34.162Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet/9p: fix double req put in p9_fd_cancelled\n\nSyzkaller reports a KASAN issue as below:\n\ngeneral protection fault, probably for non-canonical address 0xfbd59c0000000021: 0000 [#1] PREEMPT SMP KASAN NOPTI\nKASAN: maybe wild-memory-access in range [0xdead000000000108-0xdead00000000010f]\nCPU: 0 PID: 5083 Comm: syz-executor.2 Not tainted 6.1.134-syzkaller-00037-g855bd1d7d838 #0\nHardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014\nRIP: 0010:__list_del include/linux/list.h:114 [inline]\nRIP: 0010:__list_del_entry include/linux/list.h:137 [inline]\nRIP: 0010:list_del include/linux/list.h:148 [inline]\nRIP: 0010:p9_fd_cancelled+0xe9/0x200 net/9p/trans_fd.c:734\n\nCall Trace:\n <TASK>\n p9_client_flush+0x351/0x440 net/9p/client.c:614\n p9_client_rpc+0xb6b/0xc70 net/9p/client.c:734\n p9_client_version net/9p/client.c:920 [inline]\n p9_client_create+0xb51/0x1240 net/9p/client.c:1027\n v9fs_session_init+0x1f0/0x18f0 fs/9p/v9fs.c:408\n v9fs_mount+0xba/0xcb0 fs/9p/vfs_super.c:126\n legacy_get_tree+0x108/0x220 fs/fs_context.c:632\n vfs_get_tree+0x8e/0x300 fs/super.c:1573\n do_new_mount fs/namespace.c:3056 [inline]\n path_mount+0x6a6/0x1e90 fs/namespace.c:3386\n do_mount fs/namespace.c:3399 [inline]\n __do_sys_mount fs/namespace.c:3607 [inline]\n __se_sys_mount fs/namespace.c:3584 [inline]\n __x64_sys_mount+0x283/0x300 fs/namespace.c:3584\n do_syscall_x64 arch/x86/entry/common.c:51 [inline]\n do_syscall_64+0x35/0x80 arch/x86/entry/common.c:81\n entry_SYSCALL_64_after_hwframe+0x6e/0xd8\n\nThis happens because of a race condition between:\n\n- The 9p client sending an invalid flush request and later cleaning it up;\n- The 9p client in p9_read_work() canceled all pending requests.\n\n      Thread 1                              Thread 2\n    ...\n    p9_client_create()\n    ...\n    p9_fd_create()\n    ...\n    p9_conn_create()\n    ...\n    // start Thread 2\n    INIT_WORK(&m->rq, p9_read_work);\n                                        p9_read_work()\n    ...\n    p9_client_rpc()\n    ...\n                                        ...\n                                        p9_conn_cancel()\n                                        ...\n                                        spin_lock(&m->req_lock);\n    ...\n    p9_fd_cancelled()\n    ...\n                                        ...\n                                        spin_unlock(&m->req_lock);\n                                        // status rewrite\n                                        p9_client_cb(m->client, req, REQ_STATUS_ERROR)\n                                        // first remove\n                                        list_del(&req->req_list);\n                                        ...\n\n    spin_lock(&m->req_lock)\n    ...\n    // second remove\n    list_del(&req->req_list);\n    spin_unlock(&m->req_lock)\n  ...\n\nCommit 74d6a5d56629 (\"9p/trans_fd: Fix concurrency del of req_list in\np9_fd_cancelled/p9_read_work\") fixes a concurrency issue in the 9p filesystem\nclient where the req_list could be deleted simultaneously by both\np9_read_work and p9_fd_cancelled functions, but for the case where req->status\nequals REQ_STATUS_RCVD.\n\nUpdate the check for req->status in p9_fd_cancelled to skip processing not\njust received requests, but anything that is not SENT, as whatever\nchanged the state from SENT also removed the request from its list.\n\nFound by Linux Verification Center (linuxtesting.org) with Syzkaller.\n\n[updated the check from status == RECV || status == ERROR to status != SENT]",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://git.kernel.org/stable/c/c1db864270eb7fea94a9ef201da0c9dc1cbab7b8",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/0e0097005abc02c9f262370674f855625f4f3fb4",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/284e67a93b8c48952b6fc82129a8d3eb9dc73b06",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/716dceb19a9f8ff6c9d3aee5a771a93d6a47a0b6",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/448db01a48e1cdbbc31c995716a5dac1e52ba036",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/94797b84cb9985022eb9cb3275c9497fbc883bb6",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/674b56aa57f9379854cb6798c3bbcef7e7b51ab7",
+          "type": "reference"
+        }
       ],
+      "affected": [
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "unaffected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "net/9p/trans_fd.c"
+          ],
+          "versions": [
+            {
+              "version": "afd8d65411551839b7ab14a539d00075b2793451",
+              "lessThan": "c1db864270eb7fea94a9ef201da0c9dc1cbab7b8",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "afd8d65411551839b7ab14a539d00075b2793451",
+              "lessThan": "0e0097005abc02c9f262370674f855625f4f3fb4",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "afd8d65411551839b7ab14a539d00075b2793451",
+              "lessThan": "284e67a93b8c48952b6fc82129a8d3eb9dc73b06",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "afd8d65411551839b7ab14a539d00075b2793451",
+              "lessThan": "716dceb19a9f8ff6c9d3aee5a771a93d6a47a0b6",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "afd8d65411551839b7ab14a539d00075b2793451",
+              "lessThan": "448db01a48e1cdbbc31c995716a5dac1e52ba036",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "afd8d65411551839b7ab14a539d00075b2793451",
+              "lessThan": "94797b84cb9985022eb9cb3275c9497fbc883bb6",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "afd8d65411551839b7ab14a539d00075b2793451",
+              "lessThan": "674b56aa57f9379854cb6798c3bbcef7e7b51ab7",
+              "status": "affected",
+              "versionType": "git"
+            }
+          ]
+        },
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "affected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "net/9p/trans_fd.c"
+          ],
+          "versions": [
+            {
+              "version": "3.15",
+              "status": "affected"
+            },
+            {
+              "version": "0",
+              "lessThan": "3.15",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "5.15.195",
+              "lessThanOrEqual": "5.15.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.1.156",
+              "lessThanOrEqual": "6.1.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.6.111",
+              "lessThanOrEqual": "6.6.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.12.52",
+              "lessThanOrEqual": "6.12.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.16.12",
+              "lessThanOrEqual": "6.16.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.17.2",
+              "lessThanOrEqual": "6.17.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.18-rc1",
+              "lessThanOrEqual": "*",
+              "status": "unaffected",
+              "versionType": "original_commit_for_fix"
+            }
+          ]
+        }
+      ],
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-40026",
+      "publishedDate": "2025-10-28T09:32:33.075Z",
+      "lastModifiedDate": "2025-10-28T09:32:33.075Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nKVM: x86: Don't (re)check L1 intercepts when completing userspace I/O\n\nWhen completing emulation of instruction that generated a userspace exit\nfor I/O, don't recheck L1 intercepts as KVM has already finished that\nphase of instruction execution, i.e. has already committed to allowing L2\nto perform I/O.  If L1 (or host userspace) modifies the I/O permission\nbitmaps during the exit to userspace,  KVM will treat the access as being\nintercepted despite already having emulated the I/O access.\n\nPivot on EMULTYPE_NO_DECODE to detect that KVM is completing emulation.\nOf the three users of EMULTYPE_NO_DECODE, only complete_emulated_io() (the\nintended \"recipient\") can reach the code in question.  gp_interception()'s\nuse is mutually exclusive with is_guest_mode(), and\ncomplete_emulated_insn_gp() unconditionally pairs EMULTYPE_NO_DECODE with\nEMULTYPE_SKIP.\n\nThe bad behavior was detected by a syzkaller program that toggles port I/O\ninterception during the userspace I/O exit, ultimately resulting in a WARN\non vcpu->arch.pio.count being non-zero due to KVM no completing emulation\nof the I/O instruction.\n\n  WARNING: CPU: 23 PID: 1083 at arch/x86/kvm/x86.c:8039 emulator_pio_in_out+0x154/0x170 [kvm]\n  Modules linked in: kvm_intel kvm irqbypass\n  CPU: 23 UID: 1000 PID: 1083 Comm: repro Not tainted 6.16.0-rc5-c1610d2d66b1-next-vm #74 NONE\n  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015\n  RIP: 0010:emulator_pio_in_out+0x154/0x170 [kvm]\n  PKRU: 55555554\n  Call Trace:\n   <TASK>\n   kvm_fast_pio+0xd6/0x1d0 [kvm]\n   vmx_handle_exit+0x149/0x610 [kvm_intel]\n   kvm_arch_vcpu_ioctl_run+0xda8/0x1ac0 [kvm]\n   kvm_vcpu_ioctl+0x244/0x8c0 [kvm]\n   __x64_sys_ioctl+0x8a/0xd0\n   do_syscall_64+0x5d/0xc60\n   entry_SYSCALL_64_after_hwframe+0x4b/0x53\n   </TASK>",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://git.kernel.org/stable/c/e0ce3ed1048a47986d15aef1a98ebda25560d257",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/ba35a5d775799ce5ad60230be97336f2fefd518e",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/3d3abf3f7e8b1abb082070a343de82d7efc80523",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/e7177c7e32cb806f348387b7f4faafd4a5b32054",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/3a062a5c55adc5507600b9ae6d911e247e2f1d6e",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/7366830642505683bbe905a2ba5d18d6e4b512b8",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/e750f85391286a4c8100275516973324b621a269",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "unaffected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "arch/x86/kvm/emulate.c",
+            "arch/x86/kvm/kvm_emulate.h",
+            "arch/x86/kvm/x86.c"
+          ],
+          "versions": [
+            {
+              "version": "8a76d7f25f8f24fc5a328c8e15e4a7313cf141b9",
+              "lessThan": "e0ce3ed1048a47986d15aef1a98ebda25560d257",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "8a76d7f25f8f24fc5a328c8e15e4a7313cf141b9",
+              "lessThan": "ba35a5d775799ce5ad60230be97336f2fefd518e",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "8a76d7f25f8f24fc5a328c8e15e4a7313cf141b9",
+              "lessThan": "3d3abf3f7e8b1abb082070a343de82d7efc80523",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "8a76d7f25f8f24fc5a328c8e15e4a7313cf141b9",
+              "lessThan": "e7177c7e32cb806f348387b7f4faafd4a5b32054",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "8a76d7f25f8f24fc5a328c8e15e4a7313cf141b9",
+              "lessThan": "3a062a5c55adc5507600b9ae6d911e247e2f1d6e",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "8a76d7f25f8f24fc5a328c8e15e4a7313cf141b9",
+              "lessThan": "7366830642505683bbe905a2ba5d18d6e4b512b8",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "8a76d7f25f8f24fc5a328c8e15e4a7313cf141b9",
+              "lessThan": "e750f85391286a4c8100275516973324b621a269",
+              "status": "affected",
+              "versionType": "git"
+            }
+          ]
+        },
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "affected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "arch/x86/kvm/emulate.c",
+            "arch/x86/kvm/kvm_emulate.h",
+            "arch/x86/kvm/x86.c"
+          ],
+          "versions": [
+            {
+              "version": "3.0",
+              "status": "affected"
+            },
+            {
+              "version": "0",
+              "lessThan": "3.0",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "5.15.195",
+              "lessThanOrEqual": "5.15.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.1.157",
+              "lessThanOrEqual": "6.1.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.6.111",
+              "lessThanOrEqual": "6.6.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.12.52",
+              "lessThanOrEqual": "6.12.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.16.12",
+              "lessThanOrEqual": "6.16.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.17.2",
+              "lessThanOrEqual": "6.17.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.18-rc1",
+              "lessThanOrEqual": "*",
+              "status": "unaffected",
+              "versionType": "original_commit_for_fix"
+            }
+          ]
+        }
+      ],
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-40025",
+      "publishedDate": "2025-10-28T09:32:31.806Z",
+      "lastModifiedDate": "2025-10-28T09:32:31.806Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nf2fs: fix to do sanity check on node footer for non inode dnode\n\nAs syzbot reported below:\n\n------------[ cut here ]------------\nkernel BUG at fs/f2fs/file.c:1243!\nOops: invalid opcode: 0000 [#1] SMP KASAN NOPTI\nCPU: 0 UID: 0 PID: 5354 Comm: syz.0.0 Not tainted 6.17.0-rc1-syzkaller-00211-g90d970cade8e #0 PREEMPT(full)\nRIP: 0010:f2fs_truncate_hole+0x69e/0x6c0 fs/f2fs/file.c:1243\nCall Trace:\n <TASK>\n f2fs_punch_hole+0x2db/0x330 fs/f2fs/file.c:1306\n f2fs_fallocate+0x546/0x990 fs/f2fs/file.c:2018\n vfs_fallocate+0x666/0x7e0 fs/open.c:342\n ksys_fallocate fs/open.c:366 [inline]\n __do_sys_fallocate fs/open.c:371 [inline]\n __se_sys_fallocate fs/open.c:369 [inline]\n __x64_sys_fallocate+0xc0/0x110 fs/open.c:369\n do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]\n do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94\n entry_SYSCALL_64_after_hwframe+0x77/0x7f\nRIP: 0033:0x7f1e65f8ebe9\n\nw/ a fuzzed image, f2fs may encounter panic due to it detects inconsistent\ntruncation range in direct node in f2fs_truncate_hole().\n\nThe root cause is: a non-inode dnode may has the same footer.ino and\nfooter.nid, so the dnode will be parsed as an inode, then ADDRS_PER_PAGE()\nmay return wrong blkaddr count which may be 923 typically, by chance,\ndn.ofs_in_node is equal to 923, then count can be calculated to 0 in below\nstatement, later it will trigger panic w/ f2fs_bug_on(, count == 0 || ...).\n\n\tcount = min(end_offset - dn.ofs_in_node, pg_end - pg_start);\n\nThis patch introduces a new node_type NODE_TYPE_NON_INODE, then allowing\npassing the new_type to sanity_check_node_footer in f2fs_get_node_folio()\nto detect corruption that a non-inode dnode has the same footer.ino and\nfooter.nid.\n\nScripts to reproduce:\nmkfs.f2fs -f /dev/vdb\nmount /dev/vdb /mnt/f2fs\ntouch /mnt/f2fs/foo\ntouch /mnt/f2fs/bar\ndd if=/dev/zero of=/mnt/f2fs/foo bs=1M count=8\numount /mnt/f2fs\ninject.f2fs --node --mb i_nid --nid 4 --idx 0 --val 5 /dev/vdb\nmount /dev/vdb /mnt/f2fs\nxfs_io /mnt/f2fs/foo -c \"fpunch 6984k 4k\"",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://git.kernel.org/stable/c/186098f34b8a5d65eb828f952c8cc56272c60ea0",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/c18ecd99e0c707ef8f83cace861cbc3162f4fdf1",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "unaffected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "fs/f2fs/f2fs.h",
+            "fs/f2fs/gc.c",
+            "fs/f2fs/node.c",
+            "fs/f2fs/node.h",
+            "fs/f2fs/recovery.c"
+          ],
+          "versions": [
+            {
+              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
+              "lessThan": "186098f34b8a5d65eb828f952c8cc56272c60ea0",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
+              "lessThan": "c18ecd99e0c707ef8f83cace861cbc3162f4fdf1",
+              "status": "affected",
+              "versionType": "git"
+            }
+          ]
+        },
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "affected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "fs/f2fs/f2fs.h",
+            "fs/f2fs/gc.c",
+            "fs/f2fs/node.c",
+            "fs/f2fs/node.h",
+            "fs/f2fs/recovery.c"
+          ],
+          "versions": [
+            {
+              "version": "6.17.2",
+              "lessThanOrEqual": "6.17.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.18-rc1",
+              "lessThanOrEqual": "*",
+              "status": "unaffected",
+              "versionType": "original_commit_for_fix"
+            }
+          ]
+        }
+      ],
+      "problemType": [],
       "fix_suggestion": "无法生成修复建议"
     }
   ]
