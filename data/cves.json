@@ -2,47 +2,173 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 1,
-    "last_updated": "2025-10-29T17:54:10.837889",
+    "total_count": 4,
+    "last_updated": "2025-10-29T18:29:30.191800",
     "severity_distribution": {
       "critical": 0,
       "high": 0,
       "medium": 0,
       "low": 0,
-      "none": 1
+      "none": 4
     }
   },
   "cves": [
     {
-      "id": "CVE-2025-62797",
-      "publishedDate": "2025-10-29T17:49:07.899Z",
-      "lastModifiedDate": "2025-10-29T17:49:07.899Z",
-      "description": "FluxCP is a web-based Control Panel for rAthena servers written in PHP. A critical Cross-Site Request Forgery (CSRF) vulnerability exists in the FluxCP-based website template used by multiple rAthena/Ragnarok servers. State-changing POST endpoints accept browser-initiated requests that are authorized solely by the session cookie without per-request anti-CSRF tokens or robust Origin/Referer validation. An attacker who can lure a logged-in user to an attacker-controlled page can cause that user to perform sensitive actions without their intent. This vulnerability is fixed with commit e3f130c.",
+      "id": "CVE-2025-62792",
+      "publishedDate": "2025-10-29T16:50:05.994Z",
+      "lastModifiedDate": "2025-10-29T18:10:35.915Z",
+      "description": "Wazuh is a free and open source platform used for threat prevention, detection, and response. Prior to 4.12.0, a buffer over-read occurs in w_expression_match() when strlen() is called on str_test, because the corresponding buffer is not being properly NULL terminated during its allocation in OS_CleanMSG(). A compromised agent can cause a READ operation beyond the end of the allocated buffer (which may contain sensitive information) by sending a specially crafted message to the wazuh manager. An attacker who is able to craft and send an agent message to the wazuh manager can cause a buffer over-read and potentially access sensitive data. This vulnerability is fixed in 4.12.0.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/rathena/FluxCP/security/advisories/GHSA-5w2g-8cqq-r4fr",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/rathena/FluxCP/commit/e3f130c4a2ccd615a3ee2ee0302ecbfbd84747e6",
+          "url": "https://github.com/wazuh/wazuh/security/advisories/GHSA-2672-vfhm-xhr6",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "rathena",
-          "product": "FluxCP",
+          "vendor": "wazuh",
+          "product": "wazuh",
           "versions": [
             {
-              "version": "< e3f130c4a2ccd615a3ee2ee0302ecbfbd84747e6",
+              "version": "< 4.12.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-352: Cross-Site Request Forgery (CSRF)"
+        "CWE-126: Buffer Over-read",
+        "CWE-170: Improper Null Termination"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-34305",
+      "publishedDate": "2025-10-28T14:34:36.345Z",
+      "lastModifiedDate": "2025-10-29T18:09:14.373Z",
+      "description": "IPFire versions prior to 2.29 (Core Update 198) contain multiple stored cross-site scripting (XSS) vulnerabilities caused by a bug in the cleanhtml() function (/var/ipfire/header.pl) that fails to apply HTML-entity encoding to user input. When an authenticated user submits data to affected endpoints - for example, POST /cgi-bin/wakeonlan.cgi (CLIENT_COMMENT), /cgi-bin/dhcp.cgi (ADVOPT_DATA, FIX_REMARK, FIX_FILENAME, FIX_ROOTPATH), /cgi-bin/connscheduler.cgi (ACTION_COMMENT), /cgi-bin/dnsforward.cgi (REMARK), /cgi-bin/vpnmain.cgi (REMARK), or /cgi-bin/dns.cgi (REMARK) - the application calls escape() and HTML::Entities::encode_entities() but never assigns the sanitized result back to the output variable. The original unsanitized value is therefore stored and later rendered in the web interface without proper sanitation or encoding, allowing injected scripts to execute in the context of other users who view the affected entries.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.ipfire.org/blog/ipfire-2-29-core-update-198-released",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.ipfire.org/show_bug.cgi?id=13880",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/ipfire-stored-xss-via-multiple-methods-in-cleanhtml",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "modules": [
+            "/var/ipfire/header.pl"
+          ],
+          "product": "IPFire",
+          "vendor": "IPFire.org",
+          "versions": [
+            {
+              "lessThan": "2.29 (Core Update 198)",
+              "status": "affected",
+              "version": "0",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-34310",
+      "publishedDate": "2025-10-28T14:34:18.157Z",
+      "lastModifiedDate": "2025-10-29T18:12:26.568Z",
+      "description": "IPFire versions prior to 2.29 (Core Update 198) contain a stored cross-site scripting (XSS) vulnerability that allows an authenticated attacker to inject arbitrary JavaScript code through the INC_SPD, OUT_SPD, DEFCLASS_INC, and DEFCLASS_OUT parameters when updating Quality of Service (QoS) settings. When a user updates speeds or classes, the application issues an HTTP POST request to /cgi-bin/qos.cgi and the values for incoming/outgoing speeds and default classes are provided in the INC_SPD, OUT_SPD, DEFCLASS_INC, and DEFCLASS_OUT parameters. The values of these parameters are stored and later rendered in the web interface without proper sanitation or encoding, allowing injected scripts to execute in the context of other users who view the affected QoS entries.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.ipfire.org/blog/ipfire-2-29-core-update-198-released",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.ipfire.org/show_bug.cgi?id=13883",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/ipfire-stored-xss-via-quality-of-service-settings",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "modules": [
+            "/cgi-bin/qos.cgi"
+          ],
+          "product": "IPFire",
+          "vendor": "IPFire.org",
+          "versions": [
+            {
+              "lessThan": "2.29 (Core Update 198)",
+              "status": "affected",
+              "version": "0",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-34315",
+      "publishedDate": "2025-10-28T14:33:54.312Z",
+      "lastModifiedDate": "2025-10-29T18:13:29.333Z",
+      "description": "IPFire versions prior to 2.29 (Core Update 198) contain a stored cross-site scripting (XSS) vulnerability that allows an authenticated attacker to inject arbitrary JavaScript code through the REMOTELOG_ADDR parameter when updating the remote syslog server address. When a user updates the Remote logging Syslog server, the application issues an HTTP POST request to /cgi-bin/logs.cgi/config.dat and the server address is provided in the REMOTELOG_ADDR parameter. The value of this parameter is stored and later rendered in the web interface without proper sanitation or encoding, allowing injected scripts to execute in the context of other users who view the affected configuration page.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.ipfire.org/blog/ipfire-2-29-core-update-198-released",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.ipfire.org/show_bug.cgi?id=13890",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/ipfire-stored-xss-via-remote-syslog-server-address",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "modules": [
+            "/cgi-bin/logs.cgi/config.dat"
+          ],
+          "product": "IPFire",
+          "vendor": "IPFire.org",
+          "versions": [
+            {
+              "lessThan": "2.29 (Core Update 198)",
+              "status": "affected",
+              "version": "0",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting')"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
