@@ -2,64 +2,92 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 4,
-    "last_updated": "2025-10-29T18:29:30.191800",
+    "total_count": 3,
+    "last_updated": "2025-10-29T18:53:51.877426",
     "severity_distribution": {
       "critical": 0,
       "high": 0,
       "medium": 0,
       "low": 0,
-      "none": 4
+      "none": 3
     }
   },
   "cves": [
     {
-      "id": "CVE-2025-62792",
-      "publishedDate": "2025-10-29T16:50:05.994Z",
-      "lastModifiedDate": "2025-10-29T18:10:35.915Z",
-      "description": "Wazuh is a free and open source platform used for threat prevention, detection, and response. Prior to 4.12.0, a buffer over-read occurs in w_expression_match() when strlen() is called on str_test, because the corresponding buffer is not being properly NULL terminated during its allocation in OS_CleanMSG(). A compromised agent can cause a READ operation beyond the end of the allocated buffer (which may contain sensitive information) by sending a specially crafted message to the wazuh manager. An attacker who is able to craft and send an agent message to the wazuh manager can cause a buffer over-read and potentially access sensitive data. This vulnerability is fixed in 4.12.0.",
+      "id": "CVE-2025-64103",
+      "publishedDate": "2025-10-29T18:43:46.934Z",
+      "lastModifiedDate": "2025-10-29T18:43:46.934Z",
+      "description": "Starting from 2.53.6, 2.54.3, and 2.55.0, Zitadel only required multi factor authentication in case the login policy has either enabled requireMFA or requireMFAForLocalUsers. If a user has set up MFA without this requirement, Zitadel would consider single factor auhtenticated sessions as valid as well and not require multiple factors. Bypassing second authentication factors weakens multifactor authentication and enables attackers to bypass the more secure factor. An attacker can target the TOTP code alone, only six digits, bypassing password verification entirely and potentially compromising accounts with 2FA enabled. This vulnerability is fixed in 4.6.0, 3.4.3, and 2.71.18.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/wazuh/wazuh/security/advisories/GHSA-2672-vfhm-xhr6",
+          "url": "https://github.com/zitadel/zitadel/security/advisories/GHSA-cfjq-28r2-4jv5",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/zitadel/zitadel/commit/b284f8474eed0cba531905101619e7ae7963156b",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "wazuh",
-          "product": "wazuh",
+          "vendor": "zitadel",
+          "product": "zitadel",
           "versions": [
             {
-              "version": "< 4.12.0",
+              "version": ">= 4.0.0-rc.1, < 4.6.0",
+              "status": "affected"
+            },
+            {
+              "version": ">= 3.0.0-rc.1, < 3.4.3",
+              "status": "affected"
+            },
+            {
+              "version": ">= 2.55.0, < 2.71.8",
+              "status": "affected"
+            },
+            {
+              "version": ">= 2.54.3, <= 2.54.10",
+              "status": "affected"
+            },
+            {
+              "version": ">= 2.53.6, <= 2.53.9",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-126: Buffer Over-read",
-        "CWE-170: Improper Null Termination"
+        "CWE-308: Use of Single-factor Authentication",
+        "CWE-287: Improper Authentication"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-34305",
-      "publishedDate": "2025-10-28T14:34:36.345Z",
-      "lastModifiedDate": "2025-10-29T18:09:14.373Z",
-      "description": "IPFire versions prior to 2.29 (Core Update 198) contain multiple stored cross-site scripting (XSS) vulnerabilities caused by a bug in the cleanhtml() function (/var/ipfire/header.pl) that fails to apply HTML-entity encoding to user input. When an authenticated user submits data to affected endpoints - for example, POST /cgi-bin/wakeonlan.cgi (CLIENT_COMMENT), /cgi-bin/dhcp.cgi (ADVOPT_DATA, FIX_REMARK, FIX_FILENAME, FIX_ROOTPATH), /cgi-bin/connscheduler.cgi (ACTION_COMMENT), /cgi-bin/dnsforward.cgi (REMARK), /cgi-bin/vpnmain.cgi (REMARK), or /cgi-bin/dns.cgi (REMARK) - the application calls escape() and HTML::Entities::encode_entities() but never assigns the sanitized result back to the output variable. The original unsanitized value is therefore stored and later rendered in the web interface without proper sanitation or encoding, allowing injected scripts to execute in the context of other users who view the affected entries.",
+      "id": "CVE-2018-25120",
+      "publishedDate": "2025-10-29T18:39:03.581Z",
+      "lastModifiedDate": "2025-10-29T18:39:03.581Z",
+      "description": "D-Link DNS-343 ShareCenter devices running firmware versions up to and including 1.05 contain a command injection vulnerability in the Mail Test functionality. The web maintenance script posts to the internal goForm endpoint '/goform/Mail_Test' and uses several form parameters directly in a call to a system email utility without proper input validation. An unauthenticated remote attacker can supply crafted form data that injects shell commands, resulting in execution as root on the device. NOTE: The DNS-343 product line has been declared end-of-life.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://www.ipfire.org/blog/ipfire-2-29-core-update-198-released",
+          "url": "https://www.exploit-db.com/exploits/43845",
+          "type": "poc"
+        },
+        {
+          "url": "https://qkl.seebug.org/vuldb/ssvid-97088",
+          "type": "poc"
+        },
+        {
+          "url": "https://www.dlink.com/al/sq/products/dns-343-sharecenter-4-bay-network-storage-enclosure",
           "type": "reference"
         },
         {
-          "url": "https://bugzilla.ipfire.org/show_bug.cgi?id=13880",
-          "type": "reference"
+          "url": "https://github.com/jamesbercegay/advisories/blob/master/%5BGTSA-00128%5D%20D-Link%20DNS-343%20ShareCenter%201.05%20Remote%20Root.txt",
+          "type": "poc"
         },
         {
-          "url": "https://www.vulncheck.com/advisories/ipfire-stored-xss-via-multiple-methods-in-cleanhtml",
+          "url": "https://www.vulncheck.com/advisories/dlink-dns343-sharecenter-command-injection-via-goform-mail-test",
           "type": "reference"
         }
       ],
@@ -67,108 +95,63 @@
         {
           "defaultStatus": "unaffected",
           "modules": [
-            "/var/ipfire/header.pl"
+            "Web UI – maintenance/test_mail.asp -> /goform/Mail_Test goForm handler (goAhead/webs binary)"
           ],
-          "product": "IPFire",
-          "vendor": "IPFire.org",
+          "product": "DNS-343 ShareCenter",
+          "vendor": "D-Link",
           "versions": [
             {
-              "lessThan": "2.29 (Core Update 198)",
+              "lessThanOrEqual": "1.05",
               "status": "affected",
               "version": "0",
-              "versionType": "custom"
+              "versionType": "semver"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting')"
+        "CWE-78 Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-34310",
-      "publishedDate": "2025-10-28T14:34:18.157Z",
-      "lastModifiedDate": "2025-10-29T18:12:26.568Z",
-      "description": "IPFire versions prior to 2.29 (Core Update 198) contain a stored cross-site scripting (XSS) vulnerability that allows an authenticated attacker to inject arbitrary JavaScript code through the INC_SPD, OUT_SPD, DEFCLASS_INC, and DEFCLASS_OUT parameters when updating Quality of Service (QoS) settings. When a user updates speeds or classes, the application issues an HTTP POST request to /cgi-bin/qos.cgi and the values for incoming/outgoing speeds and default classes are provided in the INC_SPD, OUT_SPD, DEFCLASS_INC, and DEFCLASS_OUT parameters. The values of these parameters are stored and later rendered in the web interface without proper sanitation or encoding, allowing injected scripts to execute in the context of other users who view the affected QoS entries.",
+      "id": "CVE-2025-64102",
+      "publishedDate": "2025-10-29T18:36:15.390Z",
+      "lastModifiedDate": "2025-10-29T18:36:15.390Z",
+      "description": "Zitadel is open-source identity infrastructure software. Prior to 4.6.0, 3.4.3, and 2.71.18, an attacker can perform an online brute-force attack on OTP, TOTP, and passwords. While Zitadel allows preventing online brute force attacks in scenarios like TOTP, Email OTP, or passwords using a lockout mechanism. The mechanism is not enabled by default and can cause a denial of service for the corresponding user if enabled. Additionally, the mitigation strategies were not fully implemented in the more recent resource-based APIs. This vulnerability is fixed in 4.6.0, 3.4.3, and 2.71.18.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://www.ipfire.org/blog/ipfire-2-29-core-update-198-released",
+          "url": "https://github.com/zitadel/zitadel/security/advisories/GHSA-xrw9-r35x-x878",
           "type": "reference"
         },
         {
-          "url": "https://bugzilla.ipfire.org/show_bug.cgi?id=13883",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/ipfire-stored-xss-via-quality-of-service-settings",
+          "url": "https://github.com/zitadel/zitadel/commit/b8db8cdf9cc8ea13f461758aef12457f8b7d972a",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "unaffected",
-          "modules": [
-            "/cgi-bin/qos.cgi"
-          ],
-          "product": "IPFire",
-          "vendor": "IPFire.org",
+          "vendor": "zitadel",
+          "product": "zitadel",
           "versions": [
             {
-              "lessThan": "2.29 (Core Update 198)",
-              "status": "affected",
-              "version": "0",
-              "versionType": "custom"
+              "version": ">= 4.0.0-rc.1, < 4.6.0",
+              "status": "affected"
+            },
+            {
+              "version": ">= 3.0.0-rc.1, < 3.4.3",
+              "status": "affected"
+            },
+            {
+              "version": ">= 2.0.0, < 2.71.18",
+              "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-34315",
-      "publishedDate": "2025-10-28T14:33:54.312Z",
-      "lastModifiedDate": "2025-10-29T18:13:29.333Z",
-      "description": "IPFire versions prior to 2.29 (Core Update 198) contain a stored cross-site scripting (XSS) vulnerability that allows an authenticated attacker to inject arbitrary JavaScript code through the REMOTELOG_ADDR parameter when updating the remote syslog server address. When a user updates the Remote logging Syslog server, the application issues an HTTP POST request to /cgi-bin/logs.cgi/config.dat and the server address is provided in the REMOTELOG_ADDR parameter. The value of this parameter is stored and later rendered in the web interface without proper sanitation or encoding, allowing injected scripts to execute in the context of other users who view the affected configuration page.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://www.ipfire.org/blog/ipfire-2-29-core-update-198-released",
-          "type": "reference"
-        },
-        {
-          "url": "https://bugzilla.ipfire.org/show_bug.cgi?id=13890",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/ipfire-stored-xss-via-remote-syslog-server-address",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "modules": [
-            "/cgi-bin/logs.cgi/config.dat"
-          ],
-          "product": "IPFire",
-          "vendor": "IPFire.org",
-          "versions": [
-            {
-              "lessThan": "2.29 (Core Update 198)",
-              "status": "affected",
-              "version": "0",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting')"
+        "CWE-307: Improper Restriction of Excessive Authentication Attempts"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
