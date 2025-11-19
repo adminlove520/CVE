@@ -2,48 +2,139 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 1,
-    "last_updated": "2025-11-19T19:15:53.864139",
+    "total_count": 3,
+    "last_updated": "2025-11-19T19:30:06.069953",
     "severity_distribution": {
       "critical": 0,
-      "high": 0,
-      "medium": 0,
+      "high": 1,
+      "medium": 2,
       "low": 0,
-      "none": 1
+      "none": 0
     }
   },
   "cves": [
     {
-      "id": "CVE-2025-65094",
-      "publishedDate": "2025-11-19T19:06:21.569Z",
-      "lastModifiedDate": "2025-11-19T19:06:21.569Z",
-      "description": "WBCE CMS is a content management system. Prior to version 1.6.4, a low-privileged user in WBCE CMS can escalate their privileges to the Administrators group by manipulating the groups[] parameter in the /admin/users/save.php request. The UI restricts users to assigning only their existing group, but server-side validation is missing, allowing attackers to overwrite their group membership and obtain full administrative access. This results in a complete compromise of the CMS. This issue has been patched in version 1.6.4.",
-      "severity": "N/A",
+      "id": "CVE-2025-65103",
+      "publishedDate": "2025-11-19T19:09:09.209Z",
+      "lastModifiedDate": "2025-11-19T19:09:09.209Z",
+      "description": "OpenSTAManager is an open source management software for technical assistance and invoicing. Prior to version 2.9.5, an authenticated SQL Injection vulnerability in the API allows any user, regardless of permission level, to execute arbitrary SQL queries. By manipulating the display parameter in an API request, an attacker can exfiltrate, modify, or delete any data in the database, leading to a full system compromise. This issue has been patched in version 2.9.5.",
+      "severity": 8.8,
       "references": [
         {
-          "url": "https://github.com/WBCE/WBCE_CMS/security/advisories/GHSA-hmmw-4ccm-fx44",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/WBCE/WBCE_CMS/commit/96046178f4c80cf16f7c224054dec7fdadddda7e",
+          "url": "https://github.com/devcode-it/openstamanager/security/advisories/GHSA-2jm2-2p35-rp3j",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "WBCE",
-          "product": "WBCE_CMS",
+          "vendor": "devcode-it",
+          "product": "openstamanager",
           "versions": [
             {
-              "version": "< 1.6.4",
+              "version": "< 2.9.5",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-266: Incorrect Privilege Assignment",
-        "CWE-285: Improper Authorization"
+        "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-12770",
+      "publishedDate": "2025-11-19T03:29:39.208Z",
+      "lastModifiedDate": "2025-11-19T19:10:18.802Z",
+      "description": "The New User Approve plugin for WordPress is vulnerable to unauthorized data disclosure in all versions up to, and including, 3.0.9 due to insufficient API key validation using loose equality comparison. This makes it possible for unauthenticated attackers to retrieve personally identifiable information (PII), including usernames and email addresses of users with various approval statuses via the Zapier REST API endpoints, by exploiting PHP type juggling with the api_key parameter set to \"0\" on sites where the Zapier API key has not been configured.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/3f1cf77a-64b4-405b-adcb-ef16d9e82ab2?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/new-user-approve/tags/3.0.9/includes/zapier/includes/rest-api.php#L104",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/new-user-approve/tags/3.0.9/includes/zapier/includes/rest-api.php#L40",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/new-user-approve/trunk/includes/zapier/includes/rest-api.php#L104",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "saadiqbal",
+          "product": "New User Approve",
+          "versions": [
+            {
+              "version": "*",
+              "status": "affected",
+              "lessThanOrEqual": "3.0.9",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-200 Exposure of Sensitive Information to an Unauthorized Actor"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-12777",
+      "publishedDate": "2025-11-19T03:29:38.579Z",
+      "lastModifiedDate": "2025-11-19T19:09:51.646Z",
+      "description": "The YITH WooCommerce Wishlist plugin for WordPress is vulnerable to authorization bypass in all versions up to, and including, 4.10.0. This is due to the plugin not properly verifying that a user is authorized to perform actions on the REST API /wp-json/yith/wishlist/v1/lists endpoint (which uses permission_callback => '__return_true') and the AJAX delete_item handler (which only checks nonce validity without verifying object-level authorization). This makes it possible for unauthenticated attackers to disclose wishlist tokens for any user and subsequently delete wishlist items by chaining the REST API authorization bypass with the exposed delete_item nonce on shared wishlist pages and the AJAX handler's missing object-level authorization check.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/0088a97c-5a06-4500-a923-242499596aca?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/yith-woocommerce-wishlist/tags/4.10.0/includes/rest-api/controllers/v1/class-yith-wcwl-rest-v1-lists-controller.php#L56",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/yith-woocommerce-wishlist/tags/4.10.0/includes/rest-api/controllers/v1/class-yith-wcwl-rest-v1-lists-controller.php#L96",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/yith-woocommerce-wishlist/tags/4.10.0/includes/class-yith-wcwl-frontend.php#L740",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/yith-woocommerce-wishlist/tags/4.10.0/includes/class-yith-wcwl-ajax-handler.php#L222",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&new=3394933%40yith-woocommerce-wishlist%2Ftrunk&old=3379519%40yith-woocommerce-wishlist%2Ftrunk&sfp_email=&sfph_mail=#file0",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "yithemes",
+          "product": "YITH WooCommerce Wishlist",
+          "versions": [
+            {
+              "version": "*",
+              "status": "affected",
+              "lessThanOrEqual": "4.10.0",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-285 Improper Authorization"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
