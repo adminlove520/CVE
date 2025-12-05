@@ -2,494 +2,123 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 12,
-    "last_updated": "2025-12-05T18:50:48.205952",
+    "total_count": 3,
+    "last_updated": "2025-12-05T19:12:15.730639",
     "severity_distribution": {
-      "critical": 1,
-      "high": 3,
-      "medium": 2,
-      "low": 2,
-      "none": 4
+      "critical": 0,
+      "high": 2,
+      "medium": 0,
+      "low": 0,
+      "none": 1
     }
   },
   "cves": [
     {
-      "id": "CVE-2025-66570",
-      "publishedDate": "2025-12-05T18:18:02.928Z",
-      "lastModifiedDate": "2025-12-05T18:40:09.318Z",
-      "description": "cpp-httplib is a C++11 single-file header-only cross platform HTTP/HTTPS library. Prior to 0.27.0, a vulnerability allows attacker-controlled HTTP headers to influence server-visible metadata, logging, and authorization decisions. An attacker can inject headers named REMOTE_ADDR, REMOTE_PORT, LOCAL_ADDR, LOCAL_PORT that are parsed into the request header multimap via read_headers() in httplib.h (headers.emplace), then the server later appends its own internal metadata using the same header names in Server::process_request without erasing duplicates. Because Request::get_header_value returns the first entry for a header key (id == 0) and the client-supplied headers are parsed before server-inserted headers, downstream code that uses these header names may inadvertently use attacker-controlled values. Affected files/locations: cpp-httplib/httplib.h (read_headers, Server::process_request, Request::get_header_value, get_header_value_u64) and cpp-httplib/docker/main.cc (get_client_ip, nginx_access_logger, nginx_error_logger). Attack surface: attacker-controlled HTTP headers in incoming requests flow into the Request.headers multimap and into logging code that reads forwarded headers, enabling IP spoofing, log poisoning, and authorization bypass via header shadowing. This vulnerability is fixed in 0.27.0.",
-      "severity": 10,
+      "id": "CVE-2025-66644",
+      "publishedDate": "2025-12-05T00:00:00.000Z",
+      "lastModifiedDate": "2025-12-05T19:04:17.037Z",
+      "description": "Array Networks ArrayOS AG before 9.4.5.9 allows command injection, as exploited in the wild in August through December 2025.",
+      "severity": 7.2,
       "references": [
         {
-          "url": "https://github.com/yhirose/cpp-httplib/security/advisories/GHSA-xm2j-vfr9-mg9m",
+          "url": "https://www.jpcert.or.jp/at/2025/at250024.html",
           "type": "reference"
         },
         {
-          "url": "https://github.com/yhirose/cpp-httplib/commit/ac9ebb0ee333ce8bf13523f487bdfad9518a2aff",
+          "url": "https://x.com/ArraySupport/status/1921373397533032590",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.bleepingcomputer.com/news/security/hackers-are-exploiting-arrayos-ag-vpn-flaw-to-plant-webshells/",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "yhirose",
-          "product": "cpp-httplib",
-          "versions": [
-            {
-              "version": "< 0.27.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-290: Authentication Bypass by Spoofing",
-        "CWE-345: Insufficient Verification of Data Authenticity",
-        "CWE-807: Reliance on Untrusted Inputs in a Security Decision"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-66624",
-      "publishedDate": "2025-12-05T18:36:26.280Z",
-      "lastModifiedDate": "2025-12-05T18:36:26.280Z",
-      "description": "BACnet Protocol Stack library provides a BACnet application layer, network layer and media access (MAC) layer communications services. Prior to 1.5.0.rc2, The npdu_is_expected_reply function in src/bacnet/npdu.c indexes request_pdu[offset+2/3/5] and reply_pdu[offset+1/2/4] without verifying that those APDU bytes exist. bacnet_npdu_decode() can return offset == 2 for a 2-byte NPDU, so tiny PDUs pass the version check and then get read out of bounds. On ASan/MPU/strict builds this is an immediate crash (DoS). On unprotected builds it is undefined behavior and can mis-route replies; RCE is unlikely because only reads occur, but DoS is reliable.",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://github.com/bacnet-stack/bacnet-stack/security/advisories/GHSA-8wgw-5h6x-qgqg",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/bacnet-stack/bacnet-stack/commit/9378f7d1e70169ebde4a5090bae7603703eadf48",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "bacnet-stack",
-          "product": "bacnet-stack",
-          "versions": [
-            {
-              "version": "< 1.5.0.rc2",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-125: Out-of-bounds Read"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-65945",
-      "publishedDate": "2025-12-04T18:45:37.517Z",
-      "lastModifiedDate": "2025-12-05T18:31:52.043Z",
-      "description": "auth0/node-jws is a JSON Web Signature implementation for Node.js. In versions 3.2.2 and earlier and version 4.0.0, auth0/node-jws has an improper signature verification vulnerability when using the HS256 algorithm under specific conditions. Applications are affected when they use the jws.createVerify() function for HMAC algorithms and use user-provided data from the JSON Web Signature protected header or payload in HMAC secret lookup routines, which can allow attackers to bypass signature verification. This issue has been patched in versions 3.2.3 and 4.0.1.",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://github.com/auth0/node-jws/security/advisories/GHSA-869p-cjfg-cm3x",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/auth0/node-jws/commit/34c45b2c04434f925b638de6a061de9339c0ea2e",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "auth0",
-          "product": "node-jws",
-          "versions": [
-            {
-              "version": "< 3.2.3",
-              "status": "affected"
-            },
-            {
-              "version": ">= 4.0.0, <= 4.0.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-347: Improper Verification of Cryptographic Signature"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-66623",
-      "publishedDate": "2025-12-05T18:31:30.635Z",
-      "lastModifiedDate": "2025-12-05T18:31:30.635Z",
-      "description": "Strimzi provides a way to run an Apache Kafka cluster on Kubernetes or OpenShift in various deployment configurations. From 0.47.0 and prior to 0.49.1, in some situations, Strimzi creates an incorrect Kubernetes Role which grants the Apache Kafka Connect and Apache Kafka MirrorMaker 2 operands the GET access to all Kubernetes Secrets that exist in the given Kubernetes namespace. The issue is fixed in Strimzi 0.49.1.",
-      "severity": 7.4,
-      "references": [
-        {
-          "url": "https://github.com/strimzi/strimzi-kafka-operator/security/advisories/GHSA-xrhh-hx36-485q",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/strimzi/strimzi-kafka-operator/commit/c8a14935e99c91eb0dd865431f46515da9f82ccc",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "strimzi",
-          "product": "strimzi-kafka-operator",
-          "versions": [
-            {
-              "version": ">= 0.47.0, < 0.49.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor",
-        "CWE-863: Incorrect Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-66577",
-      "publishedDate": "2025-12-05T18:20:25.852Z",
-      "lastModifiedDate": "2025-12-05T18:29:10.535Z",
-      "description": "cpp-httplib is a C++11 single-file header-only cross platform HTTP/HTTPS library. Prior to 0.27.0, a vulnerability allows attacker-controlled HTTP headers to influence server-visible metadata, logging, and authorization decisions. An attacker can supply X-Forwarded-For or X-Real-IP headers which get accepted unconditionally by get_client_ip() in docker/main.cc, causing access and error logs (nginx_access_logger / nginx_error_logger) to record spoofed client IPs (log poisoning / audit evasion). This vulnerability is fixed in 0.27.0.",
-      "severity": 5.3,
-      "references": [
-        {
-          "url": "https://github.com/yhirose/cpp-httplib/security/advisories/GHSA-gfpf-r66f-5mh2",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/yhirose/cpp-httplib/commit/ac9ebb0ee333ce8bf13523f487bdfad9518a2aff",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "yhirose",
-          "product": "cpp-httplib",
-          "versions": [
-            {
-              "version": "< 0.27.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-117: Improper Output Neutralization for Logs",
-        "CWE-807: Reliance on Untrusted Inputs in a Security Decision"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-66552",
-      "publishedDate": "2025-12-05T16:36:39.749Z",
-      "lastModifiedDate": "2025-12-05T18:25:06.200Z",
-      "description": "Nextcloud Server is a self hosted personal cloud system. In Nextcloud Server and Enterprise Server prior to 30.0.9 and 31.0.1, incorrect path handling with groupfolders caused the admin_audit app to not properly log all actions on files and folders inside groupfolders. This vulnerability is fixed in Nextcloud Server and Enterprise Server prior to 30.0.9 and 31.0.1.",
-      "severity": 4.3,
-      "references": [
-        {
-          "url": "https://github.com/nextcloud/security-advisories/security/advisories/GHSA-ww9m-f8j4-jj9x",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/nextcloud/server/pull/50992",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/nextcloud/server/commit/7cc005c43c72bc384848cf8cb851895827c412f6",
-          "type": "reference"
-        },
-        {
-          "url": "https://hackerone.com/reports/2890071",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "nextcloud",
-          "product": "security-advisories",
-          "versions": [
-            {
-              "version": ">= 32.0.0beta1, < 32.0.1",
-              "status": "affected"
-            },
-            {
-              "version": "< 31.0.9",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-778: Insufficient Logging"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-66546",
-      "publishedDate": "2025-12-05T16:49:46.553Z",
-      "lastModifiedDate": "2025-12-05T18:32:44.271Z",
-      "description": "Nextcloud Calendar is a calendar app for Nextcloud. Prior to 4.7.19, 5.5.6, and 6.0.1, the calendar app allowed blindly booking appointments with a squential ID without known the appointment token. This vulnerability is fixed in 4.7.19, 5.5.6, and 6.0.1.",
-      "severity": 3.3,
-      "references": [
-        {
-          "url": "https://github.com/nextcloud/security-advisories/security/advisories/GHSA-7x2j-2674-fj95",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/nextcloud/calendar/pull/7537",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/nextcloud/calendar/commit/f41650c3681fc4a4130eb883f5c0899c011326b3",
-          "type": "reference"
-        },
-        {
-          "url": "https://hackerone.com/reports/3275810",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "nextcloud",
-          "product": "security-advisories",
-          "versions": [
-            {
-              "version": ">= 6.0.0-rc.1, < 6.0.1",
-              "status": "affected"
-            },
-            {
-              "version": ">= 5.0.0-rc.1, < 5.5.6",
-              "status": "affected"
-            },
-            {
-              "version": ">= 3.0.0-beta1, < 4.7.19",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-639: Authorization Bypass Through User-Controlled Key"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-66558",
-      "publishedDate": "2025-12-05T18:00:49.792Z",
-      "lastModifiedDate": "2025-12-05T18:35:53.477Z",
-      "description": "Nextcloud Twofactor WebAuthn is the WebAuthn Two-Factor Provider for Nextcloud. Prior to 1.4.2 and 2.4.1, a missing ownership check allowed an attack to take-away a 2FA webauthn device when correctly guessing a 80-128 character long random string of letters, numbers and symbols. The victim would then be prompted to register a new device on the next login. The attacker can not authenticate as the victim. This vulnerability is fixed in 1.4.2 and 2.4.1.",
-      "severity": 3.1,
-      "references": [
-        {
-          "url": "https://github.com/nextcloud/security-advisories/security/advisories/GHSA-fr8x-mvjg-wf9q",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/nextcloud/twofactor_webauthn/pull/881",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/nextcloud/twofactor_webauthn/commit/5d2302166d31ee2e01b2e21556bd5372156da13d",
-          "type": "reference"
-        },
-        {
-          "url": "https://hackerone.com/reports/3360354",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "nextcloud",
-          "product": "security-advisories",
-          "versions": [
-            {
-              "version": "< 1.4.2",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.0.0-beta.1, < 2.4.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-639: Authorization Bypass Through User-Controlled Key"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-66581",
-      "publishedDate": "2025-12-05T18:26:20.622Z",
-      "lastModifiedDate": "2025-12-05T18:26:20.622Z",
-      "description": "Frappe Learning Management System (LMS) is a learning system that helps users structure their content. Prior to 2.41.0, a flaw in the server-side authorization logic allowed authenticated users to perform actions beyond their assigned roles across multiple features. Because the affected endpoints relied on client-side or UI-level checks instead of enforcing permissions on the server, users with low-privileged roles (such as students) could perform operations intended only for instructors or administrators via directly using the API's. This vulnerability is fixed in 2.41.0.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/frappe/lms/security/advisories/GHSA-2ch7-c74m-432m",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "frappe",
-          "product": "lms",
-          "versions": [
-            {
-              "version": "< 2.41.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-863: Incorrect Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-66566",
-      "publishedDate": "2025-12-05T18:10:16.470Z",
-      "lastModifiedDate": "2025-12-05T18:27:32.797Z",
-      "description": "yawkat LZ4 Java provides LZ4 compression for Java. Insufficient clearing of the output buffer in Java-based decompressor implementations in lz4-java 1.10.0 and earlier allows remote attackers to read previous buffer contents via crafted compressed input. In applications where the output buffer is reused without being cleared, this may lead to disclosure of sensitive data. JNI-based implementations are not affected. This vulnerability is fixed in 1.10.1.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/yawkat/lz4-java/security/advisories/GHSA-cmp6-m4wj-q63q",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/yawkat/lz4-java/commit/33d180cb70c4d93c80fb0dc3ab3002f457e93840",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "yawkat",
-          "product": "lz4-java",
-          "versions": [
-            {
-              "version": "< 1.10.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-201: Insertion of Sensitive Information Into Sent Data"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-66562",
-      "publishedDate": "2025-12-05T18:03:55.770Z",
-      "lastModifiedDate": "2025-12-05T18:29:59.430Z",
-      "description": "TUUI is a desktop MCP client designed as a tool unitary utility integration. Prior to 1.3.4, a critical Remote Code Execution (RCE) vulnerability exists in Tuui due to an unsafe Cross-Site Scripting (XSS) flaw in the Markdown rendering component. Tuui allows the execution of arbitrary JavaScript within ECharts code blocks. Combined with an exposed IPC interface that allows spawning processes, an attacker can execute arbitrary system commands on the victim's machine simply by having them view a malicious Markdown message. This vulnerability is fixed in 1.3.4.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/AI-QL/tuui/security/advisories/GHSA-qjhq-rgmr-6c3g",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/AI-QL/tuui/commit/f673fa5b4d76e8236c7d9506d0727875cfa79cc1",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/AI-QL/tuui/releases/tag/v1.3.4",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "AI-QL",
-          "product": "tuui",
-          "versions": [
-            {
-              "version": "< 1.3.4",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
-        "CWE-94: Improper Control of Generation of Code ('Code Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-66516",
-      "publishedDate": "2025-12-04T16:17:24.980Z",
-      "lastModifiedDate": "2025-12-05T18:26:45.375Z",
-      "description": "Critical XXE in Apache Tika tika-core (1.13-3.2.1), tika-pdf-module (2.0.0-3.2.1) and tika-parsers (1.13-1.28.5) modules on all platforms allows an attacker to carry out XML External Entity injection via a crafted XFA file inside of a PDF. \n\nThis CVE covers the same vulnerability as in CVE-2025-54988. However, this CVE expands the scope of affected packages in two ways. \n\nFirst, while the entrypoint for the vulnerability was the tika-parser-pdf-module as reported in CVE-2025-54988, the vulnerability and its fix were in tika-core. Users who upgraded the tika-parser-pdf-module but did not upgrade tika-core to >= 3.2.2 would still be vulnerable. \n\nSecond, the original report failed to mention that in the 1.x Tika releases, the PDFParser was in the \"org.apache.tika:tika-parsers\" module.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://lists.apache.org/thread/s5x3k93nhbkqzztp1olxotoyjpdlps9k",
-          "type": "reference"
-        },
-        {
-          "url": "https://cve.org/CVERecord?id=CVE-2025-54988",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://repo.maven.apache.org/maven2",
           "defaultStatus": "unaffected",
-          "packageName": "org.apache.tika:tika-core",
-          "product": "Apache Tika core",
-          "vendor": "Apache Software Foundation",
+          "product": "ArrayOS AG",
+          "vendor": "Array Networks",
           "versions": [
             {
-              "lessThanOrEqual": "3.2.1",
+              "lessThan": "9.4.5.9",
               "status": "affected",
-              "version": "1.13",
-              "versionType": "semver"
+              "version": "0",
+              "versionType": "custom"
             }
           ]
-        },
+        }
+      ],
+      "problemType": [
+        "CWE-78 Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-46603",
+      "publishedDate": "2025-12-05T19:01:28.898Z",
+      "lastModifiedDate": "2025-12-05T19:01:28.898Z",
+      "description": "Dell CloudBoost Virtual Appliance, versions 19.13.0.0 and prior, contains an Improper Restriction of Excessive Authentication Attempts vulnerability. An unauthenticated attacker with remote access could potentially exploit this vulnerability, leading to unauthorized access.",
+      "severity": 7,
+      "references": [
         {
-          "collectionURL": "https://repo.maven.apache.org/maven2",
+          "url": "https://www.dell.com/support/kbdoc/en-us/000397417/dsa-2025-387-security-update-for-dell-cloudboost-virtual-appliance-multiple-vulnerabilities",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
           "defaultStatus": "unaffected",
-          "packageName": "org.apache.tika:tika-parsers",
-          "product": "Apache Tika parsers",
-          "vendor": "Apache Software Foundation",
+          "product": "CloudBoost Virtual Appliance",
+          "vendor": "Dell",
           "versions": [
             {
-              "lessThan": "2.0.0",
+              "lessThan": "19.13.0.2",
               "status": "affected",
-              "version": "1.13",
-              "versionType": "semver"
-            }
-          ]
-        },
-        {
-          "collectionURL": "https://repo.maven.apache.org/maven2",
-          "defaultStatus": "unaffected",
-          "packageName": "org.apache.tika:tika-parser-pdf-module",
-          "product": "Apache Tika PDF parser module",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThanOrEqual": "3.2.1",
-              "status": "affected",
-              "version": "2.0.0",
+              "version": "N/A",
               "versionType": "semver"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-611 Improper Restriction of XML External Entity Reference"
+        "CWE-307: Improper Restriction of Excessive Authentication Attempts"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-65841",
+      "publishedDate": "2025-12-03T00:00:00.000Z",
+      "lastModifiedDate": "2025-12-05T19:03:51.235Z",
+      "description": "Aquarius Desktop 3.0.069 for macOS stores user authentication credentials in the local file ~/Library/Application Support/Aquarius/aquarius.settings using a weak obfuscation scheme. The password is \"encrypted\" through predictable byte-substitution that can be trivially reversed, allowing immediate recovery of the plaintext value. Any attacker who can read this settings file can fully compromise the victim's Aquarius account by importing the stolen configuration into their own client or login through the vendor website. This results in complete account takeover, unauthorized access to cloud-synchronized data, and the ability to perform authenticated actions as the user.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "http://acustica.com",
+          "type": "reference"
+        },
+        {
+          "url": "http://aquarius.com",
+          "type": "reference"
+        },
+        {
+          "url": "https://almightysec.com/account-takeover-via-weak-encryption/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "n/a",
+          "versions": [
+            {
+              "version": "n/a",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "n/a"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
