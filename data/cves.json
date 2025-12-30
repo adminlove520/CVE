@@ -2,15 +2,126 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 0,
-    "last_updated": "2025-12-30T19:57:49.778643",
+    "total_count": 2,
+    "last_updated": "2025-12-30T20:33:08.935461",
     "severity_distribution": {
       "critical": 0,
       "high": 0,
       "medium": 0,
       "low": 0,
-      "none": 0
+      "none": 2
     }
   },
-  "cves": []
+  "cves": [
+    {
+      "id": "CVE-2025-14986",
+      "publishedDate": "2025-12-30T20:17:47.201Z",
+      "lastModifiedDate": "2025-12-30T20:17:47.201Z",
+      "description": "When frontend.enableExecuteMultiOperation is enabled, the server can apply namespace-scoped validation and feature gates for the embedded StartWorkflowExecutionRequest using its Namespace field rather than the outer, authorized ExecuteMultiOperationRequest.Namespace. This allows a caller authorized for one namespace to bypass that namespace's limits/policies by setting the embedded start request's namespace to a different namespace. The workflow is still created in the outer (authorized) namespace; only validation/gating is performed under the wrong namespace context.\nThis issue affects Temporal: from 1.24.0 through 1.29.1. Fixed in 1.27.4, 1.28.2, 1.29.2.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/temporalio/temporal/releases/tag/v1.27.4",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/temporalio/temporal/releases/tag/v1.28.2",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/temporalio/temporal/releases/tag/v1.29.2",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://github.com/temporalio/temporal",
+          "defaultStatus": "unaffected",
+          "packageName": "temporal",
+          "product": "Temporal",
+          "repo": "https://github.com/temporalio/temporal",
+          "vendor": "Temporal",
+          "versions": [
+            {
+              "lessThanOrEqual": "1.29.1",
+              "status": "affected",
+              "version": "1.24.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThanOrEqual": "1.28.1",
+              "status": "affected",
+              "version": "1.24.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThanOrEqual": "1.27.3",
+              "status": "affected",
+              "version": "1.24.0",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-863 Incorrect Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-14987",
+      "publishedDate": "2025-12-30T20:16:20.154Z",
+      "lastModifiedDate": "2025-12-30T20:16:20.154Z",
+      "description": "When system.enableCrossNamespaceCommands is enabled (on by default), the Temporal server permits certain workflow task commands (e.g. StartChildWorkflowExecution, SignalExternalWorkflowExecution, RequestCancelExternalWorkflowExecution) to target a different namespace than the namespace authorized at the gRPC boundary. The frontend authorizes RespondWorkflowTaskCompleted based on the outer request namespace, but the history service later resolves and executes the command using the namespace embedded in command attributes without authorizing the caller for that target namespace. This can allow a worker authorized for one namespace to create, signal, or cancel workflows in another namespace.\nThis issue affects Temporal: through 1.29.1. Fixed in 1.27.4, 1.28.2, 1.29.2.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/temporalio/temporal/releases/tag/v1.27.4",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/temporalio/temporal/releases/tag/v1.28.2",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/temporalio/temporal/releases/tag/v1.29.2",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://github.com/temporalio/temporal",
+          "defaultStatus": "unaffected",
+          "packageName": "temporal",
+          "product": "Temporal",
+          "repo": "https://github.com/temporalio/temporal",
+          "vendor": "Temporal",
+          "versions": [
+            {
+              "lessThanOrEqual": "1.29.1",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            },
+            {
+              "lessThanOrEqual": "1.28.1",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            },
+            {
+              "lessThanOrEqual": "1.27.3",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-863 Incorrect Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    }
+  ]
 }
