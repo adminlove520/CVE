@@ -2,47 +2,152 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 1,
-    "last_updated": "2026-01-07T22:32:35.073266",
+    "total_count": 4,
+    "last_updated": "2026-01-07T22:51:08.946346",
     "severity_distribution": {
       "critical": 0,
-      "high": 0,
-      "medium": 0,
+      "high": 1,
+      "medium": 1,
       "low": 0,
-      "none": 1
+      "none": 2
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-21441",
-      "publishedDate": "2026-01-07T22:09:01.936Z",
-      "lastModifiedDate": "2026-01-07T22:13:57.482Z",
-      "description": "urllib3 is an HTTP client library for Python. urllib3's streaming API is designed for the efficient handling of large HTTP responses by reading the content in chunks, rather than loading the entire response body into memory at once. urllib3 can perform decoding or decompression based on the HTTP `Content-Encoding` header (e.g., `gzip`, `deflate`, `br`, or `zstd`). When using the streaming API, the library decompresses only the necessary bytes, enabling partial content consumption. Starting in version 1.22 and prior to version 2.6.3, for HTTP redirect responses, the library would read the entire response body to drain the connection and decompress the content unnecessarily. This decompression occurred even before any read methods were called, and configured read limits did not restrict the amount of decompressed data. As a result, there was no safeguard against decompression bombs. A malicious server could exploit this to trigger excessive resource consumption on the client. Applications and libraries are affected when they stream content from untrusted sources by setting `preload_content=False` when they do not disable redirects. Users should upgrade to at least urllib3 v2.6.3, in which the library does not decode content of redirect responses when `preload_content=False`. If upgrading is not immediately possible, disable redirects by setting `redirect=False` for requests to untrusted source.",
-      "severity": "N/A",
+      "id": "CVE-2025-69262",
+      "publishedDate": "2026-01-07T22:30:07.428Z",
+      "lastModifiedDate": "2026-01-07T22:30:07.428Z",
+      "description": "pnpm is a package manager. Versions 6.25.0 through 10.26.2 have a Command Injection vulnerability when using environment variable substitution in .npmrc configuration files with tokenHelper settings. An attacker who can control environment variables during pnpm operations could achieve Remote Code Execution (RCE) in build environments. This issue is fixed in version 10.27.0.",
+      "severity": 7.6,
       "references": [
         {
-          "url": "https://github.com/urllib3/urllib3/security/advisories/GHSA-38jv-5279-wg99",
+          "url": "https://github.com/pnpm/pnpm/security/advisories/GHSA-2phv-j68v-wwqx",
           "type": "reference"
         },
         {
-          "url": "https://github.com/urllib3/urllib3/commit/8864ac407bba8607950025e0979c4c69bc7abc7b",
+          "url": "https://github.com/pnpm/pnpm/releases/tag/v10.27.0",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "urllib3",
-          "product": "urllib3",
+          "vendor": "pnpm",
+          "product": "pnpm",
           "versions": [
             {
-              "version": ">= 1.22, < 2.6.3",
+              "version": ">=6.25.0, < 10.27.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-409: Improper Handling of Highly Compressed Data (Data Amplification)"
+        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')",
+        "CWE-94: Improper Control of Generation of Code ('Code Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-21851",
+      "publishedDate": "2026-01-07T22:27:19.410Z",
+      "lastModifiedDate": "2026-01-07T22:27:19.410Z",
+      "description": "MONAI (Medical Open Network for AI) is an AI toolkit for health care imaging. In versions up to and including 1.5.1, a Path Traversal (Zip Slip) vulnerability exists in MONAI's `_download_from_ngc_private()` function. The function uses `zipfile.ZipFile.extractall()` without path validation, while other similar download functions in the same codebase properly use the existing `safe_extract_member()` function. Commit 4014c8475626f20f158921ae0cf98ed259ae4d59 fixes this issue.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://github.com/Project-MONAI/MONAI/security/advisories/GHSA-9rg3-9pvr-6p27",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/Project-MONAI/MONAI/commit/4014c8475626f20f158921ae0cf98ed259ae4d59",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Project-MONAI",
+          "product": "MONAI",
+          "versions": [
+            {
+              "version": "<= 1.5.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-21857",
+      "publishedDate": "2026-01-07T22:32:15.859Z",
+      "lastModifiedDate": "2026-01-07T22:32:35.974Z",
+      "description": "REDAXO is a PHP-based content management system. Prior to version 5.20.2, authenticated users with backup permissions can read arbitrary files within the webroot via path traversal in the Backup addon's file export functionality. The Backup addon does not validate the `EXPDIR` POST parameter against the UI-generated allowlist of permitted directories. An attacker can supply relative paths containing `../` sequences (or even absolute paths inside the document root) to include any readable file in the generated `.tar.gz` archive. Version 5.20.2 fixes this issue.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/redaxo/redaxo/security/advisories/GHSA-824x-88xg-cwrv",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/redaxo/redaxo/releases/tag/5.20.2",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "redaxo",
+          "product": "redaxo",
+          "versions": [
+            {
+              "version": "< 5.20.2",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-24: Path Traversal: '../filedir'",
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-21697",
+      "publishedDate": "2026-01-07T22:29:57.393Z",
+      "lastModifiedDate": "2026-01-07T22:29:57.393Z",
+      "description": "axios4go is a Go HTTP client library. Prior to version 0.6.4, a race condition vulnerability exists in the shared HTTP client configuration. The global `defaultClient` is mutated during request execution without synchronization, directly modifying the shared `http.Client`'s `Transport`, `Timeout`, and `CheckRedirect` properties. Impacted applications include that that use axios4go with concurrent requests (multiple goroutines, `GetAsync`, `PostAsync`, etc.), those where different requests use different proxy configurations, and those that handle sensitive data (authentication credentials, tokens, API keys). Version 0.6.4 fixes this issue.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/rezmoss/axios4go/security/advisories/GHSA-cmj9-27wj-7x47",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/rezmoss/axios4go/commit/b651604c64e66a115ab90cdab358b0181d74a842",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/rezmoss/axios4go/releases/tag/v0.6.4",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "rezmoss",
+          "product": "axios4go",
+          "versions": [
+            {
+              "version": "< 0.6.4",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-362: Concurrent Execution using Shared Resource with Improper Synchronization ('Race Condition')"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
