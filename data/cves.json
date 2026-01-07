@@ -2,171 +2,47 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 4,
-    "last_updated": "2026-01-07T21:59:23.523448",
+    "total_count": 1,
+    "last_updated": "2026-01-07T22:32:35.073266",
     "severity_distribution": {
       "critical": 0,
-      "high": 1,
-      "medium": 3,
+      "high": 0,
+      "medium": 0,
       "low": 0,
-      "none": 0
+      "none": 1
     }
   },
   "cves": [
     {
-      "id": "CVE-2025-69264",
-      "publishedDate": "2026-01-07T21:53:09.806Z",
-      "lastModifiedDate": "2026-01-07T21:53:09.806Z",
-      "description": "pnpm is a package manager. Versions 10.0.0 through 10.25 allow git-hosted dependencies to execute arbitrary code during pnpm install, circumventing the v10 security feature \"Dependency lifecycle scripts execution disabled by default\". While pnpm v10 blocks postinstall scripts via the onlyBuiltDependencies mechanism, git dependencies can still execute prepare, prepublish, and prepack scripts during the fetch phase, enabling remote code execution without user consent or approval. This issue is fixed in version 10.26.0.",
-      "severity": 8.8,
+      "id": "CVE-2026-21441",
+      "publishedDate": "2026-01-07T22:09:01.936Z",
+      "lastModifiedDate": "2026-01-07T22:13:57.482Z",
+      "description": "urllib3 is an HTTP client library for Python. urllib3's streaming API is designed for the efficient handling of large HTTP responses by reading the content in chunks, rather than loading the entire response body into memory at once. urllib3 can perform decoding or decompression based on the HTTP `Content-Encoding` header (e.g., `gzip`, `deflate`, `br`, or `zstd`). When using the streaming API, the library decompresses only the necessary bytes, enabling partial content consumption. Starting in version 1.22 and prior to version 2.6.3, for HTTP redirect responses, the library would read the entire response body to drain the connection and decompress the content unnecessarily. This decompression occurred even before any read methods were called, and configured read limits did not restrict the amount of decompressed data. As a result, there was no safeguard against decompression bombs. A malicious server could exploit this to trigger excessive resource consumption on the client. Applications and libraries are affected when they stream content from untrusted sources by setting `preload_content=False` when they do not disable redirects. Users should upgrade to at least urllib3 v2.6.3, in which the library does not decode content of redirect responses when `preload_content=False`. If upgrading is not immediately possible, disable redirects by setting `redirect=False` for requests to untrusted source.",
+      "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/pnpm/pnpm/security/advisories/GHSA-379q-355j-w6rj",
+          "url": "https://github.com/urllib3/urllib3/security/advisories/GHSA-38jv-5279-wg99",
           "type": "reference"
         },
         {
-          "url": "https://github.com/pnpm/pnpm/commit/73cc63504d9bc360c43e4b2feb9080677f03c5b5",
+          "url": "https://github.com/urllib3/urllib3/commit/8864ac407bba8607950025e0979c4c69bc7abc7b",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "pnpm",
-          "product": "pnpm",
+          "vendor": "urllib3",
+          "product": "urllib3",
           "versions": [
             {
-              "version": "> 10.0.0, < 10.26.0",
+              "version": ">= 1.22, < 2.6.3",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-693: Protection Mechanism Failure"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-21690",
-      "publishedDate": "2026-01-07T21:50:25.822Z",
-      "lastModifiedDate": "2026-01-07T21:50:25.822Z",
-      "description": "iccDEV provides a set of libraries and tools that allow for the interaction, manipulation, and application of International Color Consortium (ICC) color management profiles. Versions prior to 2.3.1.2 have a Type Confusion vulnerability in `CIccTagXmlTagData::ToXml()`. This vulnerability affects users of the iccDEV library who process ICC color profiles. Version 2.3.1.2 contains a patch. No known workarounds are available.",
-      "severity": 6.3,
-      "references": [
-        {
-          "url": "https://github.com/InternationalColorConsortium/iccDEV/security/advisories/GHSA-2f26-vh48-38g6",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/InternationalColorConsortium/iccDEV/issues/393",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/InternationalColorConsortium/iccDEV/pull/426",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "InternationalColorConsortium",
-          "product": "iccDEV",
-          "versions": [
-            {
-              "version": "< 2.3.1.2",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-20: Improper Input Validation",
-        "CWE-457: Use of Uninitialized Variable",
-        "CWE-475: Undefined Behavior for Input to API"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-21503",
-      "publishedDate": "2026-01-07T17:10:44.174Z",
-      "lastModifiedDate": "2026-01-07T21:53:35.787Z",
-      "description": "iccDEV provides a set of libraries and tools that allow for the interaction, manipulation, and application of ICC color management profiles. Prior to version 2.3.1.2, iccDEV has undefined behavior due to a null pointer passed to memcpy() in CIccTagSparseMatrixArray. This issue has been patched in version 2.3.1.2.",
-      "severity": 6.1,
-      "references": [
-        {
-          "url": "https://github.com/InternationalColorConsortium/iccDEV/security/advisories/GHSA-h554-qrfh-53gx",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/InternationalColorConsortium/iccDEV/issues/367",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/InternationalColorConsortium/iccDEV/pull/417",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/InternationalColorConsortium/iccDEV/commit/55259a6395c4f6124b5d0e38469c77412926bd3d",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "InternationalColorConsortium",
-          "product": "iccDEV",
-          "versions": [
-            {
-              "version": "< 2.3.1.2",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-20: Improper Input Validation",
-        "CWE-131: Incorrect Calculation of Buffer Size",
-        "CWE-476: NULL Pointer Dereference",
-        "CWE-628: Function Call with Incorrectly Specified Arguments"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-21691",
-      "publishedDate": "2026-01-07T21:53:02.461Z",
-      "lastModifiedDate": "2026-01-07T21:53:02.461Z",
-      "description": "iccDEV provides a set of libraries and tools that allow for the interaction, manipulation, and application of International Color Consortium (ICC) color management profiles. Versions prior to 2.3.1.2 have a Type Confusion vulnerability in `CIccTag:IsTypeCompressed()`. This vulnerability affects users of the iccDEV library who process ICC color profiles. Version 2.3.1.2 contains a patch. No known workarounds are available.",
-      "severity": 5.4,
-      "references": [
-        {
-          "url": "https://github.com/InternationalColorConsortium/iccDEV/security/advisories/GHSA-c9q5-x498-jv92",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/InternationalColorConsortium/iccDEV/issues/392",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/InternationalColorConsortium/iccDEV/pull/426",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "InternationalColorConsortium",
-          "product": "iccDEV",
-          "versions": [
-            {
-              "version": "< 2.3.1.2",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-20: Improper Input Validation",
-        "CWE-140: Improper Neutralization of Delimiters",
-        "CWE-476: NULL Pointer Dereference",
-        "CWE-697: Incorrect Comparison",
-        "CWE-1025: Comparison Using Wrong Factors"
+        "CWE-409: Improper Handling of Highly Compressed Data (Data Amplification)"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
