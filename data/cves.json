@@ -2,98 +2,159 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 2,
-    "last_updated": "2026-01-07T23:51:43.376186",
+    "total_count": 4,
+    "last_updated": "2026-01-08T01:25:57.351042",
     "severity_distribution": {
-      "critical": 0,
-      "high": 1,
-      "medium": 0,
+      "critical": 1,
+      "high": 0,
+      "medium": 2,
       "low": 0,
       "none": 1
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-21869",
-      "publishedDate": "2026-01-07T23:37:59.886Z",
-      "lastModifiedDate": "2026-01-07T23:37:59.886Z",
-      "description": "llama.cpp is an inference of several LLM models in C/C++. In commits 55d4206c8 and prior, the n_discard parameter is parsed directly from JSON input in the llama.cpp server's completion endpoints without validation to ensure it's non-negative. When a negative value is supplied and the context fills up, llama_memory_seq_rm/add receives a reversed range and negative offset, causing out-of-bounds memory writes in the token evaluation loop. This deterministic memory corruption can crash the process or enable remote code execution (RCE). There is no fix at the time of publication.",
-      "severity": 8.8,
+      "id": "CVE-2026-21881",
+      "publishedDate": "2026-01-08T01:08:01.853Z",
+      "lastModifiedDate": "2026-01-08T01:08:01.853Z",
+      "description": "Kanboard is project management software focused on Kanban methodology. Versions 1.2.48 and below is vulnerable to a critical authentication bypass when REVERSE_PROXY_AUTH is enabled. The application blindly trusts HTTP headers for user authentication without verifying the request originated from a trusted reverse proxy. An attacker can impersonate any user, including administrators, by simply sending a spoofed HTTP header. This issue is fixed in version 1.2.49.",
+      "severity": 9.1,
       "references": [
         {
-          "url": "https://github.com/ggml-org/llama.cpp/security/advisories/GHSA-8947-pfff-2f3c",
+          "url": "https://github.com/kanboard/kanboard/security/advisories/GHSA-wwpf-3j4p-739w",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/kanboard/kanboard/commit/7af6143e2ad25b5c15549cca8af4341c7ac4e2fc",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/kanboard/kanboard/releases/tag/v1.2.49",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "ggml-org",
-          "product": "llama.cpp",
+          "vendor": "kanboard",
+          "product": "kanboard",
           "versions": [
             {
-              "version": "<= 55d4206c8",
+              "version": "< 1.2.49",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-787: Out-of-bounds Write"
+        "CWE-287: Improper Authentication"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-15346",
-      "publishedDate": "2026-01-07T23:32:11.146Z",
-      "lastModifiedDate": "2026-01-07T23:32:11.146Z",
-      "description": "A vulnerability in the handling of verify_mode = CERT_REQUIRED in the wolfssl Python package (wolfssl-py) causes client certificate requirements to not be fully enforced. \n\nBecause the WOLFSSL_VERIFY_FAIL_IF_NO_PEER_CERT flag was not included, the behavior effectively matched CERT_OPTIONAL: a peer certificate was verified if presented, but connections were incorrectly authenticated when no client certificate was provided. \n\nThis results in improper authentication, allowing attackers to bypass mutual TLS (mTLS) client authentication by omitting a client certificate during the TLS handshake. \n\nThe issue affects versions up to and including 5.8.2.",
-      "severity": "N/A",
+      "id": "CVE-2026-21880",
+      "publishedDate": "2026-01-08T00:59:20.338Z",
+      "lastModifiedDate": "2026-01-08T00:59:20.338Z",
+      "description": "Kanboard is project management software focused on Kanban methodology. Versions 1.2.48 and below have an LDAP Injection vulnerability in the LDAP authentication mechanism. User-supplied input is directly substituted into LDAP search filters without proper sanitization, allowing attackers to enumerate all LDAP users, discover sensitive user attributes, and perform targeted attacks against specific accounts. This issue is fixed in version 1.2.49.",
+      "severity": 5.3,
       "references": [
         {
-          "url": "https://github.com/wolfSSL/wolfssl-py/pull/62",
+          "url": "https://github.com/kanboard/kanboard/security/advisories/GHSA-v66r-m28r-wmq7",
           "type": "reference"
         },
         {
-          "url": "https://github.com/wolfSSL/wolfssl-py/commit/b4517dece79f682a8f453abce5cfc0b81bae769d",
+          "url": "https://github.com/kanboard/kanboard/commit/dd374079f7c2d1dab74c1680960e684ff8668586",
           "type": "reference"
         },
         {
-          "url": "https://github.com/wolfSSL/wolfssl-py/releases/tag/v5.8.4-stable",
+          "url": "https://github.com/kanboard/kanboard/releases/tag/v1.2.49",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "collectionURL": "https://pypi.org/",
-          "defaultStatus": "unaffected",
-          "modules": [
-            "TLS Peer Certificate Verification (CERT_REQUIRED verify mode)"
-          ],
-          "packageName": "wolfssl",
-          "platforms": [
-            "Linux",
-            "MacOS",
-            "Windows"
-          ],
-          "product": "wolfSSL-py",
-          "programFiles": [
-            "wolfssl/__init__.py"
-          ],
-          "repo": "https://github.com/wolfSSL/wolfssl-py",
-          "vendor": "wolfSSL",
+          "vendor": "kanboard",
+          "product": "kanboard",
           "versions": [
             {
-              "lessThanOrEqual": "5.8.2",
-              "status": "affected",
-              "version": "5.3.0",
-              "versionType": "python"
+              "version": "< 1.2.49",
+              "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-306 Missing Authentication for Critical Function",
-        "CWE-287 Improper Authentication"
+        "CWE-90: Improper Neutralization of Special Elements used in an LDAP Query ('LDAP Injection')",
+        "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-21879",
+      "publishedDate": "2026-01-08T00:51:50.954Z",
+      "lastModifiedDate": "2026-01-08T00:51:50.954Z",
+      "description": "Kanboard is project management software focused on Kanban methodology. Versions 1.2.48 and below are vulnerable to an Open Redirect attack that allows malicious actors to redirect authenticated users to attacker-controlled websites. By crafting URLs such as //evil.com, attackers can bypass the filter_var($url, FILTER_VALIDATE_URL) validation check. This vulnerability could be exploited to conduct phishing attacks, steal user credentials, or distribute malware. The issue is fixed in version 1.2.49.",
+      "severity": 4.7,
+      "references": [
+        {
+          "url": "https://github.com/kanboard/kanboard/security/advisories/GHSA-mhv9-7m9w-7hcq",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/kanboard/kanboard/commit/93bcae03301a6d34185a8dba977417e6b3de519f",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/kanboard/kanboard/releases/tag/v1.2.49",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "kanboard",
+          "product": "kanboard",
+          "versions": [
+            {
+              "version": "< 1.2.49",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-601: URL Redirection to Untrusted Site ('Open Redirect')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-21883",
+      "publishedDate": "2026-01-08T01:20:53.479Z",
+      "lastModifiedDate": "2026-01-08T01:20:53.479Z",
+      "description": "Bokeh is an interactive visualization library written in Python. In versions 3.8.1 and below, if a server is configured with an allowlist (e.g., dashboard.corp), an attacker can register a domain like dashboard.corp.attacker.com (or use a subdomain if applicable) and lure a victim to visit it. The malicious site can then initiate a WebSocket connection to the vulnerable Bokeh server. Since the Origin header (e.g., http://dashboard.corp.attacker.com/) matches the allowlist according to the flawed logic, the connection is accepted. Once connected, the attacker can interact with the Bokeh server on behalf of the victim, potentially accessing sensitive data, or modifying visualizations. This issue is fixed in version 3.8.2.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/bokeh/bokeh/security/advisories/GHSA-793v-589g-574v",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/bokeh/bokeh/commit/cedd113b0e271b439dce768671685cf5f861812e",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "bokeh",
+          "product": "bokeh",
+          "versions": [
+            {
+              "version": "< 3.8.2",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-1385: Missing Origin Validation in WebSockets"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
