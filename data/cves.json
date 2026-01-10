@@ -2,48 +2,36 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 3,
-    "last_updated": "2026-01-10T05:34:12.672439",
+    "total_count": 1,
+    "last_updated": "2026-01-10T05:50:58.264811",
     "severity_distribution": {
       "critical": 0,
-      "high": 2,
+      "high": 0,
       "medium": 0,
-      "low": 0,
-      "none": 1
+      "low": 1,
+      "none": 0
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-22700",
-      "publishedDate": "2026-01-10T05:17:25.583Z",
-      "lastModifiedDate": "2026-01-10T05:17:25.583Z",
-      "description": "RustCrypto: Elliptic Curves is general purpose Elliptic Curve Cryptography (ECC) support, including types and traits for representing various elliptic curve forms, scalars, points, and public/secret keys composed thereof. In versions 0.14.0-pre.0 and 0.14.0-rc.0, a denial-of-service vulnerability exists in the SM2 public-key encryption (PKE) implementation: the decrypt() path performs unchecked slice::split_at operations on input buffers derived from untrusted ciphertext. An attacker can submit short/undersized ciphertext or carefully-crafted DER-encoded structures to trigger bounds-check panics (Rust unwinding) which crash the calling thread or process. This issue has been patched via commit e60e991.",
-      "severity": 7.5,
+      "id": "CVE-2026-22611",
+      "publishedDate": "2026-01-10T05:37:08.297Z",
+      "lastModifiedDate": "2026-01-10T05:37:08.297Z",
+      "description": "AWS SDK for .NET works with Amazon Web Services to help build scalable solutions with Amazon S3, Amazon DynamoDB, Amazon Glacier, and more. From versions 4.0.0 to before 4.0.3.3, Customer applications could be configured to improperly route AWS API calls to non-existent or non-AWS hosts. This notification is related to the use of specific values for the region input field when calling AWS services. An actor with access to the environment in which the SDK is used could set the region input field to an invalid value. This issue has been patched in version 4.0.3.3.",
+      "severity": 3.7,
       "references": [
         {
-          "url": "https://github.com/RustCrypto/elliptic-curves/security/advisories/GHSA-j9xq-69pf-pcm8",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/RustCrypto/elliptic-curves/pull/1603",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/RustCrypto/elliptic-curves/commit/e60e99167a9a2b187ebe80c994c5204b0fdaf4ab",
+          "url": "https://github.com/aws/aws-sdk-net/security/advisories/GHSA-9cvc-h2w8-phrp",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "RustCrypto",
-          "product": "elliptic-curves",
+          "vendor": "aws",
+          "product": "aws-sdk-net",
           "versions": [
             {
-              "version": "= 0.14.0-pre.0",
-              "status": "affected"
-            },
-            {
-              "version": "= 0.14.0-rc.0",
+              "version": ">= 4.0.0, < 4.0.3.3",
               "status": "affected"
             }
           ]
@@ -51,100 +39,6 @@
       ],
       "problemType": [
         "CWE-20: Improper Input Validation"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-22699",
-      "publishedDate": "2026-01-10T05:17:22.818Z",
-      "lastModifiedDate": "2026-01-10T05:17:22.818Z",
-      "description": "RustCrypto: Elliptic Curves is general purpose Elliptic Curve Cryptography (ECC) support, including types and traits for representing various elliptic curve forms, scalars, points, and public/secret keys composed thereof. In versions 0.14.0-pre.0 and 0.14.0-rc.0, a denial-of-service vulnerability exists in the SM2 PKE decryption path where an invalid elliptic-curve point (C1) is decoded and the resulting value is unwrapped without checking. Specifically, AffinePoint::from_encoded_point(&encoded_c1) may return a None/CtOption::None when the supplied coordinates are syntactically valid but do not lie on the SM2 curve. The calling code previously used .unwrap(), causing a panic when presented with such input. This issue has been patched via commit 085b7be.",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://github.com/RustCrypto/elliptic-curves/security/advisories/GHSA-78p6-6878-8mj6",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/RustCrypto/elliptic-curves/pull/1602",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/RustCrypto/elliptic-curves/commit/085b7bee647029bd189e1375203418205006bcab",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "RustCrypto",
-          "product": "elliptic-curves",
-          "versions": [
-            {
-              "version": "= 0.14.0-pre.0",
-              "status": "affected"
-            },
-            {
-              "version": "= 0.14.0-rc.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-20: Improper Input Validation"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-22698",
-      "publishedDate": "2026-01-10T05:17:19.993Z",
-      "lastModifiedDate": "2026-01-10T05:17:19.993Z",
-      "description": "RustCrypto: Elliptic Curves is general purpose Elliptic Curve Cryptography (ECC) support, including types and traits for representing various elliptic curve forms, scalars, points, and public/secret keys composed thereof. In versions 0.14.0-pre.0 and 0.14.0-rc.0, a  critical vulnerability exists in the SM2 Public Key Encryption (PKE) implementation where the ephemeral nonce k is generated with severely reduced entropy. A unit mismatch error causes the nonce generation function to request only 32 bits of randomness instead of the expected 256 bits. This reduces the security of the encryption from a 128-bit level to a trivial 16-bit level, allowing a practical attack to recover the nonce k and decrypt any ciphertext given only the public key and ciphertext. This issue has been patched via commit e4f7778.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/RustCrypto/elliptic-curves/security/advisories/GHSA-w3g8-fp6j-wvqw",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/RustCrypto/elliptic-curves/pull/1600",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/RustCrypto/elliptic-curves/commit/4781762f23ff22ab34763410f648128055c93731",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/RustCrypto/elliptic-curves/commit/e4f77788130d065d760e57fb109370827110a525",
-          "type": "reference"
-        },
-        {
-          "url": "https://crates.io/crates/sm2/0.14.0-pre.0",
-          "type": "reference"
-        },
-        {
-          "url": "https://crates.io/crates/sm2/0.14.0-rc.0",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "RustCrypto",
-          "product": "elliptic-curves",
-          "versions": [
-            {
-              "version": "= 0.14.0-pre.0",
-              "status": "affected"
-            },
-            {
-              "version": "= 0.14.0-rc.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-331: Insufficient Entropy"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
