@@ -2,275 +2,455 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 9,
-    "last_updated": "2026-01-12T18:24:11.867254",
+    "total_count": 20,
+    "last_updated": "2026-01-12T18:56:58.010029",
     "severity_distribution": {
       "critical": 1,
-      "high": 5,
-      "medium": 1,
-      "low": 1,
-      "none": 1
+      "high": 1,
+      "medium": 10,
+      "low": 0,
+      "none": 8
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-22252",
-      "publishedDate": "2026-01-12T18:01:48.399Z",
-      "lastModifiedDate": "2026-01-12T18:01:48.399Z",
-      "description": "LibreChat is a ChatGPT clone with additional features. Prior to v0.8.2-rc2, LibreChat's MCP stdio transport accepts arbitrary commands without validation, allowing any authenticated user to execute shell commands as root inside the container through a single API request. This vulnerability is fixed in v0.8.2-rc2.",
-      "severity": 9.1,
+      "id": "CVE-2026-21858",
+      "publishedDate": "2026-01-07T23:57:52.079Z",
+      "lastModifiedDate": "2026-01-12T18:37:27.893Z",
+      "description": "n8n is an open source workflow automation platform. Versions starting with 1.65.0 and below 1.121.0 enable an attacker to access files on the underlying server through execution of certain form-based workflows. A vulnerable workflow could grant access to an unauthenticated remote attacker, resulting in exposure of sensitive information stored on the system and may enable further compromise depending on deployment configuration and workflow usage. This issue is fixed in version 1.121.0.",
+      "severity": 10,
       "references": [
         {
-          "url": "https://github.com/danny-avila/LibreChat/security/advisories/GHSA-cxhj-j78r-p88f",
+          "url": "https://github.com/n8n-io/n8n/security/advisories/GHSA-v4pr-fm98-w9pg",
           "type": "reference"
         },
         {
-          "url": "https://github.com/danny-avila/LibreChat/commit/211b39f3113d4e6ecab84be0a83f4e9c9dea127f",
+          "url": "https://www.cyera.com/research-labs/ni8mare-unauthenticated-remote-code-execution-in-n8n-cve-2026-21858",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "danny-avila",
-          "product": "LibreChat",
+          "vendor": "n8n-io",
+          "product": "n8n",
           "versions": [
             {
-              "version": "< v0.8.2-rc2",
+              "version": ">= 1.65.0, < 1.121.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-285: Improper Authorization"
+        "CWE-20: Improper Input Validation"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-22771",
-      "publishedDate": "2026-01-12T18:08:22.532Z",
-      "lastModifiedDate": "2026-01-12T18:08:22.532Z",
-      "description": "Envoy Gateway is an open source project for managing Envoy Proxy as a standalone or Kubernetes-based application gateway. Prior to 1.5.7 and 1.6.2, EnvoyExtensionPolicy Lua scripts executed by Envoy proxy can be used to leak the proxy's credentials. These credentials can then be used to communicate with the control plane and gain access to all secrets that are used by Envoy proxy, e.g. TLS private keys and credentials used for downstream and upstream communication. This vulnerability is fixed in 1.5.7 and 1.6.2.",
-      "severity": 8.8,
+      "id": "CVE-2025-68472",
+      "publishedDate": "2026-01-12T16:53:47.748Z",
+      "lastModifiedDate": "2026-01-12T18:36:45.793Z",
+      "description": "MindsDB is a platform for building artificial intelligence from enterprise data. Prior to version 25.11.1, an unauthenticated path traversal in the file upload API lets any caller read arbitrary files from the server filesystem and move them into MindsDB’s storage, exposing sensitive data. The PUT handler in file.py directly joins user-controlled data into a filesystem path when the request body is JSON and source_type is not \"url\". Only multipart uploads and URL-sourced uploads receive sanitization; JSON uploads lack any call to clear_filename or equivalent checks. This vulnerability is fixed in 25.11.1.",
+      "severity": 8.1,
       "references": [
         {
-          "url": "https://github.com/envoyproxy/gateway/security/advisories/GHSA-xrwg-mqj6-6m22",
+          "url": "https://github.com/mindsdb/mindsdb/security/advisories/GHSA-qqhf-pm3j-96g7",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "envoyproxy",
-          "product": "gateway",
+          "vendor": "mindsdb",
+          "product": "mindsdb",
           "versions": [
             {
-              "version": "< 1.5.7",
+              "version": "< 25.11.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')",
+        "CWE-23: Relative Path Traversal",
+        "CWE-36: Absolute Path Traversal"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-68656",
+      "publishedDate": "2026-01-12T17:23:19.393Z",
+      "lastModifiedDate": "2026-01-12T18:39:37.514Z",
+      "description": "Espressif ESP-IDF USB Host HID (Human Interface Device) Driver allows access to HID devices. Prior to 1.1.0, usb_class_request_get_descriptor() frees and reallocates hid_device->ctrl_xfer when an oversized descriptor is requested but continues to use the stale local pointer, leading to an immediate use-after-free when processing attacker-controlled Report Descriptor lengths. This vulnerability is fixed in 1.1.0.",
+      "severity": 6.8,
+      "references": [
+        {
+          "url": "https://github.com/espressif/esp-usb/security/advisories/GHSA-2pm2-62mr-c9x7",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/espressif/esp-usb/commit/81b37c96593c0bec92ef14c6ee6bf8cab8d8f660",
+          "type": "reference"
+        },
+        {
+          "url": "https://components.espressif.com/components/espressif/usb_host_hid/versions/1.1.0/changelog",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "espressif",
+          "product": "esp-usb",
+          "versions": [
+            {
+              "version": "< 1.1.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-416: Use After Free"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-68622",
+      "publishedDate": "2026-01-12T17:08:22.941Z",
+      "lastModifiedDate": "2026-01-12T18:37:35.287Z",
+      "description": "Espressif ESP-IDF USB Host UVC Class Driver allows video streaming from USB cameras. Prior to 2.4.0, a vulnerability in the esp-usb UVC host implementation allows a malicious USB Video Class (UVC) device to trigger a stack buffer overflow during configuration-descriptor parsing. When UVC configuration-descriptor printing is enabled, the host prints detailed descriptor information provided by the connected USB device. A specially crafted UVC descriptor may advertise an excessively large length. Because this value is not validated before being copied into a fixed-size stack buffer, an attacker can overflow the buffer and corrupt memory. This vulnerability is fixed in 2.4.0.",
+      "severity": 6.8,
+      "references": [
+        {
+          "url": "https://github.com/espressif/esp-usb/security/advisories/GHSA-g65h-9ggq-9827",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/espressif/esp-usb/commit/77a38b15a17f6e3c7aeb620eb4aeaf61d5194cc0",
+          "type": "reference"
+        },
+        {
+          "url": "https://components.espressif.com/components/espressif/usb_host_uvc/versions/2.4.0/changelog",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "espressif",
+          "product": "esp-usb",
+          "versions": [
+            {
+              "version": "< 2.4.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-121: Stack-based Buffer Overflow"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-68471",
+      "publishedDate": "2026-01-12T17:39:57.416Z",
+      "lastModifiedDate": "2026-01-12T18:42:26.343Z",
+      "description": "Avahi is a system which facilitates service discovery on a local network via the mDNS/DNS-SD protocol suite. In 0.9-rc2 and earlier, avahi-daemon can be crashed by sending 2 unsolicited announcements with CNAME resource records 2 seconds apart.",
+      "severity": 6.5,
+      "references": [
+        {
+          "url": "https://github.com/avahi/avahi/security/advisories/GHSA-56rf-42xr-qmmg",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/avahi/avahi/issues/678",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/avahi/avahi/commit/9c6eb53bf2e290aed84b1f207e3ce35c54cc0aa1",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "avahi",
+          "product": "avahi",
+          "versions": [
+            {
+              "version": "<= 0.9-rc2",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-617: Reachable Assertion"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-68468",
+      "publishedDate": "2026-01-12T17:38:10.492Z",
+      "lastModifiedDate": "2026-01-12T18:41:50.855Z",
+      "description": "Avahi is a system which facilitates service discovery on a local network via the mDNS/DNS-SD protocol suite. In 0.9-rc2 and earlier, avahi-daemon can be crashed by sending unsolicited announcements containing CNAME resource records pointing it to resource records with short TTLs. As soon as they expire avahi-daemon crashes.",
+      "severity": 6.5,
+      "references": [
+        {
+          "url": "https://github.com/avahi/avahi/security/advisories/GHSA-cp79-r4x9-vf52",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/avahi/avahi/issues/683",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/avahi/avahi/commit/f66be13d7f31a3ef806d226bf8b67240179d309a",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "avahi",
+          "product": "avahi",
+          "versions": [
+            {
+              "version": "<= 0.9-rc2",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-617: Reachable Assertion"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-68657",
+      "publishedDate": "2026-01-12T17:26:51.106Z",
+      "lastModifiedDate": "2026-01-12T18:40:25.838Z",
+      "description": "Espressif ESP-IDF USB Host HID (Human Interface Device) Driver allows access to HID devices. Prior to 1.1.0, calls to hid_host_device_close() can free the same usb_transfer_t twice. The USB event callback and user code share the hid_iface_t state without locking, so both can tear down a READY interface simultaneously, corrupting heap metadata inside the ESP USB host stack. This vulnerability is fixed in 1.1.0.",
+      "severity": 6.4,
+      "references": [
+        {
+          "url": "https://github.com/espressif/esp-usb/security/advisories/GHSA-gp8r-qjfr-gqfv",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/espressif/esp-usb/commit/cd28106e9f72ac2719682c06f94601f9f034390b",
+          "type": "reference"
+        },
+        {
+          "url": "https://components.espressif.com/components/espressif/usb_host_hid/versions/1.1.0/changelog",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "espressif",
+          "product": "esp-usb",
+          "versions": [
+            {
+              "version": "< 1.1.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-415: Double Free",
+        "CWE-667: Improper Locking"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-12379",
+      "publishedDate": "2026-01-10T13:47:35.146Z",
+      "lastModifiedDate": "2026-01-12T18:29:20.473Z",
+      "description": "The Shortcodes and extra features for Phlox theme plugin for WordPress is vulnerable to Stored Cross-Site Scripting via a combination of the 'tag' and ‘title_tag’ parameters in all versions up to, and including, 2.17.13 due to insufficient input sanitization and output escaping. This makes it possible for authenticated attackers, with Contributor-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page.",
+      "severity": 6.4,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/1144e0d9-692e-45a5-ac63-bcdd64a8bd8a?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/auxin-elements/tags/2.17.12/includes/elementor/widgets/heading-modern.php#L1194",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset/3429103/auxin-elements/trunk/includes/elementor/widgets/heading-modern.php",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "averta",
+          "product": "Shortcodes and extra features for Phlox theme",
+          "versions": [
+            {
+              "version": "*",
+              "status": "affected",
+              "lessThanOrEqual": "2.17.13",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-0822",
+      "publishedDate": "2026-01-10T13:32:08.881Z",
+      "lastModifiedDate": "2026-01-12T18:30:50.158Z",
+      "description": "A vulnerability was identified in quickjs-ng quickjs up to 0.11.0. This issue affects the function js_typed_array_sort of the file quickjs.c. The manipulation leads to heap-based buffer overflow. Remote exploitation of the attack is possible. The exploit is publicly available and might be used. The identifier of the patch is 53eefbcd695165a3bd8c584813b472cb4a69fbf5. To fix this issue, it is recommended to deploy a patch.",
+      "severity": 6.3,
+      "references": [
+        {
+          "url": "https://vuldb.com/?id.340356",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?ctiid.340356",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?submit.731783",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/quickjs-ng/quickjs/issues/1297",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/quickjs-ng/quickjs/pull/1298",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/quickjs-ng/quickjs/issues/1297#issue-3780006202",
+          "type": "poc"
+        },
+        {
+          "url": "https://github.com/quickjs-ng/quickjs/commit/53eefbcd695165a3bd8c584813b472cb4a69fbf5",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "quickjs-ng",
+          "product": "quickjs",
+          "versions": [
+            {
+              "version": "0.1",
               "status": "affected"
             },
             {
-              "version": ">= 1.6.0-rc.0, < 1.6.2",
+              "version": "0.2",
               "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-94: Improper Control of Generation of Code ('Code Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-0836",
-      "publishedDate": "2026-01-11T04:32:06.535Z",
-      "lastModifiedDate": "2026-01-12T18:13:16.566Z",
-      "description": "A vulnerability was determined in UTT 进取 520W 1.7.7-180627. The impacted element is the function strcpy of the file /goform/formConfigFastDirectionW. This manipulation of the argument ssid causes buffer overflow. Remote exploitation of the attack is possible. The exploit has been publicly disclosed and may be utilized. The vendor was contacted early about this disclosure but did not respond in any way.",
-      "severity": 8.8,
-      "references": [
-        {
-          "url": "https://vuldb.com/?id.340436",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/?ctiid.340436",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/?submit.729018",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/Lena-lyy/cve/blob/main/1223/26.md",
-          "type": "poc"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "UTT",
-          "product": "进取 520W",
-          "versions": [
+            },
             {
-              "version": "1.7.7-180627",
+              "version": "0.3",
+              "status": "affected"
+            },
+            {
+              "version": "0.4",
+              "status": "affected"
+            },
+            {
+              "version": "0.5",
+              "status": "affected"
+            },
+            {
+              "version": "0.6",
+              "status": "affected"
+            },
+            {
+              "version": "0.7",
+              "status": "affected"
+            },
+            {
+              "version": "0.8",
+              "status": "affected"
+            },
+            {
+              "version": "0.9",
+              "status": "affected"
+            },
+            {
+              "version": "0.10",
+              "status": "affected"
+            },
+            {
+              "version": "0.11.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "Buffer Overflow",
+        "Heap-based Buffer Overflow",
         "Memory Corruption"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-21884",
-      "publishedDate": "2026-01-10T02:41:44.944Z",
-      "lastModifiedDate": "2026-01-12T18:11:09.408Z",
-      "description": "React Router is a router for React. In @remix-run/react version prior to 2.17.3. and react-router 7.0.0 through 7.11.0, a XSS vulnerability exists in in React Router's <ScrollRestoration> API in Framework Mode when using the getKey/storageKey props during Server-Side Rendering which could allow arbitrary JavaScript execution during SSR if untrusted content is used to generate the keys. There is no impact if server-side rendering in Framework Mode is disabled, or if Declarative Mode (<BrowserRouter>) or Data Mode (createBrowserRouter/<RouterProvider>) is being used. This issue has been patched in @remix-run/react version 2.17.3 and react-router version 7.12.0.",
-      "severity": 8.2,
+      "id": "CVE-2025-68276",
+      "publishedDate": "2026-01-12T17:31:49.652Z",
+      "lastModifiedDate": "2026-01-12T18:41:22.098Z",
+      "description": "Avahi is a system which facilitates service discovery on a local network via the mDNS/DNS-SD protocol suite. In 0.9-rc2 and earlier, an unprivileged local users can crash avahi-daemon (with wide-area disabled) by creating record browsers with the AVAHI_LOOKUP_USE_WIDE_AREA flag set via D-Bus. This can be done by either calling\nthe RecordBrowserNew method directly or creating hostname/address/service resolvers/browsers that create those browsers internally themselves.",
+      "severity": 5.5,
       "references": [
         {
-          "url": "https://github.com/remix-run/react-router/security/advisories/GHSA-8v8x-cx79-35w7",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "remix-run",
-          "product": "react-router",
-          "versions": [
-            {
-              "version": "@remix-run/react < 2.17.3",
-              "status": "affected"
-            },
-            {
-              "version": "react-router  >= 7.0.0, < 7.12.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-22029",
-      "publishedDate": "2026-01-10T02:42:32.736Z",
-      "lastModifiedDate": "2026-01-12T18:10:27.920Z",
-      "description": "React Router is a router for React. In @remix-run/router version prior to 1.23.2. and react-router 7.0.0 through 7.11.0, React Router (and Remix v1/v2) SPA open navigation redirects originating from loaders or actions in Framework Mode, Data Mode, or the unstable RSC modes can result in unsafe URLs causing unintended javascript execution on the client. This is only an issue if you are creating redirect paths from untrusted content or via an open redirect. There is no impact if Declarative Mode (<BrowserRouter>) is being used. This issue has been patched in @remix-run/router version 1.23.2 and react-router version 7.12.0.",
-      "severity": 8,
-      "references": [
-        {
-          "url": "https://github.com/remix-run/react-router/security/advisories/GHSA-2w69-qvjg-hvjx",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "remix-run",
-          "product": "react-router",
-          "versions": [
-            {
-              "version": "@remix-run/router < 1.23.2",
-              "status": "affected"
-            },
-            {
-              "version": "react-router  >= 7.0.0, < 7.12.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-59057",
-      "publishedDate": "2026-01-10T02:40:25.142Z",
-      "lastModifiedDate": "2026-01-12T18:12:43.462Z",
-      "description": "React Router is a router for React. In @remix-run/react versions 1.15.0 through 2.17.0. and react-router versions 7.0.0 through 7.8.2, a XSS vulnerability exists in in React Router's meta()/<Meta> APIs in Framework Mode when generating script:ld+json tags which could allow arbitrary JavaScript execution during SSR if untrusted content is used to generate the tag. There is no impact if the application is being used in Declarative Mode (<BrowserRouter>) or Data Mode (createBrowserRouter/<RouterProvider>). This issue has been patched in @remix-run/react version 2.17.1 and react-router version 7.9.0.",
-      "severity": 7.6,
-      "references": [
-        {
-          "url": "https://github.com/remix-run/react-router/security/advisories/GHSA-3cgp-3xvw-98x8",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "remix-run",
-          "product": "react-router",
-          "versions": [
-            {
-              "version": "@remix-run/react >= 1.15.0, < 2.17.1",
-              "status": "affected"
-            },
-            {
-              "version": "react-router  >= 7.0.0, < 7.9.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-22030",
-      "publishedDate": "2026-01-10T02:42:44.603Z",
-      "lastModifiedDate": "2026-01-12T18:09:39.441Z",
-      "description": "React Router is a router for React. In @remix-run/server-runtime version prior to 2.17.3. and react-router 7.0.0 through 7.11.0, React Router (or Remix v2) is vulnerable to CSRF attacks on document POST requests to UI routes when using server-side route action handlers in Framework Mode, or when using React Server Actions in the new unstable RSC modes. There is no impact if Declarative Mode (<BrowserRouter>) or Data Mode (createBrowserRouter/<RouterProvider>) is being used. This issue has been patched in @remix-run/server-runtime version 2.17.3 and react-router version 7.12.0.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://github.com/remix-run/react-router/security/advisories/GHSA-h5cw-625j-3rxh",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "remix-run",
-          "product": "react-router",
-          "versions": [
-            {
-              "version": "@remix-run/router < 2.17.3",
-              "status": "affected"
-            },
-            {
-              "version": "react-router  >= 7.0.0, < 7.12.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-346: Origin Validation Error",
-        "CWE-352: Cross-Site Request Forgery (CSRF)"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-22250",
-      "publishedDate": "2026-01-12T17:52:01.390Z",
-      "lastModifiedDate": "2026-01-12T18:07:33.376Z",
-      "description": "wlc is a Weblate command-line client using Weblate's REST API. Prior to 1.17.0, the SSL verification would be skipped for some crafted URLs. This vulnerability is fixed in 1.17.0.",
-      "severity": 2.5,
-      "references": [
-        {
-          "url": "https://github.com/WeblateOrg/wlc/security/advisories/GHSA-2mmv-7rrp-g8xh",
+          "url": "https://github.com/avahi/avahi/security/advisories/GHSA-mhf3-865v-g5rc",
           "type": "reference"
         },
         {
-          "url": "https://github.com/WeblateOrg/wlc/pull/1097",
+          "url": "https://github.com/avahi/avahi/pull/806",
           "type": "reference"
         },
         {
-          "url": "https://github.com/WeblateOrg/wlc/commit/a513864ec4daad00146e6d6e039559726e256fa3",
+          "url": "https://github.com/avahi/avahi/commit/ede7048475c5d47d53890e3bc1350dda8e0b3688",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "avahi",
+          "product": "avahi",
+          "versions": [
+            {
+              "version": "<= 0.9-rc2",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-617: Reachable Assertion"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-22251",
+      "publishedDate": "2026-01-12T17:55:09.699Z",
+      "lastModifiedDate": "2026-01-12T18:43:53.664Z",
+      "description": "wlc is a Weblate command-line client using Weblate's REST API. Prior to 1.17.0, wlc supported providing unscoped API keys in the setting. This practice was discouraged for years, but the code was never removed. This might cause the API key to be leaked to different servers.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://github.com/WeblateOrg/wlc/security/advisories/GHSA-9rp8-h4g8-8766",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/WeblateOrg/wlc/pull/1098",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/WeblateOrg/wlc/commit/aafdb507a9e66574ade1f68c50c4fe75dbe80797",
           "type": "reference"
         }
       ],
@@ -287,45 +467,343 @@
         }
       ],
       "problemType": [
-        "CWE-295: Improper Certificate Validation"
+        "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-22033",
-      "publishedDate": "2026-01-12T17:47:34.060Z",
-      "lastModifiedDate": "2026-01-12T18:12:36.147Z",
-      "description": "Label Studio is a multi-type data labeling and annotation tool. In 1.22.0 and earlier, a persistent stored cross-site scripting (XSS) vulnerability exists in the custom_hotkeys functionality of the application. An authenticated attacker (or one who can trick a user/administrator into updating their custom_hotkeys) can inject JavaScript code that executes in other users’ browsers when those users load any page using the templates/base.html template. Because the application exposes an API token endpoint (/api/current-user/token) to the browser and lacks robust CSRF protection on some API endpoints, the injected script may fetch the victim’s API token or call token reset endpoints — enabling full account takeover and unauthorized API access.",
-      "severity": "N/A",
+      "id": "CVE-2025-13393",
+      "publishedDate": "2026-01-10T13:47:35.750Z",
+      "lastModifiedDate": "2026-01-12T18:28:15.408Z",
+      "description": "The Featured Image from URL (FIFU) plugin for WordPress is vulnerable to Server-Side Request Forgery in all versions up to, and including, 5.3.1. This is due to insufficient validation of user-supplied URLs before passing them to the getimagesize() function in the Elementor widget integration. This makes it possible for authenticated attackers, with Contributor-level access and above, to make web requests to arbitrary locations originating from the web application and can be used to query and modify information from internal services via the fifu_input_url parameter in the FIFU Elementor widget granted they have permissions to use Elementor.",
+      "severity": 4.3,
       "references": [
         {
-          "url": "https://github.com/HumanSignal/label-studio/security/advisories/GHSA-2mq9-hm29-8qch",
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/b7115070-b84d-4d69-993a-f512b9f9c081?source=cve",
           "type": "reference"
         },
         {
-          "url": "https://github.com/HumanSignal/label-studio/pull/9084",
+          "url": "https://plugins.trac.wordpress.org/browser/featured-image-from-url/trunk/elementor/widgets/widget.php#L94",
           "type": "reference"
         },
         {
-          "url": "https://github.com/HumanSignal/label-studio/commit/ea2462bf042bbf370b79445d02a205fbe547b505",
+          "url": "https://plugins.trac.wordpress.org/browser/featured-image-from-url/trunk/elementor/widgets/widget.php#L121",
+          "type": "reference"
+        },
+        {
+          "url": "https://research.cleantalk.org/cve-2025-13393/",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset/3428744/",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "HumanSignal",
-          "product": "label-studio",
+          "vendor": "marceljm",
+          "product": "Featured Image from URL (FIFU)",
           "versions": [
             {
-              "version": "<= 1.22.0",
+              "version": "*",
+              "status": "affected",
+              "lessThanOrEqual": "5.3.1",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-918 Server-Side Request Forgery (SSRF)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-22785",
+      "publishedDate": "2026-01-12T18:43:16.637Z",
+      "lastModifiedDate": "2026-01-12T18:43:16.637Z",
+      "description": "orval generates type-safe JS clients (TypeScript) from any valid OpenAPI v3 or Swagger v2 specification. Prior to 7.18.0, the MCP server generation logic relies on string manipulation that incorporates the summary field from the OpenAPI specification without proper validation or escaping. This allows an attacker to \"break out\" of the string literal and inject arbitrary code. This vulnerability is fixed in 7.18.0.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/orval-labs/orval/security/advisories/GHSA-mwr6-3gp8-9jmj",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/orval-labs/orval/commit/80b5fe73b94f120a3a5561952d6d4b0f8d7e928d",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "orval-labs",
+          "product": "orval",
+          "versions": [
+            {
+              "version": "< 7.18.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
-        "CWE-284: Improper Access Control"
+        "CWE-77: Improper Neutralization of Special Elements used in a Command ('Command Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-22784",
+      "publishedDate": "2026-01-12T18:37:55.183Z",
+      "lastModifiedDate": "2026-01-12T18:37:55.183Z",
+      "description": "Lychee is a free, open-source photo-management tool. Prior to 7.1.0, an authorization vulnerability exists in Lychee's album password unlock functionality that allows users to gain possibly unauthorized access to other users' password-protected albums. When a user unlocks a password-protected public album, the system automatically unlocks ALL other public albums that share the same password, resulting in a complete authorization bypass. This vulnerability is fixed in 7.1.0.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/LycheeOrg/Lychee/security/advisories/GHSA-jj56-2c54-4f25",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/LycheeOrg/Lychee/commit/f021a29f9ab2bafa81d9f5e32ff5bc89915c7d41",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "LycheeOrg",
+          "product": "Lychee",
+          "versions": [
+            {
+              "version": "< 7.1.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-863: Incorrect Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-22200",
+      "publishedDate": "2026-01-12T18:34:12.781Z",
+      "lastModifiedDate": "2026-01-12T18:34:12.781Z",
+      "description": "Enhancesoft osTicket versions up to and including 1.18.2 contain an arbitrary file read vulnerability in the ticket PDF export functionality. A remote attacker can submit a ticket containing crafted rich-text HTML that includes PHP filter expressions which are insufficiently sanitized before being processed by the mPDF PDF generator during export. When the attacker exports the ticket to PDF, the generated PDF can embed the contents of attacker-selected files from the server filesystem as bitmap images, allowing disclosure of sensitive local files in the context of the osTicket application user. This issue is exploitable in default configurations where guests may create tickets and access ticket status, or where self-registration is enabled.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://osticket.com/",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/osTicket/osTicket",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/osticket-pdf-export-arbitrary-file-read",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "platforms": [
+            "Linux"
+          ],
+          "product": "osTicket",
+          "repo": "https://github.com/osTicket/osTicket",
+          "vendor": "Enhancesoft",
+          "versions": [
+            {
+              "lessThanOrEqual": "1.18.2",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-74 Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-63314",
+      "publishedDate": "2026-01-12T00:00:00.000Z",
+      "lastModifiedDate": "2026-01-12T18:40:07.736Z",
+      "description": "A static password reset token in the password reset function of DDSN Interactive Acora CMS v10.7.1 allows attackers to arbitrarily reset the user password and execute a full account takeover via a replay attack.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "http://ddsn.com",
+          "type": "reference"
+        },
+        {
+          "url": "http://acora.com",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/padayali-JD/CVE-2025-63314",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "n/a",
+          "versions": [
+            {
+              "version": "n/a",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "n/a"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-66689",
+      "publishedDate": "2026-01-12T00:00:00.000Z",
+      "lastModifiedDate": "2026-01-12T18:34:48.370Z",
+      "description": "A path traversal vulnerability exists in Zen MCP Server before 9.8.2 that allows authenticated attackers to read arbitrary files on the system. The vulnerability is caused by flawed logic in the is_dangerous_path() validation function that uses exact string matching against a blacklist of system directories. Attackers can bypass these restrictions by accessing subdirectories of blacklisted paths.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/BeehiveInnovations/zen-mcp-server/issues/293",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/Team-Off-course/MCP-Server-Vuln-Analysis/blob/main/CVE-2025-66689.md",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "n/a",
+          "versions": [
+            {
+              "version": "n/a",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "n/a"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-0676",
+      "publishedDate": "2026-01-08T09:17:55.655Z",
+      "lastModifiedDate": "2026-01-12T18:31:42.919Z",
+      "description": "Missing Authorization vulnerability in G5Theme Zorka zorka allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Zorka: from n/a through <= 1.5.7.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://vdp.patchstack.com/database/Wordpress/Theme/zorka/vulnerability/wordpress-zorka-theme-1-5-7-broken-access-control-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://themeforest.net",
+          "defaultStatus": "unaffected",
+          "packageName": "zorka",
+          "product": "Zorka",
+          "vendor": "G5Theme",
+          "versions": [
+            {
+              "lessThanOrEqual": "<= 1.5.7",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Missing Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-0674",
+      "publishedDate": "2026-01-08T09:17:55.119Z",
+      "lastModifiedDate": "2026-01-12T18:32:30.790Z",
+      "description": "Missing Authorization vulnerability in Campaign Monitor Campaign Monitor for WordPress forms-for-campaign-monitor allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Campaign Monitor for WordPress: from n/a through <= 2.9.0.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://vdp.patchstack.com/database/Wordpress/Plugin/forms-for-campaign-monitor/vulnerability/wordpress-campaign-monitor-for-wordpress-plugin-2-9-0-broken-access-control-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://wordpress.org/plugins",
+          "defaultStatus": "unaffected",
+          "packageName": "forms-for-campaign-monitor",
+          "product": "Campaign Monitor for WordPress",
+          "vendor": "Campaign Monitor",
+          "versions": [
+            {
+              "lessThanOrEqual": "<= 2.9.0",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Missing Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-69169",
+      "publishedDate": "2026-01-08T09:17:54.850Z",
+      "lastModifiedDate": "2026-01-12T18:33:40.047Z",
+      "description": "Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS) vulnerability in Noor Alam Easy Media Download easy-media-download allows Reflection Injection.This issue affects Easy Media Download: from n/a through <= 1.1.11.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://vdp.patchstack.com/database/Wordpress/Plugin/easy-media-download/vulnerability/wordpress-easy-media-download-plugin-1-1-11-css-injection-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://wordpress.org/plugins",
+          "defaultStatus": "unaffected",
+          "packageName": "easy-media-download",
+          "product": "Easy Media Download",
+          "vendor": "Noor Alam",
+          "versions": [
+            {
+              "changes": [
+                {
+                  "at": "1.1.12",
+                  "status": "unaffected"
+                }
+              ],
+              "lessThanOrEqual": "<= 1.1.11",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
