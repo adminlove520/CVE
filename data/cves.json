@@ -2,178 +2,122 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 4,
-    "last_updated": "2026-01-19T17:36:22.541865",
+    "total_count": 3,
+    "last_updated": "2026-01-19T17:54:21.854109",
     "severity_distribution": {
       "critical": 0,
-      "high": 0,
-      "medium": 0,
-      "low": 0,
-      "none": 4
+      "high": 1,
+      "medium": 1,
+      "low": 1,
+      "none": 0
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-23884",
-      "publishedDate": "2026-01-19T17:20:40.149Z",
-      "lastModifiedDate": "2026-01-19T17:20:40.149Z",
-      "description": "FreeRDP is a free implementation of the Remote Desktop Protocol. Prior to version 3.21.0, offscreen bitmap deletion leaves `gdi->drawing` pointing to freed memory, causing UAF when related update packets arrive. A malicious server can trigger a client‑side use after free, causing a crash (DoS) and potential heap corruption with code‑execution risk depending on allocator behavior and surrounding heap layout. Version 3.21.0 contains a patch for the issue.",
-      "severity": "N/A",
+      "id": "CVE-2026-23625",
+      "publishedDate": "2026-01-19T17:41:41.803Z",
+      "lastModifiedDate": "2026-01-19T17:41:41.803Z",
+      "description": "OpenProject is an open-source, web-based project management software. Versions 16.3.0 through 16.6.4 are affected by a stored cross-site scripting vulnerability in the Roadmap view. OpenProject’s roadmap view renders the “Related work packages” list for each version. When a version contains work packages from a different project (e.g., a subproject), the helper link_to_work_package prepends package.project.to_s to the link and returns the entire string with .html_safe. Because project names are user-controlled and no escaping happens before calling html_safe, any HTML placed in a subproject name is injected verbatim into the page. The underlying issue is mitigated in versions 16.6.5 and 17.0.0 by setting a `X-Content-Type-Options: nosniff` header, which was in place until a refactoring move to Rails standard content-security policy, which did not properly apply this header in the new configuration since OpenProject 16.3.0. Those who cannot upgrade their installations should ensure that they add a X-Content-Type-Options: nosniff header in their proxying web application server.",
+      "severity": 8.7,
       "references": [
         {
-          "url": "https://github.com/FreeRDP/FreeRDP/security/advisories/GHSA-cfgj-vc84-f3pp",
+          "url": "https://github.com/opf/openproject/security/advisories/GHSA-cvpq-cc56-gwxx",
           "type": "reference"
         },
         {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/3370e30e92a021eb680892dda14d642bc8b8727c/libfreerdp/cache/offscreen.c#L114-L122",
+          "url": "https://github.com/opf/openproject/releases/tag/v16.6.5",
           "type": "reference"
         },
         {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/3370e30e92a021eb680892dda14d642bc8b8727c/libfreerdp/cache/offscreen.c#L87-L91",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/releases/tag/3.21.0",
+          "url": "https://github.com/opf/openproject/releases/tag/v17.0.0",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "FreeRDP",
-          "product": "FreeRDP",
+          "vendor": "opf",
+          "product": "openproject",
           "versions": [
             {
-              "version": "< 3.21.0",
+              "version": ">= 16.3.0, < 16.6.5",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-416: Use After Free"
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-23883",
-      "publishedDate": "2026-01-19T17:15:55.735Z",
-      "lastModifiedDate": "2026-01-19T17:15:55.735Z",
-      "description": "FreeRDP is a free implementation of the Remote Desktop Protocol. Prior to version 3.21.0, `xf_Pointer_New` frees `cursorPixels` on failure, then `pointer_free` calls `xf_Pointer_Free` and frees it again, triggering ASan UAF. A malicious server can trigger a client‑side use after free, causing a crash (DoS) and potential heap corruption with code‑execution risk depending on allocator behavior and surrounding heap layout. Version 3.21.0 contains a patch for the issue.",
-      "severity": "N/A",
+      "id": "CVE-2026-23646",
+      "publishedDate": "2026-01-19T17:48:03.082Z",
+      "lastModifiedDate": "2026-01-19T17:48:03.082Z",
+      "description": "OpenProject is an open-source, web-based project management software. Users of OpenProject versions prior to 16.6.5 and 17.0.1 have the ability to view and end their active sessions via Account Settings → Sessions. When deleting a session, it was not properly checked if the session belongs to the user. As the ID that is used to identify these session objects use incremental integers, users could iterate requests using `DELETE /my/sessions/:id` and thus unauthenticate other users. Users did not have access to any sensitive information (like browser identifier, IP addresses, etc) of other users that are stored in the session. The problem was patched in OpenProject versions 16.6.5 and 17.0.1. No known workarounds are available as this does not require any permissions or other that can temporarily be disabled.",
+      "severity": 6.5,
       "references": [
         {
-          "url": "https://github.com/FreeRDP/FreeRDP/security/advisories/GHSA-qcrr-85qx-4p6x",
+          "url": "https://github.com/opf/openproject/security/advisories/GHSA-w422-xf8f-v4vp",
           "type": "reference"
         },
         {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/3370e30e92a021eb680892dda14d642bc8b8727c/client/X11/xf_graphics.c#L312-L319",
+          "url": "https://github.com/opf/openproject/releases/tag/v16.6.5",
           "type": "reference"
         },
         {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/3370e30e92a021eb680892dda14d642bc8b8727c/client/X11/xf_graphics.c#L340",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/3370e30e92a021eb680892dda14d642bc8b8727c/libfreerdp/cache/pointer.c#L164-L174",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/releases/tag/3.21.0",
+          "url": "https://github.com/opf/openproject/releases/tag/v17.0.1",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "FreeRDP",
-          "product": "FreeRDP",
+          "vendor": "opf",
+          "product": "openproject",
           "versions": [
             {
-              "version": "< 3.21.0",
+              "version": "< 16.6.5",
+              "status": "affected"
+            },
+            {
+              "version": "= 17.0.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-416: Use After Free"
+        "CWE-488: Exposure of Data Element to Wrong Session"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-23530",
-      "publishedDate": "2026-01-19T16:58:46.712Z",
-      "lastModifiedDate": "2026-01-19T17:18:45.760Z",
-      "description": "FreeRDP is a free implementation of the Remote Desktop Protocol. Prior to version 3.21.0,`freerdp_bitmap_decompress_planar` does not validate `nSrcWidth`/`nSrcHeight` against `planar->maxWidth`/`maxHeight` before RLE decode. A malicious server can trigger a client‑side heap buffer overflow, causing a crash (DoS) and potential heap corruption with code‑execution risk depending on allocator behavior and surrounding heap layout. Version 3.21.0 contains a patch for the issue.",
-      "severity": "N/A",
+      "id": "CVE-2025-52660",
+      "publishedDate": "2026-01-19T17:49:52.166Z",
+      "lastModifiedDate": "2026-01-19T17:49:52.166Z",
+      "description": "HCL AION is affected by an Unrestricted File Upload vulnerability. This can allow malicious file uploads, potentially resulting in unauthorized code execution or system compromise.",
+      "severity": 2.7,
       "references": [
         {
-          "url": "https://github.com/FreeRDP/FreeRDP/security/advisories/GHSA-r4hv-852m-fq7p",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/38514dfa5813aa945a86cfbcec279033f8394468/libfreerdp/codec/planar.c#L1689-L1696",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/38514dfa5813aa945a86cfbcec279033f8394468/libfreerdp/codec/planar.c#L1713-L1716",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/38514dfa5813aa945a86cfbcec279033f8394468/libfreerdp/codec/planar.c#L951-L953",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/releases/tag/3.21.0",
+          "url": "https://support.hcl-software.com/kb_view.do?sys_kb_id=4b92474633de7ad4159a05273e5c7b4b&searchTerm=kb0127995#",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "FreeRDP",
-          "product": "FreeRDP",
+          "defaultStatus": "unaffected",
+          "product": "AION",
+          "vendor": "HCL Software",
           "versions": [
             {
-              "version": "< 3.21.0",
-              "status": "affected"
+              "status": "affected",
+              "version": "2"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-122: Heap-based Buffer Overflow"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-22797",
-      "publishedDate": "2026-01-19T00:00:00.000Z",
-      "lastModifiedDate": "2026-01-19T17:26:22.190Z",
-      "description": "An issue was discovered in OpenStack keystonemiddleware 10.5 through 10.7 before 10.7.2, 10.8 and 10.9 before 10.9.1, and 10.10 through 10.12 before 10.12.1. The external_oauth2_token middleware fails to sanitize incoming authentication headers before processing OAuth 2.0 tokens. By sending forged identity headers such as X-Is-Admin-Project, X-Roles, or X-User-Id, an authenticated attacker may escalate privileges or impersonate other users. All deployments using the external_oauth2_token middleware are affected.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://launchpad.net/bugs/2129018",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.openwall.com/lists/oss-security/2026/01/16/9",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n/a",
-          "product": "n/a",
-          "versions": [
-            {
-              "version": "n/a",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "n/a"
+        "CWE-644 Improper Neutralization of HTTP Headers for Scripting Syntax"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
