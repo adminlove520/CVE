@@ -2,26 +2,26 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 3,
-    "last_updated": "2026-01-21T18:57:22.874003",
+    "total_count": 5,
+    "last_updated": "2026-01-21T19:35:39.868193",
     "severity_distribution": {
       "critical": 0,
-      "high": 1,
-      "medium": 0,
+      "high": 2,
+      "medium": 3,
       "low": 0,
-      "none": 2
+      "none": 0
     }
   },
   "cves": [
     {
-      "id": "CVE-2025-68134",
-      "publishedDate": "2026-01-21T18:32:13.882Z",
-      "lastModifiedDate": "2026-01-21T18:32:13.882Z",
-      "description": "EVerest is an EV charging software stack. Prior to version 2025.12.0, Prior to version 2025.10.0, the use of the `assert` function to handle errors frequently causes the module to crash. This is particularly critical because the manager shuts down all other modules and exits when any one of them terminates, leading to a denial of service. In a context where a manager handles multiple EVSE, this would also impact other users. Version 2025.10.0 fixes the issue.",
-      "severity": 7.4,
+      "id": "CVE-2025-68137",
+      "publishedDate": "2026-01-21T19:20:09.059Z",
+      "lastModifiedDate": "2026-01-21T19:20:09.059Z",
+      "description": "EVerest is an EV charging software stack. Prior to version 2025.10.0, an integer overflow occurring in `SdpPacket::parse_header()` allows the current buffer length to be set to 7 after a complete header of size 8 has been read. The remaining length to read is computed using the current length subtracted by the header length which results in a negative value. This value is then interpreted as `SIZE_MAX` (or slightly less) because the expected type of the argument is `size_t`. Depending on whether the server is plain TCP or TLS, this leads to either an infinite loop or a stack buffer overflow. Version 2025.10.0 fixes the issue.",
+      "severity": 8.4,
       "references": [
         {
-          "url": "https://github.com/EVerest/everest-core/security/advisories/GHSA-cxc5-rrj5-8pf3",
+          "url": "https://github.com/EVerest/everest-core/security/advisories/GHSA-7qq4-q9r8-wc7w",
           "type": "reference"
         }
       ],
@@ -38,23 +38,20 @@
         }
       ],
       "problemType": [
-        "CWE-20: Improper Input Validation"
+        "CWE-120: Buffer Copy without Checking Size of Input ('Classic Buffer Overflow')",
+        "CWE-835: Loop with Unreachable Exit Condition ('Infinite Loop')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-68132",
-      "publishedDate": "2026-01-21T18:28:40.763Z",
-      "lastModifiedDate": "2026-01-21T18:28:40.763Z",
-      "description": "EVerest is an EV charging software stack. Prior to version 2025.12.0, `is_message_crc_correct` in the DZG_GSH01 powermeter SLIP parser reads `vec[vec.size()-1]` and `vec[vec.size()-2]` without checking that at least two bytes are present. Malformed SLIP frames on the serial link can reach `is_message_crc_correct` with `vec.size() < 2` (only via the multi-message path), causing an out-of-bounds read before CRC verification and `pop_back` underflow. Therefore, an attacker controlling the serial input can reliably crash the process. Version 2025.12.0 fixes the issue.",
-      "severity": "N/A",
+      "id": "CVE-2025-68136",
+      "publishedDate": "2026-01-21T19:18:21.068Z",
+      "lastModifiedDate": "2026-01-21T19:18:21.068Z",
+      "description": "EVerest is an EV charging software stack. Prior to version 2025.10.0, once the module receives a SDP request, it creates a whole new set of objects like `Session`, `IConnection` which open new TCP socket for the ISO15118-20 communications and registers callbacks for the created file descriptor, without closing and destroying the previous ones. Previous `Session` is not saved and the usage of an `unique_ptr` is lost, destroying connection data. Latter, if the used socket and therefore file descriptor is not the last one, it will lead to a null pointer dereference. Version 2025.10.0 fixes the issue.",
+      "severity": 7.4,
       "references": [
         {
-          "url": "https://github.com/EVerest/everest-core/security/advisories/GHSA-79gc-m8w6-9hx5",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/EVerest/everest-core/commit/b8139b95144e3fe0082789b7fafe4e532ee494a1",
+          "url": "https://github.com/EVerest/everest-core/security/advisories/GHSA-4h8h-x5cp-g22r",
           "type": "reference"
         }
       ],
@@ -64,63 +61,115 @@
           "product": "everest-core",
           "versions": [
             {
-              "version": "< 2025.12.0",
+              "version": "< 2025.10.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-125: Out-of-bounds Read"
+        "CWE-770: Allocation of Resources Without Limits or Throttling"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-0834",
-      "publishedDate": "2026-01-21T17:14:55.179Z",
-      "lastModifiedDate": "2026-01-21T18:36:22.772Z",
-      "description": "Logic vulnerability in TP-Link Archer C20 v6.0 and Archer AX53 v1.0 (TDDP module) allows unauthenticated adjacent attackers to execute administrative commands including factory reset and device reboot without credentials. Attackers on the adjacent network can remotely trigger factory resets and reboots without credentials, causing configuration loss and interruption of device availability.This issue affects Archer C20 v6.0 < V6_251031.\n\n\nArcher AX53 v1.0 < \n\nV1_251215",
-      "severity": "N/A",
+      "id": "CVE-2025-68135",
+      "publishedDate": "2026-01-21T18:56:05.970Z",
+      "lastModifiedDate": "2026-01-21T19:17:21.915Z",
+      "description": "EVerest is an EV charging software stack. Prior to version 2025.10.0, C++ exceptions are not properly handled for and by the `TbdController` loop, leading to its caller and itself to silently terminates. Thus, this leads to a denial of service as it is responsible of SDP and ISO15118-20 servers. Version 2025.10.0 fixes the issue.",
+      "severity": 6.5,
       "references": [
         {
-          "url": "https://www.tp-link.com/en/support/download/archer-c20/v6/#Firmware",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.tp-link.com/en/support/download/archer-ax53/v1/#Firmware",
-          "type": "reference"
-        },
-        {
-          "url": "https://killing.systems/posts/cve-2026-0834/",
+          "url": "https://github.com/EVerest/everest-core/security/advisories/GHSA-g7mm-r6qp-96vh",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "unaffected",
-          "modules": [
-            "tddp"
-          ],
-          "product": "Archer C20 v6.0, Archer AX53 v1.0",
-          "vendor": "TP-Link Systems Inc.",
+          "vendor": "EVerest",
+          "product": "everest-core",
           "versions": [
             {
-              "lessThan": "V6_251031",
+              "version": "< 2025.10.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-703: Improper Check or Handling of Exceptional Conditions"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-21968",
+      "publishedDate": "2026-01-20T21:56:34.542Z",
+      "lastModifiedDate": "2026-01-21T19:21:31.349Z",
+      "description": "Vulnerability in the MySQL Server product of Oracle MySQL (component: Server: Optimizer).  Supported versions that are affected are 8.0.0-8.0.44, 8.4.0-8.4.7 and  9.0.0-9.5.0. Easily exploitable vulnerability allows low privileged attacker with network access via multiple protocols to compromise MySQL Server.  Successful attacks of this vulnerability can result in unauthorized ability to cause a hang or frequently repeatable crash (complete DOS) of MySQL Server. CVSS 3.1 Base Score 6.5 (Availability impacts).  CVSS Vector: (CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H).",
+      "severity": 6.5,
+      "references": [
+        {
+          "url": "https://www.oracle.com/security-alerts/cpujan2026.html",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Oracle Corporation",
+          "product": "MySQL Server",
+          "versions": [
+            {
+              "version": "8.0.0",
               "status": "affected",
-              "version": "0",
+              "lessThanOrEqual": "8.0.44",
               "versionType": "custom"
             },
             {
-              "lessThan": "V1_251215",
+              "version": "8.4.0",
               "status": "affected",
-              "version": "0",
+              "lessThanOrEqual": "8.4.7",
+              "versionType": "custom"
+            },
+            {
+              "version": "9.0.0",
+              "status": "affected",
+              "lessThanOrEqual": "9.5.0",
               "versionType": "custom"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-290 Authentication Bypass by Spoofing"
+        "Easily exploitable vulnerability allows low privileged attacker with network access via multiple protocols to compromise MySQL Server.  Successful attacks of this vulnerability can result in unauthorized ability to cause a hang or frequently repeatable crash (complete DOS) of MySQL Server."
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-23955",
+      "publishedDate": "2026-01-21T19:25:12.104Z",
+      "lastModifiedDate": "2026-01-21T19:25:12.104Z",
+      "description": "EVerest is an EV charging software stack. Prior to version 2025.9.0, in several places, integer values are concatenated to literal strings when throwing errors. This results in pointers arithmetic instead of printing the integer value as expected, like most of interpreted languages. This can be used by malicious operator to read unintended memory regions, including the heap and the stack. Version 2025.9.0 fixes the issue.",
+      "severity": 4.2,
+      "references": [
+        {
+          "url": "https://github.com/EVerest/everest-core/security/advisories/GHSA-px57-jx97-hrff",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "EVerest",
+          "product": "everest-core",
+          "versions": [
+            {
+              "version": "< 2025.9.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-1046: Creation of Immutable Text Using String Concatenation"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
