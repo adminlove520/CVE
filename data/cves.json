@@ -3,152 +3,533 @@
   "dataVersion": "5.1",
   "cveMetadata": {
     "total_count": 4,
-    "last_updated": "2026-01-26T21:33:55.815912",
+    "last_updated": "2026-01-26T21:53:04.318039",
     "severity_distribution": {
       "critical": 0,
       "high": 0,
-      "medium": 0,
+      "medium": 3,
       "low": 0,
-      "none": 4
+      "none": 1
     }
   },
   "cves": [
     {
-      "id": "CVE-2025-9520",
-      "publishedDate": "2026-01-26T19:34:44.585Z",
-      "lastModifiedDate": "2026-01-26T21:11:52.235Z",
-      "description": "An IDOR vulnerability exists in Omada Controllers that allows an attacker with Administrator permissions to manipulate requests and potentially hijack the Owner account.",
-      "severity": "N/A",
+      "id": "CVE-2026-23888",
+      "publishedDate": "2026-01-26T21:37:17.483Z",
+      "lastModifiedDate": "2026-01-26T21:37:17.483Z",
+      "description": "pnpm is a package manager. Prior to version 10.28.1, a path traversal vulnerability in pnpm's binary fetcher allows malicious packages to write files outside the intended extraction directory. The vulnerability has two attack vectors: (1) Malicious ZIP entries containing `../` or absolute paths that escape the extraction root via AdmZip's `extractAllTo`, and (2) The `BinaryResolution.prefix` field is concatenated into the extraction path without validation, allowing a crafted prefix like `../../evil` to redirect extracted files outside `targetDir`. The issue impacts all pnpm users who install packages with binary assets, users who configure custom Node.js binary locations, CI/CD pipelines that auto-install binary dependencies, and those who can overwrite config files, scripts, or other sensitive files leading to RCE. Version 10.28.1 contains a patch.",
+      "severity": 6.5,
       "references": [
         {
-          "url": "https://support.omadanetworks.com/us/document/115200/",
+          "url": "https://github.com/pnpm/pnpm/security/advisories/GHSA-6pfh-p556-v868",
           "type": "reference"
         },
         {
-          "url": "https://support.omadanetworks.com/us/download/software/omada-controller/",
+          "url": "https://github.com/pnpm/pnpm/commit/5c382f0ca3b7cc49963b94677426e66539dcb3f5",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/pnpm/pnpm/releases/tag/v10.28.1",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "unknown",
-          "product": "Omada Controller",
-          "vendor": "TP-Link Systems Inc.",
+          "vendor": "pnpm",
+          "product": "pnpm",
           "versions": [
             {
-              "lessThan": "6.0",
-              "status": "affected",
-              "version": "0",
-              "versionType": "custom"
+              "version": "< 10.28.1",
+              "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-639 Authorization Bypass Through User-Controlled Key"
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')",
+        "CWE-23: Relative Path Traversal",
+        "CWE-426: Untrusted Search Path"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-24566",
-      "publishedDate": "2026-01-23T14:28:56.024Z",
-      "lastModifiedDate": "2026-01-26T21:12:43.661Z",
-      "description": "Missing Authorization vulnerability in iNET iNET Webkit inet-webkit allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects iNET Webkit: from n/a through <= 1.2.4.",
-      "severity": "N/A",
+      "id": "CVE-2025-59472",
+      "publishedDate": "2026-01-26T21:43:05.099Z",
+      "lastModifiedDate": "2026-01-26T21:43:05.099Z",
+      "description": "A denial of service vulnerability exists in Next.js versions with Partial Prerendering (PPR) enabled when running in minimal mode. The PPR resume endpoint accepts unauthenticated POST requests with the `Next-Resume: 1` header and processes attacker-controlled postponed state data. Two closely related vulnerabilities allow an attacker to crash the server process through memory exhaustion:\n\n1. **Unbounded request body buffering**: The server buffers the entire POST request body into memory using `Buffer.concat()` without enforcing any size limit, allowing arbitrarily large payloads to exhaust available memory.\n\n2. **Unbounded decompression (zipbomb)**: The resume data cache is decompressed using `inflateSync()` without limiting the decompressed output size. A small compressed payload can expand to hundreds of megabytes or gigabytes, causing memory exhaustion.\n\nBoth attack vectors result in a fatal V8 out-of-memory error (`FATAL ERROR: Reached heap limit Allocation failed - JavaScript heap out of memory`) causing the Node.js process to terminate. The zipbomb variant is particularly dangerous as it can bypass reverse proxy request size limits while still causing large memory allocation on the server.\n\nTo be affected you must have an application running with `experimental.ppr: true` or `cacheComponents: true` configured along with the NEXT_PRIVATE_MINIMAL_MODE=1 environment variable.\n\nStrongly consider upgrading to 15.6.0-canary.61 or 16.1.5 to reduce risk and prevent availability issues in Next applications.",
+      "severity": 5.9,
       "references": [
         {
-          "url": "https://patchstack.com/database/Wordpress/Plugin/inet-webkit/vulnerability/wordpress-inet-webkit-plugin-1-2-4-broken-access-control-vulnerability?_s_id=cve",
+          "url": "https://github.com/vercel/next.js/security/advisories/GHSA-5f7q-jpqc-wp7h",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "collectionURL": "https://wordpress.org/plugins",
           "defaultStatus": "unaffected",
-          "packageName": "inet-webkit",
-          "product": "iNET Webkit",
-          "vendor": "iNET",
+          "vendor": "vercel",
+          "product": "next",
           "versions": [
             {
-              "lessThanOrEqual": "<= 1.2.4",
+              "version": "15.0.0-canary.0",
               "status": "affected",
-              "version": "n/a",
-              "versionType": "custom"
+              "lessThan": "15.0.0",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.0.1-canary.0",
+              "status": "affected",
+              "lessThan": "15.0.1",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.0.2-canary.0",
+              "status": "affected",
+              "lessThan": "15.0.2",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.0.3-canary.0",
+              "status": "affected",
+              "lessThan": "15.0.3",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.0.4-canary.0",
+              "status": "affected",
+              "lessThan": "15.0.4",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.1.0-canary.0",
+              "status": "affected",
+              "lessThan": "15.1.0",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.1.1-canary.0",
+              "status": "affected",
+              "lessThan": "15.1.1",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.1.2-canary.0",
+              "status": "affected",
+              "lessThan": "15.1.2",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.1.3-canary.0",
+              "status": "affected",
+              "lessThan": "15.1.3",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.1.4-canary.0",
+              "status": "affected",
+              "lessThan": "15.1.4",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.1.5-canary.0",
+              "status": "affected",
+              "lessThan": "15.1.5",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.1.6-canary.0",
+              "status": "affected",
+              "lessThan": "15.1.6",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.1.7-canary.0",
+              "status": "affected",
+              "lessThan": "15.1.7",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.2.0-canary.0",
+              "status": "affected",
+              "lessThan": "15.2.0",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.2.1-canary.0",
+              "status": "affected",
+              "lessThan": "15.2.1",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.2.2-canary.0",
+              "status": "affected",
+              "lessThan": "15.2.2",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.2.3-canary.0",
+              "status": "affected",
+              "lessThan": "15.2.3",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.2.4-canary.0",
+              "status": "affected",
+              "lessThan": "15.2.4",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.2.5-canary.0",
+              "status": "affected",
+              "lessThan": "15.2.5",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.3.0-canary.0",
+              "status": "affected",
+              "lessThan": "15.3.0",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.3.1-canary.0",
+              "status": "affected",
+              "lessThan": "15.3.1",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.3.2-canary.0",
+              "status": "affected",
+              "lessThan": "15.3.2",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.1.8-canary.0",
+              "status": "affected",
+              "lessThan": "15.1.8",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.3.3-canary.0",
+              "status": "affected",
+              "lessThan": "15.3.3",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.4.0-canary.0",
+              "status": "affected",
+              "lessThan": "15.4.0",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.3.4-canary.0",
+              "status": "affected",
+              "lessThan": "15.3.4",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.3.5-canary.0",
+              "status": "affected",
+              "lessThan": "15.3.5",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.4.1-canary.0",
+              "status": "affected",
+              "lessThan": "15.4.1",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.4.2-canary.0",
+              "status": "affected",
+              "lessThan": "15.4.2",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.4.3-canary.0",
+              "status": "affected",
+              "lessThan": "15.4.3",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.4.4-canary.0",
+              "status": "affected",
+              "lessThan": "15.4.4",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.4.5-canary.0",
+              "status": "affected",
+              "lessThan": "15.4.5",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.4.6-canary.0",
+              "status": "affected",
+              "lessThan": "15.4.6",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.4.7-canary.0",
+              "status": "affected",
+              "lessThan": "15.4.7",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.5.0-canary.0",
+              "status": "affected",
+              "lessThan": "15.5.0",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.5.1-canary.0",
+              "status": "affected",
+              "lessThan": "15.5.1",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.5.2-canary.0",
+              "status": "affected",
+              "lessThan": "15.5.2",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.5.3-canary.0",
+              "status": "affected",
+              "lessThan": "15.5.3",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.5.4-canary.0",
+              "status": "affected",
+              "lessThan": "15.5.4",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.5.5-canary.0",
+              "status": "affected",
+              "lessThan": "15.5.5",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.5.6-canary.0",
+              "status": "affected",
+              "lessThan": "15.5.6",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.5.7-canary.0",
+              "status": "affected",
+              "lessThan": "15.5.7",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.4.8-canary.0",
+              "status": "affected",
+              "lessThan": "15.4.8",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.1.9-canary.0",
+              "status": "affected",
+              "lessThan": "15.1.9",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.0.5-canary.0",
+              "status": "affected",
+              "lessThan": "15.0.5",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.3.6-canary.0",
+              "status": "affected",
+              "lessThan": "15.3.6",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.2.6-canary.0",
+              "status": "affected",
+              "lessThan": "15.2.6",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.5.8-canary.0",
+              "status": "affected",
+              "lessThan": "15.5.8",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.4.9-canary.0",
+              "status": "affected",
+              "lessThan": "15.4.9",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.3.7-canary.0",
+              "status": "affected",
+              "lessThan": "15.3.7",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.2.7-canary.0",
+              "status": "affected",
+              "lessThan": "15.2.7",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.1.10-canary.0",
+              "status": "affected",
+              "lessThan": "15.1.10",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.0.6-canary.0",
+              "status": "affected",
+              "lessThan": "15.0.6",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.5.9-canary.0",
+              "status": "affected",
+              "lessThan": "15.5.9",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.4.10-canary.0",
+              "status": "affected",
+              "lessThan": "15.4.10",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.3.8-canary.0",
+              "status": "affected",
+              "lessThan": "15.3.8",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.2.8-canary.0",
+              "status": "affected",
+              "lessThan": "15.2.8",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.1.11-canary.0",
+              "status": "affected",
+              "lessThan": "15.1.11",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.0.7-canary.0",
+              "status": "affected",
+              "lessThan": "15.0.7",
+              "versionType": "semver"
+            },
+            {
+              "version": "16.1.0",
+              "status": "affected",
+              "lessThan": "16.1.5",
+              "versionType": "semver"
             }
           ]
         }
       ],
-      "problemType": [
-        "Missing Authorization"
-      ],
+      "problemType": [],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-22401",
-      "publishedDate": "2026-01-22T16:52:37.071Z",
-      "lastModifiedDate": "2026-01-26T21:15:26.754Z",
-      "description": "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion') vulnerability in pavothemes Freshio freshio allows PHP Local File Inclusion.This issue affects Freshio: from n/a through <= 2.4.2.",
-      "severity": "N/A",
+      "id": "CVE-2025-59471",
+      "publishedDate": "2026-01-26T21:43:05.094Z",
+      "lastModifiedDate": "2026-01-26T21:43:05.094Z",
+      "description": "A denial of service vulnerability exists in self-hosted Next.js applications that have `remotePatterns` configured for the Image Optimizer. The image optimization endpoint (`/_next/image`) loads external images entirely into memory without enforcing a maximum size limit, allowing an attacker to cause out-of-memory conditions by requesting optimization of arbitrarily large images. This vulnerability requires that `remotePatterns` is configured to allow image optimization from external domains and that the attacker can serve or control a large image on an allowed domain.\r\n\r\nStrongly consider upgrading to 15.5.10 or 16.1.5 to reduce risk and prevent availability issues in Next applications.",
+      "severity": 5.9,
       "references": [
         {
-          "url": "https://patchstack.com/database/Wordpress/Theme/freshio/vulnerability/wordpress-freshio-theme-2-4-2-local-file-inclusion-vulnerability?_s_id=cve",
+          "url": "https://github.com/vercel/next.js/security/advisories/GHSA-9g9p-9gw9-jx7f",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "collectionURL": "https://themeforest.net",
           "defaultStatus": "unaffected",
-          "packageName": "freshio",
-          "product": "Freshio",
-          "vendor": "pavothemes",
+          "vendor": "vercel",
+          "product": "next",
           "versions": [
             {
-              "lessThanOrEqual": "<= 2.4.2",
+              "version": "10.0",
               "status": "affected",
-              "version": "n/a",
-              "versionType": "custom"
+              "lessThan": "10.0",
+              "versionType": "semver"
+            },
+            {
+              "version": "11.0",
+              "status": "affected",
+              "lessThan": "11.0",
+              "versionType": "semver"
+            },
+            {
+              "version": "12.0",
+              "status": "affected",
+              "lessThan": "12.0",
+              "versionType": "semver"
+            },
+            {
+              "version": "13.0",
+              "status": "affected",
+              "lessThan": "13.0",
+              "versionType": "semver"
+            },
+            {
+              "version": "14.0",
+              "status": "affected",
+              "lessThan": "14.0",
+              "versionType": "semver"
+            },
+            {
+              "version": "15.0",
+              "status": "affected",
+              "lessThan": "15.5.10",
+              "versionType": "semver"
+            },
+            {
+              "version": "16.0",
+              "status": "affected",
+              "lessThan": "16.1.5",
+              "versionType": "semver"
             }
           ]
         }
       ],
-      "problemType": [
-        "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
-      ],
+      "problemType": [],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-22400",
-      "publishedDate": "2026-01-22T16:52:36.847Z",
-      "lastModifiedDate": "2026-01-26T21:18:22.627Z",
-      "description": "Authorization Bypass Through User-Controlled Key vulnerability in Mikado-Themes Holmes holmes allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Holmes: from n/a through <= 1.7.",
+      "id": "CVE-2025-59473",
+      "publishedDate": "2026-01-26T21:43:05.071Z",
+      "lastModifiedDate": "2026-01-26T21:43:05.071Z",
+      "description": "SQL Injection vulnerability in the Structure for Admin authenticated user",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://patchstack.com/database/Wordpress/Theme/holmes/vulnerability/wordpress-holmes-theme-1-7-insecure-direct-object-references-idor-vulnerability?_s_id=cve",
+          "url": "https://hackerone.com/reports/3249794",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "collectionURL": "https://themeforest.net",
-          "defaultStatus": "unaffected",
-          "packageName": "holmes",
-          "product": "Holmes",
-          "vendor": "Mikado-Themes",
+          "defaultStatus": "affected",
+          "vendor": "ExpressionEngine",
+          "product": "ExpressionEngine",
           "versions": [
             {
-              "lessThanOrEqual": "<= 1.7",
-              "status": "affected",
-              "version": "n/a",
-              "versionType": "custom"
+              "version": "7.*",
+              "status": "unaffected",
+              "lessThan": "7.5.14",
+              "versionType": "semver"
             }
           ]
         }
       ],
-      "problemType": [
-        "Authorization Bypass Through User-Controlled Key"
-      ],
+      "problemType": [],
       "fix_suggestion": "无法生成修复建议"
     }
   ]
