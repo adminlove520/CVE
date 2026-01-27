@@ -2,1122 +2,342 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 18,
-    "last_updated": "2026-01-27T16:14:56.804230",
+    "total_count": 10,
+    "last_updated": "2026-01-27T16:52:25.055071",
     "severity_distribution": {
-      "critical": 0,
+      "critical": 1,
       "high": 1,
-      "medium": 1,
+      "medium": 0,
       "low": 0,
-      "none": 16
+      "none": 8
     }
   },
   "cves": [
     {
-      "id": "CVE-2021-47902",
-      "publishedDate": "2026-01-27T15:23:52.531Z",
-      "lastModifiedDate": "2026-01-27T16:01:24.282Z",
-      "description": "Testa Online Test Management System 3.4.7 contains a SQL injection vulnerability that allows attackers to manipulate database queries through the 'q' search parameter. Attackers can inject malicious SQL code in the search field to extract database information, potentially accessing sensitive user or system data.",
-      "severity": 8.2,
+      "id": "CVE-2026-22039",
+      "publishedDate": "2026-01-27T16:07:19.698Z",
+      "lastModifiedDate": "2026-01-27T16:42:49.789Z",
+      "description": "Kyverno is a policy engine designed for cloud native platform engineering teams. Versions prior to 1.16.3 and 1.15.3 have a critical authorization boundary bypass in namespaced Kyverno Policy apiCall. The resolved `urlPath` is executed using the Kyverno admission controller ServiceAccount, with no enforcement that the request is limited to the policy’s namespace. As a result, any authenticated user with permission to create a namespaced Policy can cause Kyverno to perform Kubernetes API requests using Kyverno’s admission controller identity, targeting any API path allowed by that ServiceAccount’s RBAC. This breaks namespace isolation by enabling cross-namespace reads (for example, ConfigMaps and, where permitted, Secrets) and allows cluster-scoped or cross-namespace writes (for example, creating ClusterPolicies) by controlling the urlPath through context variable substitution. Versions 1.16.3 and 1.15.3 contain a patch for the vulnerability.",
+      "severity": 10,
       "references": [
         {
-          "url": "https://www.exploit-db.com/exploits/49194",
-          "type": "poc"
-        },
-        {
-          "url": "https://web.archive.org/web/20220406031253/https://testa.cc/",
+          "url": "https://github.com/kyverno/kyverno/security/advisories/GHSA-8p9x-46gm-qfx2",
           "type": "reference"
         },
         {
-          "url": "https://www.vulncheck.com/advisories/testa-online-test-management-system-q-sql-injection",
+          "url": "https://github.com/kyverno/kyverno/commit/e0ba4de4f1e0ca325066d5095db51aec45b1407b",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/kyverno/kyverno/commit/eba60fa856c781bcb9c3be066061a3df03ae4e3e",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Testa",
-          "product": "Testa Online Test Management System",
+          "vendor": "kyverno",
+          "product": "kyverno",
           "versions": [
             {
-              "version": "3.4.7",
+              "version": "< 1.15.3",
+              "status": "affected"
+            },
+            {
+              "version": ">= 1.16.0, < 1.16.3",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+        "CWE-269: Improper Privilege Management",
+        "CWE-918: Server-Side Request Forgery (SSRF)"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-55095",
-      "publishedDate": "2026-01-27T15:34:47.755Z",
-      "lastModifiedDate": "2026-01-27T15:58:14.494Z",
-      "description": "The function _ux_host_class_storage_media_mount() is responsible for mounting partitions on a USB mass storage device. When it encounters an extended partition entry in the partition table, it recursively calls itself to mount the next logical partition.\n\nThis recursion occurs in _ux_host_class_storage_partition_read(), which parses up to four partition entries. If an extended partition is found (with type UX_HOST_CLASS_STORAGE_PARTITION_EXTENDED or EXTENDED_LBA_MAPPED), the code invokes:\n            _ux_host_class_storage_media_mount(storage, sector + _ux_utility_long_get(...));\n\n\nThere is no limit on the recursion depth or tracking of visited sectors. As a result, a malicious or malformed disk image can include cyclic or excessively deep chains of extended partitions, causing the function to recurse until stack overflow occurs.",
-      "severity": 4.2,
+      "id": "CVE-2026-23881",
+      "publishedDate": "2026-01-27T16:10:44.376Z",
+      "lastModifiedDate": "2026-01-27T16:33:03.342Z",
+      "description": "Kyverno is a policy engine designed for cloud native platform engineering teams. Versions prior to 1.16.3 and 1.15.3 have unbounded memory consumption in Kyverno's policy engine that allows users with policy creation privileges to cause denial of service by crafting policies that exponentially amplify string data through context variables. Versions 1.16.3 and 1.15.3 contain a patch for the vulnerability.",
+      "severity": 7.7,
       "references": [
         {
-          "url": "https://github.com/eclipse-threadx/usbx/security/advisories/GHSA-qfmp-wch9-rpv2",
+          "url": "https://github.com/kyverno/kyverno/security/advisories/GHSA-r2rj-wwm5-x6mq",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/kyverno/kyverno/commit/7a651be3a8c78dcabfbf4178b8d89026bf3b850f",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/kyverno/kyverno/commit/f5617f60920568a301740485472bf704892175b7",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "unaffected",
-          "product": "Eclipse ThreadX - USBX",
-          "repo": "https://github.com/eclipse-threadx/usbx",
-          "vendor": "Eclipse Foundation",
+          "vendor": "kyverno",
+          "product": "kyverno",
           "versions": [
             {
-              "lessThanOrEqual": "6.4.2",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-121  Stack-based Buffer Overflow",
-        "CWE-674 Uncontrolled Recursion"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-22796",
-      "publishedDate": "2026-01-27T16:01:28.150Z",
-      "lastModifiedDate": "2026-01-27T16:01:28.150Z",
-      "description": "Issue summary: A type confusion vulnerability exists in the signature\nverification of signed PKCS#7 data where an ASN1_TYPE union member is\naccessed without first validating the type, causing an invalid or NULL\npointer dereference when processing malformed PKCS#7 data.\n\nImpact summary: An application performing signature verification of PKCS#7\ndata or calling directly the PKCS7_digest_from_attributes() function can be\ncaused to dereference an invalid or NULL pointer when reading, resulting in\na Denial of Service.\n\nThe function PKCS7_digest_from_attributes() accesses the message digest attribute\nvalue without validating its type. When the type is not V_ASN1_OCTET_STRING,\nthis results in accessing invalid memory through the ASN1_TYPE union, causing\na crash.\n\nExploiting this vulnerability requires an attacker to provide a malformed\nsigned PKCS#7 to an application that verifies it. The impact of the\nexploit is just a Denial of Service, the PKCS7 API is legacy and applications\nshould be using the CMS API instead. For these reasons the issue was\nassessed as Low severity.\n\nThe FIPS modules in 3.5, 3.4, 3.3 and 3.0 are not affected by this issue,\nas the PKCS#7 parsing implementation is outside the OpenSSL FIPS module\nboundary.\n\nOpenSSL 3.6, 3.5, 3.4, 3.3, 3.0, 1.1.1 and 1.0.2 are vulnerable to this issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://openssl-library.org/news/secadv/20260127.txt",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/ef2fb66ec571564d64d1c74a12e388a2a54d05d2",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/2502e7b7d4c0cf4f972a881641fe09edc67aeec4",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/7bbca05be55b129651d9df4bdb92becc45002c12",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/eeee3cbd4d682095ed431052f00403004596373e",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/572844beca95068394c916626a6d3a490f831a49",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "OpenSSL",
-          "vendor": "OpenSSL",
-          "versions": [
-            {
-              "lessThan": "3.6.1",
-              "status": "affected",
-              "version": "3.6.0",
-              "versionType": "semver"
+              "version": "< 1.15.3",
+              "status": "affected"
             },
             {
-              "lessThan": "3.5.5",
-              "status": "affected",
-              "version": "3.5.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.4.4",
-              "status": "affected",
-              "version": "3.4.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.3.6",
-              "status": "affected",
-              "version": "3.3.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.0.19",
-              "status": "affected",
-              "version": "3.0.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "1.1.1ze",
-              "status": "affected",
-              "version": "1.1.1",
-              "versionType": "custom"
-            },
-            {
-              "lessThan": "1.0.2zn",
-              "status": "affected",
-              "version": "1.0.2",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-754 Improper Check for Unusual or Exceptional Conditions"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-22795",
-      "publishedDate": "2026-01-27T16:01:27.320Z",
-      "lastModifiedDate": "2026-01-27T16:01:27.320Z",
-      "description": "Issue summary: An invalid or NULL pointer dereference can happen in\nan application processing a malformed PKCS#12 file.\n\nImpact summary: An application processing a malformed PKCS#12 file can be\ncaused to dereference an invalid or NULL pointer on memory read, resulting\nin a Denial of Service.\n\nA type confusion vulnerability exists in PKCS#12 parsing code where\nan ASN1_TYPE union member is accessed without first validating the type,\ncausing an invalid pointer read.\n\nThe location is constrained to a 1-byte address space, meaning any\nattempted pointer manipulation can only target addresses between 0x00 and 0xFF.\nThis range corresponds to the zero page, which is unmapped on most modern\noperating systems and will reliably result in a crash, leading only to a\nDenial of Service. Exploiting this issue also requires a user or application\nto process a maliciously crafted PKCS#12 file. It is uncommon to accept\nuntrusted PKCS#12 files in applications as they are usually used to store\nprivate keys which are trusted by definition. For these reasons, the issue\nwas assessed as Low severity.\n\nThe FIPS modules in 3.5, 3.4, 3.3 and 3.0 are not affected by this issue,\nas the PKCS12 implementation is outside the OpenSSL FIPS module boundary.\n\nOpenSSL 3.6, 3.5, 3.4, 3.3, 3.0 and 1.1.1 are vulnerable to this issue.\n\nOpenSSL 1.0.2 is not affected by this issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://openssl-library.org/news/secadv/20260127.txt",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/ef2fb66ec571564d64d1c74a12e388a2a54d05d2",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/2502e7b7d4c0cf4f972a881641fe09edc67aeec4",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/7bbca05be55b129651d9df4bdb92becc45002c12",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/eeee3cbd4d682095ed431052f00403004596373e",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/572844beca95068394c916626a6d3a490f831a49",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "OpenSSL",
-          "vendor": "OpenSSL",
-          "versions": [
-            {
-              "lessThan": "3.6.1",
-              "status": "affected",
-              "version": "3.6.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.5.5",
-              "status": "affected",
-              "version": "3.5.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.4.4",
-              "status": "affected",
-              "version": "3.4.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.3.6",
-              "status": "affected",
-              "version": "3.3.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.0.19",
-              "status": "affected",
-              "version": "3.0.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "1.1.1ze",
-              "status": "affected",
-              "version": "1.1.1",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-754 Improper Check for Unusual or Exceptional Conditions"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-69421",
-      "publishedDate": "2026-01-27T16:01:26.435Z",
-      "lastModifiedDate": "2026-01-27T16:01:26.435Z",
-      "description": "Issue summary: Processing a malformed PKCS#12 file can trigger a NULL pointer\ndereference in the PKCS12_item_decrypt_d2i_ex() function.\n\nImpact summary: A NULL pointer dereference can trigger a crash which leads to\nDenial of Service for an application processing PKCS#12 files.\n\nThe PKCS12_item_decrypt_d2i_ex() function does not check whether the oct\nparameter is NULL before dereferencing it. When called from\nPKCS12_unpack_p7encdata() with a malformed PKCS#12 file, this parameter can\nbe NULL, causing a crash. The vulnerability is limited to Denial of Service\nand cannot be escalated to achieve code execution or memory disclosure.\n\nExploiting this issue requires an attacker to provide a malformed PKCS#12 file\nto an application that processes it. For that reason the issue was assessed as\nLow severity according to our Security Policy.\n\nThe FIPS modules in 3.6, 3.5, 3.4, 3.3 and 3.0 are not affected by this issue,\nas the PKCS#12 implementation is outside the OpenSSL FIPS module boundary.\n\nOpenSSL 3.6, 3.5, 3.4, 3.3, 3.0, 1.1.1 and 1.0.2 are vulnerable to this issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://openssl-library.org/news/secadv/20260127.txt",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/a2dbc539f0f9cc63832709fa5aa33ad9495eb19c",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/3524a29271f8191b8fd8a5257eb05173982a097b",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/643986985cd1c21221f941129d76fe0c2785aeb3",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/4bbc8d41a72c842ce4077a8a3eccd1109aaf74bd",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/36ecb4960872a4ce04bf6f1e1f4e78d75ec0c0c7",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "OpenSSL",
-          "vendor": "OpenSSL",
-          "versions": [
-            {
-              "lessThan": "3.6.1",
-              "status": "affected",
-              "version": "3.6.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.5.5",
-              "status": "affected",
-              "version": "3.5.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.4.4",
-              "status": "affected",
-              "version": "3.4.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.3.6",
-              "status": "affected",
-              "version": "3.3.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.0.19",
-              "status": "affected",
-              "version": "3.0.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "1.1.1ze",
-              "status": "affected",
-              "version": "1.1.1",
-              "versionType": "custom"
-            },
-            {
-              "lessThan": "1.0.2zn",
-              "status": "affected",
-              "version": "1.0.2",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-476 NULL Pointer Dereference"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-69420",
-      "publishedDate": "2026-01-27T16:01:25.643Z",
-      "lastModifiedDate": "2026-01-27T16:01:25.643Z",
-      "description": "Issue summary: A type confusion vulnerability exists in the TimeStamp Response\nverification code where an ASN1_TYPE union member is accessed without first\nvalidating the type, causing an invalid or NULL pointer dereference when\nprocessing a malformed TimeStamp Response file.\n\nImpact summary: An application calling TS_RESP_verify_response() with a\nmalformed TimeStamp Response can be caused to dereference an invalid or\nNULL pointer when reading, resulting in a Denial of Service.\n\nThe functions ossl_ess_get_signing_cert() and ossl_ess_get_signing_cert_v2()\naccess the signing cert attribute value without validating its type.\nWhen the type is not V_ASN1_SEQUENCE, this results in accessing invalid memory\nthrough the ASN1_TYPE union, causing a crash.\n\nExploiting this vulnerability requires an attacker to provide a malformed\nTimeStamp Response to an application that verifies timestamp responses. The\nTimeStamp protocol (RFC 3161) is not widely used and the impact of the\nexploit is just a Denial of Service. For these reasons the issue was\nassessed as Low severity.\n\nThe FIPS modules in 3.5, 3.4, 3.3 and 3.0 are not affected by this issue,\nas the TimeStamp Response implementation is outside the OpenSSL FIPS module\nboundary.\n\nOpenSSL 3.6, 3.5, 3.4, 3.3, 3.0 and 1.1.1 are vulnerable to this issue.\n\nOpenSSL 1.0.2 is not affected by this issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://openssl-library.org/news/secadv/20260127.txt",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/a99349ebfc519999edc50620abe24d599b9eb085",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/564fd9c73787f25693bf9e75faf7bf6bb1305d4e",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/27c7012c91cc986a598d7540f3079dfde2416eb9",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/5eb0770ffcf11b785cf374ff3c19196245e54f1b",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/4e254b48ad93cc092be3dd62d97015f33f73133a",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "OpenSSL",
-          "vendor": "OpenSSL",
-          "versions": [
-            {
-              "lessThan": "3.6.1",
-              "status": "affected",
-              "version": "3.6.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.5.5",
-              "status": "affected",
-              "version": "3.5.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.4.4",
-              "status": "affected",
-              "version": "3.4.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.3.6",
-              "status": "affected",
-              "version": "3.3.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.0.19",
-              "status": "affected",
-              "version": "3.0.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "1.1.1ze",
-              "status": "affected",
-              "version": "1.1.1",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-754 Improper Check for Unusual or Exceptional Conditions"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-69419",
-      "publishedDate": "2026-01-27T16:01:24.822Z",
-      "lastModifiedDate": "2026-01-27T16:01:24.822Z",
-      "description": "Issue summary: Calling PKCS12_get_friendlyname() function on a maliciously\ncrafted PKCS#12 file with a BMPString (UTF-16BE) friendly name containing\nnon-ASCII BMP code point can trigger a one byte write before the allocated\nbuffer.\n\nImpact summary: The out-of-bounds write can cause a memory corruption\nwhich can have various consequences including a Denial of Service.\n\nThe OPENSSL_uni2utf8() function performs a two-pass conversion of a PKCS#12\nBMPString (UTF-16BE) to UTF-8. In the second pass, when emitting UTF-8 bytes,\nthe helper function bmp_to_utf8() incorrectly forwards the remaining UTF-16\nsource byte count as the destination buffer capacity to UTF8_putc(). For BMP\ncode points above U+07FF, UTF-8 requires three bytes, but the forwarded\ncapacity can be just two bytes. UTF8_putc() then returns -1, and this negative\nvalue is added to the output length without validation, causing the\nlength to become negative. The subsequent trailing NUL byte is then written\nat a negative offset, causing write outside of heap allocated buffer.\n\nThe vulnerability is reachable via the public PKCS12_get_friendlyname() API\nwhen parsing attacker-controlled PKCS#12 files. While PKCS12_parse() uses a\ndifferent code path that avoids this issue, PKCS12_get_friendlyname() directly\ninvokes the vulnerable function. Exploitation requires an attacker to provide\na malicious PKCS#12 file to be parsed by the application and the attacker\ncan just trigger a one zero byte write before the allocated buffer.\nFor that reason the issue was assessed as Low severity according to our\nSecurity Policy.\n\nThe FIPS modules in 3.6, 3.5, 3.4, 3.3 and 3.0 are not affected by this issue,\nas the PKCS#12 implementation is outside the OpenSSL FIPS module boundary.\n\nOpenSSL 3.6, 3.5, 3.4, 3.3, 3.0 and 1.1.1 are vulnerable to this issue.\n\nOpenSSL 1.0.2 is not affected by this issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://openssl-library.org/news/secadv/20260127.txt",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/7e9cac9832e4705b91987c2474ed06a37a93cecb",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/ff628933755075446bca8307e8417c14d164b535",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/cda12de3bc0e333ea8d2c6fd15001dbdaf280015",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/a26a90d38edec3748566129d824e664b54bee2e2",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/41be0f216404f14457bbf3b9cc488dba60b49296",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "OpenSSL",
-          "vendor": "OpenSSL",
-          "versions": [
-            {
-              "lessThan": "3.6.1",
-              "status": "affected",
-              "version": "3.6.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.5.5",
-              "status": "affected",
-              "version": "3.5.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.4.4",
-              "status": "affected",
-              "version": "3.4.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.3.6",
-              "status": "affected",
-              "version": "3.3.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.0.19",
-              "status": "affected",
-              "version": "3.0.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "1.1.1ze",
-              "status": "affected",
-              "version": "1.1.1",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-787 Out-of-bounds Write"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-69418",
-      "publishedDate": "2026-01-27T16:01:23.986Z",
-      "lastModifiedDate": "2026-01-27T16:01:23.986Z",
-      "description": "Issue summary: When using the low-level OCB API directly with AES-NI or<br>other hardware-accelerated code paths, inputs whose length is not a multiple<br>of 16 bytes can leave the final partial block unencrypted and unauthenticated.<br><br>Impact summary: The trailing 1-15 bytes of a message may be exposed in<br>cleartext on encryption and are not covered by the authentication tag,<br>allowing an attacker to read or tamper with those bytes without detection.<br><br>The low-level OCB encrypt and decrypt routines in the hardware-accelerated<br>stream path process full 16-byte blocks but do not advance the input/output<br>pointers. The subsequent tail-handling code then operates on the original<br>base pointers, effectively reprocessing the beginning of the buffer while<br>leaving the actual trailing bytes unprocessed. The authentication checksum<br>also excludes the true tail bytes.<br><br>However, typical OpenSSL consumers using EVP are not affected because the<br>higher-level EVP and provider OCB implementations split inputs so that full<br>blocks and trailing partial blocks are processed in separate calls, avoiding<br>the problematic code path. Additionally, TLS does not use OCB ciphersuites.<br>The vulnerability only affects applications that call the low-level<br>CRYPTO_ocb128_encrypt() or CRYPTO_ocb128_decrypt() functions directly with<br>non-block-aligned lengths in a single call on hardware-accelerated builds.<br>For these reasons the issue was assessed as Low severity.<br><br>The FIPS modules in 3.6, 3.5, 3.4, 3.3, 3.2, 3.1 and 3.0 are not affected<br>by this issue, as OCB mode is not a FIPS-approved algorithm.<br><br>OpenSSL 3.6, 3.5, 3.4, 3.3, 3.0 and 1.1.1 are vulnerable to this issue.<br><br>OpenSSL 1.0.2 is not affected by this issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://openssl-library.org/news/secadv/20260127.txt",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/ed40856d7d4ba6cb42779b6770666a65f19cb977",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/4016975d4469cd6b94927c607f7c511385f928d8",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/372fc5c77529695b05b4f5b5187691a57ef5dffc",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/a7589230356d908c0eca4b969ec4f62106f4f5ae",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/52d23c86a54adab5ee9f80e48b242b52c4cc2347",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "OpenSSL",
-          "vendor": "OpenSSL",
-          "versions": [
-            {
-              "lessThan": "3.6.1",
-              "status": "affected",
-              "version": "3.6.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.5.5",
-              "status": "affected",
-              "version": "3.5.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.4.4",
-              "status": "affected",
-              "version": "3.4.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.3.6",
-              "status": "affected",
-              "version": "3.3.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.0.19",
-              "status": "affected",
-              "version": "3.0.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "1.1.1ze",
-              "status": "affected",
-              "version": "1.1.1",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-325 Missing Cryptographic Step"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-68160",
-      "publishedDate": "2026-01-27T16:01:23.181Z",
-      "lastModifiedDate": "2026-01-27T16:01:23.181Z",
-      "description": "Issue summary: Writing large, newline-free data into a BIO chain using the\nline-buffering filter where the next BIO performs short writes can trigger\na heap-based out-of-bounds write.\n\nImpact summary: This out-of-bounds write can cause memory corruption which\ntypically results in a crash, leading to Denial of Service for an application.\n\nThe line-buffering BIO filter (BIO_f_linebuffer) is not used by default in\nTLS/SSL data paths. In OpenSSL command-line applications, it is typically\nonly pushed onto stdout/stderr on VMS systems. Third-party applications that\nexplicitly use this filter with a BIO chain that can short-write and that\nwrite large, newline-free data influenced by an attacker would be affected.\nHowever, the circumstances where this could happen are unlikely to be under\nattacker control, and BIO_f_linebuffer is unlikely to be handling non-curated\ndata controlled by an attacker. For that reason the issue was assessed as\nLow severity.\n\nThe FIPS modules in 3.6, 3.5, 3.4, 3.3 and 3.0 are not affected by this issue,\nas the BIO implementation is outside the OpenSSL FIPS module boundary.\n\nOpenSSL 3.6, 3.5, 3.4, 3.3, 3.0, 1.1.1 and 1.0.2 are vulnerable to this issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://openssl-library.org/news/secadv/20260127.txt",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/4c96fbba618e1940f038012506ee9e21d32ee12c",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/6845c3b6460a98b1ec4e463baa2ea1a63a32d7c0",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/68a7cd2e2816c3a02f4d45a2ce43fc04fac97096",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/384011202af92605d926fafe4a0bcd6b65d162ad",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/475c466ef2fbd8fc1df6fae1c3eed9c813fc8ff6",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "OpenSSL",
-          "vendor": "OpenSSL",
-          "versions": [
-            {
-              "lessThan": "3.6.1",
-              "status": "affected",
-              "version": "3.6.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.5.5",
-              "status": "affected",
-              "version": "3.5.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.4.4",
-              "status": "affected",
-              "version": "3.4.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.3.6",
-              "status": "affected",
-              "version": "3.3.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.0.19",
-              "status": "affected",
-              "version": "3.0.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "1.1.1ze",
-              "status": "affected",
-              "version": "1.1.1",
-              "versionType": "custom"
-            },
-            {
-              "lessThan": "1.0.2zn",
-              "status": "affected",
-              "version": "1.0.2",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-787 Out-of-bounds Write"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-66199",
-      "publishedDate": "2026-01-27T16:01:22.399Z",
-      "lastModifiedDate": "2026-01-27T16:01:22.399Z",
-      "description": "Issue summary: A TLS 1.3 connection using certificate compression can be\nforced to allocate a large buffer before decompression without checking\nagainst the configured certificate size limit.\n\nImpact summary: An attacker can cause per-connection memory allocations of\nup to approximately 22 MiB and extra CPU work, potentially leading to\nservice degradation or resource exhaustion (Denial of Service).\n\nIn affected configurations, the peer-supplied uncompressed certificate\nlength from a CompressedCertificate message is used to grow a heap buffer\nprior to decompression. This length is not bounded by the max_cert_list\nsetting, which otherwise constrains certificate message sizes. An attacker\ncan exploit this to cause large per-connection allocations followed by\nhandshake failure. No memory corruption or information disclosure occurs.\n\nThis issue only affects builds where TLS 1.3 certificate compression is\ncompiled in (i.e., not OPENSSL_NO_COMP_ALG) and at least one compression\nalgorithm (brotli, zlib, or zstd) is available, and where the compression\nextension is negotiated. Both clients receiving a server CompressedCertificate\nand servers in mutual TLS scenarios receiving a client CompressedCertificate\nare affected. Servers that do not request client certificates are not\nvulnerable to client-initiated attacks.\n\nUsers can mitigate this issue by setting SSL_OP_NO_RX_CERTIFICATE_COMPRESSION\nto disable receiving compressed certificates.\n\nThe FIPS modules in 3.6, 3.5, 3.4 and 3.3 are not affected by this issue,\nas the TLS implementation is outside the OpenSSL FIPS module boundary.\n\nOpenSSL 3.6, 3.5, 3.4 and 3.3 are vulnerable to this issue.\n\nOpenSSL 3.0, 1.1.1 and 1.0.2 are not affected by this issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://openssl-library.org/news/secadv/20260127.txt",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/6184a4fb08ee6d7bca570d931a4e8bef40b64451",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/895150b5e021d16b52fb32b97e1dd12f20448be5",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/966a2478046c311ed7dae50c457d0db4cafbf7e4",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/3ed1f75249932b155eef993a8e66a99cb98bfef4",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "OpenSSL",
-          "vendor": "OpenSSL",
-          "versions": [
-            {
-              "lessThan": "3.6.1",
-              "status": "affected",
-              "version": "3.6.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.5.5",
-              "status": "affected",
-              "version": "3.5.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.4.4",
-              "status": "affected",
-              "version": "3.4.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.3.6",
-              "status": "affected",
-              "version": "3.3.0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-789 Memory Allocation with Excessive Size Value"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-15469",
-      "publishedDate": "2026-01-27T16:01:21.597Z",
-      "lastModifiedDate": "2026-01-27T16:01:21.597Z",
-      "description": "Issue summary: The 'openssl dgst' command-line tool silently truncates input\ndata to 16MB when using one-shot signing algorithms and reports success instead\nof an error.\n\nImpact summary: A user signing or verifying files larger than 16MB with\none-shot algorithms (such as Ed25519, Ed448, or ML-DSA) may believe the entire\nfile is authenticated while trailing data beyond 16MB remains unauthenticated.\n\nWhen the 'openssl dgst' command is used with algorithms that only support\none-shot signing (Ed25519, Ed448, ML-DSA-44, ML-DSA-65, ML-DSA-87), the input\nis buffered with a 16MB limit. If the input exceeds this limit, the tool\nsilently truncates to the first 16MB and continues without signaling an error,\ncontrary to what the documentation states. This creates an integrity gap where\ntrailing bytes can be modified without detection if both signing and\nverification are performed using the same affected codepath.\n\nThe issue affects only the command-line tool behavior. Verifiers that process\nthe full message using library APIs will reject the signature, so the risk\nprimarily affects workflows that both sign and verify with the affected\n'openssl dgst' command. Streaming digest algorithms for 'openssl dgst' and\nlibrary users are unaffected.\n\nThe FIPS modules in 3.5 and 3.6 are not affected by this issue, as the\ncommand-line tools are outside the OpenSSL FIPS module boundary.\n\nOpenSSL 3.5 and 3.6 are vulnerable to this issue.\n\nOpenSSL 3.4, 3.3, 3.0, 1.1.1 and 1.0.2 are not affected by this issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://openssl-library.org/news/secadv/20260127.txt",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/310f305eb92ea8040d6b3cb75a5feeba8e6acf2f",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/a7936fa4bd23c906e1955a16a0a0ab39a4953a61",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "OpenSSL",
-          "vendor": "OpenSSL",
-          "versions": [
-            {
-              "lessThan": "3.6.1",
-              "status": "affected",
-              "version": "3.6.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.5.5",
-              "status": "affected",
-              "version": "3.5.0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-347 Improper Verification of Cryptographic Signature"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-15468",
-      "publishedDate": "2026-01-27T16:01:20.824Z",
-      "lastModifiedDate": "2026-01-27T16:01:20.824Z",
-      "description": "Issue summary: If an application using the SSL_CIPHER_find() function in\na QUIC protocol client or server receives an unknown cipher suite from\nthe peer, a NULL dereference occurs.\n\nImpact summary: A NULL pointer dereference leads to abnormal termination of\nthe running process causing Denial of Service.\n\nSome applications call SSL_CIPHER_find() from the client_hello_cb callback\non the cipher ID received from the peer. If this is done with an SSL object\nimplementing the QUIC protocol, NULL pointer dereference will happen if\nthe examined cipher ID is unknown or unsupported.\n\nAs it is not very common to call this function in applications using the QUIC \nprotocol and the worst outcome is Denial of Service, the issue was assessed\nas Low severity.\n\nThe vulnerable code was introduced in the 3.2 version with the addition\nof the QUIC protocol support.\n\nThe FIPS modules in 3.6, 3.5, 3.4 and 3.3 are not affected by this issue,\nas the QUIC implementation is outside the OpenSSL FIPS module boundary.\n\nOpenSSL 3.6, 3.5, 3.4 and 3.3 are vulnerable to this issue.\n\nOpenSSL 3.0, 1.1.1 and 1.0.2 are not affected by this issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://openssl-library.org/news/secadv/20260127.txt",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/b2539639400288a4580fe2d76247541b976bade4",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/1f08e54bad32843044fe8a675948d65e3b4ece65",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/7c88376731c589ee5b36116c5a6e32d5ae5f7ae2",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/d75b309879631d45b972396ce4e5102559c64ac7",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "OpenSSL",
-          "vendor": "OpenSSL",
-          "versions": [
-            {
-              "lessThan": "3.6.1",
-              "status": "affected",
-              "version": "3.6.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.5.5",
-              "status": "affected",
-              "version": "3.5.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.4.4",
-              "status": "affected",
-              "version": "3.4.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.3.6",
-              "status": "affected",
-              "version": "3.3.0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-476 NULL Pointer Dereference"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-15467",
-      "publishedDate": "2026-01-27T16:01:19.922Z",
-      "lastModifiedDate": "2026-01-27T16:01:19.922Z",
-      "description": "Issue summary: Parsing CMS AuthEnvelopedData message with maliciously\ncrafted AEAD parameters can trigger a stack buffer overflow.\n\nImpact summary: A stack buffer overflow may lead to a crash, causing Denial\nof Service, or potentially remote code execution.\n\nWhen parsing CMS AuthEnvelopedData structures that use AEAD ciphers such as\nAES-GCM, the IV (Initialization Vector) encoded in the ASN.1 parameters is\ncopied into a fixed-size stack buffer without verifying that its length fits\nthe destination. An attacker can supply a crafted CMS message with an\noversized IV, causing a stack-based out-of-bounds write before any\nauthentication or tag verification occurs.\n\nApplications and services that parse untrusted CMS or PKCS#7 content using\nAEAD ciphers (e.g., S/MIME AuthEnvelopedData with AES-GCM) are vulnerable.\nBecause the overflow occurs prior to authentication, no valid key material\nis required to trigger it. While exploitability to remote code execution\ndepends on platform and toolchain mitigations, the stack-based write\nprimitive represents a severe risk.\n\nThe FIPS modules in 3.6, 3.5, 3.4, 3.3 and 3.0 are not affected by this\nissue, as the CMS implementation is outside the OpenSSL FIPS module\nboundary.\n\nOpenSSL 3.6, 3.5, 3.4, 3.3 and 3.0 are vulnerable to this issue.\n\nOpenSSL 1.1.1 and 1.0.2 are not affected by this issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://openssl-library.org/news/secadv/20260127.txt",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/2c8f0e5fa9b6ee5508a0349e4572ddb74db5a703",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/d0071a0799f20cc8101730145349ed4487c268dc",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/6ced0fe6b10faa560e410e3ee8d6c82f06c65ea3",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/5f26d4202f5b89664c5c3f3c62086276026ba9a9",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/ce39170276daec87f55c39dad1f629b56344429e",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "OpenSSL",
-          "vendor": "OpenSSL",
-          "versions": [
-            {
-              "lessThan": "3.6.1",
-              "status": "affected",
-              "version": "3.6.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.5.5",
-              "status": "affected",
-              "version": "3.5.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.4.4",
-              "status": "affected",
-              "version": "3.4.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.3.6",
-              "status": "affected",
-              "version": "3.3.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.0.19",
-              "status": "affected",
-              "version": "3.0.0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-787 Out-of-bounds Write"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-11187",
-      "publishedDate": "2026-01-27T15:59:41.681Z",
-      "lastModifiedDate": "2026-01-27T15:59:41.681Z",
-      "description": "Issue summary: PBMAC1 parameters in PKCS#12 files are missing validation\nwhich can trigger a stack-based buffer overflow, invalid pointer or NULL\npointer dereference during MAC verification.\n\nImpact summary: The stack buffer overflow or NULL pointer dereference may\ncause a crash leading to Denial of Service for an application that parses\nuntrusted PKCS#12 files. The buffer overflow may also potentially enable\ncode execution depending on platform mitigations.\n\nWhen verifying a PKCS#12 file that uses PBMAC1 for the MAC, the PBKDF2\nsalt and keylength parameters from the file are used without validation.\nIf the value of keylength exceeds the size of the fixed stack buffer used\nfor the derived key (64 bytes), the key derivation will overflow the buffer.\nThe overflow length is attacker-controlled. Also, if the salt parameter is\nnot an OCTET STRING type this can lead to invalid or NULL pointer\ndereference.\n\nExploiting this issue requires a user or application to process\na maliciously crafted PKCS#12 file. It is uncommon to accept untrusted\nPKCS#12 files in applications as they are usually used to store private\nkeys which are trusted by definition. For this reason the issue was assessed\nas Moderate severity.\n\nThe FIPS modules in 3.6, 3.5 and 3.4 are not affected by this issue, as\nPKCS#12 processing is outside the OpenSSL FIPS module boundary.\n\nOpenSSL 3.6, 3.5 and 3.4 are vulnerable to this issue.\n\nOpenSSL 3.3, 3.0, 1.1.1 and 1.0.2 are not affected by this issue as they do\nnot support PBMAC1 in PKCS#12.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://openssl-library.org/news/secadv/20260127.txt",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/8caf359d6e46fb413e8f5f0df765d2e8a51df4e8",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/e1079bc17ed93ff16f6b86f33a2fe3336e78817e",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openssl/openssl/commit/205e3a55e16e4bd08c12fdbd3416ab829c0f6206",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "OpenSSL",
-          "vendor": "OpenSSL",
-          "versions": [
-            {
-              "lessThan": "3.6.1",
-              "status": "affected",
-              "version": "3.6.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.5.5",
-              "status": "affected",
-              "version": "3.5.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "3.4.4",
-              "status": "affected",
-              "version": "3.4.0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-787 Out-of-bounds Write",
-        "CWE-476 NULL Pointer Dereference"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-24869",
-      "publishedDate": "2026-01-27T15:58:48.799Z",
-      "lastModifiedDate": "2026-01-27T15:58:48.799Z",
-      "description": "Use-after-free in the Layout: Scrolling and Overflow component. This vulnerability affects Firefox < 147.0.2.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://bugzilla.mozilla.org/show_bug.cgi?id=2008698",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-06/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Firefox",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "147.0.2",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-24868",
-      "publishedDate": "2026-01-27T15:58:48.472Z",
-      "lastModifiedDate": "2026-01-27T15:58:48.472Z",
-      "description": "Mitigation bypass in the Privacy: Anti-Tracking component. This vulnerability affects Firefox < 147.0.2.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://bugzilla.mozilla.org/show_bug.cgi?id=2007302",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-06/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Firefox",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "147.0.2",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-55102",
-      "publishedDate": "2026-01-27T15:25:36.203Z",
-      "lastModifiedDate": "2026-01-27T15:58:21.021Z",
-      "description": "A denial-of-service vulnerability exists in the NetX IPv6 component functionality of Eclipse ThreadX NetX Duo. A specially crafted network packet of \"Packet Too Big\" with more than 15 different source address can lead to denial of service. An attacker can send a malicious packet to trigger this vulnerability.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/eclipse-threadx/netxduo/security/advisories/GHSA-f3rx-xrwm-q2rf",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Eclipse ThreadX - NetX Duo",
-          "repo": "https://github.com/eclipse-threadx/netxduo",
-          "vendor": "Eclipse Foundation",
-          "versions": [
-            {
-              "lessThanOrEqual": "6.4.3",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-400 Uncontrolled Resource Consumption",
-        "CWE-404 Improper Resource Shutdown or Release",
-        "CWE-770 Allocation of Resources Without Limits or Throttling"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-69565",
-      "publishedDate": "2026-01-27T00:00:00.000Z",
-      "lastModifiedDate": "2026-01-27T16:00:57.509Z",
-      "description": "code-projects Mobile Shop Management System 1.0 is vulnerable to File Upload in /ExAddProduct.php.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://gitee.com/Z_180yc/zyy/issues/IDCFAQ",
-          "type": "reference"
-        },
-        {
-          "url": "https://gist.github.com/lih28984-commits/81d523afde3b122c652f652bab808e33",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n/a",
-          "product": "n/a",
-          "versions": [
-            {
-              "version": "n/a",
+              "version": ">= 1.16.0, < 1.16.3",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "n/a"
+        "CWE-770: Allocation of Resources Without Limits or Throttling"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-0705",
+      "publishedDate": "2026-01-27T16:43:42.575Z",
+      "lastModifiedDate": "2026-01-27T16:43:42.575Z",
+      "description": "Local privilege escalation due to insecure folder permissions. The following products are affected: Acronis Cloud Manager (Windows) before build 6.4.25342.354.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://security-advisory.acronis.com/advisories/SEC-7316",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Acronis",
+          "product": "Acronis Cloud Manager",
+          "platforms": [
+            "Windows"
+          ],
+          "versions": [
+            {
+              "version": "unspecified",
+              "status": "affected",
+              "lessThan": "6.4.25342.354",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-276"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-1483",
+      "publishedDate": "2026-01-27T16:33:21.696Z",
+      "lastModifiedDate": "2026-01-27T16:33:21.696Z",
+      "description": "An out-of-band SQL injection vulnerability (OOB SQLi) has been detected in the Performance Evaluation (EDD) application developed by Gabinete Técnico de Programación. Exploiting this vulnerability in the parameter 'Id_usuario' in '/evaluacion_objetivos_ver_auto.aspx', could allow an attacker to extract sensitive information from the database through external channels, without the affected application returning the data directly, compromising the confidentiality of the stored information.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.incibe.es/en/incibe-cert/notices/aviso/out-band-sql-injection-quatuor-performance-evaluation",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Evaluación de Desempeño (EDD)",
+          "vendor": "Quatuor",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "All versions"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-1482",
+      "publishedDate": "2026-01-27T16:32:53.381Z",
+      "lastModifiedDate": "2026-01-27T16:32:53.381Z",
+      "description": "An out-of-band SQL injection vulnerability (OOB SQLi) has been detected in the Performance Evaluation (EDD) application developed by Gabinete Técnico de Programación. Exploiting this vulnerability in the parameter 'Id_evaluacion' in '/evaluacion_objetivos_evalua_definido.aspx', could allow an attacker to extract sensitive information from the database through external channels, without the affected application returning the data directly, compromising the confidentiality of the stored information.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.incibe.es/en/incibe-cert/notices/aviso/out-band-sql-injection-quatuor-performance-evaluation",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Evaluación de Desempeño (EDD)",
+          "vendor": "Quatuor",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "All versions"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-1481",
+      "publishedDate": "2026-01-27T16:32:25.749Z",
+      "lastModifiedDate": "2026-01-27T16:32:25.749Z",
+      "description": "An out-of-band SQL injection vulnerability (OOB SQLi) has been detected in the Performance Evaluation (EDD) application developed by Gabinete Técnico de Programación. Exploiting this vulnerability in the parameter 'Id_usuario' in '/evaluacion_objetivos_anyo_sig_ver_auto.aspx', could allow an attacker to extract sensitive information from the database through external channels, without the affected application returning the data directly, compromising the confidentiality of the stored information.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.incibe.es/en/incibe-cert/notices/aviso/out-band-sql-injection-quatuor-performance-evaluation",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Evaluación de Desempeño (EDD)",
+          "vendor": "Quatuor",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "All versions"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-1480",
+      "publishedDate": "2026-01-27T16:31:51.831Z",
+      "lastModifiedDate": "2026-01-27T16:31:51.831Z",
+      "description": "An out-of-band SQL injection vulnerability (OOB SQLi) has been detected in the Performance Evaluation (EDD) application developed by Gabinete Técnico de Programación. Exploiting this vulnerability in the parameter 'Id_usuario' in '/evaluacion_objetivos_anyo_sig_evalua.aspx', could allow an attacker to extract sensitive information from the database through external channels, without the affected application returning the data directly, compromising the confidentiality of the stored information.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.incibe.es/en/incibe-cert/notices/aviso/out-band-sql-injection-quatuor-performance-evaluation",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Evaluación de Desempeño (EDD)",
+          "vendor": "Quatuor",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "All versions"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-1479",
+      "publishedDate": "2026-01-27T16:31:06.870Z",
+      "lastModifiedDate": "2026-01-27T16:31:06.870Z",
+      "description": "An out-of-band SQL injection vulnerability (OOB SQLi) has been detected in the Performance Evaluation (EDD) application developed by Gabinete Técnico de Programación. Exploiting this vulnerability in the parameters 'Id_usuario' and 'Id_evaluacion’ in ‘/evaluacion_hca_ver_auto.asp', could allow an attacker to extract sensitive information from the database through external channels, without the affected application returning the data directly, compromising the confidentiality of the stored information.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.incibe.es/en/incibe-cert/notices/aviso/out-band-sql-injection-quatuor-performance-evaluation",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Evaluación de Desempeño (EDD)",
+          "vendor": "Quatuor",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "All versions"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-1478",
+      "publishedDate": "2026-01-27T16:30:35.628Z",
+      "lastModifiedDate": "2026-01-27T16:30:35.628Z",
+      "description": "An out-of-band SQL injection vulnerability (OOB SQLi) has been detected in the Performance Evaluation (EDD) application developed by Gabinete Técnico de Programación. Exploiting this vulnerability in the parameter 'Id_usuario' and 'Id_evaluacion’ in ‘/evaluacion_hca_evalua.aspx’, could allow an attacker to extract sensitive information from the database through external channels, without the affected application returning the data directly, compromising the confidentiality of the stored information.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.incibe.es/en/incibe-cert/notices/aviso/out-band-sql-injection-quatuor-performance-evaluation",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Evaluación de Desempeño (EDD)",
+          "vendor": "Quatuor",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "All versions"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-1477",
+      "publishedDate": "2026-01-27T16:30:04.356Z",
+      "lastModifiedDate": "2026-01-27T16:30:04.356Z",
+      "description": "An out-of-band SQL injection vulnerability (OOB SQLi) has been detected in the Performance Evaluation (EDD) application developed by Gabinete Técnico de Programación. Exploiting this vulnerability in the parameter 'Id_usuario' and 'Id_evaluacion’ in ‘/evaluacion_competencias_evalua_old.aspx’, could allow an attacker to extract sensitive information from the database through external channels, without the affected application returning the data directly, compromising the confidentiality of the stored information.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.incibe.es/en/incibe-cert/notices/aviso/out-band-sql-injection-quatuor-performance-evaluation",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Evaluación de Desempeño (EDD)",
+          "vendor": "Quatuor",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "All versions"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
