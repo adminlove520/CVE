@@ -2,587 +2,41 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 18,
-    "last_updated": "2026-01-28T15:24:44.265047",
+    "total_count": 21,
+    "last_updated": "2026-01-28T15:59:14.441209",
     "severity_distribution": {
-      "critical": 3,
-      "high": 3,
-      "medium": 7,
+      "critical": 0,
+      "high": 2,
+      "medium": 0,
       "low": 0,
-      "none": 5
+      "none": 19
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-23830",
-      "publishedDate": "2026-01-27T23:32:16.104Z",
-      "lastModifiedDate": "2026-01-28T15:09:44.543Z",
-      "description": "SandboxJS is a JavaScript sandboxing library. Versions prior to 0.8.26 have a sandbox escape vulnerability due to `AsyncFunction` not being isolated in `SandboxFunction`. The library attempts to sandbox code execution by replacing the global `Function` constructor with a safe, sandboxed version (`SandboxFunction`). This is handled in `utils.ts` by mapping `Function` to `sandboxFunction` within a map used for lookups. However, before version 0.8.26, the library did not include mappings for `AsyncFunction`, `GeneratorFunction`, and `AsyncGeneratorFunction`. These constructors are not global properties but can be accessed via the `.constructor` property of an instance (e.g., `(async () => {}).constructor`). In `executor.ts`, property access is handled. When code running inside the sandbox accesses `.constructor` on an async function (which the sandbox allows creating), the `executor` retrieves the property value. Since `AsyncFunction` was not in the safe-replacement map, the `executor` returns the actual native host `AsyncFunction` constructor. Constructors for functions in JavaScript (like `Function`, `AsyncFunction`) create functions that execute in the global scope. By obtaining the host `AsyncFunction` constructor, an attacker can create a new async function that executes entirely outside the sandbox context, bypassing all restrictions and gaining full access to the host environment (Remote Code Execution). Version 0.8.26 patches this vulnerability.",
-      "severity": 10,
+      "id": "CVE-2026-24882",
+      "publishedDate": "2026-01-27T18:40:18.166Z",
+      "lastModifiedDate": "2026-01-28T15:45:56.231Z",
+      "description": "In GnuPG before 2.5.17, a stack-based buffer overflow exists in tpm2daemon during handling of the PKDECRYPT command for TPM-backed RSA and ECC keys.",
+      "severity": 8.4,
       "references": [
         {
-          "url": "https://github.com/nyariv/SandboxJS/security/advisories/GHSA-wxhw-j4hc-fmq6",
+          "url": "https://www.openwall.com/lists/oss-security/2026/01/27/8",
           "type": "reference"
         },
         {
-          "url": "https://github.com/nyariv/SandboxJS/commit/345aee6566e47979dee5c337b925b141e7f78ccd",
+          "url": "https://dev.gnupg.org/T8045",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "nyariv",
-          "product": "SandboxJS",
+          "defaultStatus": "unaffected",
+          "product": "GnuPG",
+          "vendor": "GnuPG",
           "versions": [
             {
-              "version": "< 0.8.26",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-94: Improper Control of Generation of Code ('Code Injection')",
-        "CWE-693: Protection Mechanism Failure",
-        "CWE-913: Improper Control of Dynamically-Managed Code Resources"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-24838",
-      "publishedDate": "2026-01-27T23:58:33.340Z",
-      "lastModifiedDate": "2026-01-28T15:03:27.676Z",
-      "description": "DNN (formerly DotNetNuke) is an open-source web content management platform (CMS) in the Microsoft ecosystem. Prior to versions 9.13.10 and 10.2.0,  module title supports richtext which could include scripts that would execute in certain scenarios. Versions 9.13.10 and 10.2.0 contain a fix for the issue.",
-      "severity": 9.1,
-      "references": [
-        {
-          "url": "https://github.com/dnnsoftware/Dnn.Platform/security/advisories/GHSA-w9pf-h6m6-v89h",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "dnnsoftware",
-          "product": "Dnn.Platform",
-          "versions": [
-            {
-              "version": "< 9.13.10",
-              "status": "affected"
-            },
-            {
-              "version": ">= 10.0.0, < 10.2.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-24736",
-      "publishedDate": "2026-01-27T20:54:51.489Z",
-      "lastModifiedDate": "2026-01-28T15:17:12.814Z",
-      "description": "Squidex is an open source headless content management system and content management hub. Versions of the application up to and including 7.21.0 allow users to define \"Webhooks\" as actions within the Rules engine. The url parameter in the webhook configuration does not appear to validate or restrict destination IP addresses. It accepts local addresses such as 127.0.0.1 or localhost. When a rule is triggered (Either manual trigger by manually calling the trigger endpoint or by a content update or any other triggers), the backend server executes an HTTP request to the user-supplied URL. Crucially, the server logs the full HTTP response in the rule execution log (lastDump field), which is accessible via the API. Which turns a \"Blind\" SSRF into a \"Full Read\" SSRF. As of time of publication, no patched versions are available.",
-      "severity": 9.1,
-      "references": [
-        {
-          "url": "https://github.com/Squidex/squidex/security/advisories/GHSA-wxg2-953m-fg2w",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Squidex",
-          "product": "squidex",
-          "versions": [
-            {
-              "version": "<= 7.21.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-918: Server-Side Request Forgery (SSRF)"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-24747",
-      "publishedDate": "2026-01-27T21:13:46.878Z",
-      "lastModifiedDate": "2026-01-28T15:14:13.263Z",
-      "description": "PyTorch is a Python package that provides tensor computation. Prior to version 2.10.0, a vulnerability in PyTorch's `weights_only` unpickler allows an attacker to craft a malicious checkpoint file (`.pth`) that, when loaded with `torch.load(..., weights_only=True)`, can corrupt memory and potentially lead to arbitrary code execution. Version 2.10.0 fixes the issue.",
-      "severity": 8.8,
-      "references": [
-        {
-          "url": "https://github.com/pytorch/pytorch/security/advisories/GHSA-63cw-57p8-fm3p",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/pytorch/pytorch/issues/163105",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/pytorch/pytorch/163122/commit/954dc5183ee9205cbe79876ad05dd2d9ae752139",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/pytorch/pytorch/releases/tag/v2.10.0",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "pytorch",
-          "product": "pytorch",
-          "versions": [
-            {
-              "version": "< 2.10.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-502: Deserialization of Untrusted Data",
-        "CWE-94: Improper Control of Generation of Code ('Code Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-55292",
-      "publishedDate": "2026-01-27T23:28:28.962Z",
-      "lastModifiedDate": "2026-01-28T15:10:48.709Z",
-      "description": "Meshtastic is an open source mesh networking solution. In the current Meshtastic architecture, a Node is identified by their NodeID, generated from the MAC address, rather than their public key. This aspect downgrades the security, specifically by abusing the HAM mode which doesn't use encryption. An attacker can, as such, forge a NodeInfo on behalf of a victim node advertising that the HAM mode is enabled. This, in turn, will allow the other nodes on the mesh to accept the new information and overwriting the NodeDB. The other nodes will then only be able to send direct messages to the victim by using the shared channel key instead of the PKC. Additionally, because HAM mode by design doesn't provide any confidentiality or authentication of information, the attacker could potentially also be able to change the Node details, like the full name, short code, etc. To keep the attack persistent, it is enough to regularly resend the forged NodeInfo, in particular right after the victim sends their own. A patch is available in version 2.7.6.834c3c5.",
-      "severity": 8.2,
-      "references": [
-        {
-          "url": "https://github.com/meshtastic/firmware/security/advisories/GHSA-45vg-3f35-7ch2",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/meshtastic/firmware/commit/e5e8683cdba133e726033101586c3235a8678893",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "meshtastic",
-          "product": "firmware",
-          "versions": [
-            {
-              "version": "<= 2.6.2",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-348: Use of Less Trusted Source"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-24741",
-      "publishedDate": "2026-01-27T21:11:57.295Z",
-      "lastModifiedDate": "2026-01-28T15:14:23.019Z",
-      "description": "ConvertXis a self-hosted online file converter. In versions prior to 0.17.0, the `POST /delete` endpoint uses a user-controlled `filename` value to construct a filesystem path and deletes it via `unlink` without sufficient validation. By supplying path traversal sequences (e.g., `../`), an attacker can delete arbitrary files outside the intended uploads directory, limited only by the permissions of the server process. Version 0.17.0 fixes the issue.",
-      "severity": 8.1,
-      "references": [
-        {
-          "url": "https://github.com/C4illin/ConvertX/security/advisories/GHSA-w372-w6cr-45jp",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/C4illin/ConvertX/commit/7a936bdc0463936463616381ca257b13babc5e77",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "C4illin",
-          "product": "ConvertX",
-          "versions": [
-            {
-              "version": "< 0.17.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-24784",
-      "publishedDate": "2026-01-27T23:47:41.846Z",
-      "lastModifiedDate": "2026-01-28T15:06:44.527Z",
-      "description": "DNN (formerly DotNetNuke) is an open-source web content management platform (CMS) in the Microsoft ecosystem. Starting in version 9.0.0 and prior to versions 9.13.10 and 10.2.0, a content editor could inject scripts in module headers/footers that would run for other users. Versions 9.13.10 and 10.2.0 contain a fix for the issue.",
-      "severity": 6.8,
-      "references": [
-        {
-          "url": "https://github.com/dnnsoftware/Dnn.Platform/security/advisories/GHSA-jjwg-4948-6wxp",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "dnnsoftware",
-          "product": "Dnn.Platform",
-          "versions": [
-            {
-              "version": ">= 9.0.0, < 9.13.10",
-              "status": "affected"
-            },
-            {
-              "version": ">= 10.0.0, < 10.2.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-24134",
-      "publishedDate": "2026-01-27T23:34:55.922Z",
-      "lastModifiedDate": "2026-01-28T15:08:38.778Z",
-      "description": "StudioCMS is a server-side-rendered, Astro native, headless content management system. Versions prior to 0.2.0 contain a Broken Object Level Authorization (BOLA) vulnerability in the Content Management feature that allows users with the \"Visitor\" role to access draft content created by Editor/Admin/Owner users. Version 0.2.0 patches the issue.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://github.com/withstudiocms/studiocms/security/advisories/GHSA-8cw6-53m5-4932",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/withstudiocms/studiocms/commit/efc10bee20db090fdd75463622c30dda390c50ad",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/withstudiocms/studiocms/releases/tag/studiocms%400.2.0",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "withstudiocms",
-          "product": "studiocms",
-          "versions": [
-            {
-              "version": "< 0.2.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-639: Authorization Bypass Through User-Controlled Key",
-        "CWE-862: Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-1244",
-      "publishedDate": "2026-01-28T06:43:41.879Z",
-      "lastModifiedDate": "2026-01-28T15:04:11.678Z",
-      "description": "The Forms Bridge – Infinite integrations plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the 'id' shortcode attribute in the 'financoop_campaign' shortcode in all versions up to, and including, 4.2.5. This is due to insufficient input sanitization and output escaping on the user-supplied 'id' parameter in the forms_bridge_financoop_shortcode_error function. This makes it possible for authenticated attackers, with Contributor-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page.",
-      "severity": 6.4,
-      "references": [
-        {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/3e047822-5766-4e7f-be89-f4a15f0e6d51?source=cve",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/forms-bridge/trunk/addons/financoop/shortcodes.php#L389",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/forms-bridge/tags/4.2.3/addons/financoop/shortcodes.php#L389",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=3446693%40forms-bridge&new=3446693%40forms-bridge&sfp_email=&sfph_mail=#file1",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "codeccoop",
-          "product": "Forms Bridge – Infinite integrations",
-          "versions": [
-            {
-              "version": "*",
-              "status": "affected",
-              "lessThanOrEqual": "4.2.5",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-1539",
-      "publishedDate": "2026-01-28T15:15:48.725Z",
-      "lastModifiedDate": "2026-01-28T15:15:48.725Z",
-      "description": "A flaw was found in the libsoup HTTP library that can cause proxy authentication credentials to be sent to unintended destinations. When handling HTTP redirects, libsoup removes the Authorization header but does not remove the Proxy-Authorization header if the request is redirected to a different host. As a result, sensitive proxy credentials may be leaked to third-party servers. Applications using libsoup for HTTP communication may unintentionally expose proxy authentication data.",
-      "severity": 5.8,
-      "references": [
-        {
-          "url": "https://access.redhat.com/security/cve/CVE-2026-1539",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat Enterprise Linux 10",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "libsoup3",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:10"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat Enterprise Linux 6",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "libsoup",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:6"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat Enterprise Linux 7",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "libsoup",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:7"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat Enterprise Linux 8",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "libsoup",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:8"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat Enterprise Linux 9",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "libsoup",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:9"
-          ]
-        }
-      ],
-      "problemType": [
-        "Insertion of Sensitive Information Into Sent Data"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-1536",
-      "publishedDate": "2026-01-28T15:15:46.708Z",
-      "lastModifiedDate": "2026-01-28T15:15:46.708Z",
-      "description": "A flaw was found in libsoup. An attacker who can control the input for the Content-Disposition header can inject CRLF (Carriage Return Line Feed) sequences into the header value. These sequences are then interpreted verbatim when the HTTP request or response is constructed, allowing arbitrary HTTP headers to be injected. This vulnerability can lead to HTTP header injection or HTTP response splitting without requiring authentication or user interaction.",
-      "severity": 5.8,
-      "references": [
-        {
-          "url": "https://access.redhat.com/security/cve/CVE-2026-1536",
-          "type": "reference"
-        },
-        {
-          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2433834",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat Enterprise Linux 10",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "libsoup3",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:10"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat Enterprise Linux 6",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "libsoup",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:6"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat Enterprise Linux 7",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "libsoup",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:7"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat Enterprise Linux 8",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "libsoup",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:8"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat Enterprise Linux 9",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "libsoup",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:9"
-          ]
-        }
-      ],
-      "problemType": [
-        "Improper Neutralization of CRLF Sequences ('CRLF Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-0825",
-      "publishedDate": "2026-01-28T06:43:42.726Z",
-      "lastModifiedDate": "2026-01-28T15:02:15.499Z",
-      "description": "The Database for Contact Form 7, WPforms, Elementor forms plugin for WordPress is vulnerable to authorization bypass due to missing capability checks on the CSV export functionality in all versions up to, and including, 1.4.5. This makes it possible for unauthenticated attackers to download sensitive form submission data containing personally identifiable information (PII) by accessing the CSV export endpoint with an export key that is exposed in publicly accessible page source code. The vulnerability is created because while the shortcode properly filters displayed entries by user, the CSV export handler completely bypasses this filtering and exports all entries regardless of user permissions.",
-      "severity": 5.3,
-      "references": [
-        {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/4048ae11-fece-42aa-baf3-c636c4875635?source=cve",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/contact-form-entries/trunk/contact-form-entries.php#L76",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/contact-form-entries/tags/1.4.5/contact-form-entries.php#L76",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/contact-form-entries/trunk/contact-form-entries.php#L301",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/contact-form-entries/trunk/templates/leads-table.php#L10",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=3442962%40contact-form-entries&new=3442962%40contact-form-entries&sfp_email=&sfph_mail=",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "crmperks",
-          "product": "Database for Contact Form 7, WPforms, Elementor forms",
-          "versions": [
-            {
-              "version": "*",
-              "status": "affected",
-              "lessThanOrEqual": "1.4.5",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-862 Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-24839",
-      "publishedDate": "2026-01-28T00:01:49.253Z",
-      "lastModifiedDate": "2026-01-28T15:02:29.344Z",
-      "description": "Dokploy is a free, self-hostable Platform as a Service (PaaS). In versions prior to 0.26.6, the Dokploy web interface is vulnerable to Clickjacking attacks due to missing frame-busting headers. This allows attackers to embed Dokploy pages in malicious iframes and trick authenticated users into performing unintended actions. Version 0.26.6 patches the issue.",
-      "severity": 4.7,
-      "references": [
-        {
-          "url": "https://github.com/Dokploy/dokploy/security/advisories/GHSA-c94j-8wgf-2q9q",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/Dokploy/dokploy/pull/3500",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/Dokploy/dokploy/commit/9714695d5a78fe24496f989ab81807ba04699df8",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Dokploy",
-          "product": "dokploy",
-          "versions": [
-            {
-              "version": "< 0.26.6",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-1021: Improper Restriction of Rendered UI Layers or Frames"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-1237",
-      "publishedDate": "2026-01-28T15:01:46.364Z",
-      "lastModifiedDate": "2026-01-28T15:06:23.120Z",
-      "description": "Vulnerable cross-model authorization in juju. If a charm's cross-model permissions are revoked or expire, a malicious user who is able to update database records can mint an invalid macaroon that is incorrectly validated by the juju controller, enabling a charm to maintain otherwise revoked or expired permissions. This allows a charm to continue relating to another charm in a cross-model relation, and use their workload without their permission. No fix is available as of the time of writing.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/juju/juju/security/advisories/GHSA-j477-6vpg-6c8x",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "affected",
-          "product": "juju",
-          "vendor": "Canonical",
-          "versions": [
-            {
+              "lessThan": "2.5.17",
               "status": "affected",
               "version": "0",
               "versionType": "semver"
@@ -591,16 +45,272 @@
         }
       ],
       "problemType": [
-        "CWE-672 Operation on a Resource after Expiration or Release",
-        "CWE-347 Improper Verification of Cryptographic Signature"
+        "CWE-121 Stack-based Buffer Overflow"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-59901",
-      "publishedDate": "2026-01-28T12:01:30.669Z",
-      "lastModifiedDate": "2026-01-28T15:16:54.606Z",
-      "description": "Disk Pulse Enterprise v10.4.18 has an authenticated reflected XSS vulnerability in the '/monitor_directory?sid=' endpoint, caused by insufficient validation of the 'monitor_directory' parameter sent by POST. An attacker could exploit this weakness to send malicious content to an authenticated user and steal information from their session.",
+      "id": "CVE-2020-36984",
+      "publishedDate": "2026-01-28T12:28:58.749Z",
+      "lastModifiedDate": "2026-01-28T15:45:05.554Z",
+      "description": "EPSON 1.124 contains an unquoted service path vulnerability in the SENADB service that allows local attackers to execute code with elevated system privileges. Attackers can exploit the unquoted path in C:\\Program Files (x86)\\EPSON_P2B\\Printer Software\\Status Monitor\\ to inject malicious executables that will run with LocalSystem permissions.",
+      "severity": 7.8,
+      "references": [
+        {
+          "url": "https://www.exploit-db.com/exploits/48965",
+          "type": "poc"
+        },
+        {
+          "url": "https://www.epson.co.uk/support?productID=10820&os=22#drivers_and_manuals",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/epson-seksmdbexe-unquoted-service-path",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Epson",
+          "product": "EPSON",
+          "versions": [
+            {
+              "version": "1.124",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Unquoted Search Path or Element"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-23553",
+      "publishedDate": "2026-01-28T15:33:44.782Z",
+      "lastModifiedDate": "2026-01-28T15:33:44.782Z",
+      "description": "In the context switch logic Xen attempts to skip an IBPB in the case of\na vCPU returning to a CPU on which it was the previous vCPU to run.\nWhile safe for Xen's isolation between vCPUs, this prevents the guest\nkernel correctly isolating between tasks.  Consider:\n\n 1) vCPU runs on CPU A, running task 1.\n 2) vCPU moves to CPU B, idle gets scheduled on A.  Xen skips IBPB.\n 3) On CPU B, guest kernel switches from task 1 to 2, issuing IBPB.\n 4) vCPU moves back to CPU A.  Xen skips IBPB again.\n\nNow, task 2 is running on CPU A with task 1's training still in the BTB.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://xenbits.xenproject.org/xsa/advisory-479.html",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unknown",
+          "product": "Xen",
+          "vendor": "Xen",
+          "versions": [
+            {
+              "status": "unknown",
+              "version": "consult Xen advisory XSA-479"
+            }
+          ]
+        }
+      ],
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-58150",
+      "publishedDate": "2026-01-28T15:33:17.316Z",
+      "lastModifiedDate": "2026-01-28T15:33:17.316Z",
+      "description": "Shadow mode tracing code uses a set of per-CPU variables to avoid\ncumbersome parameter passing.  Some of these variables are written to\nwith guest controlled data, of guest controllable size.  That size can\nbe larger than the variable, and bounding of the writes was missing.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://xenbits.xenproject.org/xsa/advisory-477.html",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unknown",
+          "product": "Xen",
+          "vendor": "Xen",
+          "versions": [
+            {
+              "status": "unknown",
+              "version": "consult Xen advisory XSA-477"
+            }
+          ]
+        }
+      ],
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-59898",
+      "publishedDate": "2026-01-28T11:58:44.144Z",
+      "lastModifiedDate": "2026-01-28T15:32:32.025Z",
+      "description": "Sync Breeze Enterprise Server v10.4.18 and Disk Pulse Enterprise v10.4.18 contain a persistent authenticated Cross-Site Scripting (XSS) vulnerability. An attacker could send malicious content to an authenticated user and steal information from their session due to insufficient validation of user input in '/add_exclude_dir?sid=', affecting the 'exclude_dir' parameter.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-flexense-products",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Sync Breeze Enterprise Server",
+          "vendor": "Flexense",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "v10.4.18"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "Disk Pulse Enterprise",
+          "vendor": "Flexense",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "v10.4.18"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-59897",
+      "publishedDate": "2026-01-28T11:58:28.711Z",
+      "lastModifiedDate": "2026-01-28T15:34:32.254Z",
+      "description": "Sync Breeze Enterprise Server v10.4.18 and Disk Pulse Enterprise v10.4.18 contain a persistent authenticated Cross-Site Scripting (XSS) vulnerability. An attacker could send malicious content to an authenticated user and steal information from their session due to insufficient validation of user input in '/edit_command?sid=', affecting the 'source_dir' and ‘dest_dir’ parameters.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-flexense-products",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Sync Breeze Enterprise Server",
+          "vendor": "Flexense",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "v10.4.18"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "Disk Pulse Enterprise",
+          "vendor": "Flexense",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "v10.4.18"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-59896",
+      "publishedDate": "2026-01-28T11:58:13.762Z",
+      "lastModifiedDate": "2026-01-28T15:35:37.114Z",
+      "description": "Sync Breeze Enterprise Server v10.4.18 and Disk Pulse Enterprise v10.4.18 contain a persistent authenticated Cross-Site Scripting (XSS) vulnerability. An attacker could send malicious content to an authenticated user and steal information from their session due to insufficient validation of user input in '/add_command?sid=', affecting the 'command_name' parameter.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-flexense-products",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Sync Breeze Enterprise Server",
+          "vendor": "Flexense",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "v10.4.18"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "Disk Pulse Enterprise",
+          "vendor": "Flexense",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "v10.4.18"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-59895",
+      "publishedDate": "2026-01-28T11:55:43.546Z",
+      "lastModifiedDate": "2026-01-28T15:38:11.029Z",
+      "description": "Sync Breeze Enterprise Server v10.4.18 and Disk Pulse Enterprise v10.4.18 contain a remote denial-of-service (DoS) vulnerability in the configuration restore functionality. The issue is due to insufficient validation of user-supplied data during this process. An attacker could send malicious requests to alter the configuration file, causing the application to become unresponsive. In a successful scenario, the service may not recover on its own and require a complete reinstallation, as the configuration becomes corrupted and prevents the service from restarting, even manually.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-flexense-products",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Sync Breeze Enterprise Server",
+          "vendor": "Flexense",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "v10.4.18"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "Disk Pulse Enterprise",
+          "vendor": "Flexense",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "v10.4.18"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-20 Improper Input Validation"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-59894",
+      "publishedDate": "2026-01-28T11:53:24.197Z",
+      "lastModifiedDate": "2026-01-28T15:40:28.684Z",
+      "description": "Cross-Site request forgery (CSRF) vulnerability in Sync Breeze Enterprise Server v10.4.18 and Disk Pulse Enterprise v10.4.18. An authenticated user could cause another user to perform unwanted actions within the application they are logged into. This vulnerability is possible due to the lack of proper CSRF token implementation. Among other things, it is possible, using a POST request to delete all commands via '/delete_all_commands?sid='.",
       "severity": "N/A",
       "references": [
         {
@@ -638,89 +348,239 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-24785",
-      "publishedDate": "2026-01-27T23:38:53.409Z",
-      "lastModifiedDate": "2026-01-28T15:10:48.864Z",
-      "description": "Clatter is a no_std compatible, pure Rust implementation of the Noise protocol framework with post-quantum support. Versiosn prior to2.2.0 have a protocol compliance vulnerability. The library allowed post-quantum handshake patterns that violated the PSK validity rule (Noise Protocol Framework Section 9.3). This could allow PSK-derived keys to be used for encryption without proper randomization by self-chosen ephemeral randomness, weakening security guarantees and potentially allowing catastrophic key reuse. Affected default patterns include `noise_pqkk_psk0`, `noise_pqkn_psk0`, `noise_pqnk_psk0`, `noise_pqnn_psk0``, and some hybrid variants. Users of these patterns may have been using handshakes that do not meet the intended security properties. The issue is fully patched and released in Clatter v2.2.0. The fixed version includes runtime checks to detect offending handshake patterns. As a workaround, avoid using offending `*_psk0` variants of post-quantum patterns. Review custom handshake patterns carefully.",
+      "id": "CVE-2025-59893",
+      "publishedDate": "2026-01-28T11:52:51.985Z",
+      "lastModifiedDate": "2026-01-28T15:43:40.929Z",
+      "description": "Cross-Site request forgery (CSRF) vulnerability in Sync Breeze Enterprise Server v10.4.18 and Disk Pulse Enterprise v10.4.18. An authenticated user could cause another user to perform unwanted actions within the application they are logged into. This vulnerability is possible due to the lack of proper CSRF token implementation. Among other things, it is possible, using a POST request to rename commands via '/rename_command?sid=', affecting the 'command_name' parameter.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/jmlepisto/clatter/security/advisories/GHSA-253q-9q78-63x4",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/jmlepisto/clatter/commit/b65ae6e9b8019bed5407771e21f89ddff17c5a71",
-          "type": "reference"
-        },
-        {
-          "url": "https://noiseprotocol.org/noise.html#validity-rule",
+          "url": "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-flexense-products",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "jmlepisto",
-          "product": "clatter",
+          "defaultStatus": "unaffected",
+          "product": "Sync Breeze Enterprise Server",
+          "vendor": "Flexense",
           "versions": [
             {
-              "version": "< 2.2.0",
+              "status": "affected",
+              "version": "v10.4.18"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "Disk Pulse Enterprise",
+          "vendor": "Flexense",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "v10.4.18"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-352 Cross-Site Request Forgery (CSRF)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-59892",
+      "publishedDate": "2026-01-28T11:52:35.782Z",
+      "lastModifiedDate": "2026-01-28T15:45:40.967Z",
+      "description": "Cross-Site request forgery (CSRF) vulnerability in Sync Breeze Enterprise Server v10.4.18 and Disk Pulse Enterprise v10.4.18. An authenticated user could cause another user to perform unwanted actions within the application they are logged into. This vulnerability is possible due to the lack of proper CSRF token implementation. Among other things, it is possible, using a POST request to delete commands individually via '/delete_command?sid=', using the 'cid' parameter.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-flexense-products",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Sync Breeze Enterprise Server",
+          "vendor": "Flexense",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "v10.4.18"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "Disk Pulse Enterprise",
+          "vendor": "Flexense",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "v10.4.18"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-352 Cross-Site Request Forgery (CSRF)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-59891",
+      "publishedDate": "2026-01-28T11:52:15.635Z",
+      "lastModifiedDate": "2026-01-28T15:46:23.117Z",
+      "description": "Cross-Site request forgery (CSRF) vulnerability in Sync Breeze Enterprise Server v10.4.18 and Disk Pulse Enterprise v10.4.18. An authenticated user could cause another user to perform unwanted actions within the application they are logged into. This vulnerability is possible due to the lack of proper CSRF token implementation. Among other things, it is possible, using a POST request to change a user's password or create users via '/setup_login?sid=', affecting the 'username', 'password', and 'cpassword' parameters.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-flexense-products",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Sync Breeze Enterprise Server",
+          "vendor": "Flexense",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "v10.4.18"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "Disk Pulse Enterprise",
+          "vendor": "Flexense",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "v10.4.18"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-352 Cross-Site Request Forgery (CSRF)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-0483",
+      "publishedDate": "2026-01-28T11:43:42.484Z",
+      "lastModifiedDate": "2026-01-28T15:47:13.081Z",
+      "description": "Stored Cross-Site Scripting (XSS) vulnerability in the PDF file upload functionality of Live Helper Chat, versions prior to 4.72. An attacker can upload a malicious PDF file containing an XSS payload, which will be executed in the user's context when they download and open the file via the link generated by the application. The vulnerability allows arbitrary JavaScript code to be executed in the user's local context.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.incibe.es/en/incibe-cert/notices/aviso/stored-cross-site-scripting-xss-vulnerability-livehelperchat",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "LiveHelperChat",
+          "vendor": "LiveHelperChat",
+          "versions": [
+            {
+              "lessThan": "4.72",
+              "status": "affected",
+              "version": "0",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-69517",
+      "publishedDate": "2026-01-28T00:00:00.000Z",
+      "lastModifiedDate": "2026-01-28T15:36:27.196Z",
+      "description": "An issue in Amidaware Inc Tactical RMM v1.3.1 and before allows a remote attacker to execute arbitrary code via the /api/tacticalrmm/apiv3/views.py component",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/amidaware/tacticalrmm",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.amidaware.com/",
+          "type": "reference"
+        },
+        {
+          "url": "https://gist.github.com/NtGabrielGomes/fdabcd9e85d841c5490739686e0f8b72",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "n/a",
+          "versions": [
+            {
+              "version": "n/a",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-327: Use of a Broken or Risky Cryptographic Algorithm"
+        "n/a"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-24738",
-      "publishedDate": "2026-01-27T21:08:29.392Z",
-      "lastModifiedDate": "2026-01-28T15:16:31.785Z",
-      "description": "gmrtd is a Go library for reading Machine Readable Travel Documents (MRTDs). Prior to version 0.17.2, ReadFile accepts TLVs with lengths that can range up to 4GB, which can cause unconstrained resource consumption in both memory and cpu cycles. ReadFile can consume an extended TLV with lengths well outside what would be available in ICs. It can accept something all the way up to 4GB which would take too many iterations in 256 byte chunks, and would also try to allocate memory that might not be available in constrained environments like phones. Or if an API sends data  to ReadFile, the same problem applies. The very small chunked read also locks the goroutine in  accepting data for a very large number of iterations.  projects using the gmrtd library to read files from NFCs can experience extreme slowdowns or memory consumption. A malicious NFC can just behave like the mock transceiver described above and by just sending dummy bytes as each chunk to be read, can make the receiving thread unresponsive and fill up memory on the host system. Version 0.17.2 patches the issue.",
+      "id": "CVE-2025-57283",
+      "publishedDate": "2026-01-28T00:00:00.000Z",
+      "lastModifiedDate": "2026-01-28T15:45:34.249Z",
+      "description": "The Node.js package browserstack-local 1.5.8 contains a command injection vulnerability. This occurs because the logfile variable is not properly sanitized in lib/Local.js.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/gmrtd/gmrtd/security/advisories/GHSA-j49h-6577-5xwq",
+          "url": "https://www.npmjs.com",
           "type": "reference"
         },
         {
-          "url": "https://github.com/gmrtd/gmrtd/commit/54469a95e5a20a8602ac1457b2110bfeb80c8891",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/gmrtd/gmrtd/releases/tag/v0.17.2",
+          "url": "https://gist.github.com/Dremig/b639c61541dd1482007dc7a5cd7fefb1",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "gmrtd",
-          "product": "gmrtd",
+          "vendor": "n/a",
+          "product": "n/a",
           "versions": [
             {
-              "version": "< 0.17.2",
+              "version": "n/a",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-770: Allocation of Resources Without Limits or Throttling",
-        "CWE-400: Uncontrolled Resource Consumption"
+        "n/a"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-24525",
-      "publishedDate": "2026-01-23T14:28:49.126Z",
-      "lastModifiedDate": "2026-01-28T15:11:14.494Z",
-      "description": "Missing Authorization vulnerability in CloudPanel CLP Varnish Cache clp-varnish-cache allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects CLP Varnish Cache: from n/a through <= 1.0.2.",
+      "id": "CVE-2025-68838",
+      "publishedDate": "2026-01-22T16:52:08.981Z",
+      "lastModifiedDate": "2026-01-28T15:32:24.033Z",
+      "description": "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') vulnerability in expresstechsoftware MemberPress Discord Addon expresstechsoftwares-memberpress-discord-add-on allows Reflected XSS.This issue affects MemberPress Discord Addon: from n/a through <= 1.1.4.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://patchstack.com/database/Wordpress/Plugin/clp-varnish-cache/vulnerability/wordpress-clp-varnish-cache-plugin-1-0-2-broken-access-control-vulnerability?_s_id=cve",
+          "url": "https://patchstack.com/database/Wordpress/Plugin/expresstechsoftwares-memberpress-discord-add-on/vulnerability/wordpress-memberpress-discord-addon-plugin-1-1-4-reflected-cross-site-scripting-xss-vulnerability?_s_id=cve",
           "type": "reference"
         }
       ],
@@ -728,12 +588,206 @@
         {
           "collectionURL": "https://wordpress.org/plugins",
           "defaultStatus": "unaffected",
-          "packageName": "clp-varnish-cache",
-          "product": "CLP Varnish Cache",
-          "vendor": "CloudPanel",
+          "packageName": "expresstechsoftwares-memberpress-discord-add-on",
+          "product": "MemberPress Discord Addon",
+          "vendor": "expresstechsoftware",
           "versions": [
             {
-              "lessThanOrEqual": "<= 1.0.2",
+              "lessThanOrEqual": "<= 1.1.4",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-68538",
+      "publishedDate": "2026-01-22T16:52:08.348Z",
+      "lastModifiedDate": "2026-01-28T15:34:49.597Z",
+      "description": "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') vulnerability in ThemeGoods Craft craftcoffee allows DOM-Based XSS.This issue affects Craft: from n/a through <= 2.3.6.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Theme/craftcoffee/vulnerability/wordpress-craft-coffee-shop-cafe-restaurant-wordpress-theme-2-3-6-reflected-cross-site-scripting-xss-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://themeforest.net",
+          "defaultStatus": "unaffected",
+          "packageName": "craftcoffee",
+          "product": "Craft",
+          "vendor": "ThemeGoods",
+          "versions": [
+            {
+              "changes": [
+                {
+                  "at": "2.3.7",
+                  "status": "unaffected"
+                }
+              ],
+              "lessThanOrEqual": "<= 2.3.6",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-68520",
+      "publishedDate": "2026-01-22T16:52:08.148Z",
+      "lastModifiedDate": "2026-01-28T15:36:08.522Z",
+      "description": "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') vulnerability in ThemeGoods DotLife dotlife allows Reflected XSS.This issue affects DotLife: from n/a through < 4.9.5.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Theme/dotlife/vulnerability/wordpress-dotlife-theme-4-9-5-reflected-cross-site-scripting-xss-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://themeforest.net",
+          "defaultStatus": "unaffected",
+          "packageName": "dotlife",
+          "product": "DotLife",
+          "vendor": "ThemeGoods",
+          "versions": [
+            {
+              "changes": [
+                {
+                  "at": "4.9.5",
+                  "status": "unaffected"
+                }
+              ],
+              "lessThanOrEqual": "< 4.9.5",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-68518",
+      "publishedDate": "2026-01-22T16:52:07.893Z",
+      "lastModifiedDate": "2026-01-28T15:37:15.565Z",
+      "description": "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') vulnerability in ThemeGoods Hoteller hoteller allows Reflected XSS.This issue affects Hoteller: from n/a through < 6.8.9.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Theme/hoteller/vulnerability/wordpress-hoteller-theme-6-8-9-reflected-cross-site-scripting-xss-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://themeforest.net",
+          "defaultStatus": "unaffected",
+          "packageName": "hoteller",
+          "product": "Hoteller",
+          "vendor": "ThemeGoods",
+          "versions": [
+            {
+              "changes": [
+                {
+                  "at": "6.8.9",
+                  "status": "unaffected"
+                }
+              ],
+              "lessThanOrEqual": "< 6.8.9",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-68507",
+      "publishedDate": "2026-01-22T16:52:07.377Z",
+      "lastModifiedDate": "2026-01-28T15:38:01.128Z",
+      "description": "Missing Authorization vulnerability in Icegram Icegram icegram allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Icegram: from n/a through <= 3.1.35.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Plugin/icegram/vulnerability/wordpress-icegram-plugin-3-1-35-broken-access-control-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://wordpress.org/plugins",
+          "defaultStatus": "unaffected",
+          "packageName": "icegram",
+          "product": "Icegram",
+          "vendor": "Icegram",
+          "versions": [
+            {
+              "changes": [
+                {
+                  "at": "3.1.36",
+                  "status": "unaffected"
+                }
+              ],
+              "lessThanOrEqual": "<= 3.1.35",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Missing Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-68072",
+      "publishedDate": "2026-01-22T16:52:06.979Z",
+      "lastModifiedDate": "2026-01-28T15:39:01.232Z",
+      "description": "Missing Authorization vulnerability in Merv Barrett Easy Property Listings easy-property-listings allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Easy Property Listings: from n/a through <= 3.5.17.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Plugin/easy-property-listings/vulnerability/wordpress-easy-property-listings-plugin-3-5-16-broken-access-control-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://wordpress.org/plugins",
+          "defaultStatus": "unaffected",
+          "packageName": "easy-property-listings",
+          "product": "Easy Property Listings",
+          "vendor": "Merv Barrett",
+          "versions": [
+            {
+              "lessThanOrEqual": "<= 3.5.17",
               "status": "affected",
               "version": "n/a",
               "versionType": "custom"
