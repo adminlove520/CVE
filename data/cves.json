@@ -2,42 +2,50 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 10,
-    "last_updated": "2026-02-14T15:37:37.442944",
+    "total_count": 6,
+    "last_updated": "2026-02-14T15:57:52.690740",
     "severity_distribution": {
       "critical": 0,
       "high": 0,
       "medium": 0,
       "low": 0,
-      "none": 10
+      "none": 6
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-23140",
-      "publishedDate": "2026-02-14T15:22:24.727Z",
-      "lastModifiedDate": "2026-02-14T15:22:24.727Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nbpf, test_run: Subtract size of xdp_frame from allowed metadata size\n\nThe xdp_frame structure takes up part of the XDP frame headroom,\nlimiting the size of the metadata. However, in bpf_test_run, we don't\ntake this into account, which makes it possible for userspace to supply\na metadata size that is too large (taking up the entire headroom).\n\nIf userspace supplies such a large metadata size in live packet mode,\nthe xdp_update_frame_from_buff() call in xdp_test_run_init_page() call\nwill fail, after which packet transmission proceeds with an\nuninitialised frame structure, leading to the usual Bad Stuff.\n\nThe commit in the Fixes tag fixed a related bug where the second check\nin xdp_update_frame_from_buff() could fail, but did not add any\nadditional constraints on the metadata size. Complete the fix by adding\nan additional check on the metadata size. Reorder the checks slightly to\nmake the logic clearer and add a comment.",
+      "id": "CVE-2026-23145",
+      "publishedDate": "2026-02-14T15:36:10.207Z",
+      "lastModifiedDate": "2026-02-14T15:36:10.207Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\next4: fix iloc.bh leak in ext4_xattr_inode_update_ref\n\nThe error branch for ext4_xattr_inode_update_ref forget to release the\nrefcount for iloc.bh. Find this when review code.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://git.kernel.org/stable/c/e7440935063949d6f2c10f7328d960d0ff4bce90",
+          "url": "https://git.kernel.org/stable/c/7c9f059c3d531a12d7ad96cd34a44b8af7c00d5f",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/7c81ad5e580bd8441f8a521a8d34824ce6582ae5",
+          "url": "https://git.kernel.org/stable/c/6241cd1d0acc2363016ac55b8773ba1332dd59d7",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/6447e697cfa8a43a8e491cb81bcc390d0f28f8ba",
+          "url": "https://git.kernel.org/stable/c/3b00c16e42428a1ecd3a5eb9cc37f8ad9bd47626",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/31e37f44b60679d90b9f999c91371b15291be8e0",
+          "url": "https://git.kernel.org/stable/c/0b06cde92f2f960f4ebe3c988c69f2711f2a24dc",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/e558cca217790286e799a8baacd1610bda31b261",
+          "url": "https://git.kernel.org/stable/c/8e8542c539927ae3898a4d02941f84e252e2dea1",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/06e26287f2e349a28ad363941ffd9076bfed8b2e",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/d250bdf531d9cd4096fedbb9f172bb2ca660c868",
           "type": "reference"
         }
       ],
@@ -48,36 +56,58 @@
           "defaultStatus": "unaffected",
           "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
           "programFiles": [
-            "net/bpf/test_run.c"
+            "fs/ext4/xattr.c"
           ],
           "versions": [
             {
-              "version": "b6f1f780b3932ae497ed85e79bc8a1e513883624",
-              "lessThan": "e7440935063949d6f2c10f7328d960d0ff4bce90",
+              "version": "1cfb3e4ddbdc8e02e637b8852540bd4718bf4814",
+              "lessThan": "7c9f059c3d531a12d7ad96cd34a44b8af7c00d5f",
               "status": "affected",
               "versionType": "git"
             },
             {
-              "version": "b6f1f780b3932ae497ed85e79bc8a1e513883624",
-              "lessThan": "7c81ad5e580bd8441f8a521a8d34824ce6582ae5",
+              "version": "505e69f76ac497e788f4ea0267826ec7266b40c8",
+              "lessThan": "6241cd1d0acc2363016ac55b8773ba1332dd59d7",
               "status": "affected",
               "versionType": "git"
             },
             {
-              "version": "b6f1f780b3932ae497ed85e79bc8a1e513883624",
-              "lessThan": "6447e697cfa8a43a8e491cb81bcc390d0f28f8ba",
+              "version": "3d6269028246f4484bfed403c947a114bb583631",
+              "lessThan": "3b00c16e42428a1ecd3a5eb9cc37f8ad9bd47626",
               "status": "affected",
               "versionType": "git"
             },
             {
-              "version": "b6f1f780b3932ae497ed85e79bc8a1e513883624",
-              "lessThan": "31e37f44b60679d90b9f999c91371b15291be8e0",
+              "version": "79ea7f3e11effe1bd9e753172981d9029133a278",
+              "lessThan": "0b06cde92f2f960f4ebe3c988c69f2711f2a24dc",
               "status": "affected",
               "versionType": "git"
             },
             {
-              "version": "b6f1f780b3932ae497ed85e79bc8a1e513883624",
-              "lessThan": "e558cca217790286e799a8baacd1610bda31b261",
+              "version": "6b879c4c6bbaab03c0ad2a983953bd1410bb165e",
+              "lessThan": "8e8542c539927ae3898a4d02941f84e252e2dea1",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "57295e835408d8d425bef58da5253465db3d6888",
+              "lessThan": "06e26287f2e349a28ad363941ffd9076bfed8b2e",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "57295e835408d8d425bef58da5253465db3d6888",
+              "lessThan": "d250bdf531d9cd4096fedbb9f172bb2ca660c868",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "ea39e712c2f5ae148ee5515798ae03523673e002",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "440b003f449a4ff2a00b08c8eab9ba5cd28f3943",
               "status": "affected",
               "versionType": "git"
             }
@@ -89,698 +119,7 @@
           "defaultStatus": "affected",
           "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
           "programFiles": [
-            "net/bpf/test_run.c"
-          ],
-          "versions": [
-            {
-              "version": "5.18",
-              "status": "affected"
-            },
-            {
-              "version": "0",
-              "lessThan": "5.18",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.1.161",
-              "lessThanOrEqual": "6.1.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.6.121",
-              "lessThanOrEqual": "6.6.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.12.66",
-              "lessThanOrEqual": "6.12.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.18.6",
-              "lessThanOrEqual": "6.18.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.19",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-23139",
-      "publishedDate": "2026-02-14T15:22:24.059Z",
-      "lastModifiedDate": "2026-02-14T15:22:24.059Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetfilter: nf_conncount: update last_gc only when GC has been performed\n\nCurrently last_gc is being updated everytime a new connection is\ntracked, that means that it is updated even if a GC wasn't performed.\nWith a sufficiently high packet rate, it is possible to always bypass\nthe GC, causing the list to grow infinitely.\n\nUpdate the last_gc value only when a GC has been actually performed.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://git.kernel.org/stable/c/2c7c71113ed6d3e2f3aca4c088f22283016ff34f",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/c4cde57c8affdcca5bcff53a1047e15d268bdca1",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/9f45588993d7f115280fc726119ca86fba32a811",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/3cd717359e56f82f06cbf8279b47a7d79880c6f3",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/26a82dce2beee39c43c109d9647e16f49cb02a35",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/8bdafdf4900040a81422056cabe5e00a37bd101a",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/7811ba452402d58628e68faedf38745b3d485e3c",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "net/netfilter/nf_conncount.c"
-          ],
-          "versions": [
-            {
-              "version": "f106694733c66a48740c25bc4e212e9b2ea364ce",
-              "lessThan": "2c7c71113ed6d3e2f3aca4c088f22283016ff34f",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "be69850b461e7b491d87a22e33ab76fdd04b725e",
-              "lessThan": "c4cde57c8affdcca5bcff53a1047e15d268bdca1",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "d265929930e2ffafc744c0ae05fb70acd53be1ee",
-              "lessThan": "9f45588993d7f115280fc726119ca86fba32a811",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "d265929930e2ffafc744c0ae05fb70acd53be1ee",
-              "lessThan": "3cd717359e56f82f06cbf8279b47a7d79880c6f3",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "d265929930e2ffafc744c0ae05fb70acd53be1ee",
-              "lessThan": "26a82dce2beee39c43c109d9647e16f49cb02a35",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "d265929930e2ffafc744c0ae05fb70acd53be1ee",
-              "lessThan": "8bdafdf4900040a81422056cabe5e00a37bd101a",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "d265929930e2ffafc744c0ae05fb70acd53be1ee",
-              "lessThan": "7811ba452402d58628e68faedf38745b3d485e3c",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "net/netfilter/nf_conncount.c"
-          ],
-          "versions": [
-            {
-              "version": "5.19",
-              "status": "affected"
-            },
-            {
-              "version": "0",
-              "lessThan": "5.19",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.1.161",
-              "lessThanOrEqual": "6.1.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.6.121",
-              "lessThanOrEqual": "6.6.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.12.66",
-              "lessThanOrEqual": "6.12.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.18.6",
-              "lessThanOrEqual": "6.18.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.19",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-23138",
-      "publishedDate": "2026-02-14T15:22:23.385Z",
-      "lastModifiedDate": "2026-02-14T15:22:23.385Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\ntracing: Add recursion protection in kernel stack trace recording\n\nA bug was reported about an infinite recursion caused by tracing the rcu\nevents with the kernel stack trace trigger enabled. The stack trace code\ncalled back into RCU which then called the stack trace again.\n\nExpand the ftrace recursion protection to add a set of bits to protect\nevents from recursion. Each bit represents the context that the event is\nin (normal, softirq, interrupt and NMI).\n\nHave the stack trace code use the interrupt context to protect against\nrecursion.\n\nNote, the bug showed an issue in both the RCU code as well as the tracing\nstacktrace code. This only handles the tracing stack trace side of the\nbug. The RCU fix will be handled separately.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://git.kernel.org/stable/c/5b7f91acffd2c4c000971553d22efa1e1bb4feae",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/5f1ef0dfcb5b7f4a91a9b0e0ba533efd9f7e2cdb",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "include/linux/trace_recursion.h",
-            "kernel/trace/trace.c"
-          ],
-          "versions": [
-            {
-              "version": "5f5fa7ea89dc82d34ed458f4d7a8634e8e9eefce",
-              "lessThan": "5b7f91acffd2c4c000971553d22efa1e1bb4feae",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "5f5fa7ea89dc82d34ed458f4d7a8634e8e9eefce",
-              "lessThan": "5f1ef0dfcb5b7f4a91a9b0e0ba533efd9f7e2cdb",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "include/linux/trace_recursion.h",
-            "kernel/trace/trace.c"
-          ],
-          "versions": [
-            {
-              "version": "5.8",
-              "status": "affected"
-            },
-            {
-              "version": "0",
-              "lessThan": "5.8",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.18.6",
-              "lessThanOrEqual": "6.18.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.19",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-23137",
-      "publishedDate": "2026-02-14T15:22:22.690Z",
-      "lastModifiedDate": "2026-02-14T15:22:22.690Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nof: unittest: Fix memory leak in unittest_data_add()\n\nIn unittest_data_add(), if of_resolve_phandles() fails, the allocated\nunittest_data is not freed, leading to a memory leak.\n\nFix this by using scope-based cleanup helper __free(kfree) for automatic\nresource cleanup. This ensures unittest_data is automatically freed when\nit goes out of scope in error paths.\n\nFor the success path, use retain_and_null_ptr() to transfer ownership\nof the memory to the device tree and prevent double freeing.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://git.kernel.org/stable/c/f09b0f705bd7197863b90256ef533a6414d1db2c",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/235a1eb8d2dcc49a6cf0a5ee1aa85544a5d0054b",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/of/unittest.c"
-          ],
-          "versions": [
-            {
-              "version": "2eb46da2a760e5764c48b752a5ef320e02b96b21",
-              "lessThan": "f09b0f705bd7197863b90256ef533a6414d1db2c",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "2eb46da2a760e5764c48b752a5ef320e02b96b21",
-              "lessThan": "235a1eb8d2dcc49a6cf0a5ee1aa85544a5d0054b",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/of/unittest.c"
-          ],
-          "versions": [
-            {
-              "version": "3.18",
-              "status": "affected"
-            },
-            {
-              "version": "0",
-              "lessThan": "3.18",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.18.6",
-              "lessThanOrEqual": "6.18.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.19",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-23136",
-      "publishedDate": "2026-02-14T15:22:21.952Z",
-      "lastModifiedDate": "2026-02-14T15:22:21.952Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nlibceph: reset sparse-read state in osd_fault()\n\nWhen a fault occurs, the connection is abandoned, reestablished, and any\npending operations are retried. The OSD client tracks the progress of a\nsparse-read reply using a separate state machine, largely independent of\nthe messenger's state.\n\nIf a connection is lost mid-payload or the sparse-read state machine\nreturns an error, the sparse-read state is not reset. The OSD client\nwill then interpret the beginning of a new reply as the continuation of\nthe old one. If this makes the sparse-read machinery enter a failure\nstate, it may never recover, producing loops like:\n\n  libceph:  [0] got 0 extents\n  libceph: data len 142248331 != extent len 0\n  libceph: osd0 (1)...:6801 socket error on read\n  libceph: data len 142248331 != extent len 0\n  libceph: osd0 (1)...:6801 socket error on read\n\nTherefore, reset the sparse-read state in osd_fault(), ensuring retries\nstart from a clean state.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://git.kernel.org/stable/c/90a60fe61908afa0eaf7f8fcf1421b9b50e5f7ff",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/e94075e950a6598e710b9f7dffea5aa388f40313",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/10b7c72810364226f7b27916ea3e2a4f870bc04b",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/11194b416ef95012c2cfe5f546d71af07b639e93",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "net/ceph/osd_client.c"
-          ],
-          "versions": [
-            {
-              "version": "f628d799972799023d32c2542bb2639eb8c4f84e",
-              "lessThan": "90a60fe61908afa0eaf7f8fcf1421b9b50e5f7ff",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "f628d799972799023d32c2542bb2639eb8c4f84e",
-              "lessThan": "e94075e950a6598e710b9f7dffea5aa388f40313",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "f628d799972799023d32c2542bb2639eb8c4f84e",
-              "lessThan": "10b7c72810364226f7b27916ea3e2a4f870bc04b",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "f628d799972799023d32c2542bb2639eb8c4f84e",
-              "lessThan": "11194b416ef95012c2cfe5f546d71af07b639e93",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "net/ceph/osd_client.c"
-          ],
-          "versions": [
-            {
-              "version": "6.6",
-              "status": "affected"
-            },
-            {
-              "version": "0",
-              "lessThan": "6.6",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.6.121",
-              "lessThanOrEqual": "6.6.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.12.66",
-              "lessThanOrEqual": "6.12.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.18.6",
-              "lessThanOrEqual": "6.18.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.19",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-71201",
-      "publishedDate": "2026-02-14T15:22:21.233Z",
-      "lastModifiedDate": "2026-02-14T15:22:21.233Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetfs: Fix early read unlock of page with EOF in middle\n\nThe read result collection for buffered reads seems to run ahead of the\ncompletion of subrequests under some circumstances, as can be seen in the\nfollowing log snippet:\n\n    9p_client_res: client 18446612686390831168 response P9_TREAD tag  0 err 0\n    ...\n    netfs_sreq: R=00001b55[1] DOWN TERM  f=192 s=0 5fb2/5fb2 s=5 e=0\n    ...\n    netfs_collect_folio: R=00001b55 ix=00004 r=4000-5000 t=4000/5fb2\n    netfs_folio: i=157f3 ix=00004-00004 read-done\n    netfs_folio: i=157f3 ix=00004-00004 read-unlock\n    netfs_collect_folio: R=00001b55 ix=00005 r=5000-5fb2 t=5000/5fb2\n    netfs_folio: i=157f3 ix=00005-00005 read-done\n    netfs_folio: i=157f3 ix=00005-00005 read-unlock\n    ...\n    netfs_collect_stream: R=00001b55[0:] cto=5fb2 frn=ffffffff\n    netfs_collect_state: R=00001b55 col=5fb2 cln=6000 n=c\n    netfs_collect_stream: R=00001b55[0:] cto=5fb2 frn=ffffffff\n    netfs_collect_state: R=00001b55 col=5fb2 cln=6000 n=8\n    ...\n    netfs_sreq: R=00001b55[2] ZERO SUBMT f=000 s=5fb2 0/4e s=0 e=0\n    netfs_sreq: R=00001b55[2] ZERO TERM  f=102 s=5fb2 4e/4e s=5 e=0\n\nThe 'cto=5fb2' indicates the collected file pos we've collected results to\nso far - but we still have 0x4e more bytes to go - so we shouldn't have\ncollected folio ix=00005 yet.  The 'ZERO' subreq that clears the tail\nhappens after we unlock the folio, allowing the application to see the\nuncleared tail through mmap.\n\nThe problem is that netfs_read_unlock_folios() will unlock a folio in which\nthe amount of read results collected hits EOF position - but the ZERO\nsubreq lies beyond that and so happens after.\n\nFix this by changing the end check to always be the end of the folio and\nnever the end of the file.\n\nIn the future, I should look at clearing to the end of the folio here rather\nthan adding a ZERO subreq to do this.  On the other hand, the ZERO subreq can\nrun in parallel with an async READ subreq.  Further, the ZERO subreq may still\nbe necessary to, say, handle extents in a ceph file that don't have any\nbacking store and are thus implicitly all zeros.\n\nThis can be reproduced by creating a file, the size of which doesn't align\nto a page boundary, e.g. 24998 (0x5fb2) bytes and then doing something\nlike:\n\n    xfs_io -c \"mmap -r 0 0x6000\" -c \"madvise -d 0 0x6000\" \\\n           -c \"mread -v 0 0x6000\" /xfstest.test/x\n\nThe last 0x4e bytes should all be 00, but if the tail hasn't been cleared\nyet, you may see rubbish there.  This can be reproduced with kafs by\nmodifying the kernel to disable the call to netfs_read_subreq_progress()\nand to stop afs_issue_read() from doing the async call for NETFS_READAHEAD.\nReproduction can be made easier by inserting an mdelay(100) in\nnetfs_issue_read() for the ZERO-subreq case.\n\nAFS and CIFS are normally unlikely to show this as they dispatch READ ops\nasynchronously, which allows the ZERO-subreq to finish first.  9P's READ op is\ncompletely synchronous, so the ZERO-subreq will always happen after.  It isn't\nseen all the time, though, because the collection may be done in a worker\nthread.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://git.kernel.org/stable/c/5b5482c0e5ee740b35a70759d3582477aea8e8e4",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/570ad253a3455a520f03c2136af8714bc780186d",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "fs/netfs/read_collect.c"
-          ],
-          "versions": [
-            {
-              "version": "e2d46f2ec332533816417b60933954173f602121",
-              "lessThan": "5b5482c0e5ee740b35a70759d3582477aea8e8e4",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "e2d46f2ec332533816417b60933954173f602121",
-              "lessThan": "570ad253a3455a520f03c2136af8714bc780186d",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "fs/netfs/read_collect.c"
-          ],
-          "versions": [
-            {
-              "version": "6.14",
-              "status": "affected"
-            },
-            {
-              "version": "0",
-              "lessThan": "6.14",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.18.6",
-              "lessThanOrEqual": "6.18.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.19",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-23135",
-      "publishedDate": "2026-02-14T15:14:34.473Z",
-      "lastModifiedDate": "2026-02-14T15:14:34.473Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nwifi: ath12k: fix dma_free_coherent() pointer\n\ndma_alloc_coherent() allocates a DMA mapped buffer and stores the\naddresses in XXX_unaligned fields.  Those should be reused when freeing\nthe buffer rather than the aligned addresses.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://git.kernel.org/stable/c/36e0bc5e8b282564906fca636c4ebc99814de4e7",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/24585a13c41ea7253ee59aac74441fb570f5824a",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/4846b32be324f4dd3653f38a3f69c049543d52ae",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/bb97131fbf9b708dd9616ac2bdc793ad102b5c48",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/net/wireless/ath/ath12k/ce.c"
-          ],
-          "versions": [
-            {
-              "version": "d889913205cf7ebda905b1e62c5867ed4e39f6c2",
-              "lessThan": "36e0bc5e8b282564906fca636c4ebc99814de4e7",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "d889913205cf7ebda905b1e62c5867ed4e39f6c2",
-              "lessThan": "24585a13c41ea7253ee59aac74441fb570f5824a",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "d889913205cf7ebda905b1e62c5867ed4e39f6c2",
-              "lessThan": "4846b32be324f4dd3653f38a3f69c049543d52ae",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "d889913205cf7ebda905b1e62c5867ed4e39f6c2",
-              "lessThan": "bb97131fbf9b708dd9616ac2bdc793ad102b5c48",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/net/wireless/ath/ath12k/ce.c"
-          ],
-          "versions": [
-            {
-              "version": "6.3",
-              "status": "affected"
-            },
-            {
-              "version": "0",
-              "lessThan": "6.3",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.6.122",
-              "lessThanOrEqual": "6.6.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.12.68",
-              "lessThanOrEqual": "6.12.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.18.8",
-              "lessThanOrEqual": "6.18.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.19",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-23134",
-      "publishedDate": "2026-02-14T15:14:33.806Z",
-      "lastModifiedDate": "2026-02-14T15:14:33.806Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nslab: fix kmalloc_nolock() context check for PREEMPT_RT\n\nOn PREEMPT_RT kernels, local_lock becomes a sleeping lock. The current\ncheck in kmalloc_nolock() only verifies we're not in NMI or hard IRQ\ncontext, but misses the case where preemption is disabled.\n\nWhen a BPF program runs from a tracepoint with preemption disabled\n(preempt_count > 0), kmalloc_nolock() proceeds to call\nlocal_lock_irqsave() which attempts to acquire a sleeping lock,\ntriggering:\n\n  BUG: sleeping function called from invalid context\n  in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 6128\n  preempt_count: 2, expected: 0\n\nFix this by checking !preemptible() on PREEMPT_RT, which directly\nexpresses the constraint that we cannot take a sleeping lock when\npreemption is disabled. This encompasses the previous checks for NMI\nand hard IRQ contexts while also catching cases where preemption is\ndisabled.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://git.kernel.org/stable/c/f60ba4a97ae3f94e4818722ed2e4d260bbb17b44",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/99a3e3a1cfc93b8fe318c0a3a5cfb01f1d4ad53c",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "mm/slub.c"
-          ],
-          "versions": [
-            {
-              "version": "af92793e52c3a99b828ed4bdd277fd3e11c18d08",
-              "lessThan": "f60ba4a97ae3f94e4818722ed2e4d260bbb17b44",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "af92793e52c3a99b828ed4bdd277fd3e11c18d08",
-              "lessThan": "99a3e3a1cfc93b8fe318c0a3a5cfb01f1d4ad53c",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "mm/slub.c"
+            "fs/ext4/xattr.c"
           ],
           "versions": [
             {
@@ -790,133 +129,6 @@
             {
               "version": "0",
               "lessThan": "6.18",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.18.8",
-              "lessThanOrEqual": "6.18.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.19",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-23133",
-      "publishedDate": "2026-02-14T15:14:33.102Z",
-      "lastModifiedDate": "2026-02-14T15:14:33.102Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nwifi: ath10k: fix dma_free_coherent() pointer\n\ndma_alloc_coherent() allocates a DMA mapped buffer and stores the\naddresses in XXX_unaligned fields.  Those should be reused when freeing\nthe buffer rather than the aligned addresses.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://git.kernel.org/stable/c/e2dda298ef809aa201ea7c0904c4d064f6c497cb",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/fc8da65f9fe1bc6802f8240b342cfff4f5c7e841",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/b0ad924332a96550a84b8c0ae5483e7042d65fa9",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/1928851334ecfd6e0d663121ab69ac639d4217a6",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/5d6fa4d2c9799c09389588da5118a72d97d87e92",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/07f363f305793baecad41816f73056252f3df61e",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/9282a1e171ad8d2205067e8ec3bbe4e3cef4f29f",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/net/wireless/ath/ath10k/ce.c"
-          ],
-          "versions": [
-            {
-              "version": "2a1e1ad3fd37a632b61f50e73dafddb4b0fa57f1",
-              "lessThan": "e2dda298ef809aa201ea7c0904c4d064f6c497cb",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "2a1e1ad3fd37a632b61f50e73dafddb4b0fa57f1",
-              "lessThan": "fc8da65f9fe1bc6802f8240b342cfff4f5c7e841",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "2a1e1ad3fd37a632b61f50e73dafddb4b0fa57f1",
-              "lessThan": "b0ad924332a96550a84b8c0ae5483e7042d65fa9",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "2a1e1ad3fd37a632b61f50e73dafddb4b0fa57f1",
-              "lessThan": "1928851334ecfd6e0d663121ab69ac639d4217a6",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "2a1e1ad3fd37a632b61f50e73dafddb4b0fa57f1",
-              "lessThan": "5d6fa4d2c9799c09389588da5118a72d97d87e92",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "2a1e1ad3fd37a632b61f50e73dafddb4b0fa57f1",
-              "lessThan": "07f363f305793baecad41816f73056252f3df61e",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "2a1e1ad3fd37a632b61f50e73dafddb4b0fa57f1",
-              "lessThan": "9282a1e171ad8d2205067e8ec3bbe4e3cef4f29f",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/net/wireless/ath/ath10k/ce.c"
-          ],
-          "versions": [
-            {
-              "version": "4.16",
-              "status": "affected"
-            },
-            {
-              "version": "0",
-              "lessThan": "4.16",
               "status": "unaffected",
               "versionType": "semver"
             },
@@ -945,13 +157,13 @@
               "versionType": "semver"
             },
             {
-              "version": "6.12.68",
+              "version": "6.12.67",
               "lessThanOrEqual": "6.12.*",
               "status": "unaffected",
               "versionType": "semver"
             },
             {
-              "version": "6.18.8",
+              "version": "6.18.7",
               "lessThanOrEqual": "6.18.*",
               "status": "unaffected",
               "versionType": "semver"
@@ -969,18 +181,30 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-23132",
-      "publishedDate": "2026-02-14T15:14:32.334Z",
-      "lastModifiedDate": "2026-02-14T15:14:32.334Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/bridge: synopsys: dw-dp: fix error paths of dw_dp_bind\n\nFix several issues in dw_dp_bind() error handling:\n\n1. Missing return after drm_bridge_attach() failure - the function\n   continued execution instead of returning an error.\n\n2. Resource leak: drm_dp_aux_register() is not a devm function, so\n   drm_dp_aux_unregister() must be called on all error paths after\n   aux registration succeeds. This affects errors from:\n   - drm_bridge_attach()\n   - phy_init()\n   - devm_add_action_or_reset()\n   - platform_get_irq()\n   - devm_request_threaded_irq()\n\n3. Bug fix: platform_get_irq() returns the IRQ number or a negative\n   error code, but the error path was returning ERR_PTR(ret) instead\n   of ERR_PTR(dp->irq).\n\nUse a goto label for cleanup to ensure consistent error handling.",
+      "id": "CVE-2026-23144",
+      "publishedDate": "2026-02-14T15:36:09.518Z",
+      "lastModifiedDate": "2026-02-14T15:36:09.518Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nmm/damon/sysfs: cleanup attrs subdirs on context dir setup failure\n\nWhen a context DAMON sysfs directory setup is failed after setup of attrs/\ndirectory, subdirectories of attrs/ directory are not cleaned up.  As a\nresult, DAMON sysfs interface is nearly broken until the system reboots,\nand the memory for the unremoved directory is leaked.\n\nCleanup the directories under such failures.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://git.kernel.org/stable/c/569ed6a73e927a34cae4ae6de1464c0737a5ec44",
+          "url": "https://git.kernel.org/stable/c/db7dfe78fc81bdd2b532d77f340fe453f2360426",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/1a0f69e3c28477b97d3609569b7e8feb4b6162e8",
+          "url": "https://git.kernel.org/stable/c/43964644348f6b1add3055c4a6cae8f77d892a6e",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/5651c0c391c0029541794f9c4c9597faecfd401f",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/78b4eb99751ebd37ceade78810bf94de80f7fb3a",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/9814cc832b88bd040fc2a1817c2b5469d0f7e862",
           "type": "reference"
         }
       ],
@@ -991,18 +215,36 @@
           "defaultStatus": "unaffected",
           "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
           "programFiles": [
-            "drivers/gpu/drm/bridge/synopsys/dw-dp.c"
+            "mm/damon/sysfs.c"
           ],
           "versions": [
             {
-              "version": "86eecc3a9c2e06462f6a273fcd24150b6da787de",
-              "lessThan": "569ed6a73e927a34cae4ae6de1464c0737a5ec44",
+              "version": "c951cd3b89010c7a4751b9d4ea074007e44851e6",
+              "lessThan": "db7dfe78fc81bdd2b532d77f340fe453f2360426",
               "status": "affected",
               "versionType": "git"
             },
             {
-              "version": "86eecc3a9c2e06462f6a273fcd24150b6da787de",
-              "lessThan": "1a0f69e3c28477b97d3609569b7e8feb4b6162e8",
+              "version": "c951cd3b89010c7a4751b9d4ea074007e44851e6",
+              "lessThan": "43964644348f6b1add3055c4a6cae8f77d892a6e",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "c951cd3b89010c7a4751b9d4ea074007e44851e6",
+              "lessThan": "5651c0c391c0029541794f9c4c9597faecfd401f",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "c951cd3b89010c7a4751b9d4ea074007e44851e6",
+              "lessThan": "78b4eb99751ebd37ceade78810bf94de80f7fb3a",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "c951cd3b89010c7a4751b9d4ea074007e44851e6",
+              "lessThan": "9814cc832b88bd040fc2a1817c2b5469d0f7e862",
               "status": "affected",
               "versionType": "git"
             }
@@ -1014,21 +256,423 @@
           "defaultStatus": "affected",
           "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
           "programFiles": [
-            "drivers/gpu/drm/bridge/synopsys/dw-dp.c"
+            "mm/damon/sysfs.c"
           ],
           "versions": [
             {
-              "version": "6.18",
+              "version": "5.18",
               "status": "affected"
             },
             {
               "version": "0",
-              "lessThan": "6.18",
+              "lessThan": "5.18",
               "status": "unaffected",
               "versionType": "semver"
             },
             {
-              "version": "6.18.8",
+              "version": "6.1.162",
+              "lessThanOrEqual": "6.1.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.6.122",
+              "lessThanOrEqual": "6.6.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.12.67",
+              "lessThanOrEqual": "6.12.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.18.7",
+              "lessThanOrEqual": "6.18.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.19",
+              "lessThanOrEqual": "*",
+              "status": "unaffected",
+              "versionType": "original_commit_for_fix"
+            }
+          ]
+        }
+      ],
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-23143",
+      "publishedDate": "2026-02-14T15:36:08.834Z",
+      "lastModifiedDate": "2026-02-14T15:36:08.834Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nvirtio_net: Fix misalignment bug in struct virtnet_info\n\nUse the new TRAILING_OVERLAP() helper to fix a misalignment bug\nalong with the following warning:\n\ndrivers/net/virtio_net.c:429:46: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]\n\nThis helper creates a union between a flexible-array member (FAM)\nand a set of members that would otherwise follow it (in this case\n`u8 rss_hash_key_data[VIRTIO_NET_RSS_MAX_KEY_SIZE];`). This\noverlays the trailing members (rss_hash_key_data) onto the FAM\n(hash_key_data) while keeping the FAM and the start of MEMBERS aligned.\nThe static_assert() ensures this alignment remains.\n\nNotice that due to tail padding in flexible `struct\nvirtio_net_rss_config_trailer`, `rss_trailer.hash_key_data`\n(at offset 83 in struct virtnet_info) and `rss_hash_key_data` (at\noffset 84 in struct virtnet_info) are misaligned by one byte. See\nbelow:\n\nstruct virtio_net_rss_config_trailer {\n        __le16                     max_tx_vq;            /*     0     2 */\n        __u8                       hash_key_length;      /*     2     1 */\n        __u8                       hash_key_data[];      /*     3     0 */\n\n        /* size: 4, cachelines: 1, members: 3 */\n        /* padding: 1 */\n        /* last cacheline: 4 bytes */\n};\n\nstruct virtnet_info {\n...\n        struct virtio_net_rss_config_trailer rss_trailer; /*    80     4 */\n\n        /* XXX last struct has 1 byte of padding */\n\n        u8                         rss_hash_key_data[40]; /*    84    40 */\n...\n        /* size: 832, cachelines: 13, members: 48 */\n        /* sum members: 801, holes: 8, sum holes: 31 */\n        /* paddings: 2, sum paddings: 5 */\n};\n\nAfter changes, those members are correctly aligned at offset 795:\n\nstruct virtnet_info {\n...\n        union {\n                struct virtio_net_rss_config_trailer rss_trailer; /*   792     4 */\n                struct {\n                        unsigned char __offset_to_hash_key_data[3]; /*   792     3 */\n                        u8         rss_hash_key_data[40]; /*   795    40 */\n                };                                       /*   792    43 */\n        };                                               /*   792    44 */\n...\n        /* size: 840, cachelines: 14, members: 47 */\n        /* sum members: 801, holes: 8, sum holes: 35 */\n        /* padding: 4 */\n        /* paddings: 1, sum paddings: 4 */\n        /* last cacheline: 8 bytes */\n};\n\nAs a result, the RSS key passed to the device is shifted by 1\nbyte: the last byte is cut off, and instead a (possibly\nuninitialized) byte is added at the beginning.\n\nAs a last note `struct virtio_net_rss_config_hdr *rss_hdr;` is also\nmoved to the end, since it seems those three members should stick\naround together. :)",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://git.kernel.org/stable/c/ae48108c2310f1dd700e0dbb655c2f1d92ed00fc",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/4156c3745f06bc197094b9ee97a9584e69ed00bf",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "unaffected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "drivers/net/virtio_net.c"
+          ],
+          "versions": [
+            {
+              "version": "ed3100e90d0d120a045a551b85eb43cf2527e885",
+              "lessThan": "ae48108c2310f1dd700e0dbb655c2f1d92ed00fc",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "ed3100e90d0d120a045a551b85eb43cf2527e885",
+              "lessThan": "4156c3745f06bc197094b9ee97a9584e69ed00bf",
+              "status": "affected",
+              "versionType": "git"
+            }
+          ]
+        },
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "affected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "drivers/net/virtio_net.c"
+          ],
+          "versions": [
+            {
+              "version": "6.15",
+              "status": "affected"
+            },
+            {
+              "version": "0",
+              "lessThan": "6.15",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.18.7",
+              "lessThanOrEqual": "6.18.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.19",
+              "lessThanOrEqual": "*",
+              "status": "unaffected",
+              "versionType": "original_commit_for_fix"
+            }
+          ]
+        }
+      ],
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-23142",
+      "publishedDate": "2026-02-14T15:36:08.147Z",
+      "lastModifiedDate": "2026-02-14T15:36:08.147Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nmm/damon/sysfs-scheme: cleanup access_pattern subdirs on scheme dir setup failure\n\nWhen a DAMOS-scheme DAMON sysfs directory setup fails after setup of\naccess_pattern/ directory, subdirectories of access_pattern/ directory are\nnot cleaned up.  As a result, DAMON sysfs interface is nearly broken until\nthe system reboots, and the memory for the unremoved directory is leaked.\n\nCleanup the directories under such failures.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://git.kernel.org/stable/c/ae8ac0066b48ed957bdcab58f0d3543549c57a29",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/e9711bd0e64812c694a228cf58c9e6032decee54",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/16236b0b4a08fa3e326cf1373ef789dabdc2e30d",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/725d4fdaa01bd1161782081f419e1568cc7432e0",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/392b3d9d595f34877dd745b470c711e8ebcd225c",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "unaffected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "mm/damon/sysfs-schemes.c"
+          ],
+          "versions": [
+            {
+              "version": "9bbb820a5bd5f406ae5e0819cc31f2c2e6f4d990",
+              "lessThan": "ae8ac0066b48ed957bdcab58f0d3543549c57a29",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "9bbb820a5bd5f406ae5e0819cc31f2c2e6f4d990",
+              "lessThan": "e9711bd0e64812c694a228cf58c9e6032decee54",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "9bbb820a5bd5f406ae5e0819cc31f2c2e6f4d990",
+              "lessThan": "16236b0b4a08fa3e326cf1373ef789dabdc2e30d",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "9bbb820a5bd5f406ae5e0819cc31f2c2e6f4d990",
+              "lessThan": "725d4fdaa01bd1161782081f419e1568cc7432e0",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "9bbb820a5bd5f406ae5e0819cc31f2c2e6f4d990",
+              "lessThan": "392b3d9d595f34877dd745b470c711e8ebcd225c",
+              "status": "affected",
+              "versionType": "git"
+            }
+          ]
+        },
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "affected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "mm/damon/sysfs-schemes.c"
+          ],
+          "versions": [
+            {
+              "version": "5.18",
+              "status": "affected"
+            },
+            {
+              "version": "0",
+              "lessThan": "5.18",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.1.162",
+              "lessThanOrEqual": "6.1.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.6.122",
+              "lessThanOrEqual": "6.6.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.12.67",
+              "lessThanOrEqual": "6.12.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.18.7",
+              "lessThanOrEqual": "6.18.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.19",
+              "lessThanOrEqual": "*",
+              "status": "unaffected",
+              "versionType": "original_commit_for_fix"
+            }
+          ]
+        }
+      ],
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-23141",
+      "publishedDate": "2026-02-14T15:36:07.417Z",
+      "lastModifiedDate": "2026-02-14T15:36:07.417Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nbtrfs: send: check for inline extents in range_is_hole_in_parent()\n\nBefore accessing the disk_bytenr field of a file extent item we need\nto check if we are dealing with an inline extent.\nThis is because for inline extents their data starts at the offset of\nthe disk_bytenr field. So accessing the disk_bytenr\nmeans we are accessing inline data or in case the inline data is less\nthan 8 bytes we can actually cause an invalid\nmemory access if this inline extent item is the first item in the leaf\nor access metadata from other items.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://git.kernel.org/stable/c/f2dc6ab3a14c2d2eb0b14783427eb9b03bf631c9",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/db00636643e66898d79f2530ac9c56ebd5eca369",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/39f83f10772310ba4a77f2b5256aaf36994ef7e8",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/08b096c1372cd69627f4f559fb47c9fb67a52b39",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "unaffected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "fs/btrfs/send.c"
+          ],
+          "versions": [
+            {
+              "version": "82bfb2e7b645c8f228dc3b6d3b27b0b10125ca4f",
+              "lessThan": "f2dc6ab3a14c2d2eb0b14783427eb9b03bf631c9",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "82bfb2e7b645c8f228dc3b6d3b27b0b10125ca4f",
+              "lessThan": "db00636643e66898d79f2530ac9c56ebd5eca369",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "82bfb2e7b645c8f228dc3b6d3b27b0b10125ca4f",
+              "lessThan": "39f83f10772310ba4a77f2b5256aaf36994ef7e8",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "82bfb2e7b645c8f228dc3b6d3b27b0b10125ca4f",
+              "lessThan": "08b096c1372cd69627f4f559fb47c9fb67a52b39",
+              "status": "affected",
+              "versionType": "git"
+            }
+          ]
+        },
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "affected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "fs/btrfs/send.c"
+          ],
+          "versions": [
+            {
+              "version": "4.11",
+              "status": "affected"
+            },
+            {
+              "version": "0",
+              "lessThan": "4.11",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.6.122",
+              "lessThanOrEqual": "6.6.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.12.67",
+              "lessThanOrEqual": "6.12.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.18.7",
+              "lessThanOrEqual": "6.18.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.19",
+              "lessThanOrEqual": "*",
+              "status": "unaffected",
+              "versionType": "original_commit_for_fix"
+            }
+          ]
+        }
+      ],
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-71202",
+      "publishedDate": "2026-02-14T15:36:06.588Z",
+      "lastModifiedDate": "2026-02-14T15:36:06.588Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\niommu/sva: invalidate stale IOTLB entries for kernel address space\n\nIntroduce a new IOMMU interface to flush IOTLB paging cache entries for\nthe CPU kernel address space.  This interface is invoked from the x86\narchitecture code that manages combined user and kernel page tables,\nspecifically before any kernel page table page is freed and reused.\n\nThis addresses the main issue with vfree() which is a common occurrence\nand can be triggered by unprivileged users.  While this resolves the\nprimary problem, it doesn't address some extremely rare case related to\nmemory unplug of memory that was present as reserved memory at boot, which\ncannot be triggered by unprivileged users.  The discussion can be found at\nthe link below.\n\nEnable SVA on x86 architecture since the IOMMU can now receive\nnotification to flush the paging cache before freeing the CPU kernel page\ntable pages.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://git.kernel.org/stable/c/9f0a7ab700f8620e433b05c57fbd26c92ea186d9",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/e37d5a2d60a338c5917c45296bac65da1382eda5",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "unaffected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "arch/x86/Kconfig",
+            "drivers/iommu/iommu-sva.c",
+            "include/linux/iommu.h",
+            "mm/pgtable-generic.c"
+          ],
+          "versions": [
+            {
+              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
+              "lessThan": "9f0a7ab700f8620e433b05c57fbd26c92ea186d9",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
+              "lessThan": "e37d5a2d60a338c5917c45296bac65da1382eda5",
+              "status": "affected",
+              "versionType": "git"
+            }
+          ]
+        },
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "affected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "arch/x86/Kconfig",
+            "drivers/iommu/iommu-sva.c",
+            "include/linux/iommu.h",
+            "mm/pgtable-generic.c"
+          ],
+          "versions": [
+            {
+              "version": "6.18.7",
               "lessThanOrEqual": "6.18.*",
               "status": "unaffected",
               "versionType": "semver"
