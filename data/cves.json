@@ -2,15 +2,89 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 0,
-    "last_updated": "2026-02-17T12:56:09.573861",
+    "total_count": 2,
+    "last_updated": "2026-02-17T14:09:54.011105",
     "severity_distribution": {
       "critical": 0,
       "high": 0,
-      "medium": 0,
+      "medium": 1,
       "low": 0,
-      "none": 0
+      "none": 1
     }
   },
-  "cves": []
+  "cves": [
+    {
+      "id": "CVE-2025-7706",
+      "publishedDate": "2026-02-17T13:22:54.033Z",
+      "lastModifiedDate": "2026-02-17T13:22:54.033Z",
+      "description": "Missing Authentication for Critical Function vulnerability in TUBITAK BILGEM Software Technologies Research Institute Liderahenk allows Remote Code Inclusion.This issue affects Liderahenk: from 3.0.0 to 3.3.1 before 3.5.0.",
+      "severity": 6.1,
+      "references": [
+        {
+          "url": "https://www.usom.gov.tr/bildirim/tr-26-0069",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Liderahenk",
+          "vendor": "TUBITAK BILGEM Software Technologies Research Institute",
+          "versions": [
+            {
+              "lessThan": "3.5.0",
+              "status": "affected",
+              "version": "3.0.0 to 3.3.1",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-306 Missing Authentication for Critical Function"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-25087",
+      "publishedDate": "2026-02-17T13:18:25.494Z",
+      "lastModifiedDate": "2026-02-17T13:18:25.494Z",
+      "description": "Use After Free vulnerability in Apache Arrow C++.\n\nThis issue affects Apache Arrow C++ from 15.0.0 through 23.0.0. It can be triggered when reading an Arrow IPC file (but not an IPC stream) with pre-buffering enabled, if the IPC file contains data with variadic buffers (such as Binary View and String View data). Depending on the number of variadic buffers in a record batch column and on the temporal sequence of multi-threaded IO, a write to a dangling pointer could occur. The value (a `std::shared_ptr<Buffer>` object) that is written to the dangling pointer is not under direct control of the attacker.\n\nPre-buffering is disabled by default but can be enabled using a specific C++ API call (`RecordBatchFileReader::PreBufferMetadata`). The functionality is not exposed in language bindings (Python, Ruby, C GLib), so these bindings are not vulnerable.\n\nThe most likely consequence of this issue would be random crashes or memory corruption when reading specific kinds of IPC files. If the application allows ingesting IPC files from untrusted sources, this could plausibly be exploited for denial of service. Inducing more targeted kinds of misbehavior (such as confidential data extraction from the running process) depends on memory allocation and multi-threaded IO temporal patterns that are unlikely to be easily controlled by an attacker.\n\nAdvice for users of Arrow C++:\n\n1. check whether you enable pre-buffering on the IPC file reader (using `RecordBatchFileReader::PreBufferMetadata`)\n\n2. if so, either disable pre-buffering (which may have adverse performance consequences), or switch to Arrow 23.0.1 which is not vulnerable",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/apache/arrow/pull/48925",
+          "type": "reference"
+        },
+        {
+          "url": "https://lists.apache.org/thread/mpm4ld1qony30tchfpjtk5b11tcyvmwh",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Apache Arrow",
+          "vendor": "Apache Software Foundation",
+          "versions": [
+            {
+              "lessThanOrEqual": "23.0.0",
+              "status": "affected",
+              "version": "15.0.0",
+              "versionType": "semver"
+            },
+            {
+              "status": "unaffected",
+              "version": "23.0.1",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-416 Use After Free"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    }
+  ]
 }
