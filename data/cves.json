@@ -2,11 +2,11 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 20,
-    "last_updated": "2026-02-19T20:25:11.366691",
+    "total_count": 16,
+    "last_updated": "2026-02-19T20:58:50.465465",
     "severity_distribution": {
-      "critical": 0,
-      "high": 5,
+      "critical": 1,
+      "high": 0,
       "medium": 3,
       "low": 0,
       "none": 12
@@ -14,263 +14,253 @@
   },
   "cves": [
     {
-      "id": "CVE-2026-26318",
-      "publishedDate": "2026-02-19T19:48:55.816Z",
-      "lastModifiedDate": "2026-02-19T19:48:55.816Z",
-      "description": "systeminformation is a System and OS information library for node.js. Versions prior to 5.31.0 are vulnerable to command injection via unsanitized `locate` output in `versions()`. Version 5.31.0 fixes the issue.",
-      "severity": 8.8,
+      "id": "CVE-2026-27476",
+      "publishedDate": "2026-02-19T20:43:08.963Z",
+      "lastModifiedDate": "2026-02-19T20:43:08.963Z",
+      "description": "RustFly 2.0.0 contains a command injection vulnerability in its remote UI control mechanism that accepts hex-encoded instructions over UDP port 5005 without proper sanitization. Attackers can send crafted hex-encoded payloads containing system commands to execute arbitrary operations on the target system, including reverse shell establishment and command execution.",
+      "severity": 9.8,
       "references": [
         {
-          "url": "https://github.com/sebhildebrandt/systeminformation/security/advisories/GHSA-5vv4-hvf7-2h46",
-          "type": "reference"
+          "url": "https://packetstorm.news/files/id/215819/",
+          "type": "poc"
         },
         {
-          "url": "https://github.com/sebhildebrandt/systeminformation/commit/b67d3715eec881038ccbaace2f2711419ac3e107",
+          "url": "https://www.vulncheck.com/advisories/rustfly-command-injection-via-udp-remote-control",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "sebhildebrandt",
-          "product": "systeminformation",
+          "vendor": "Bixat",
+          "product": "RustFly",
           "versions": [
             {
-              "version": "< 5.31.0",
+              "version": "2.0.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+        "Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-26280",
-      "publishedDate": "2026-02-19T19:43:05.868Z",
-      "lastModifiedDate": "2026-02-19T19:43:05.868Z",
-      "description": "systeminformation is a System and OS information library for node.js. In versions prior to 5.30.8, a command injection vulnerability in the `wifiNetworks()` function allows an attacker to execute arbitrary OS commands via an unsanitized network interface parameter in the retry code path. In `lib/wifi.js`, the `wifiNetworks()` function sanitizes the `iface` parameter on the initial call (line 437). However, when the initial scan returns empty results, a `setTimeout` retry (lines 440-441) calls `getWifiNetworkListIw(iface)` with the **original unsanitized** `iface` value, which is passed directly to `execSync('iwlist ${iface} scan')`. Any application passing user-controlled input to `si.wifiNetworks()` is vulnerable to arbitrary command execution with the privileges of the Node.js process. Version 5.30.8 fixes the issue.",
-      "severity": 8.4,
+      "id": "CVE-2025-14076",
+      "publishedDate": "2026-02-19T04:36:16.830Z",
+      "lastModifiedDate": "2026-02-19T20:38:20.577Z",
+      "description": "The iXML – Google XML sitemap generator plugin for WordPress is vulnerable to Reflected Cross-Site Scripting via the 'iXML_email' parameter in all versions up to, and including, 0.6 due to insufficient input sanitization and output escaping. This makes it possible for unauthenticated attackers to inject arbitrary web scripts in pages that execute if they can successfully trick a user into performing an action such as clicking on a link.",
+      "severity": 6.1,
       "references": [
         {
-          "url": "https://github.com/sebhildebrandt/systeminformation/security/advisories/GHSA-9c88-49p5-5ggf",
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/7c63bb98-5bfb-471f-a612-cc7634cd6dc5?source=cve",
           "type": "reference"
         },
         {
-          "url": "https://github.com/sebhildebrandt/systeminformation/commit/22242aa56188f2bffcbd7d265a11e1ebb808b460",
+          "url": "https://plugins.trac.wordpress.org/browser/ixml/trunk/iXML.php#L249",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/ixml/tags/0.6/iXML.php#L249",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "sebhildebrandt",
-          "product": "systeminformation",
+          "vendor": "icount",
+          "product": "iXML – Google XML sitemap generator",
           "versions": [
             {
-              "version": "< 5.30.8",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-27013",
-      "publishedDate": "2026-02-19T19:38:19.711Z",
-      "lastModifiedDate": "2026-02-19T19:38:19.711Z",
-      "description": "Fabric.js is a Javascript HTML5 canvas library. Prior to version 7.2.0, Fabric.js applies `escapeXml()` to text content during SVG export (`src/shapes/Text/TextSVGExportMixin.ts:186`) but fails to apply it to other user-controlled string values that are interpolated into SVG attribute markup. When attacker-controlled JSON is loaded via `loadFromJSON()` and later exported via `toSVG()`, the unescaped values break out of XML attributes and inject arbitrary SVG elements including event handlers. Any application that accepts user-supplied JSON (via `loadFromJSON()`, collaborative sharing, import features, CMS plugins) and renders the `toSVG()` output in a browser context (SVG preview, export download rendered in-page, email template, embed) is vulnerable to stored XSS. An attacker can execute arbitrary JavaScript in the victim's browser session. Version 7.2.0 contains a fix.",
-      "severity": 7.6,
-      "references": [
-        {
-          "url": "https://github.com/fabricjs/fabric.js/security/advisories/GHSA-hfvx-25r5-qc3w",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/fabricjs/fabric.js/commit/7e1a122defd8feefe4eb7eaf0c180d7b0aeb6fee",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/fabricjs/fabric.js/releases/tag/v720",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "fabricjs",
-          "product": "fabric.js",
-          "versions": [
-            {
-              "version": "< 7.2.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
-        "CWE-116: Improper Encoding or Escaping of Output"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-26278",
-      "publishedDate": "2026-02-19T19:40:55.842Z",
-      "lastModifiedDate": "2026-02-19T19:40:55.842Z",
-      "description": "fast-xml-parser allows users to validate XML, parse XML to JS object, or build XML from JS object without C/C++ based libraries and no callback. In versions 4.1.3 through 5.3.5, the XML parser can be forced to do an unlimited amount of entity expansion. With a very small XML input, it’s possible to make the parser spend seconds or even minutes processing a single request, effectively freezing the application. Version 5.3.6 fixes the issue. As a workaround, avoid using DOCTYPE parsing by `processEntities: false` option.",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://github.com/NaturalIntelligence/fast-xml-parser/security/advisories/GHSA-jmr7-xgp7-cmfj",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/NaturalIntelligence/fast-xml-parser/commit/910dae5be2de2955e968558fadf6e8f74f117a77",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/NaturalIntelligence/fast-xml-parser/releases/tag/v5.3.6",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "NaturalIntelligence",
-          "product": "fast-xml-parser",
-          "versions": [
-            {
-              "version": ">= 4.1.3, < 5.3.6",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-776: Improper Restriction of Recursive Entity References in DTDs ('XML Entity Expansion')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-26267",
-      "publishedDate": "2026-02-19T19:35:40.539Z",
-      "lastModifiedDate": "2026-02-19T19:35:40.539Z",
-      "description": "soroban-sdk is a Rust SDK for Soroban contracts. Prior to versions 22.0.10, 23.5.2, and 25.1.1, the `#[contractimpl]` macro contains a bug in how it wires up function calls. `#[contractimpl]` generates code that uses `MyContract::value()` style calls even when it's processing the trait version. This means if an inherent function is also defined with the same name, the inherent function gets called instead of the trait function. This means the Wasm-exported entry point silently calls the wrong function when two conditions are met simultaneously: First, an `impl Trait for MyContract` block is defined with one or more functions, with `#[contractimpl]` applied. Second, an `impl MyContract` block is defined with one or more identically named functions, without `#[contractimpl]` applied. If the trait version contains important security checks, such as verifying the caller is authorized, that the inherent version does not, those checks are bypassed. Anyone interacting with the contract through its public interface will call the wrong function. The problem is patched in `soroban-sdk-macros` versions 22.0.10, 23.5.2, and 25.1.1. The fix changes the generated call from `<Type>::func()` to `<Type as Trait>::func()` when processing trait implementations, ensuring Rust resolves to the trait associated function regardless of whether an inherent function with the same name exists. Users should upgrade to `soroban-sdk-macros` 22.0.10, 23.5.2, or 25.1.1 and recompile their contracts. If upgrading is not immediately possible, contract developers can avoid the issue by ensuring that no inherent associated function on the contract type shares a name with any function in the trait implementation. Renaming or removing the conflicting inherent function eliminates the ambiguity and causes the macro-generated code to correctly resolve to the trait function.",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://github.com/stellar/rs-soroban-sdk/security/advisories/GHSA-4chv-4c6w-w254",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/stellar/rs-soroban-sdk/pull/1729",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/stellar/rs-soroban-sdk/pull/1730",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/stellar/rs-soroban-sdk/pull/1731",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/stellar/rs-soroban-sdk/commit/e92a3933e5f92dc09da3c740cf6a360d55709a2b",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "stellar",
-          "product": "rs-soroban-sdk",
-          "versions": [
-            {
-              "version": ">= 25.0.0, < 25.1.1",
-              "status": "affected"
-            },
-            {
-              "version": ">= 23.0.0, < 23.5.2",
-              "status": "affected"
-            },
-            {
-              "version": "< 22.0.10",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-670: Always-Incorrect Control Flow Implementation"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-25739",
-      "publishedDate": "2026-02-19T15:39:32.554Z",
-      "lastModifiedDate": "2026-02-19T19:49:22.187Z",
-      "description": "Indico is an event management system that uses Flask-Multipass, a multi-backend authentication system for Flask. Versions prior to 3.3.10 are vulnerable to cross-site scripting when uploading certain file types as materials. Users should upgrade to version 3.3.10 to receive a patch. To apply the fix itself updating is sufficient, but to benefit from the strict Content Security Policy (CSP) Indico now applies by default for file downloads, update the webserver config in case one uses nginx with Indico's `STATIC_FILE_METHOD` set to `xaccelredirect`. For further directions, consult the GitHub Security advisory or Indico setup documentation. Some workarounds are available. Use the webserver config to apply a strict CSP for material download endpoints, and/or only let trustworthy users create content (including material uploads, which speakers can typically do as well) on Indico.",
-      "severity": 5.4,
-      "references": [
-        {
-          "url": "https://github.com/indico/indico/security/advisories/GHSA-jxc4-54g3-j7vp",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/indico/indico/releases/tag/v3.3.10",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "indico",
-          "product": "indico",
-          "versions": [
-            {
-              "version": "< 3.3.10",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-26223",
-      "publishedDate": "2026-02-19T15:26:05.652Z",
-      "lastModifiedDate": "2026-02-19T19:50:57.562Z",
-      "description": "SPIP before 4.4.8 allows Cross-Site Scripting (XSS) in the private area via malicious iframe tags. The application does not properly sandbox or escape iframe content in the back-office, allowing an attacker to inject and execute malicious scripts. The fix adds a sandbox attribute to iframe tags in the private area. This vulnerability is not mitigated by the SPIP security screen.",
-      "severity": 5.4,
-      "references": [
-        {
-          "url": "https://blog.spip.net/Mise-a-jour-de-securite-sortie-de-SPIP-4-4-8.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.spip.net/spip/spip",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/spip-cross-site-scripting-via-iframe-tags-in-private-area",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "SPIP",
-          "vendor": "SPIP",
-          "versions": [
-            {
-              "lessThan": "4.4.8",
+              "version": "*",
               "status": "affected",
-              "version": "4.4.0",
+              "lessThanOrEqual": "0.6",
               "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-1043",
+      "publishedDate": "2026-02-19T04:36:17.315Z",
+      "lastModifiedDate": "2026-02-19T20:37:09.646Z",
+      "description": "The PostmarkApp Email Integrator plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the plugin settings in versions up to, and including, 2.4. This is due to insufficient input sanitization and output escaping on the pma_api_key and pma_sender_address parameters. This makes it possible for authenticated attackers, with Administrator-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses the settings page.",
+      "severity": 4.4,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/80b03e81-6660-483a-9150-e6075b7bffbd?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/postmarkapp-email-integrator/trunk/postmarkapp.php#L149",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/postmarkapp-email-integrator/tags/2.4/postmarkapp.php#L149",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/postmarkapp-email-integrator/trunk/postmarkapp.php#L153",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/postmarkapp-email-integrator/trunk/postmarkapp.php#L68",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "gagan0123",
+          "product": "PostmarkApp Email Integrator",
+          "versions": [
+            {
+              "version": "*",
+              "status": "affected",
+              "lessThanOrEqual": "2.4",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-14342",
+      "publishedDate": "2026-02-19T04:36:16.373Z",
+      "lastModifiedDate": "2026-02-19T20:40:01.636Z",
+      "description": "The SEO Plugin by Squirrly SEO plugin for WordPress is vulnerable to unauthorized modification of data due to a missing capability check on the sq_ajax_uninstall function in all versions up to, and including, 12.4.14. This makes it possible for authenticated attackers, with Subscriber-level access and above, to disconnect the site from Squirrly's cloud service.",
+      "severity": 4.3,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/7ad25948-3265-4c4c-9b99-86f7240600ce?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/squirrly-seo/tags/12.4.14/controllers/SeoSettings.php#L616",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset/3435711/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "cifi",
+          "product": "SEO Plugin by Squirrly SEO",
+          "versions": [
+            {
+              "version": "*",
+              "status": "affected",
+              "lessThanOrEqual": "12.4.14",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-862 Missing Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-27014",
+      "publishedDate": "2026-02-19T20:45:07.953Z",
+      "lastModifiedDate": "2026-02-19T20:45:07.953Z",
+      "description": "NanaZip is an open source file archive Starting in version 5.0.1252.0 and prior to version 6.0.1630.0, circular `NextOffset` chains cause an infinite loop, and deeply nested directories cause unbounded recursion (stack overflow) in the ROMFS archive parser. Version 6.0.1630.0 patches the issue.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/M2Team/NanaZip/security/advisories/GHSA-fc89-3f57-h9q5",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "M2Team",
+          "product": "NanaZip",
+          "versions": [
+            {
+              "version": ">= 5.0.1252.0, < 6.0.1630.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-674: Uncontrolled Recursion"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-26282",
+      "publishedDate": "2026-02-19T20:41:49.223Z",
+      "lastModifiedDate": "2026-02-19T20:41:49.223Z",
+      "description": "NanaZip is an open source file archive Starting in version 5.0.1252.0 and prior to version 6.0.1630.0, NanaZip has an out-of-bounds heap read in `.NET Single File` bundle header parser due to missing bounds check. Opening a crafted file with NanaZip causes a crash or leaks heap data to the user. Version 6.0.1630.0 patches the issue.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/M2Team/NanaZip/security/advisories/GHSA-ccpc-2222-xv5c",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/user-attachments/files/25274143/poc.exe.zip",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "M2Team",
+          "product": "NanaZip",
+          "versions": [
+            {
+              "version": ">= 5.0.1252.0, < 6.0.1630.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-126: Buffer Over-read"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-27440",
+      "publishedDate": "2026-02-19T20:35:42.839Z",
+      "lastModifiedDate": "2026-02-19T20:35:42.839Z",
+      "description": "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') vulnerability in Saad Iqbal myCred mycred allows Stored XSS.This issue affects myCred: from n/a through <= 2.9.7.6.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Plugin/mycred/vulnerability/wordpress-mycred-plugin-2-9-7-6-cross-site-scripting-xss-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://wordpress.org/plugins",
+          "defaultStatus": "unaffected",
+          "packageName": "mycred",
+          "product": "myCred",
+          "vendor": "Saad Iqbal",
+          "versions": [
+            {
+              "lessThanOrEqual": "<= 2.9.7.6",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
             }
           ]
         }
@@ -281,99 +271,14 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-25766",
-      "publishedDate": "2026-02-19T15:49:02.402Z",
-      "lastModifiedDate": "2026-02-19T19:46:01.829Z",
-      "description": "Echo is a Go web framework. In versions 5.0.0 through 5.0.2 on Windows, Echo’s `middleware.Static` using the default filesystem allows path traversal via backslashes, enabling unauthenticated remote file read outside the static root. In `middleware/static.go`, the requested path is unescaped and normalized with `path.Clean` (URL semantics). `path.Clean` does not treat `\\` as a path separator, so `..\\` sequences remain in the cleaned path. The resulting path is then passed to `currentFS.Open(...)`. When the filesystem is left at the default (nil), Echo uses `defaultFS` which calls `os.Open` (`echo.go:792`). On Windows, `os.Open` treats `\\` as a path separator and resolves `..\\`, allowing traversal outside the static root. Version 5.0.3 fixes the issue.",
-      "severity": 5.3,
-      "references": [
-        {
-          "url": "https://github.com/labstack/echo/security/advisories/GHSA-pgvm-wxw2-hrv9",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/labstack/echo/pull/2891",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/labstack/echo/commit/b1d443086ea27cf51345ec72a71e9b7e9d9ce5f1",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "labstack",
-          "product": "echo",
-          "versions": [
-            {
-              "version": ">= 5.0.0, < 5.0.3",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2017-7492",
-      "publishedDate": "2026-02-19T20:24:53.699322+00:00",
-      "lastModifiedDate": "2023-02-12T00:00:00.000Z",
-      "description": "",
-      "severity": "N/A",
-      "references": [],
-      "affected": [],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-26205",
-      "publishedDate": "2026-02-19T19:31:26.905Z",
-      "lastModifiedDate": "2026-02-19T19:31:26.905Z",
-      "description": "opa-envoy-plugun is a plugin to enforce OPA policies with Envoy. Versions prior to 1.13.2-envoy-2 have a vulnerability in how the `input.parsed_path` field is constructed. HTTP request paths are treated as full URIs when parsed; interpreting leading path segments prefixed with double slashes (`//`) as authority components, and therefore dropping them from the parsed path. This creates a path interpretation mismatch between authorization policies and backend servers, enabling attackers to bypass access controls by crafting requests where the authorization filter evaluates a different path than the one ultimately served. Version 1.13.2-envoy-2 fixes the issue.",
+      "id": "CVE-2026-27387",
+      "publishedDate": "2026-02-19T20:35:42.604Z",
+      "lastModifiedDate": "2026-02-19T20:35:42.604Z",
+      "description": "Missing Authorization vulnerability in designinvento DirectoryPress directorypress allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects DirectoryPress: from n/a through <= 3.6.26.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/open-policy-agent/opa-envoy-plugin/security/advisories/GHSA-9f29-v6mm-pw6w",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/open-policy-agent/opa-envoy-plugin/commit/58c44d4ec408d5852d1d0287599e7d5c5e2bc5c3",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/open-policy-agent/opa-envoy-plugin/releases/tag/v1.13.2-envoy-2",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "open-policy-agent",
-          "product": "opa-envoy-plugin",
-          "versions": [
-            {
-              "version": "< 1.13.2-envoy-2",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-863: Incorrect Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-25416",
-      "publishedDate": "2026-02-19T08:27:06.461Z",
-      "lastModifiedDate": "2026-02-19T19:32:13.189Z",
-      "description": "Missing Authorization vulnerability in blazethemes News Kit Elementor Addons news-kit-elementor-addons allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects News Kit Elementor Addons: from n/a through <= 1.4.2.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://patchstack.com/database/Wordpress/Plugin/news-kit-elementor-addons/vulnerability/wordpress-news-kit-elementor-addons-plugin-1-4-2-broken-access-control-vulnerability?_s_id=cve",
+          "url": "https://patchstack.com/database/Wordpress/Plugin/directorypress/vulnerability/wordpress-directorypress-plugin-3-6-26-broken-access-control-vulnerability?_s_id=cve",
           "type": "reference"
         }
       ],
@@ -381,12 +286,12 @@
         {
           "collectionURL": "https://wordpress.org/plugins",
           "defaultStatus": "unaffected",
-          "packageName": "news-kit-elementor-addons",
-          "product": "News Kit Elementor Addons",
-          "vendor": "blazethemes",
+          "packageName": "directorypress",
+          "product": "DirectoryPress",
+          "vendor": "designinvento",
           "versions": [
             {
-              "lessThanOrEqual": "<= 1.4.2",
+              "lessThanOrEqual": "<= 3.6.26",
               "status": "affected",
               "version": "n/a",
               "versionType": "custom"
@@ -400,14 +305,14 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-25408",
-      "publishedDate": "2026-02-19T08:27:05.163Z",
-      "lastModifiedDate": "2026-02-19T19:33:13.531Z",
-      "description": "Missing Authorization vulnerability in PluginRx Broken Link Notifier broken-link-notifier allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Broken Link Notifier: from n/a through <= 1.3.5.",
+      "id": "CVE-2026-27368",
+      "publishedDate": "2026-02-19T20:35:42.391Z",
+      "lastModifiedDate": "2026-02-19T20:35:42.391Z",
+      "description": "Missing Authorization vulnerability in SeedProd Coming Soon Page, Under Construction & Maintenance Mode by SeedProd coming-soon allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Coming Soon Page, Under Construction & Maintenance Mode by SeedProd: from n/a through <= 6.19.7.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://patchstack.com/database/Wordpress/Plugin/broken-link-notifier/vulnerability/wordpress-broken-link-notifier-plugin-1-3-4-broken-access-control-vulnerability?_s_id=cve",
+          "url": "https://patchstack.com/database/Wordpress/Plugin/coming-soon/vulnerability/wordpress-coming-soon-page-under-construction-maintenance-mode-by-seedprod-plugin-6-19-7-broken-access-control-vulnerability?_s_id=cve",
           "type": "reference"
         }
       ],
@@ -415,12 +320,12 @@
         {
           "collectionURL": "https://wordpress.org/plugins",
           "defaultStatus": "unaffected",
-          "packageName": "broken-link-notifier",
-          "product": "Broken Link Notifier",
-          "vendor": "PluginRx",
+          "packageName": "coming-soon",
+          "product": "Coming Soon Page, Under Construction & Maintenance Mode by SeedProd",
+          "vendor": "SeedProd",
           "versions": [
             {
-              "lessThanOrEqual": "<= 1.3.5",
+              "lessThanOrEqual": "<= 6.19.7",
               "status": "affected",
               "version": "n/a",
               "versionType": "custom"
@@ -434,14 +339,14 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-25399",
-      "publishedDate": "2026-02-19T08:27:03.896Z",
-      "lastModifiedDate": "2026-02-19T19:44:24.597Z",
-      "description": "Missing Authorization vulnerability in CryoutCreations Serious Slider cryout-serious-slider allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Serious Slider: from n/a through <= 1.2.7.",
+      "id": "CVE-2026-27360",
+      "publishedDate": "2026-02-19T20:35:42.196Z",
+      "lastModifiedDate": "2026-02-19T20:35:42.196Z",
+      "description": "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') vulnerability in 10Web Photo Gallery by 10Web photo-gallery allows Stored XSS.This issue affects Photo Gallery by 10Web: from n/a through <= 1.8.37.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://patchstack.com/database/Wordpress/Plugin/cryout-serious-slider/vulnerability/wordpress-serious-slider-plugin-1-2-7-broken-access-control-vulnerability?_s_id=cve",
+          "url": "https://patchstack.com/database/Wordpress/Plugin/photo-gallery/vulnerability/wordpress-photo-gallery-by-10web-plugin-1-8-37-cross-site-scripting-xss-vulnerability?_s_id=cve",
           "type": "reference"
         }
       ],
@@ -449,12 +354,80 @@
         {
           "collectionURL": "https://wordpress.org/plugins",
           "defaultStatus": "unaffected",
-          "packageName": "cryout-serious-slider",
-          "product": "Serious Slider",
-          "vendor": "CryoutCreations",
+          "packageName": "photo-gallery",
+          "product": "Photo Gallery by 10Web",
+          "vendor": "10Web",
           "versions": [
             {
-              "lessThanOrEqual": "<= 1.2.7",
+              "lessThanOrEqual": "<= 1.8.37",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-27343",
+      "publishedDate": "2026-02-19T20:35:41.998Z",
+      "lastModifiedDate": "2026-02-19T20:35:41.998Z",
+      "description": "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion') vulnerability in VanKarWai Airtifact airtifact allows PHP Local File Inclusion.This issue affects Airtifact: from n/a through <= 1.2.91.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Theme/airtifact/vulnerability/wordpress-airtifact-theme-1-2-91-local-file-inclusion-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://themeforest.net",
+          "defaultStatus": "unaffected",
+          "packageName": "airtifact",
+          "product": "Airtifact",
+          "vendor": "VanKarWai",
+          "versions": [
+            {
+              "lessThanOrEqual": "<= 1.2.91",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-27328",
+      "publishedDate": "2026-02-19T20:35:41.705Z",
+      "lastModifiedDate": "2026-02-19T20:35:41.705Z",
+      "description": "Missing Authorization vulnerability in DevsBlink EduBlink edublink allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects EduBlink: from n/a through <= 2.0.7.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Theme/edublink/vulnerability/wordpress-edublink-theme-2-0-7-broken-access-control-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://themeforest.net",
+          "defaultStatus": "unaffected",
+          "packageName": "edublink",
+          "product": "EduBlink",
+          "vendor": "DevsBlink",
+          "versions": [
+            {
+              "lessThanOrEqual": "<= 2.0.7",
               "status": "affected",
               "version": "n/a",
               "versionType": "custom"
@@ -468,14 +441,14 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-25394",
-      "publishedDate": "2026-02-19T08:27:03.524Z",
-      "lastModifiedDate": "2026-02-19T19:45:59.921Z",
-      "description": "Missing Authorization vulnerability in sparklewpthemes Fitness FSE fitness-fse allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Fitness FSE: from n/a through <= 1.0.6.",
+      "id": "CVE-2026-27327",
+      "publishedDate": "2026-02-19T20:35:41.377Z",
+      "lastModifiedDate": "2026-02-19T20:35:41.377Z",
+      "description": "Missing Authorization vulnerability in YayCommerce YayMail – WooCommerce Email Customizer yaymail allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects YayMail – WooCommerce Email Customizer: from n/a through <= 4.3.2.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://patchstack.com/database/Wordpress/Theme/fitness-fse/vulnerability/wordpress-fitness-fse-theme-1-0-6-broken-access-control-vulnerability?_s_id=cve",
+          "url": "https://patchstack.com/database/Wordpress/Plugin/yaymail/vulnerability/wordpress-yaymail-woocommerce-email-customizer-plugin-4-3-2-broken-access-control-vulnerability?_s_id=cve",
           "type": "reference"
         }
       ],
@@ -483,12 +456,12 @@
         {
           "collectionURL": "https://wordpress.org/plugins",
           "defaultStatus": "unaffected",
-          "packageName": "fitness-fse",
-          "product": "Fitness FSE",
-          "vendor": "sparklewpthemes",
+          "packageName": "yaymail",
+          "product": "YayMail – WooCommerce Email Customizer",
+          "vendor": "YayCommerce",
           "versions": [
             {
-              "lessThanOrEqual": "<= 1.0.6",
+              "lessThanOrEqual": "<= 4.3.2",
               "status": "affected",
               "version": "n/a",
               "versionType": "custom"
@@ -502,14 +475,14 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-25392",
-      "publishedDate": "2026-02-19T08:27:02.858Z",
-      "lastModifiedDate": "2026-02-19T19:50:12.288Z",
-      "description": "URL Redirection to Untrusted Site ('Open Redirect') vulnerability in KaizenCoders Update URLs &#8211; Quick and Easy way to search old links and replace them with new links in WordPress update-urls allows Phishing.This issue affects Update URLs &#8211; Quick and Easy way to search old links and replace them with new links in WordPress: from n/a through <= 1.4.0.",
+      "id": "CVE-2026-25374",
+      "publishedDate": "2026-02-19T08:27:00.661Z",
+      "lastModifiedDate": "2026-02-19T20:39:12.783Z",
+      "description": "Missing Authorization vulnerability in raratheme Spa and Salon spa-and-salon allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Spa and Salon: from n/a through <= 1.3.2.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://patchstack.com/database/Wordpress/Plugin/update-urls/vulnerability/wordpress-update-urls-quick-and-easy-way-to-search-old-links-and-replace-them-with-new-links-in-wordpress-plugin-1-3-0-open-redirection-vulnerability?_s_id=cve",
+          "url": "https://patchstack.com/database/Wordpress/Theme/spa-and-salon/vulnerability/wordpress-spa-and-salon-theme-1-3-2-broken-access-control-vulnerability?_s_id=cve",
           "type": "reference"
         }
       ],
@@ -517,52 +490,18 @@
         {
           "collectionURL": "https://wordpress.org/plugins",
           "defaultStatus": "unaffected",
-          "packageName": "update-urls",
-          "product": "Update URLs &#8211; Quick and Easy way to search old links and replace them with new links in WordPress",
-          "vendor": "KaizenCoders",
-          "versions": [
-            {
-              "lessThanOrEqual": "<= 1.4.0",
-              "status": "affected",
-              "version": "n/a",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "URL Redirection to Untrusted Site ('Open Redirect')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-25384",
-      "publishedDate": "2026-02-19T08:27:01.252Z",
-      "lastModifiedDate": "2026-02-19T19:33:36.888Z",
-      "description": "Missing Authorization vulnerability in WP Lab WP-Lister Lite for eBay wp-lister-for-ebay allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects WP-Lister Lite for eBay: from n/a through <= 3.8.5.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://patchstack.com/database/Wordpress/Plugin/wp-lister-for-ebay/vulnerability/wordpress-wp-lister-lite-for-ebay-plugin-3-8-5-broken-access-control-vulnerability?_s_id=cve",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://wordpress.org/plugins",
-          "defaultStatus": "unaffected",
-          "packageName": "wp-lister-for-ebay",
-          "product": "WP-Lister Lite for eBay",
-          "vendor": "WP Lab",
+          "packageName": "spa-and-salon",
+          "product": "Spa and Salon",
+          "vendor": "raratheme",
           "versions": [
             {
               "changes": [
                 {
-                  "at": "3.8.6",
+                  "at": "1.3.3",
                   "status": "unaffected"
                 }
               ],
-              "lessThanOrEqual": "<= 3.8.5",
+              "lessThanOrEqual": "<= 1.3.2",
               "status": "affected",
               "version": "n/a",
               "versionType": "custom"
@@ -576,14 +515,54 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-25375",
-      "publishedDate": "2026-02-19T08:27:00.855Z",
-      "lastModifiedDate": "2026-02-19T19:36:56.593Z",
-      "description": "Missing Authorization vulnerability in WP Chill Image Photo Gallery Final Tiles Grid final-tiles-grid-gallery-lite allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Image Photo Gallery Final Tiles Grid: from n/a through <= 3.6.10.",
+      "id": "CVE-2026-25367",
+      "publishedDate": "2026-02-19T08:26:59.651Z",
+      "lastModifiedDate": "2026-02-19T20:42:05.985Z",
+      "description": "Missing Authorization vulnerability in NooTheme CitiLights noo-citilights allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects CitiLights: from n/a through < 3.7.2.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://patchstack.com/database/Wordpress/Plugin/final-tiles-grid-gallery-lite/vulnerability/wordpress-image-photo-gallery-final-tiles-grid-plugin-3-6-10-broken-access-control-vulnerability?_s_id=cve",
+          "url": "https://patchstack.com/database/Wordpress/Theme/noo-citilights/vulnerability/wordpress-citilights-theme-3-7-2-broken-access-control-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://themeforest.net",
+          "defaultStatus": "unaffected",
+          "packageName": "noo-citilights",
+          "product": "CitiLights",
+          "vendor": "NooTheme",
+          "versions": [
+            {
+              "changes": [
+                {
+                  "at": "3.7.2",
+                  "status": "unaffected"
+                }
+              ],
+              "lessThanOrEqual": "< 3.7.2",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Missing Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-25310",
+      "publishedDate": "2026-02-19T08:26:53.599Z",
+      "lastModifiedDate": "2026-02-19T20:37:54.630Z",
+      "description": "Server-Side Request Forgery (SSRF) vulnerability in Alobaidi Extend Link extend-link allows Server Side Request Forgery.This issue affects Extend Link: from n/a through <= 2.0.0.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Plugin/extend-link/vulnerability/wordpress-extend-link-plugin-2-0-0-server-side-request-forgery-ssrf-vulnerability?_s_id=cve",
           "type": "reference"
         }
       ],
@@ -591,18 +570,18 @@
         {
           "collectionURL": "https://wordpress.org/plugins",
           "defaultStatus": "unaffected",
-          "packageName": "final-tiles-grid-gallery-lite",
-          "product": "Image Photo Gallery Final Tiles Grid",
-          "vendor": "WP Chill",
+          "packageName": "extend-link",
+          "product": "Extend Link",
+          "vendor": "Alobaidi",
           "versions": [
             {
               "changes": [
                 {
-                  "at": "3.6.11",
+                  "at": "2.0.1",
                   "status": "unaffected"
                 }
               ],
-              "lessThanOrEqual": "<= 3.6.10",
+              "lessThanOrEqual": "<= 2.0.0",
               "status": "affected",
               "version": "n/a",
               "versionType": "custom"
@@ -611,120 +590,7 @@
         }
       ],
       "problemType": [
-        "Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-25372",
-      "publishedDate": "2026-02-19T08:27:00.488Z",
-      "lastModifiedDate": "2026-02-19T19:40:19.017Z",
-      "description": "Missing Authorization vulnerability in Kodezen LLC Academy LMS academy allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Academy LMS: from n/a through <= 3.5.3.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://patchstack.com/database/Wordpress/Plugin/academy/vulnerability/wordpress-academy-lms-plugin-3-5-3-broken-access-control-vulnerability?_s_id=cve",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://wordpress.org/plugins",
-          "defaultStatus": "unaffected",
-          "packageName": "academy",
-          "product": "Academy LMS",
-          "vendor": "Kodezen LLC",
-          "versions": [
-            {
-              "changes": [
-                {
-                  "at": "3.5.4",
-                  "status": "unaffected"
-                }
-              ],
-              "lessThanOrEqual": "<= 3.5.3",
-              "status": "affected",
-              "version": "n/a",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-25368",
-      "publishedDate": "2026-02-19T08:26:59.947Z",
-      "lastModifiedDate": "2026-02-19T19:43:47.309Z",
-      "description": "Missing Authorization vulnerability in codepeople Calculated Fields Form calculated-fields-form allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Calculated Fields Form: from n/a through <= 5.4.4.1.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://patchstack.com/database/Wordpress/Plugin/calculated-fields-form/vulnerability/wordpress-calculated-fields-form-plugin-5-4-4-1-broken-access-control-vulnerability?_s_id=cve",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://wordpress.org/plugins",
-          "defaultStatus": "unaffected",
-          "packageName": "calculated-fields-form",
-          "product": "Calculated Fields Form",
-          "vendor": "codepeople",
-          "versions": [
-            {
-              "changes": [
-                {
-                  "at": "5.4.4.2",
-                  "status": "unaffected"
-                }
-              ],
-              "lessThanOrEqual": "<= 5.4.4.1",
-              "status": "affected",
-              "version": "n/a",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-67304",
-      "publishedDate": "2026-02-19T00:00:00.000Z",
-      "lastModifiedDate": "2026-02-19T19:51:31.678Z",
-      "description": "In Ruckus Network Director (RND) < 4.5.0.54, the OVA appliance contains hardcoded credentials for the ruckus PostgreSQL database user. In the default configuration, the PostgreSQL service is accessible over the network on TCP port 5432. An attacker can use the hardcoded credentials to authenticate remotely, gaining superuser access to the database. This allows creation of administrative users for the web interface, extraction of password hashes, and execution of arbitrary OS commands.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://webresources.commscope.com/download/assets/RUCKUS+Network+Director%3A+Critical+Security+Bypass+Vulnerability+Leading+to+Remote+Code+Execution+and/3adeb3acb69211f08a46b6532db37357",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/marlinkcyber/advisories/blob/main/advisories/MCSAID-2025-009-ruckus-nd-hardcoded-postgresql-credentials-rce.md",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n/a",
-          "product": "n/a",
-          "versions": [
-            {
-              "version": "n/a",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "n/a"
+        "Server-Side Request Forgery (SSRF)"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
