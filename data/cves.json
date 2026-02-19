@@ -2,76 +2,265 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 2,
-    "last_updated": "2026-02-19T22:15:19.212674",
+    "total_count": 7,
+    "last_updated": "2026-02-19T22:54:50.191475",
     "severity_distribution": {
       "critical": 0,
       "high": 1,
-      "medium": 0,
-      "low": 1,
-      "none": 0
+      "medium": 1,
+      "low": 0,
+      "none": 5
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-26119",
-      "publishedDate": "2026-02-17T22:56:03.973Z",
-      "lastModifiedDate": "2026-02-19T21:59:06.557Z",
-      "description": "Improper authentication in Windows Admin Center allows an authorized attacker to elevate privileges over a network.",
-      "severity": 8.8,
+      "id": "CVE-2026-26322",
+      "publishedDate": "2026-02-19T22:33:10.400Z",
+      "lastModifiedDate": "2026-02-19T22:33:10.400Z",
+      "description": "OpenClaw is a personal AI assistant. Prior to OpenClaw version 2026.2.14, the Gateway tool accepted a tool-supplied `gatewayUrl` without sufficient restrictions, which could cause the OpenClaw host to attempt outbound WebSocket connections to user-specified targets. This requires the ability to invoke tools that accept `gatewayUrl` overrides (directly or indirectly). In typical setups this is limited to authenticated operators, trusted automation, or environments where tool calls are exposed to non-operators. In other words, this is not a drive-by issue for arbitrary internet users unless a deployment explicitly allows untrusted users to trigger these tool calls. Some tool call paths allowed `gatewayUrl` overrides to flow into the Gateway WebSocket client without validation or allowlisting. This meant the host could be instructed to attempt connections to non-gateway endpoints (for example, localhost services, private network addresses, or cloud metadata IPs). In the common case, this results in an outbound connection attempt from the OpenClaw host (and corresponding errors/timeouts). In environments where the tool caller can observe the results, this can also be used for limited network reachability probing. If the target speaks WebSocket and is reachable, further interaction may be possible. Starting in version 2026.2.14, tool-supplied `gatewayUrl` overrides are restricted to loopback (on the configured gateway port) or the configured `gateway.remote.url`. Disallowed protocols, credentials, query/hash, and non-root paths are rejected.",
+      "severity": 7.6,
       "references": [
         {
-          "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-26119",
+          "url": "https://github.com/openclaw/openclaw/security/advisories/GHSA-g6q9-8fvw-f7rf",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/openclaw/openclaw/commit/c5406e1d2434be2ef6eb4d26d8f1798d718713f4",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/openclaw/openclaw/releases/tag/v2026.2.14",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Microsoft",
-          "product": "Windows Admin Center",
+          "vendor": "openclaw",
+          "product": "openclaw",
           "versions": [
             {
-              "version": "1809.0",
-              "lessThan": "2.6.4",
-              "versionType": "custom",
+              "version": "< 2026.2.14",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-287: Improper Authentication"
+        "CWE-918: Server-Side Request Forgery (SSRF)"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-0102",
-      "publishedDate": "2026-02-17T19:14:32.901Z",
-      "lastModifiedDate": "2026-02-19T21:58:46.029Z",
-      "description": "Under specific conditions, a malicious webpage may trigger autofill population after two consecutive taps, potentially without clear or intentional user consent. This could result in disclosure of stored autofill data such as addresses, email, or phone number metadata.",
-      "severity": 3.1,
+      "id": "CVE-2026-26952",
+      "publishedDate": "2026-02-19T22:43:58.403Z",
+      "lastModifiedDate": "2026-02-19T22:43:58.403Z",
+      "description": "Pi-hole Admin Interface is a web interface for managing Pi-hole, a network-level ad and internet tracker blocking application. Versions 6.4 and below are vulnerable to stored HTML injection through the local DNS records configuration page, which allows an authenticated administrator to inject code that is stored in the Pi-hole configuration and rendered every time the DNS records table is viewed. The populateDataTable() function contains a data variable with the full DNS record value exactly as entered by the user and returned by the API. This value is inserted directly into the data-tag HTML attribute without any escaping or sanitization of special characters. When an attacker supplies a value containing double quotes (\"), they can prematurely “close” the data-tag attribute and inject additional HTML attributes into the element. Since Pi-hole implements a Content Security Policy (CSP) that blocks inline JavaScript, the impact is limited. This issue has been fixed in version 6.4.1.",
+      "severity": 5.4,
       "references": [
         {
-          "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-0102",
+          "url": "https://github.com/pi-hole/web/security/advisories/GHSA-6xp4-jw73-f4qp",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/pi-hole/web/commit/d328f143718022d82dc94c8751121ca41be3b996",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/pi-hole/web/releases/tag/v6.4.1",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Microsoft",
-          "product": "Microsoft Edge (Chromium-based)",
+          "vendor": "pi-hole",
+          "product": "web",
           "versions": [
             {
-              "version": "1.0.0.0",
-              "lessThan": "145.0.3800.58",
-              "versionType": "custom",
+              "version": "< 6.4.1",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-359: Exposure of Private Personal Information to an Unauthorized Actor"
+        "CWE-20: Improper Input Validation",
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
+        "CWE-116: Improper Encoding or Escaping of Output"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-26323",
+      "publishedDate": "2026-02-19T22:47:47.978Z",
+      "lastModifiedDate": "2026-02-19T22:47:47.978Z",
+      "description": "OpenClaw is a personal AI assistant. Versions 2026.1.8 through 2026.2.13 have a command injection in the maintainer/dev script `scripts/update-clawtributors.ts`. The issue affects contributors/maintainers (or CI) who run `bun scripts/update-clawtributors.ts` in a source checkout that contains a malicious commit author email (e.g. crafted `@users[.]noreply[.]github[.]com` values). Normal CLI usage is not affected (`npm i -g openclaw`): this script is not part of the shipped CLI and is not executed during routine operation. The script derived a GitHub login from `git log` author metadata and interpolated it into a shell command (via `execSync`). A malicious commit record could inject shell metacharacters and execute arbitrary commands when the script is run. Version 2026.2.14 contains a patch.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/openclaw/openclaw/security/advisories/GHSA-m7x8-2w3w-pr42",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/openclaw/openclaw/commit/a429380e337152746031d290432a4b93aa553d55",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/openclaw/openclaw/releases/tag/v2026.2.14",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "openclaw",
+          "product": "openclaw",
+          "versions": [
+            {
+              "version": ">= 2026.1.8, < 2026.2.14",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-1658",
+      "publishedDate": "2026-02-19T22:40:33.406Z",
+      "lastModifiedDate": "2026-02-19T22:40:33.406Z",
+      "description": "User Interface (UI) Misrepresentation of Critical Information vulnerability in OpenText™ Directory Services allows Cache Poisoning. \n\nThe vulnerability could be exploited by a bad actor to inject manipulated text into the OpenText application, potentially misleading users.\n\nThis issue affects Directory Services: from 20.4.1 through 25.2.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://support.opentext.com/csm?id=ot_kb_unauthenticated&sysparm_article=KB0858517",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Directory Services",
+          "vendor": "OpenText™",
+          "versions": [
+            {
+              "lessThanOrEqual": "25.2",
+              "status": "affected",
+              "version": "20.4.1",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-451 User Interface (UI) Misrepresentation of Critical Information"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-9208",
+      "publishedDate": "2026-02-19T22:37:19.208Z",
+      "lastModifiedDate": "2026-02-19T22:37:19.208Z",
+      "description": "Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting') vulnerability in OpenText™ Web Site Management Server allows Stored XSS. The vulnerability could execute malicious scripts on the client side when the download query parameter is removed from the file URL, allowing attackers to compromise user sessions and data.\n\nThis issue affects Web Site Management Server: 16.7.X, 16.8, 16.8.1.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://support.opentext.com/csm/en?id=ot_kb_unauthenticated&sysparm_article=KB0854844",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Web Site Management Server",
+          "vendor": "OpenText™",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "16.7.x"
+            },
+            {
+              "status": "affected",
+              "version": "16.8"
+            },
+            {
+              "status": "affected",
+              "version": "16.8.1"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-13671",
+      "publishedDate": "2026-02-19T22:36:49.083Z",
+      "lastModifiedDate": "2026-02-19T22:36:49.083Z",
+      "description": "Cross-Site Request Forgery (CSRF) vulnerability in OpenText™ Web Site Management Server allows Cross Site Request Forgery. The vulnerability could make a user, with active session inside the product, click on a page that contains this malicious HTML triggering to perform changes unconsciously.\n\nThis issue affects Web Site Management Server: 16.7.0, 16.7.1.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://support.opentext.com/csm/en?id=ot_kb_unauthenticated&sysparm_article=KB0854846",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Web Site Management Server",
+          "vendor": "OpenText™",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "16.7.0"
+            },
+            {
+              "status": "affected",
+              "version": "16.7.1"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-352 Cross-Site Request Forgery (CSRF)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-13672",
+      "publishedDate": "2026-02-19T22:36:33.467Z",
+      "lastModifiedDate": "2026-02-19T22:36:33.467Z",
+      "description": "Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting') vulnerability in OpenText™ Web Site Management Server allows Reflected XSS. The vulnerability could allow injecting malicious JavaScript inside URL parameters that was then rendered with the preview of the page, so that malicious scripts could be executed on the client side.\n\nThis issue affects Web Site Management Server: 16.7.0, 16.7.1.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://support.opentext.com/csm/en?id=ot_kb_unauthenticated&sysparm_article=KB0854847",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Web Site Management Server",
+          "vendor": "OpenText™",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "16.7.0"
+            },
+            {
+              "status": "affected",
+              "version": "16.7.1"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting')"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
