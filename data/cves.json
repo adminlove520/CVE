@@ -2,79 +2,514 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 16,
-    "last_updated": "2026-02-19T20:58:50.465465",
+    "total_count": 31,
+    "last_updated": "2026-02-19T21:43:55.745225",
     "severity_distribution": {
-      "critical": 1,
-      "high": 0,
-      "medium": 3,
-      "low": 0,
-      "none": 12
+      "critical": 3,
+      "high": 7,
+      "medium": 9,
+      "low": 1,
+      "none": 11
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-27476",
-      "publishedDate": "2026-02-19T20:43:08.963Z",
-      "lastModifiedDate": "2026-02-19T20:43:08.963Z",
-      "description": "RustFly 2.0.0 contains a command injection vulnerability in its remote UI control mechanism that accepts hex-encoded instructions over UDP port 5005 without proper sanitization. Attackers can send crafted hex-encoded payloads containing system commands to execute arbitrary operations on the target system, including reverse shell establishment and command execution.",
-      "severity": 9.8,
+      "id": "CVE-2026-26030",
+      "publishedDate": "2026-02-19T16:00:55.623Z",
+      "lastModifiedDate": "2026-02-19T21:24:19.805Z",
+      "description": "Semantic Kernel, Microsoft's semantic kernel Python SDK, has a remote code execution vulnerability in versions prior to 1.39.4, specifically within the `InMemoryVectorStore` filter functionality. The problem has been fixed in version `python-1.39.4`. Users should upgrade this version or higher. As a workaround, avoid using `InMemoryVectorStore` for production scenarios.",
+      "severity": 10,
       "references": [
         {
-          "url": "https://packetstorm.news/files/id/215819/",
-          "type": "poc"
+          "url": "https://github.com/microsoft/semantic-kernel/security/advisories/GHSA-xjw9-4gw8-4rqx",
+          "type": "reference"
         },
         {
-          "url": "https://www.vulncheck.com/advisories/rustfly-command-injection-via-udp-remote-control",
+          "url": "https://github.com/microsoft/semantic-kernel/pull/13505",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/microsoft/semantic-kernel/releases/tag/python-1.39.4",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Bixat",
-          "product": "RustFly",
+          "vendor": "microsoft",
+          "product": "semantic-kernel",
           "versions": [
             {
-              "version": "2.0.0",
+              "version": "< 1.39.4",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+        "CWE-94: Improper Control of Generation of Code ('Code Injection')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-14076",
-      "publishedDate": "2026-02-19T04:36:16.830Z",
-      "lastModifiedDate": "2026-02-19T20:38:20.577Z",
-      "description": "The iXML – Google XML sitemap generator plugin for WordPress is vulnerable to Reflected Cross-Site Scripting via the 'iXML_email' parameter in all versions up to, and including, 0.6 due to insufficient input sanitization and output escaping. This makes it possible for unauthenticated attackers to inject arbitrary web scripts in pages that execute if they can successfully trick a user into performing an action such as clicking on a link.",
-      "severity": 6.1,
+      "id": "CVE-2025-13851",
+      "publishedDate": "2026-02-19T04:36:27.334Z",
+      "lastModifiedDate": "2026-02-19T21:24:16.175Z",
+      "description": "The Buyent Classified plugin for WordPress (bundled with Buyent theme) is vulnerable to privilege escalation via user registration in all versions up to, and including, 1.0.7. This is due to the plugin not validating or restricting the user role during registration via the REST API endpoint. This makes it possible for unauthenticated attackers to register accounts with arbitrary roles, including administrator, by manipulating the _buyent_classified_user_type parameter during the registration process, granting them complete control over the WordPress site.",
+      "severity": 9.8,
       "references": [
         {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/7c63bb98-5bfb-471f-a612-cc7634cd6dc5?source=cve",
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/f3e618cf-dd77-45a7-ab57-5732fd329883?source=cve",
           "type": "reference"
         },
         {
-          "url": "https://plugins.trac.wordpress.org/browser/ixml/trunk/iXML.php#L249",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/ixml/tags/0.6/iXML.php#L249",
+          "url": "https://themeforest.net/item/buyent-classified-wordpress-theme/32588790",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "icount",
-          "product": "iXML – Google XML sitemap generator",
+          "vendor": "scriptsbundle",
+          "product": "Buyent",
           "versions": [
             {
               "version": "*",
               "status": "affected",
-              "lessThanOrEqual": "0.6",
+              "lessThanOrEqual": "1.0.7",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-269 Improper Privilege Management"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-24834",
+      "publishedDate": "2026-02-19T15:57:50.691Z",
+      "lastModifiedDate": "2026-02-19T21:24:29.816Z",
+      "description": "Kata Containers is an open source project focusing on a standard implementation of lightweight Virtual Machines (VMs) that perform like containers. In versions prior to 3.27.0, an issue in Kata with Cloud Hypervisor allows a user of the container to modify the file system used by the Guest micro VM ultimately achieving arbitrary code execution as root in said VM. The current understanding is this doesn’t impact the security of the Host or of other containers / VMs running on that Host (note that arm64 QEMU lacks NVDIMM read-only support: It is believed that until the upstream QEMU gains this capability, a guest write could reach the image file). Version 3.27.0 patches the issue.",
+      "severity": 9.4,
+      "references": [
+        {
+          "url": "https://github.com/kata-containers/kata-containers/security/advisories/GHSA-wwj6-vghv-5p64",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/kata-containers/kata-containers/commit/6a672503973bf7c687053e459bfff8a9652e16bf",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/kata-containers/kata-containers/releases/tag/3.27.0",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "kata-containers",
+          "product": "kata-containers",
+          "versions": [
+            {
+              "version": "< 3.27.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-732: Incorrect Permission Assignment for Critical Resource"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-26362",
+      "publishedDate": "2026-02-19T08:25:14.267Z",
+      "lastModifiedDate": "2026-02-19T21:29:58.454Z",
+      "description": "Dell Unisphere for PowerMax, version(s) 10.2, contain(s) a Relative Path Traversal vulnerability. A low privileged attacker with remote access could potentially exploit this vulnerability, leading to unauthorized modification of critical system files.",
+      "severity": 8.1,
+      "references": [
+        {
+          "url": "https://www.dell.com/support/kbdoc/en-us/000429268/dsa-2026-102-dell-unisphere-for-powermax-and-powermax-eem-security-update-for-multiple-vulnerabilities",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Unisphere for PowerMax",
+          "vendor": "Dell",
+          "versions": [
+            {
+              "lessThan": "10.3.0.1 or later",
+              "status": "affected",
+              "version": "N/A",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "PowerMax",
+          "vendor": "Dell",
+          "versions": [
+            {
+              "lessThan": "10.3.0.1 or later",
+              "status": "affected",
+              "version": "N/A",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-23: Relative Path Traversal"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-26200",
+      "publishedDate": "2026-02-19T19:19:10.512Z",
+      "lastModifiedDate": "2026-02-19T21:23:04.319Z",
+      "description": "HDF5 is software for managing data. Prior to version 1.14.4-2, an attacker who can control an `h5` file parsed by HDF5 can trigger a write-based heap buffer overflow condition. This can lead to a denial-of-service condition, and potentially further issues such as remote code execution depending on the practical exploitability of the heap overflow against modern operating systems. Real-world exploitability of this issue in terms of remote-code execution is currently unknown. Version 1.14.4-2 fixes the issue.",
+      "severity": 7.8,
+      "references": [
+        {
+          "url": "https://github.com/HDFGroup/hdf5/security/advisories/GHSA-5p2m-j456-9mr2",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "HDFGroup",
+          "product": "hdf5",
+          "versions": [
+            {
+              "version": "< 1.14.4-2",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-122: Heap-based Buffer Overflow"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-26316",
+      "publishedDate": "2026-02-19T21:28:33.454Z",
+      "lastModifiedDate": "2026-02-19T21:28:33.454Z",
+      "description": "OpenClaw is a personal AI assistant. Prior to 2026.2.13, the optional BlueBubbles iMessage channel plugin could accept webhook requests as authenticated based only on the TCP peer address being loopback (`127.0.0.1`, `::1`, `::ffff:127.0.0.1`) even when the configured webhook secret was missing or incorrect. This does not affect the default iMessage integration unless BlueBubbles is installed and enabled. Version 2026.2.13 contains a patch. Other mitigations include setting a non-empty BlueBubbles webhook password and avoiding deployments where a public-facing reverse proxy forwards to a loopback-bound Gateway without strong upstream authentication.",
+      "severity": 7.5,
+      "references": [
+        {
+          "url": "https://github.com/openclaw/openclaw/security/advisories/GHSA-pchc-86f6-8758",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/openclaw/openclaw/commit/743f4b28495cdeb0d5bf76f6ebf4af01f6a02e5a",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/openclaw/openclaw/commit/f836c385ffc746cb954e8ee409f99d079bfdcd2f",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/openclaw/openclaw/releases/tag/v2026.2.13",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "openclaw",
+          "product": "openclaw",
+          "versions": [
+            {
+              "version": "< 2026.2.13",
+              "status": "affected"
+            }
+          ]
+        },
+        {
+          "vendor": "openclaw",
+          "product": "@openclaw/bluebubbles",
+          "versions": [
+            {
+              "version": "< 2026.2.13",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-863: Incorrect Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-26275",
+      "publishedDate": "2026-02-19T21:25:37.335Z",
+      "lastModifiedDate": "2026-02-19T21:25:37.335Z",
+      "description": "httpsig-hyper is a hyper extension for http message signatures. An issue was discovered in `httpsig-hyper` prior to version 0.0.23 where Digest header verification could incorrectly succeed due to misuse of Rust's `matches!` macro. Specifically, the comparison `if matches!(digest, _expected_digest)` treated `_expected_digest` as a pattern binding rather than a value comparison, resulting in unconditional success of the match expression. As a consequence, digest verification could incorrectly return success even when the computed digest did not match the expected value. Applications relying on Digest verification as part of HTTP message signature validation may therefore fail to detect message body modification. The severity depends on how the library is integrated and whether additional signature validation layers are enforced. This issue has been fixed in `httpsig-hyper` 0.0.23. The fix replaces the incorrect `matches!` usage with proper value comparison and additionally introduces constant-time comparison for digest verification as defense-in-depth. Regression tests have also been added to prevent reintroduction of this issue. Users are strongly advised to upgrade to the patched version. There is no reliable workaround without upgrading. Users who cannot immediately upgrade should avoid relying solely on Digest verification for message integrity and ensure that full HTTP message signature verification is enforced at the application layer.",
+      "severity": 7.5,
+      "references": [
+        {
+          "url": "https://github.com/junkurihara/httpsig-rs/security/advisories/GHSA-7v42-g35v-xrch",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/junkurihara/httpsig-rs/pull/14",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/junkurihara/httpsig-rs/pull/15",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/junkurihara/httpsig-rs/commit/5533f596c650377e02f4aa9e3eb8dba591b87370",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/junkurihara/httpsig-rs/commit/65cbd19b395180a4bba09a89746c4b14ccb8d297",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "junkurihara",
+          "product": "httpsig-rs",
+          "versions": [
+            {
+              "version": "< 0.0.23",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-354: Improper Validation of Integrity Check Value",
+        "CWE-697: Incorrect Comparison"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-26193",
+      "publishedDate": "2026-02-19T19:15:03.473Z",
+      "lastModifiedDate": "2026-02-19T21:23:14.010Z",
+      "description": "Open WebUI is a self-hosted artificial intelligence platform designed to operate entirely offline. Prior to version 0.6.44, aanually modifying chat history allows setting the `embeds` property on a response message, the content of which is loaded into an iFrame with a sandbox that has `allow-scripts` and `allow-same-origin` set, ignoring the \"iframe Sandbox Allow Same Origin\" configuration. This enables stored XSS on the affected chat. This also triggers when the chat is in the shared format. The result is a shareable link containing the payload that can be distributed to any other users on the instance. Version 0.6.44 fixes the issue.",
+      "severity": 7.3,
+      "references": [
+        {
+          "url": "https://github.com/open-webui/open-webui/security/advisories/GHSA-vjm7-m4xh-7wrc",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/open-webui/open-webui/blob/6f1486ffd0cb288d0e21f41845361924e0d742b3/src/lib/components/chat/Messages/ResponseMessage.svelte#L689-L703",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "open-webui",
+          "product": "open-webui",
+          "versions": [
+            {
+              "version": "< 0.6.44",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-26192",
+      "publishedDate": "2026-02-19T19:10:52.185Z",
+      "lastModifiedDate": "2026-02-19T21:23:23.625Z",
+      "description": "Open WebUI is a self-hosted artificial intelligence platform designed to operate entirely offline. Prior to version 0.7.0, aanually modifying chat history allows setting the `html` property within document metadata. This causes the frontend to enter a code path that treats document contents as HTML, and render them in an iFrame when the citation is previewed. This allows stored XSS via a weaponized document payload in a chat. The payload also executes when the citation is viewed on a shared chat. Version 0.7.0 fixes the issue.",
+      "severity": 7.3,
+      "references": [
+        {
+          "url": "https://github.com/open-webui/open-webui/security/advisories/GHSA-xc8p-9rr6-97r2",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/open-webui/open-webui/blob/6f1486ffd0cb288d0e21f41845361924e0d742b3/src/lib/components/chat/Messages/Citations/CitationModal.svelte#L163-L170",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "open-webui",
+          "product": "open-webui",
+          "versions": [
+            {
+              "version": "< 0.7.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-26317",
+      "publishedDate": "2026-02-19T21:34:27.786Z",
+      "lastModifiedDate": "2026-02-19T21:34:27.786Z",
+      "description": "OpenClaw is a personal AI assistant. Prior to 2026.2.14, browser-facing localhost mutation routes accepted cross-origin browser requests without explicit Origin/Referer validation. Loopback binding reduces remote exposure but does not prevent browser-initiated requests from malicious origins. A malicious website can trigger unauthorized state changes against a victim's local OpenClaw browser control plane (for example opening tabs, starting/stopping the browser, mutating storage/cookies) if the browser control service is reachable on loopback in the victim's browser context. Starting in version 2026.2.14, mutating HTTP methods (POST/PUT/PATCH/DELETE) are rejected when the request indicates a non-loopback Origin/Referer (or `Sec-Fetch-Site: cross-site`). Other mitigations include enabling browser control auth (token/password) and avoid running with auth disabled.",
+      "severity": 7.1,
+      "references": [
+        {
+          "url": "https://github.com/openclaw/openclaw/security/advisories/GHSA-3fqr-4cg8-h96q",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/openclaw/openclaw/commit/b566b09f81e2b704bf9398d8d97d5f7a90aa94c3",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/openclaw/openclaw/releases/tag/v2026.2.14",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "openclaw",
+          "product": "openclaw",
+          "versions": [
+            {
+              "version": "< 2026.2.14",
+              "status": "affected"
+            }
+          ]
+        },
+        {
+          "vendor": "openclaw",
+          "product": "clawdbot",
+          "versions": [
+            {
+              "version": "<= 2026.1.24-3",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-352: Cross-Site Request Forgery (CSRF)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-26057",
+      "publishedDate": "2026-02-19T18:41:13.812Z",
+      "lastModifiedDate": "2026-02-19T21:24:08.529Z",
+      "description": "Skill Scanner is a security scanner for AI Agent Skills that detects prompt injection, data exfiltration, and malicious code patterns. A vulnerability in the API Server of Skill Scanner could allow a unauthenticated, remote attacker to interact with the server API and either trigger a denial of service (DoS) condition or upload arbitrary files. This vulnerability is due to an erroneous binding to multiple interfaces. An attacker could exploit this vulnerability by sending API requests to a device exposing the affected API Server. A successful exploit could allow the attacker to consume an excessive amount of resources (memory starvation) or to upload files to arbitrary folders on the affected device. This vulnerability affects Skill-scanner 1.0.1 and earlier releases when the API Server is enabled. The API Server is not enabled by default. Skill-scanner software releases 1.0.2 and later contain the fix for this vulnerability.",
+      "severity": 6.5,
+      "references": [
+        {
+          "url": "https://github.com/cisco-ai-defense/skill-scanner/security/advisories/GHSA-ppfx-73j5-fhxc",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/cisco-ai-defense/skill-scanner/commit/1e35e57f3051ecc89ba845ae7206321c8eac20a1",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "cisco-ai-defense",
+          "product": "skill-scanner",
+          "versions": [
+            {
+              "version": "< 1.0.2",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-668: Exposure of Resource to Wrong Sphere"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-26361",
+      "publishedDate": "2026-02-19T08:14:59.358Z",
+      "lastModifiedDate": "2026-02-19T21:30:41.803Z",
+      "description": "Dell Unisphere for PowerMax, version(s) 10.2, contain(s) an External Control of File Name or Path vulnerability. A low privileged attacker with remote access could potentially exploit this vulnerability, leading to Information disclosure.",
+      "severity": 6.5,
+      "references": [
+        {
+          "url": "https://www.dell.com/support/kbdoc/en-us/000429268/dsa-2026-102-dell-unisphere-for-powermax-and-powermax-eem-security-update-for-multiple-vulnerabilities",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Unisphere for PowerMax",
+          "vendor": "Dell",
+          "versions": [
+            {
+              "lessThan": "10.3.0.1 or later",
+              "status": "affected",
+              "version": "N/A",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "PowerMax",
+          "vendor": "Dell",
+          "versions": [
+            {
+              "lessThan": "10.3.0.1 or later",
+              "status": "affected",
+              "version": "N/A",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-73: External Control of File Name or Path"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-1373",
+      "publishedDate": "2026-02-19T04:36:26.857Z",
+      "lastModifiedDate": "2026-02-19T21:25:54.071Z",
+      "description": "The Easy Author Image plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the 'author_profile_picture_url' parameter in all versions up to, and including, 1.7 due to insufficient input sanitization and output escaping. This makes it possible for authenticated attackers, with Subscriber-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page.",
+      "severity": 6.4,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/eaa53088-c383-4315-9871-b4ceb83f5fdb?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/easy-author-image/tags/1.7/easy-author-image.php#L149",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "lawsonry",
+          "product": "Easy Author Image",
+          "versions": [
+            {
+              "version": "*",
+              "status": "affected",
+              "lessThanOrEqual": "1.7",
               "versionType": "semver"
             }
           ],
@@ -87,42 +522,34 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-1043",
-      "publishedDate": "2026-02-19T04:36:17.315Z",
-      "lastModifiedDate": "2026-02-19T20:37:09.646Z",
-      "description": "The PostmarkApp Email Integrator plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the plugin settings in versions up to, and including, 2.4. This is due to insufficient input sanitization and output escaping on the pma_api_key and pma_sender_address parameters. This makes it possible for authenticated attackers, with Administrator-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses the settings page.",
-      "severity": 4.4,
+      "id": "CVE-2025-14445",
+      "publishedDate": "2026-02-19T04:36:25.358Z",
+      "lastModifiedDate": "2026-02-19T21:28:58.239Z",
+      "description": "The Image Hotspot by DevVN plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the 'hotspot_content' custom field meta in all versions up to, and including, 1.2.9 due to insufficient input sanitization and output escaping. This makes it possible for authenticated attackers, with author level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page.",
+      "severity": 6.4,
       "references": [
         {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/80b03e81-6660-483a-9150-e6075b7bffbd?source=cve",
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/e41965eb-f8eb-4f40-b8f6-e415dff048cd?source=cve",
           "type": "reference"
         },
         {
-          "url": "https://plugins.trac.wordpress.org/browser/postmarkapp-email-integrator/trunk/postmarkapp.php#L149",
+          "url": "https://plugins.trac.wordpress.org/browser/devvn-image-hotspot/tags/1.2.9/admin/inc/add_shortcode_devvn_ihotspot.php?marks=97#L97",
           "type": "reference"
         },
         {
-          "url": "https://plugins.trac.wordpress.org/browser/postmarkapp-email-integrator/tags/2.4/postmarkapp.php#L149",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/postmarkapp-email-integrator/trunk/postmarkapp.php#L153",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/postmarkapp-email-integrator/trunk/postmarkapp.php#L68",
+          "url": "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=3417725%40devvn-image-hotspot&new=3417725%40devvn-image-hotspot&sfp_email=&sfph_mail=",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "gagan0123",
-          "product": "PostmarkApp Email Integrator",
+          "vendor": "levantoan",
+          "product": "Image Hotspot by DevVN",
           "versions": [
             {
               "version": "*",
               "status": "affected",
-              "lessThanOrEqual": "2.4",
+              "lessThanOrEqual": "1.2.9",
               "versionType": "semver"
             }
           ],
@@ -135,34 +562,159 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-14342",
-      "publishedDate": "2026-02-19T04:36:16.373Z",
-      "lastModifiedDate": "2026-02-19T20:40:01.636Z",
-      "description": "The SEO Plugin by Squirrly SEO plugin for WordPress is vulnerable to unauthorized modification of data due to a missing capability check on the sq_ajax_uninstall function in all versions up to, and including, 12.4.14. This makes it possible for authenticated attackers, with Subscriber-level access and above, to disconnect the site from Squirrly's cloud service.",
-      "severity": 4.3,
+      "id": "CVE-2026-26189",
+      "publishedDate": "2026-02-19T19:07:49.631Z",
+      "lastModifiedDate": "2026-02-19T21:23:33.970Z",
+      "description": "Trivy Action runs Trivy as GitHub action to scan a Docker container image for vulnerabilities. A command injection vulnerability exists in `aquasecurity/trivy-action` versions 0.31.0 through 0.33.1 due to improper handling of action inputs when exporting environment variables. The action writes `export VAR=<input>` lines to `trivy_envs.txt` based on user-supplied inputs and subsequently sources this file in `entrypoint.sh`. Because input values are written without appropriate shell escaping, attacker-controlled input containing shell metacharacters (e.g., `$(...)`, backticks, or other command substitution syntax) may be evaluated during the sourcing process. This can result in arbitrary command execution within the GitHub Actions runner context. Version 0.34.0 contains a patch for this issue. The vulnerability is exploitable when a consuming workflow passes attacker-controlled data into any action input that is written to `trivy_envs.txt`. Access to user input is required by the malicious actor. Workflows that do not pass attacker-controlled data into `trivy-action` inputs, workflows that upgrade to a patched version that properly escapes shell values or eliminates the `source ./trivy_envs.txt` pattern, and workflows where user input is not accessible are not affected.",
+      "severity": 5.9,
       "references": [
         {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/7ad25948-3265-4c4c-9b99-86f7240600ce?source=cve",
+          "url": "https://github.com/aquasecurity/trivy-action/security/advisories/GHSA-9p44-j4g5-cfx5",
           "type": "reference"
         },
         {
-          "url": "https://plugins.trac.wordpress.org/browser/squirrly-seo/tags/12.4.14/controllers/SeoSettings.php#L616",
+          "url": "https://github.com/aquasecurity/trivy-action/commit/7aca5acc9500b463826cc47a47a65ad7d404b045",
           "type": "reference"
         },
         {
-          "url": "https://plugins.trac.wordpress.org/changeset/3435711/",
+          "url": "https://github.com/aquasecurity/trivy-action/commit/bc61dc55704e2d5704760f3cdab0d09acf16e4ca",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "cifi",
-          "product": "SEO Plugin by Squirrly SEO",
+          "vendor": "aquasecurity",
+          "product": "trivy-action",
+          "versions": [
+            {
+              "version": ">= 0.31.0, < 0.34.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-2711",
+      "publishedDate": "2026-02-19T07:02:07.848Z",
+      "lastModifiedDate": "2026-02-19T21:31:56.333Z",
+      "description": "A vulnerability has been found in zhutoutoutousan worldquant-miner up to 1.0.9. The impacted element is an unknown function of the file worldquant-miner-master/agent-dify-api/core/helper/ssrf_proxy.py of the component URL Handler. The manipulation of the argument make_request leads to server-side request forgery. The attack can be initiated remotely. The attack's complexity is rated as high. The exploitability is regarded as difficult. The exploit has been disclosed to the public and may be used. The project was informed of the problem early through an issue report but has not responded yet.",
+      "severity": 5.6,
+      "references": [
+        {
+          "url": "https://vuldb.com/?id.346662",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?ctiid.346662",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?submit.753320",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/zhutoutoutousan/worldquant-miner/issues/100",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/zhutoutoutousan/worldquant-miner/issues/100#issue-3905756578",
+          "type": "poc"
+        },
+        {
+          "url": "https://github.com/zhutoutoutousan/worldquant-miner/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "zhutoutoutousan",
+          "product": "worldquant-miner",
+          "versions": [
+            {
+              "version": "1.0.0",
+              "status": "affected"
+            },
+            {
+              "version": "1.0.1",
+              "status": "affected"
+            },
+            {
+              "version": "1.0.2",
+              "status": "affected"
+            },
+            {
+              "version": "1.0.3",
+              "status": "affected"
+            },
+            {
+              "version": "1.0.4",
+              "status": "affected"
+            },
+            {
+              "version": "1.0.5",
+              "status": "affected"
+            },
+            {
+              "version": "1.0.6",
+              "status": "affected"
+            },
+            {
+              "version": "1.0.7",
+              "status": "affected"
+            },
+            {
+              "version": "1.0.8",
+              "status": "affected"
+            },
+            {
+              "version": "1.0.9",
+              "status": "affected"
+            }
+          ],
+          "modules": [
+            "URL Handler"
+          ]
+        }
+      ],
+      "problemType": [
+        "Server-Side Request Forgery"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-2284",
+      "publishedDate": "2026-02-19T04:36:26.287Z",
+      "lastModifiedDate": "2026-02-19T21:27:00.808Z",
+      "description": "The News Element Elementor Blog Magazine plugin for WordPress is vulnerable to Missing Authorization in all versions up to, and including, 1.0.8. This is due to a missing capability check and nonce verification on the 'ne_clean_data' AJAX action. This makes it possible for authenticated attackers, with Subscriber-level access and above, to truncate 8 core WordPress database tables (posts, comments, terms, term_relationships, term_taxonomy, postmeta, commentmeta, termmeta) and delete the entire WordPress uploads directory, resulting in complete data loss.",
+      "severity": 5.4,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/e5d81318-c9da-4626-acfa-f092d2ce5fe9?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/news-element/trunk/admin/inc/dash.php#L206",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/news-element/tags/1.0.8/admin/inc/dash.php#L206",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "webangon",
+          "product": "News Element Elementor Blog Magazine",
           "versions": [
             {
               "version": "*",
               "status": "affected",
-              "lessThanOrEqual": "12.4.14",
+              "lessThanOrEqual": "1.0.8",
               "versionType": "semver"
             }
           ],
@@ -175,241 +727,168 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-27014",
-      "publishedDate": "2026-02-19T20:45:07.953Z",
-      "lastModifiedDate": "2026-02-19T20:45:07.953Z",
-      "description": "NanaZip is an open source file archive Starting in version 5.0.1252.0 and prior to version 6.0.1630.0, circular `NextOffset` chains cause an infinite loop, and deeply nested directories cause unbounded recursion (stack overflow) in the ROMFS archive parser. Version 6.0.1630.0 patches the issue.",
-      "severity": "N/A",
+      "id": "CVE-2026-2681",
+      "publishedDate": "2026-02-19T06:58:47.090Z",
+      "lastModifiedDate": "2026-02-19T21:32:34.940Z",
+      "description": "A flaw was found in the blst cryptographic library. This out-of-bounds stack write vulnerability, specifically in the blst_sha256_bcopy assembly routine, occurs due to a missing zero-length guard. A remote attacker can exploit this by providing a zero-length salt parameter to key generation functions, such as blst_keygen_v5(), if the application exposes this functionality. Successful exploitation leads to memory corruption and immediate process termination, resulting in a denial-of-service (DoS) condition.",
+      "severity": 5.3,
       "references": [
         {
-          "url": "https://github.com/M2Team/NanaZip/security/advisories/GHSA-fc89-3f57-h9q5",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "M2Team",
-          "product": "NanaZip",
-          "versions": [
-            {
-              "version": ">= 5.0.1252.0, < 6.0.1630.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-674: Uncontrolled Recursion"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-26282",
-      "publishedDate": "2026-02-19T20:41:49.223Z",
-      "lastModifiedDate": "2026-02-19T20:41:49.223Z",
-      "description": "NanaZip is an open source file archive Starting in version 5.0.1252.0 and prior to version 6.0.1630.0, NanaZip has an out-of-bounds heap read in `.NET Single File` bundle header parser due to missing bounds check. Opening a crafted file with NanaZip causes a crash or leaks heap data to the user. Version 6.0.1630.0 patches the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/M2Team/NanaZip/security/advisories/GHSA-ccpc-2222-xv5c",
+          "url": "https://access.redhat.com/security/cve/CVE-2026-2681",
           "type": "reference"
         },
         {
-          "url": "https://github.com/user-attachments/files/25274143/poc.exe.zip",
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2440580",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "M2Team",
-          "product": "NanaZip",
           "versions": [
             {
-              "version": ">= 5.0.1252.0, < 6.0.1630.0",
-              "status": "affected"
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver",
+              "lessThanOrEqual": "0.3.16"
             }
-          ]
+          ],
+          "packageName": "blst",
+          "collectionURL": "https://github.com/supranational/blst",
+          "defaultStatus": "unaffected"
         }
       ],
       "problemType": [
-        "CWE-126: Buffer Over-read"
+        "Out-of-bounds Write"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-27440",
-      "publishedDate": "2026-02-19T20:35:42.839Z",
-      "lastModifiedDate": "2026-02-19T20:35:42.839Z",
-      "description": "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') vulnerability in Saad Iqbal myCred mycred allows Stored XSS.This issue affects myCred: from n/a through <= 2.9.7.6.",
-      "severity": "N/A",
+      "id": "CVE-2026-1455",
+      "publishedDate": "2026-02-19T04:36:25.835Z",
+      "lastModifiedDate": "2026-02-19T21:28:00.278Z",
+      "description": "The Whatsiplus Scheduled Notification for Woocommerce plugin for WordPress is vulnerable to Cross-Site Request Forgery in all versions up to, and including, 1.0.1. This is due to missing nonce validation on the 'wsnfw_save_users_settings' AJAX action. This makes it possible for unauthenticated attackers to modify plugin configuration settings via a forged request granted they can trick a site administrator into performing an action such as clicking on a link.",
+      "severity": 4.3,
       "references": [
         {
-          "url": "https://patchstack.com/database/Wordpress/Plugin/mycred/vulnerability/wordpress-mycred-plugin-2-9-7-6-cross-site-scripting-xss-vulnerability?_s_id=cve",
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/e466640e-de66-42f0-b56b-226db32d382d?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/whatsiplus-scheduled-notification-for-woocommerce/tags/1.0.1/inc/wsnfw-ajax-request.php#L85",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/whatsiplus-scheduled-notification-for-woocommerce/tags/1.0.1/inc/wsnfw-ajax-request.php#L84",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "collectionURL": "https://wordpress.org/plugins",
-          "defaultStatus": "unaffected",
-          "packageName": "mycred",
-          "product": "myCred",
-          "vendor": "Saad Iqbal",
+          "vendor": "whatsiplus",
+          "product": "Whatsiplus Scheduled Notification for Woocommerce",
           "versions": [
             {
-              "lessThanOrEqual": "<= 2.9.7.6",
+              "version": "*",
               "status": "affected",
-              "version": "n/a",
-              "versionType": "custom"
+              "lessThanOrEqual": "1.0.1",
+              "versionType": "semver"
             }
-          ]
+          ],
+          "defaultStatus": "unaffected"
         }
       ],
       "problemType": [
-        "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+        "CWE-352 Cross-Site Request Forgery (CSRF)"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-27387",
-      "publishedDate": "2026-02-19T20:35:42.604Z",
-      "lastModifiedDate": "2026-02-19T20:35:42.604Z",
-      "description": "Missing Authorization vulnerability in designinvento DirectoryPress directorypress allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects DirectoryPress: from n/a through <= 3.6.26.",
-      "severity": "N/A",
+      "id": "CVE-2026-2733",
+      "publishedDate": "2026-02-19T07:48:08.910Z",
+      "lastModifiedDate": "2026-02-19T21:31:19.914Z",
+      "description": "A flaw was identified in the Docker v2 authentication endpoint of Keycloak, where tokens continue to be issued even after a Docker registry client has been administratively disabled. This means that turning the client “Enabled” setting to OFF does not fully prevent access. As a result, previously valid credentials can still be used to obtain authentication tokens. This weakens administrative controls and could allow unintended access to container registry resources.",
+      "severity": 3.8,
       "references": [
         {
-          "url": "https://patchstack.com/database/Wordpress/Plugin/directorypress/vulnerability/wordpress-directorypress-plugin-3-6-26-broken-access-control-vulnerability?_s_id=cve",
+          "url": "https://access.redhat.com/security/cve/CVE-2026-2733",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2440895",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "collectionURL": "https://wordpress.org/plugins",
-          "defaultStatus": "unaffected",
-          "packageName": "directorypress",
-          "product": "DirectoryPress",
-          "vendor": "designinvento",
-          "versions": [
-            {
-              "lessThanOrEqual": "<= 3.6.26",
-              "status": "affected",
-              "version": "n/a",
-              "versionType": "custom"
-            }
+          "vendor": "Red Hat",
+          "product": "Red Hat Build of Keycloak",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhbk/keycloak-operator-bundle",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Build of Keycloak",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhbk/keycloak-rhel9",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Build of Keycloak",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhbk/keycloak-rhel9-operator",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat JBoss Enterprise Application Platform 8",
+          "collectionURL": "https://access.redhat.com/jbossnetwork/restricted/listSoftware.html",
+          "packageName": "keycloak-services",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:jboss_enterprise_application_platform:8"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat JBoss Enterprise Application Platform Expansion Pack",
+          "collectionURL": "https://access.redhat.com/jbossnetwork/restricted/listSoftware.html",
+          "packageName": "keycloak-services",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:jbosseapxp"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Single Sign-On 7",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "keycloak-services",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:red_hat_single_sign_on:7"
           ]
         }
       ],
       "problemType": [
-        "Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-27368",
-      "publishedDate": "2026-02-19T20:35:42.391Z",
-      "lastModifiedDate": "2026-02-19T20:35:42.391Z",
-      "description": "Missing Authorization vulnerability in SeedProd Coming Soon Page, Under Construction & Maintenance Mode by SeedProd coming-soon allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Coming Soon Page, Under Construction & Maintenance Mode by SeedProd: from n/a through <= 6.19.7.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://patchstack.com/database/Wordpress/Plugin/coming-soon/vulnerability/wordpress-coming-soon-page-under-construction-maintenance-mode-by-seedprod-plugin-6-19-7-broken-access-control-vulnerability?_s_id=cve",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://wordpress.org/plugins",
-          "defaultStatus": "unaffected",
-          "packageName": "coming-soon",
-          "product": "Coming Soon Page, Under Construction & Maintenance Mode by SeedProd",
-          "vendor": "SeedProd",
-          "versions": [
-            {
-              "lessThanOrEqual": "<= 6.19.7",
-              "status": "affected",
-              "version": "n/a",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-27360",
-      "publishedDate": "2026-02-19T20:35:42.196Z",
-      "lastModifiedDate": "2026-02-19T20:35:42.196Z",
-      "description": "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') vulnerability in 10Web Photo Gallery by 10Web photo-gallery allows Stored XSS.This issue affects Photo Gallery by 10Web: from n/a through <= 1.8.37.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://patchstack.com/database/Wordpress/Plugin/photo-gallery/vulnerability/wordpress-photo-gallery-by-10web-plugin-1-8-37-cross-site-scripting-xss-vulnerability?_s_id=cve",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://wordpress.org/plugins",
-          "defaultStatus": "unaffected",
-          "packageName": "photo-gallery",
-          "product": "Photo Gallery by 10Web",
-          "vendor": "10Web",
-          "versions": [
-            {
-              "lessThanOrEqual": "<= 1.8.37",
-              "status": "affected",
-              "version": "n/a",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-27343",
-      "publishedDate": "2026-02-19T20:35:41.998Z",
-      "lastModifiedDate": "2026-02-19T20:35:41.998Z",
-      "description": "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion') vulnerability in VanKarWai Airtifact airtifact allows PHP Local File Inclusion.This issue affects Airtifact: from n/a through <= 1.2.91.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://patchstack.com/database/Wordpress/Theme/airtifact/vulnerability/wordpress-airtifact-theme-1-2-91-local-file-inclusion-vulnerability?_s_id=cve",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://themeforest.net",
-          "defaultStatus": "unaffected",
-          "packageName": "airtifact",
-          "product": "Airtifact",
-          "vendor": "VanKarWai",
-          "versions": [
-            {
-              "lessThanOrEqual": "<= 1.2.91",
-              "status": "affected",
-              "version": "n/a",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
+        "Improper Authorization"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
       "id": "CVE-2026-27328",
       "publishedDate": "2026-02-19T20:35:41.705Z",
-      "lastModifiedDate": "2026-02-19T20:35:41.705Z",
+      "lastModifiedDate": "2026-02-19T21:29:22.383Z",
       "description": "Missing Authorization vulnerability in DevsBlink EduBlink edublink allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects EduBlink: from n/a through <= 2.0.7.",
       "severity": "N/A",
       "references": [
@@ -441,48 +920,72 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-27327",
-      "publishedDate": "2026-02-19T20:35:41.377Z",
-      "lastModifiedDate": "2026-02-19T20:35:41.377Z",
-      "description": "Missing Authorization vulnerability in YayCommerce YayMail – WooCommerce Email Customizer yaymail allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects YayMail – WooCommerce Email Customizer: from n/a through <= 4.3.2.",
+      "id": "CVE-2026-26063",
+      "publishedDate": "2026-02-19T18:53:47.314Z",
+      "lastModifiedDate": "2026-02-19T21:23:44.840Z",
+      "description": "CediPay is a crypto-to-fiat app for the Ghanaian market. A vulnerability in CediPay prior to version 1.2.3 allows attackers to bypass input validation in the transaction API. The issue has been fixed in version 1.2.3. If upgrading is not immediately possible, restrict API access to trusted networks or IP ranges; enforce strict input validation at the application layer; and/or monitor transaction logs for anomalies or suspicious activity. These mitigations reduce exposure but do not fully eliminate the vulnerability.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://patchstack.com/database/Wordpress/Plugin/yaymail/vulnerability/wordpress-yaymail-woocommerce-email-customizer-plugin-4-3-2-broken-access-control-vulnerability?_s_id=cve",
+          "url": "https://github.com/xpertforextradeinc/CediPay/security/advisories/GHSA-wvr6-395c-5pxr",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "collectionURL": "https://wordpress.org/plugins",
-          "defaultStatus": "unaffected",
-          "packageName": "yaymail",
-          "product": "YayMail – WooCommerce Email Customizer",
-          "vendor": "YayCommerce",
+          "vendor": "xpertforextradeinc",
+          "product": "CediPay",
           "versions": [
             {
-              "lessThanOrEqual": "<= 4.3.2",
-              "status": "affected",
-              "version": "n/a",
-              "versionType": "custom"
+              "version": "< 1.2.3",
+              "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "Missing Authorization"
+        "CWE-20: Improper Input Validation"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-25374",
-      "publishedDate": "2026-02-19T08:27:00.661Z",
-      "lastModifiedDate": "2026-02-19T20:39:12.783Z",
-      "description": "Missing Authorization vulnerability in raratheme Spa and Salon spa-and-salon allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Spa and Salon: from n/a through <= 1.3.2.",
+      "id": "CVE-2026-26059",
+      "publishedDate": "2026-02-19T18:45:53.171Z",
+      "lastModifiedDate": "2026-02-19T21:23:56.193Z",
+      "description": "ChurchCRM is an open-source church management system. In versions prior to 6.8.2, it was possible for an authenticated user with permission to edit groups to store a JavaScript payload that would execute when the group was viewed in the Group View. Version 6.8.2 fixes this issue.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://patchstack.com/database/Wordpress/Theme/spa-and-salon/vulnerability/wordpress-spa-and-salon-theme-1-3-2-broken-access-control-vulnerability?_s_id=cve",
+          "url": "https://github.com/ChurchCRM/CRM/security/advisories/GHSA-3wp4-vpr7-47q6",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "ChurchCRM",
+          "product": "CRM",
+          "versions": [
+            {
+              "version": "< 6.8.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-25325",
+      "publishedDate": "2026-02-19T08:26:56.293Z",
+      "lastModifiedDate": "2026-02-19T21:27:48.272Z",
+      "description": "Exposure of Sensitive System Information to an Unauthorized Control Sphere vulnerability in rtCamp rtMedia for WordPress, BuddyPress and bbPress buddypress-media allows Retrieve Embedded Sensitive Data.This issue affects rtMedia for WordPress, BuddyPress and bbPress: from n/a through <= 4.7.8.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Plugin/buddypress-media/vulnerability/wordpress-rtmedia-for-wordpress-buddypress-and-bbpress-plugin-4-7-8-sensitive-data-exposure-vulnerability?_s_id=cve",
           "type": "reference"
         }
       ],
@@ -490,18 +993,58 @@
         {
           "collectionURL": "https://wordpress.org/plugins",
           "defaultStatus": "unaffected",
-          "packageName": "spa-and-salon",
-          "product": "Spa and Salon",
-          "vendor": "raratheme",
+          "packageName": "buddypress-media",
+          "product": "rtMedia for WordPress, BuddyPress and bbPress",
+          "vendor": "rtCamp",
           "versions": [
             {
               "changes": [
                 {
-                  "at": "1.3.3",
+                  "at": "4.7.9",
                   "status": "unaffected"
                 }
               ],
-              "lessThanOrEqual": "<= 1.3.2",
+              "lessThanOrEqual": "<= 4.7.8",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Exposure of Sensitive System Information to an Unauthorized Control Sphere"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-25321",
+      "publishedDate": "2026-02-19T08:26:55.525Z",
+      "lastModifiedDate": "2026-02-19T21:30:22.554Z",
+      "description": "Missing Authorization vulnerability in PSM Plugins SupportCandy supportcandy allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects SupportCandy: from n/a through <= 3.4.4.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Plugin/supportcandy/vulnerability/wordpress-supportcandy-plugin-3-4-4-broken-access-control-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://wordpress.org/plugins",
+          "defaultStatus": "unaffected",
+          "packageName": "supportcandy",
+          "product": "SupportCandy",
+          "vendor": "PSM Plugins",
+          "versions": [
+            {
+              "changes": [
+                {
+                  "at": "3.4.5",
+                  "status": "unaffected"
+                }
+              ],
+              "lessThanOrEqual": "<= 3.4.4",
               "status": "affected",
               "version": "n/a",
               "versionType": "custom"
@@ -515,14 +1058,174 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-25367",
-      "publishedDate": "2026-02-19T08:26:59.651Z",
-      "lastModifiedDate": "2026-02-19T20:42:05.985Z",
-      "description": "Missing Authorization vulnerability in NooTheme CitiLights noo-citilights allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects CitiLights: from n/a through < 3.7.2.",
+      "id": "CVE-2026-25319",
+      "publishedDate": "2026-02-19T08:26:55.141Z",
+      "lastModifiedDate": "2026-02-19T21:32:50.454Z",
+      "description": "Cross-Site Request Forgery (CSRF) vulnerability in wpzita Zita Elementor Site Library zita-site-library allows Cross Site Request Forgery.This issue affects Zita Elementor Site Library: from n/a through <= 1.6.6.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://patchstack.com/database/Wordpress/Theme/noo-citilights/vulnerability/wordpress-citilights-theme-3-7-2-broken-access-control-vulnerability?_s_id=cve",
+          "url": "https://patchstack.com/database/Wordpress/Plugin/zita-site-library/vulnerability/wordpress-zita-elementor-site-library-plugin-1-6-6-cross-site-request-forgery-csrf-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://wordpress.org/plugins",
+          "defaultStatus": "unaffected",
+          "packageName": "zita-site-library",
+          "product": "Zita Elementor Site Library",
+          "vendor": "wpzita",
+          "versions": [
+            {
+              "changes": [
+                {
+                  "at": "1.6.7",
+                  "status": "unaffected"
+                }
+              ],
+              "lessThanOrEqual": "<= 1.6.6",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Cross-Site Request Forgery (CSRF)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-25314",
+      "publishedDate": "2026-02-19T08:26:54.126Z",
+      "lastModifiedDate": "2026-02-19T21:37:25.186Z",
+      "description": "Missing Authorization vulnerability in WP Messiah TOP Table Of Contents top-table-of-contents allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects TOP Table Of Contents: from n/a through <= 1.3.31.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Plugin/top-table-of-contents/vulnerability/wordpress-top-table-of-contents-plugin-1-3-31-broken-access-control-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://wordpress.org/plugins",
+          "defaultStatus": "unaffected",
+          "packageName": "top-table-of-contents",
+          "product": "TOP Table Of Contents",
+          "vendor": "WP Messiah",
+          "versions": [
+            {
+              "changes": [
+                {
+                  "at": "1.4.0",
+                  "status": "unaffected"
+                }
+              ],
+              "lessThanOrEqual": "<= 1.3.31",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Missing Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-25311",
+      "publishedDate": "2026-02-19T08:26:53.773Z",
+      "lastModifiedDate": "2026-02-19T21:38:28.387Z",
+      "description": "Missing Authorization vulnerability in 10up Autoshare for Twitter autoshare-for-twitter allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Autoshare for Twitter: from n/a through <= 2.3.1.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Plugin/autoshare-for-twitter/vulnerability/wordpress-autoshare-for-twitter-plugin-2-3-1-broken-access-control-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://wordpress.org/plugins",
+          "defaultStatus": "unaffected",
+          "packageName": "autoshare-for-twitter",
+          "product": "Autoshare for Twitter",
+          "vendor": "10up",
+          "versions": [
+            {
+              "changes": [
+                {
+                  "at": "2.3.2",
+                  "status": "unaffected"
+                }
+              ],
+              "lessThanOrEqual": "<= 2.3.1",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Missing Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-23549",
+      "publishedDate": "2026-02-19T08:26:49.962Z",
+      "lastModifiedDate": "2026-02-19T21:24:34.333Z",
+      "description": "Deserialization of Untrusted Data vulnerability in magepeopleteam WpEvently mage-eventpress allows Object Injection.This issue affects WpEvently: from n/a through <= 5.1.1.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Plugin/mage-eventpress/vulnerability/wordpress-wpevently-plugin-5-1-1-php-object-injection-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://wordpress.org/plugins",
+          "defaultStatus": "unaffected",
+          "packageName": "mage-eventpress",
+          "product": "WpEvently",
+          "vendor": "magepeopleteam",
+          "versions": [
+            {
+              "changes": [
+                {
+                  "at": "5.1.2",
+                  "status": "unaffected"
+                }
+              ],
+              "lessThanOrEqual": "<= 5.1.1",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Deserialization of Untrusted Data"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-23544",
+      "publishedDate": "2026-02-19T08:26:49.016Z",
+      "lastModifiedDate": "2026-02-19T21:32:54.087Z",
+      "description": "Deserialization of Untrusted Data vulnerability in codetipi Valenti valenti allows Object Injection.This issue affects Valenti: from n/a through <= 5.6.3.5.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Theme/valenti/vulnerability/wordpress-valenti-theme-5-6-3-5-php-object-injection-vulnerability?_s_id=cve",
           "type": "reference"
         }
       ],
@@ -530,18 +1233,12 @@
         {
           "collectionURL": "https://themeforest.net",
           "defaultStatus": "unaffected",
-          "packageName": "noo-citilights",
-          "product": "CitiLights",
-          "vendor": "NooTheme",
+          "packageName": "valenti",
+          "product": "Valenti",
+          "vendor": "codetipi",
           "versions": [
             {
-              "changes": [
-                {
-                  "at": "3.7.2",
-                  "status": "unaffected"
-                }
-              ],
-              "lessThanOrEqual": "< 3.7.2",
+              "lessThanOrEqual": "<= 5.6.3.5",
               "status": "affected",
               "version": "n/a",
               "versionType": "custom"
@@ -550,19 +1247,19 @@
         }
       ],
       "problemType": [
-        "Missing Authorization"
+        "Deserialization of Untrusted Data"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-25310",
-      "publishedDate": "2026-02-19T08:26:53.599Z",
-      "lastModifiedDate": "2026-02-19T20:37:54.630Z",
-      "description": "Server-Side Request Forgery (SSRF) vulnerability in Alobaidi Extend Link extend-link allows Server Side Request Forgery.This issue affects Extend Link: from n/a through <= 2.0.0.",
+      "id": "CVE-2026-23542",
+      "publishedDate": "2026-02-19T08:26:48.592Z",
+      "lastModifiedDate": "2026-02-19T21:35:26.008Z",
+      "description": "Deserialization of Untrusted Data vulnerability in ThemeGoods Grand Restaurant grandrestaurant allows Object Injection.This issue affects Grand Restaurant: from n/a through <= 7.0.10.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://patchstack.com/database/Wordpress/Plugin/extend-link/vulnerability/wordpress-extend-link-plugin-2-0-0-server-side-request-forgery-ssrf-vulnerability?_s_id=cve",
+          "url": "https://patchstack.com/database/Wordpress/Theme/grandrestaurant/vulnerability/wordpress-grand-restaurant-theme-7-0-10-php-object-injection-vulnerability?_s_id=cve",
           "type": "reference"
         }
       ],
@@ -570,18 +1267,18 @@
         {
           "collectionURL": "https://wordpress.org/plugins",
           "defaultStatus": "unaffected",
-          "packageName": "extend-link",
-          "product": "Extend Link",
-          "vendor": "Alobaidi",
+          "packageName": "grandrestaurant",
+          "product": "Grand Restaurant",
+          "vendor": "ThemeGoods",
           "versions": [
             {
               "changes": [
                 {
-                  "at": "2.0.1",
+                  "at": "7.0.11",
                   "status": "unaffected"
                 }
               ],
-              "lessThanOrEqual": "<= 2.0.0",
+              "lessThanOrEqual": "<= 7.0.10",
               "status": "affected",
               "version": "n/a",
               "versionType": "custom"
@@ -590,7 +1287,7 @@
         }
       ],
       "problemType": [
-        "Server-Side Request Forgery (SSRF)"
+        "Deserialization of Untrusted Data"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
