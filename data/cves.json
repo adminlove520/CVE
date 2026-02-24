@@ -2,86 +2,312 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 5,
-    "last_updated": "2026-02-24T20:18:50.738420",
+    "total_count": 40,
+    "last_updated": "2026-02-24T21:00:25.176458",
     "severity_distribution": {
-      "critical": 0,
+      "critical": 1,
       "high": 0,
-      "medium": 1,
+      "medium": 5,
       "low": 0,
-      "none": 4
+      "none": 34
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-26981",
-      "publishedDate": "2026-02-24T02:26:16.659Z",
-      "lastModifiedDate": "2026-02-24T20:03:54.667Z",
-      "description": "OpenEXR provides the specification and reference implementation of the EXR file format, an image storage format for the motion picture industry. In versions 3.3.0 through 3.3.6 and 3.4.0 through 3.4.4, a heap-buffer-overflow (OOB read) occurs in the `istream_nonparallel_read` function in `ImfContextInit.cpp` when parsing a malformed EXR file through a memory-mapped `IStream`. A signed integer subtraction produces a negative value that is implicitly converted to `size_t`, resulting in a massive length being passed to `memcpy`. Versions 3.3.7 and 3.4.5 contain a patch.",
-      "severity": 6.5,
+      "id": "CVE-2026-26198",
+      "publishedDate": "2026-02-24T02:03:47.094Z",
+      "lastModifiedDate": "2026-02-24T20:35:44.673Z",
+      "description": "Ormar is a async mini ORM for Python. In versions 0.9.9 through 0.22.0, when performing aggregate queries, Ormar ORM constructs SQL expressions by passing user-supplied column names directly into `sqlalchemy.text()` without any validation or sanitization. The `min()` and `max()` methods in the `QuerySet` class accept arbitrary string input as the column parameter. While `sum()` and `avg()` are partially protected by an `is_numeric` type check that rejects non-existent fields, `min()` and `max()` skip this validation entirely. As a result, an attacker-controlled string is embedded as raw SQL inside the aggregate function call. Any unauthorized user can exploit this vulnerability to read the entire database contents, including tables unrelated to the queried model, by injecting a subquery as the column parameter. Version 0.23.0 contains a patch.",
+      "severity": 9.8,
       "references": [
         {
-          "url": "https://github.com/AcademySoftwareFoundation/openexr/security/advisories/GHSA-q6vj-wxvf-5m8c",
+          "url": "https://github.com/collerek/ormar/security/advisories/GHSA-xxh2-68g9-8jqr",
           "type": "reference"
         },
         {
-          "url": "https://github.com/AcademySoftwareFoundation/openexr/commit/6bb2ddf1068573d073edf81270a015b38cc05cef",
+          "url": "https://github.com/collerek/ormar/commit/a03bae14fe01358d3eaf7e319fcd5db2e4956b16",
           "type": "reference"
         },
         {
-          "url": "https://github.com/AcademySoftwareFoundation/openexr/commit/d2be382758adc3e9ab83a3de35138ec28d93ebd8",
+          "url": "https://github.com/collerek/ormar/releases/tag/0.23.0",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "AcademySoftwareFoundation",
-          "product": "openexr",
+          "vendor": "collerek",
+          "product": "ormar",
           "versions": [
             {
-              "version": ">= 3.3.0, < 3.3.7",
-              "status": "affected"
-            },
-            {
-              "version": ">= 3.4.0, < 3.4.5",
+              "version": ">= 0.9.9, < 0.23.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-195: Signed to Unsigned Conversion Error"
+        "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-22356",
-      "publishedDate": "2026-02-20T15:47:01.362Z",
-      "lastModifiedDate": "2026-02-24T20:06:17.125Z",
-      "description": "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion') vulnerability in Automattic Jetpack CRM zero-bs-crm allows PHP Local File Inclusion.This issue affects Jetpack CRM: from n/a through <= 6.7.0.",
-      "severity": "N/A",
+      "id": "CVE-2026-3091",
+      "publishedDate": "2026-02-24T02:31:20.298Z",
+      "lastModifiedDate": "2026-02-24T20:48:54.091Z",
+      "description": "An uncontrolled search path element vulnerability in Synology Presto Client before 2.1.3-0672 allows local users to read or write arbitrary files during installation by placing a malicious DLL in advance in the same directory as the installer.",
+      "severity": 6.7,
       "references": [
         {
-          "url": "https://patchstack.com/database/Wordpress/Plugin/zero-bs-crm/vulnerability/wordpress-jetpack-crm-plugin-6-7-0-local-file-inclusion-vulnerability?_s_id=cve",
+          "url": "https://www.synology.com/en-global/security/advisory/Synology_SA_26_02",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "collectionURL": "https://wordpress.org/plugins",
-          "defaultStatus": "unaffected",
-          "packageName": "zero-bs-crm",
-          "product": "Jetpack CRM",
-          "vendor": "Automattic",
+          "vendor": "Synology",
+          "product": "Synology Presto Client",
           "versions": [
             {
-              "changes": [
-                {
-                  "at": "6.7.1",
-                  "status": "unaffected"
-                }
-              ],
-              "lessThanOrEqual": "<= 6.7.0",
+              "version": "*",
+              "status": "affected",
+              "lessThan": "2.1.3-0672",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "affected"
+        }
+      ],
+      "problemType": [
+        "Uncontrolled Search Path Element"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-26284",
+      "publishedDate": "2026-02-24T02:00:19.417Z",
+      "lastModifiedDate": "2026-02-24T20:46:56.730Z",
+      "description": "ImageMagick is free and open-source software used for editing and manipulating digital images. Prior to versions 7.1.2-15 and 6.9.13-40, ImageMagick lacks proper boundary checking when processing Huffman-coded data from PCD (Photo CD) files. The decoder contains an function that has an incorrect initialization that could cause an out of bounds read. Versions 7.1.2-15 and 6.9.13-40 contain a patch.",
+      "severity": 6.5,
+      "references": [
+        {
+          "url": "https://github.com/ImageMagick/ImageMagick/security/advisories/GHSA-wrhr-rf8j-r842",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "ImageMagick",
+          "product": "ImageMagick",
+          "versions": [
+            {
+              "version": ">= 7.0.0, < 7.1.2-15",
+              "status": "affected"
+            },
+            {
+              "version": "< 6.9.13-40",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-122: Heap-based Buffer Overflow",
+        "CWE-787: Out-of-bounds Write"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3057",
+      "publishedDate": "2026-02-24T02:02:08.977Z",
+      "lastModifiedDate": "2026-02-24T20:42:56.315Z",
+      "description": "A security flaw has been discovered in a54552239 pearProjectApi up to 2.8.10. Affected is the function dateTotalForProject of the file application/common/Model/Task.php of the component Backend Interface. The manipulation of the argument projectCode results in sql injection. The attack can be launched remotely. The exploit has been released to the public and may be used for attacks. The vendor was contacted early about this disclosure but did not respond in any way.",
+      "severity": 6.3,
+      "references": [
+        {
+          "url": "https://vuldb.com/?id.347413",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?ctiid.347413",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?submit.757669",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/XiaoyuZhou1997/CVE/issues/1",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/XiaoyuZhou1997/CVE/issues/1#issue-3935708166",
+          "type": "poc"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "a54552239",
+          "product": "pearProjectApi",
+          "versions": [
+            {
+              "version": "2.8.0",
+              "status": "affected"
+            },
+            {
+              "version": "2.8.1",
+              "status": "affected"
+            },
+            {
+              "version": "2.8.2",
+              "status": "affected"
+            },
+            {
+              "version": "2.8.3",
+              "status": "affected"
+            },
+            {
+              "version": "2.8.4",
+              "status": "affected"
+            },
+            {
+              "version": "2.8.5",
+              "status": "affected"
+            },
+            {
+              "version": "2.8.6",
+              "status": "affected"
+            },
+            {
+              "version": "2.8.7",
+              "status": "affected"
+            },
+            {
+              "version": "2.8.8",
+              "status": "affected"
+            },
+            {
+              "version": "2.8.9",
+              "status": "affected"
+            },
+            {
+              "version": "2.8.10",
+              "status": "affected"
+            }
+          ],
+          "cpes": [
+            "cpe:2.3:a:a54552239:pearprojectapi:*:*:*:*:*:*:*:*"
+          ],
+          "modules": [
+            "Backend Interface"
+          ]
+        }
+      ],
+      "problemType": [
+        "SQL Injection",
+        "Injection"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-26283",
+      "publishedDate": "2026-02-24T01:55:59.350Z",
+      "lastModifiedDate": "2026-02-24T20:47:41.990Z",
+      "description": "ImageMagick is free and open-source software used for editing and manipulating digital images. Prior to versions 7.1.2-15 and 6.9.13-40, a `continue` statement in the JPEG extent binary search loop in the jpeg encoder causes an infinite loop when writing persistently fails. An attacker can trigger a 100% CPU consumption and process hang (Denial of Service) with a crafted image. Versions 7.1.2-15 and 6.9.13-40 contain a patch.",
+      "severity": 6.2,
+      "references": [
+        {
+          "url": "https://github.com/ImageMagick/ImageMagick/security/advisories/GHSA-gwr3-x37h-h84v",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "ImageMagick",
+          "product": "ImageMagick",
+          "versions": [
+            {
+              "version": ">= 7.0.0, < 7.1.2-15",
+              "status": "affected"
+            },
+            {
+              "version": "< 6.9.13-40",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-835: Loop with Unreachable Exit Condition ('Infinite Loop')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3054",
+      "publishedDate": "2026-02-24T02:02:06.992Z",
+      "lastModifiedDate": "2026-02-24T20:45:48.226Z",
+      "description": "A vulnerability was identified in Alinto SOGo 5.12.3/5.12.4. This impacts an unknown function. The manipulation of the argument hint leads to cross site scripting. The attack can be initiated remotely. The exploit is publicly available and might be used. The vendor was contacted early about this disclosure but did not respond in any way.",
+      "severity": 4.3,
+      "references": [
+        {
+          "url": "https://vuldb.com/?id.347412",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?ctiid.347412",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?submit.757609",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Alinto",
+          "product": "SOGo",
+          "versions": [
+            {
+              "version": "5.12.3",
+              "status": "affected"
+            },
+            {
+              "version": "5.12.4",
+              "status": "affected"
+            }
+          ],
+          "cpes": [
+            "cpe:2.3:a:alinto:sogo:*:*:*:*:*:*:*:*"
+          ]
+        }
+      ],
+      "problemType": [
+        "Cross Site Scripting",
+        "Code Injection"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-22379",
+      "publishedDate": "2026-02-20T15:47:06.345Z",
+      "lastModifiedDate": "2026-02-24T20:50:59.202Z",
+      "description": "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion') vulnerability in AncoraThemes Netmix netmix allows PHP Local File Inclusion.This issue affects Netmix: from n/a through <= 1.0.10.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Theme/netmix/vulnerability/wordpress-netmix-theme-1-0-10-local-file-inclusion-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://themeforest.net",
+          "defaultStatus": "unaffected",
+          "packageName": "netmix",
+          "product": "Netmix",
+          "vendor": "AncoraThemes",
+          "versions": [
+            {
+              "lessThanOrEqual": "<= 1.0.10",
               "status": "affected",
               "version": "n/a",
               "versionType": "custom"
@@ -95,24 +321,330 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-22341",
-      "publishedDate": "2026-02-20T15:46:59.242Z",
-      "lastModifiedDate": "2026-02-24T19:54:34.388Z",
-      "description": "Authentication Bypass Using an Alternate Path or Channel vulnerability in Case-Themes Booked booked allows Authentication Abuse.This issue affects Booked: from n/a through <= 3.0.0.",
+      "id": "CVE-2026-22375",
+      "publishedDate": "2026-02-20T15:47:05.586Z",
+      "lastModifiedDate": "2026-02-24T20:50:59.430Z",
+      "description": "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion') vulnerability in AncoraThemes Impacto Patronus impacto-patronus allows PHP Local File Inclusion.This issue affects Impacto Patronus: from n/a through <= 1.2.3.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://patchstack.com/database/Wordpress/Plugin/booked/vulnerability/wordpress-booked-plugin-3-0-0-account-takeover-vulnerability?_s_id=cve",
+          "url": "https://patchstack.com/database/Wordpress/Theme/impacto-patronus/vulnerability/wordpress-impacto-patronus-theme-1-2-3-local-file-inclusion-vulnerability?_s_id=cve",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "collectionURL": "https://wordpress.org/plugins",
+          "collectionURL": "https://themeforest.net",
           "defaultStatus": "unaffected",
-          "packageName": "booked",
-          "product": "Booked",
-          "vendor": "Case-Themes",
+          "packageName": "impacto-patronus",
+          "product": "Impacto Patronus",
+          "vendor": "AncoraThemes",
+          "versions": [
+            {
+              "lessThanOrEqual": "<= 1.2.3",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-22373",
+      "publishedDate": "2026-02-20T15:47:05.132Z",
+      "lastModifiedDate": "2026-02-24T20:50:59.622Z",
+      "description": "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion') vulnerability in AncoraThemes Fooddy fooddy allows PHP Local File Inclusion.This issue affects Fooddy: from n/a through <= 1.3.10.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Theme/fooddy/vulnerability/wordpress-fooddy-theme-1-3-10-local-file-inclusion-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://themeforest.net",
+          "defaultStatus": "unaffected",
+          "packageName": "fooddy",
+          "product": "Fooddy",
+          "vendor": "AncoraThemes",
+          "versions": [
+            {
+              "lessThanOrEqual": "<= 1.3.10",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-22371",
+      "publishedDate": "2026-02-20T15:47:04.076Z",
+      "lastModifiedDate": "2026-02-24T20:50:59.804Z",
+      "description": "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion') vulnerability in AncoraThemes Gustavo gustavo allows PHP Local File Inclusion.This issue affects Gustavo: from n/a through <= 1.2.2.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Theme/gustavo/vulnerability/wordpress-gustavo-theme-1-2-2-local-file-inclusion-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://themeforest.net",
+          "defaultStatus": "unaffected",
+          "packageName": "gustavo",
+          "product": "Gustavo",
+          "vendor": "AncoraThemes",
+          "versions": [
+            {
+              "lessThanOrEqual": "<= 1.2.2",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-22369",
+      "publishedDate": "2026-02-20T15:47:03.701Z",
+      "lastModifiedDate": "2026-02-24T20:50:59.952Z",
+      "description": "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion') vulnerability in AncoraThemes Ironfit ironfit allows PHP Local File Inclusion.This issue affects Ironfit: from n/a through <= 1.5.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Theme/ironfit/vulnerability/wordpress-ironfit-theme-1-5-local-file-inclusion-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://themeforest.net",
+          "defaultStatus": "unaffected",
+          "packageName": "ironfit",
+          "product": "Ironfit",
+          "vendor": "AncoraThemes",
+          "versions": [
+            {
+              "lessThanOrEqual": "<= 1.5",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-22367",
+      "publishedDate": "2026-02-20T15:47:03.323Z",
+      "lastModifiedDate": "2026-02-24T20:51:00.406Z",
+      "description": "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion') vulnerability in AncoraThemes Coworking coworking allows PHP Local File Inclusion.This issue affects Coworking: from n/a through <= 1.6.1.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Theme/coworking/vulnerability/wordpress-coworking-theme-1-6-1-local-file-inclusion-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://themeforest.net",
+          "defaultStatus": "unaffected",
+          "packageName": "coworking",
+          "product": "Coworking",
+          "vendor": "AncoraThemes",
+          "versions": [
+            {
+              "lessThanOrEqual": "<= 1.6.1",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-22363",
+      "publishedDate": "2026-02-20T15:47:02.437Z",
+      "lastModifiedDate": "2026-02-24T20:51:00.543Z",
+      "description": "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion') vulnerability in axiomthemes Rhodos rhodos allows PHP Local File Inclusion.This issue affects Rhodos: from n/a through <= 1.3.3.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Theme/rhodos/vulnerability/wordpress-rhodos-theme-1-3-3-local-file-inclusion-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://themeforest.net",
+          "defaultStatus": "unaffected",
+          "packageName": "rhodos",
+          "product": "Rhodos",
+          "vendor": "axiomthemes",
+          "versions": [
+            {
+              "lessThanOrEqual": "<= 1.3.3",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-22361",
+      "publishedDate": "2026-02-20T15:47:01.916Z",
+      "lastModifiedDate": "2026-02-24T20:51:00.699Z",
+      "description": "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion') vulnerability in axiomthemes A-Mart a-mart allows PHP Local File Inclusion.This issue affects A-Mart: from n/a through <= 1.0.2.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Theme/a-mart/vulnerability/wordpress-a-mart-theme-1-0-2-local-file-inclusion-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://themeforest.net",
+          "defaultStatus": "unaffected",
+          "packageName": "a-mart",
+          "product": "A-Mart",
+          "vendor": "axiomthemes",
+          "versions": [
+            {
+              "lessThanOrEqual": "<= 1.0.2",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-22344",
+      "publishedDate": "2026-02-20T15:46:59.662Z",
+      "lastModifiedDate": "2026-02-24T20:51:00.843Z",
+      "description": "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion') vulnerability in Mikado-Themes FiveStar fivestar allows PHP Local File Inclusion.This issue affects FiveStar: from n/a through <= 1.7.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Theme/fivestar/vulnerability/wordpress-fivestar-theme-1-7-local-file-inclusion-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://themeforest.net",
+          "defaultStatus": "unaffected",
+          "packageName": "fivestar",
+          "product": "FiveStar",
+          "vendor": "Mikado-Themes",
+          "versions": [
+            {
+              "lessThanOrEqual": "<= 1.7",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-69410",
+      "publishedDate": "2026-02-20T15:46:59.059Z",
+      "lastModifiedDate": "2026-02-24T20:51:00.989Z",
+      "description": "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion') vulnerability in Edge-Themes Belletrist belletrist allows PHP Local File Inclusion.This issue affects Belletrist: from n/a through <= 1.2.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Theme/belletrist/vulnerability/wordpress-belletrist-theme-1-2-local-file-inclusion-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://themeforest.net",
+          "defaultStatus": "unaffected",
+          "packageName": "belletrist",
+          "product": "Belletrist",
+          "vendor": "Edge-Themes",
+          "versions": [
+            {
+              "lessThanOrEqual": "<= 1.2",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-69409",
+      "publishedDate": "2026-02-20T15:46:58.882Z",
+      "lastModifiedDate": "2026-02-24T20:51:01.152Z",
+      "description": "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion') vulnerability in axiomthemes PJ | Life & Business Coaching pj allows PHP Local File Inclusion.This issue affects PJ | Life & Business Coaching: from n/a through <= 3.0.0.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Theme/pj/vulnerability/wordpress-pj-life-business-coaching-theme-3-0-0-local-file-inclusion-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://themeforest.net",
+          "defaultStatus": "unaffected",
+          "packageName": "pj",
+          "product": "PJ | Life & Business Coaching",
+          "vendor": "axiomthemes",
           "versions": [
             {
               "lessThanOrEqual": "<= 3.0.0",
@@ -124,19 +656,19 @@
         }
       ],
       "problemType": [
-        "Authentication Bypass Using an Alternate Path or Channel"
+        "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-69299",
-      "publishedDate": "2026-02-20T15:46:46.533Z",
-      "lastModifiedDate": "2026-02-24T19:57:23.888Z",
-      "description": "Server-Side Request Forgery (SSRF) vulnerability in Laborator Oxygen oxygen allows Server Side Request Forgery.This issue affects Oxygen: from n/a through <= 6.0.8.",
+      "id": "CVE-2025-69408",
+      "publishedDate": "2026-02-20T15:46:58.713Z",
+      "lastModifiedDate": "2026-02-24T20:51:01.374Z",
+      "description": "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion') vulnerability in Mikado-Themes HealthFirst healthfirst allows PHP Local File Inclusion.This issue affects HealthFirst: from n/a through <= 1.0.1.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://patchstack.com/database/Wordpress/Theme/oxygen/vulnerability/wordpress-oxygen-theme-6-0-8-server-side-request-forgery-ssrf-vulnerability?_s_id=cve",
+          "url": "https://patchstack.com/database/Wordpress/Theme/healthfirst/vulnerability/wordpress-healthfirst-theme-1-0-1-local-file-inclusion-vulnerability?_s_id=cve",
           "type": "reference"
         }
       ],
@@ -144,12 +676,12 @@
         {
           "collectionURL": "https://themeforest.net",
           "defaultStatus": "unaffected",
-          "packageName": "oxygen",
-          "product": "Oxygen",
-          "vendor": "Laborator",
+          "packageName": "healthfirst",
+          "product": "HealthFirst",
+          "vendor": "Mikado-Themes",
           "versions": [
             {
-              "lessThanOrEqual": "<= 6.0.8",
+              "lessThanOrEqual": "<= 1.0.1",
               "status": "affected",
               "version": "n/a",
               "versionType": "custom"
@@ -158,19 +690,359 @@
         }
       ],
       "problemType": [
-        "Server-Side Request Forgery (SSRF)"
+        "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-23803",
-      "publishedDate": "2026-02-19T08:26:50.148Z",
-      "lastModifiedDate": "2026-02-24T19:57:55.720Z",
-      "description": "Server-Side Request Forgery (SSRF) vulnerability in Burhan Nasir Smart Auto Upload Images smart-auto-upload-images allows Server Side Request Forgery.This issue affects Smart Auto Upload Images: from n/a through <= 1.2.2.",
+      "id": "CVE-2025-69407",
+      "publishedDate": "2026-02-20T15:46:58.538Z",
+      "lastModifiedDate": "2026-02-24T20:51:01.621Z",
+      "description": "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion') vulnerability in Select-Themes Struktur struktur allows PHP Local File Inclusion.This issue affects Struktur: from n/a through <= 2.5.1.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://patchstack.com/database/Wordpress/Plugin/smart-auto-upload-images/vulnerability/wordpress-smart-auto-upload-images-plugin-1-2-2-server-side-request-forgery-ssrf-vulnerability?_s_id=cve",
+          "url": "https://patchstack.com/database/Wordpress/Theme/struktur/vulnerability/wordpress-struktur-theme-2-5-1-local-file-inclusion-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://themeforest.net",
+          "defaultStatus": "unaffected",
+          "packageName": "struktur",
+          "product": "Struktur",
+          "vendor": "Select-Themes",
+          "versions": [
+            {
+              "lessThanOrEqual": "<= 2.5.1",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-69406",
+      "publishedDate": "2026-02-20T15:46:58.338Z",
+      "lastModifiedDate": "2026-02-24T20:51:01.980Z",
+      "description": "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion') vulnerability in ThemeREX FreightCo freightco allows PHP Local File Inclusion.This issue affects FreightCo: from n/a through <= 1.1.7.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Theme/freightco/vulnerability/wordpress-freightco-theme-1-1-7-local-file-inclusion-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://themeforest.net",
+          "defaultStatus": "unaffected",
+          "packageName": "freightco",
+          "product": "FreightCo",
+          "vendor": "ThemeREX",
+          "versions": [
+            {
+              "lessThanOrEqual": "<= 1.1.7",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-69402",
+      "publishedDate": "2026-02-20T15:46:57.536Z",
+      "lastModifiedDate": "2026-02-24T20:51:02.244Z",
+      "description": "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion') vulnerability in ThemeREX R&F rf allows PHP Local File Inclusion.This issue affects R&F: from n/a through <= 1.5.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Theme/rf/vulnerability/wordpress-r-f-theme-1-5-local-file-inclusion-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://themeforest.net",
+          "defaultStatus": "unaffected",
+          "packageName": "rf",
+          "product": "R&F",
+          "vendor": "ThemeREX",
+          "versions": [
+            {
+              "lessThanOrEqual": "<= 1.5",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-69400",
+      "publishedDate": "2026-02-20T15:46:57.137Z",
+      "lastModifiedDate": "2026-02-24T20:51:02.474Z",
+      "description": "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion') vulnerability in ThemeREX Yokoo yokoo allows PHP Local File Inclusion.This issue affects Yokoo: from n/a through <= 1.1.11.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Theme/yokoo/vulnerability/wordpress-yokoo-theme-1-1-11-local-file-inclusion-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://themeforest.net",
+          "defaultStatus": "unaffected",
+          "packageName": "yokoo",
+          "product": "Yokoo",
+          "vendor": "ThemeREX",
+          "versions": [
+            {
+              "lessThanOrEqual": "<= 1.1.11",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-69399",
+      "publishedDate": "2026-02-20T15:46:56.948Z",
+      "lastModifiedDate": "2026-02-24T20:51:02.652Z",
+      "description": "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion') vulnerability in ThemeREX Cobble cobble allows PHP Local File Inclusion.This issue affects Cobble: from n/a through <= 1.7.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Theme/cobble/vulnerability/wordpress-cobble-theme-1-7-local-file-inclusion-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://themeforest.net",
+          "defaultStatus": "unaffected",
+          "packageName": "cobble",
+          "product": "Cobble",
+          "vendor": "ThemeREX",
+          "versions": [
+            {
+              "lessThanOrEqual": "<= 1.7",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-69398",
+      "publishedDate": "2026-02-20T15:46:56.752Z",
+      "lastModifiedDate": "2026-02-24T20:51:02.811Z",
+      "description": "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion') vulnerability in ThemeREX Plank plank allows PHP Local File Inclusion.This issue affects Plank: from n/a through <= 1.7.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Theme/plank/vulnerability/wordpress-plank-theme-1-7-local-file-inclusion-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://themeforest.net",
+          "defaultStatus": "unaffected",
+          "packageName": "plank",
+          "product": "Plank",
+          "vendor": "ThemeREX",
+          "versions": [
+            {
+              "lessThanOrEqual": "<= 1.7",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-69397",
+      "publishedDate": "2026-02-20T15:46:56.567Z",
+      "lastModifiedDate": "2026-02-24T20:51:03.011Z",
+      "description": "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion') vulnerability in ThemeREX Tint tint allows PHP Local File Inclusion.This issue affects Tint: from n/a through <= 1.7.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Theme/tint/vulnerability/wordpress-tint-theme-1-7-local-file-inclusion-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://themeforest.net",
+          "defaultStatus": "unaffected",
+          "packageName": "tint",
+          "product": "Tint",
+          "vendor": "ThemeREX",
+          "versions": [
+            {
+              "lessThanOrEqual": "<= 1.7",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-69396",
+      "publishedDate": "2026-02-20T15:46:56.394Z",
+      "lastModifiedDate": "2026-02-24T20:51:03.165Z",
+      "description": "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion') vulnerability in ThemeREX Splendour splendour allows PHP Local File Inclusion.This issue affects Splendour: from n/a through <= 1.23.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Theme/splendour/vulnerability/wordpress-splendour-theme-1-23-local-file-inclusion-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://themeforest.net",
+          "defaultStatus": "unaffected",
+          "packageName": "splendour",
+          "product": "Splendour",
+          "vendor": "ThemeREX",
+          "versions": [
+            {
+              "lessThanOrEqual": "<= 1.23",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-69395",
+      "publishedDate": "2026-02-20T15:46:56.223Z",
+      "lastModifiedDate": "2026-02-24T20:51:03.370Z",
+      "description": "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion') vulnerability in ThemeREX Gable gable allows PHP Local File Inclusion.This issue affects Gable: from n/a through <= 1.5.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Theme/gable/vulnerability/wordpress-gable-theme-1-5-local-file-inclusion-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://themeforest.net",
+          "defaultStatus": "unaffected",
+          "packageName": "gable",
+          "product": "Gable",
+          "vendor": "ThemeREX",
+          "versions": [
+            {
+              "lessThanOrEqual": "<= 1.5",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-69375",
+      "publishedDate": "2026-02-20T15:46:52.069Z",
+      "lastModifiedDate": "2026-02-24T20:51:03.533Z",
+      "description": "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion') vulnerability in SolverWp Portfolio Builder swp-portfolio allows PHP Local File Inclusion.This issue affects Portfolio Builder: from n/a through <= 1.2.5.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Plugin/swp-portfolio/vulnerability/wordpress-portfolio-builder-plugin-1-2-5-local-file-inclusion-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://codecanyon.net",
+          "defaultStatus": "unaffected",
+          "packageName": "swp-portfolio",
+          "product": "Portfolio Builder",
+          "vendor": "SolverWp",
+          "versions": [
+            {
+              "lessThanOrEqual": "<= 1.2.5",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-69374",
+      "publishedDate": "2026-02-20T15:46:51.890Z",
+      "lastModifiedDate": "2026-02-24T20:51:03.717Z",
+      "description": "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion') vulnerability in SolverWp Eleblog – Elementor Blog And Magazine Addons ele-blog allows PHP Local File Inclusion.This issue affects Eleblog – Elementor Blog And Magazine Addons: from n/a through <= 2.0.3.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Plugin/ele-blog/vulnerability/wordpress-eleblog-elementor-blog-and-magazine-addons-plugin-2-0-3-local-file-inclusion-vulnerability?_s_id=cve",
           "type": "reference"
         }
       ],
@@ -178,18 +1050,12 @@
         {
           "collectionURL": "https://wordpress.org/plugins",
           "defaultStatus": "unaffected",
-          "packageName": "smart-auto-upload-images",
-          "product": "Smart Auto Upload Images",
-          "vendor": "Burhan Nasir",
+          "packageName": "ele-blog",
+          "product": "Eleblog – Elementor Blog And Magazine Addons",
+          "vendor": "SolverWp",
           "versions": [
             {
-              "changes": [
-                {
-                  "at": "1.2.3",
-                  "status": "unaffected"
-                }
-              ],
-              "lessThanOrEqual": "<= 1.2.2",
+              "lessThanOrEqual": "<= 2.0.3",
               "status": "affected",
               "version": "n/a",
               "versionType": "custom"
@@ -198,7 +1064,441 @@
         }
       ],
       "problemType": [
-        "Server-Side Request Forgery (SSRF)"
+        "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-69322",
+      "publishedDate": "2026-02-20T15:46:48.754Z",
+      "lastModifiedDate": "2026-02-24T20:51:03.943Z",
+      "description": "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion') vulnerability in fuelthemes PeakShops peakshops allows PHP Local File Inclusion.This issue affects PeakShops: from n/a through < 1.5.9.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Theme/peakshops/vulnerability/wordpress-peakshops-theme-1-5-9-local-file-inclusion-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://themeforest.net",
+          "defaultStatus": "unaffected",
+          "packageName": "peakshops",
+          "product": "PeakShops",
+          "vendor": "fuelthemes",
+          "versions": [
+            {
+              "changes": [
+                {
+                  "at": "1.5.9",
+                  "status": "unaffected"
+                }
+              ],
+              "lessThanOrEqual": "< 1.5.9",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-68543",
+      "publishedDate": "2026-02-20T15:46:40.451Z",
+      "lastModifiedDate": "2026-02-24T20:51:07.084Z",
+      "description": "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion') vulnerability in thembay Diza diza allows PHP Local File Inclusion.This issue affects Diza: from n/a through <= 1.3.15.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Theme/diza/vulnerability/wordpress-diza-theme-1-3-15-local-file-inclusion-vulnerability-2?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://themeforest.net",
+          "defaultStatus": "unaffected",
+          "packageName": "diza",
+          "product": "Diza",
+          "vendor": "thembay",
+          "versions": [
+            {
+              "changes": [
+                {
+                  "at": "1.3.16",
+                  "status": "unaffected"
+                }
+              ],
+              "lessThanOrEqual": "<= 1.3.15",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-68539",
+      "publishedDate": "2026-02-20T15:46:39.873Z",
+      "lastModifiedDate": "2026-02-24T20:51:06.923Z",
+      "description": "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion') vulnerability in thembay Fana fana allows PHP Local File Inclusion.This issue affects Fana: from n/a through <= 1.1.35.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Theme/fana/vulnerability/wordpress-fana-theme-1-1-35-local-file-inclusion-vulnerability-2?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://wordpress.org/plugins",
+          "defaultStatus": "unaffected",
+          "packageName": "fana",
+          "product": "Fana",
+          "vendor": "thembay",
+          "versions": [
+            {
+              "changes": [
+                {
+                  "at": "1.1.36",
+                  "status": "unaffected"
+                }
+              ],
+              "lessThanOrEqual": "<= 1.1.35",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-68536",
+      "publishedDate": "2026-02-20T15:46:39.679Z",
+      "lastModifiedDate": "2026-02-24T20:51:06.751Z",
+      "description": "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion') vulnerability in thembay Zota zota allows PHP Local File Inclusion.This issue affects Zota: from n/a through <= 1.3.14.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Theme/zota/vulnerability/wordpress-zota-theme-1-3-14-local-file-inclusion-vulnerability-2?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://wordpress.org/plugins",
+          "defaultStatus": "unaffected",
+          "packageName": "zota",
+          "product": "Zota",
+          "vendor": "thembay",
+          "versions": [
+            {
+              "changes": [
+                {
+                  "at": "1.3.15",
+                  "status": "unaffected"
+                }
+              ],
+              "lessThanOrEqual": "<= 1.3.14",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-67992",
+      "publishedDate": "2026-02-20T15:46:32.513Z",
+      "lastModifiedDate": "2026-02-24T20:51:06.557Z",
+      "description": "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion') vulnerability in LoftOcean PatioTime patiotime allows PHP Local File Inclusion.This issue affects PatioTime: from n/a through < 2.1.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Theme/patiotime/vulnerability/wordpress-patiotime-theme-2-1-local-file-inclusion-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://themeforest.net",
+          "defaultStatus": "unaffected",
+          "packageName": "patiotime",
+          "product": "PatioTime",
+          "vendor": "LoftOcean",
+          "versions": [
+            {
+              "changes": [
+                {
+                  "at": "2.1",
+                  "status": "unaffected"
+                }
+              ],
+              "lessThanOrEqual": "< 2.1",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-67988",
+      "publishedDate": "2026-02-20T15:46:31.946Z",
+      "lastModifiedDate": "2026-02-24T20:51:06.372Z",
+      "description": "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion') vulnerability in LoftOcean CozyStay cozystay allows PHP Local File Inclusion.This issue affects CozyStay: from n/a through < 1.9.1.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Theme/cozystay/vulnerability/wordpress-cozystay-theme-1-9-1-local-file-inclusion-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://themeforest.net",
+          "defaultStatus": "unaffected",
+          "packageName": "cozystay",
+          "product": "CozyStay",
+          "vendor": "LoftOcean",
+          "versions": [
+            {
+              "changes": [
+                {
+                  "at": "1.9.1",
+                  "status": "unaffected"
+                }
+              ],
+              "lessThanOrEqual": "< 1.9.1",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-67982",
+      "publishedDate": "2026-02-20T15:46:31.376Z",
+      "lastModifiedDate": "2026-02-24T20:51:06.097Z",
+      "description": "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion') vulnerability in thembay Urna urna allows PHP Local File Inclusion.This issue affects Urna: from n/a through <= 2.5.12.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Theme/urna/vulnerability/wordpress-urna-theme-2-5-12-local-file-inclusion-vulnerability-2?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://wordpress.org/plugins",
+          "defaultStatus": "unaffected",
+          "packageName": "urna",
+          "product": "Urna",
+          "vendor": "thembay",
+          "versions": [
+            {
+              "changes": [
+                {
+                  "at": "2.5.13",
+                  "status": "unaffected"
+                }
+              ],
+              "lessThanOrEqual": "<= 2.5.12",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-67981",
+      "publishedDate": "2026-02-20T15:46:31.208Z",
+      "lastModifiedDate": "2026-02-24T20:51:05.942Z",
+      "description": "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion') vulnerability in thembay Besa besa allows PHP Local File Inclusion.This issue affects Besa: from n/a through <= 2.3.15.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Theme/besa/vulnerability/wordpress-besa-theme-2-3-15-local-file-inclusion-vulnerability-2?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://wordpress.org/plugins",
+          "defaultStatus": "unaffected",
+          "packageName": "besa",
+          "product": "Besa",
+          "vendor": "thembay",
+          "versions": [
+            {
+              "changes": [
+                {
+                  "at": "2.3.16",
+                  "status": "unaffected"
+                }
+              ],
+              "lessThanOrEqual": "<= 2.3.15",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-67980",
+      "publishedDate": "2026-02-20T15:46:31.029Z",
+      "lastModifiedDate": "2026-02-24T20:51:04.121Z",
+      "description": "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion') vulnerability in thembay Hara hara allows PHP Local File Inclusion.This issue affects Hara: from n/a through <= 1.2.17.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Theme/hara/vulnerability/wordpress-hara-theme-1-2-17-local-file-inclusion-vulnerability-2?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://wordpress.org/plugins",
+          "defaultStatus": "unaffected",
+          "packageName": "hara",
+          "product": "Hara",
+          "vendor": "thembay",
+          "versions": [
+            {
+              "changes": [
+                {
+                  "at": "1.2.18",
+                  "status": "unaffected"
+                }
+              ],
+              "lessThanOrEqual": "<= 1.2.17",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-60087",
+      "publishedDate": "2026-02-20T15:46:27.515Z",
+      "lastModifiedDate": "2026-02-24T20:51:04.478Z",
+      "description": "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion') vulnerability in Nenad Obradovic Extensive VC Addons for WPBakery page builder extensive-vc-addon allows PHP Local File Inclusion.This issue affects Extensive VC Addons for WPBakery page builder: from n/a through <= 1.9.1.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Plugin/extensive-vc-addon/vulnerability/wordpress-extensive-vc-addons-for-wpbakery-page-builder-plugin-1-9-1-local-file-inclusion-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://wordpress.org/plugins",
+          "defaultStatus": "unaffected",
+          "packageName": "extensive-vc-addon",
+          "product": "Extensive VC Addons for WPBakery page builder",
+          "vendor": "Nenad Obradovic",
+          "versions": [
+            {
+              "lessThanOrEqual": "<= 1.9.1",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-22333",
+      "publishedDate": "2026-02-19T08:26:47.849Z",
+      "lastModifiedDate": "2026-02-24T20:52:27.444Z",
+      "description": "Deserialization of Untrusted Data vulnerability in YITHEMES YITH WooCommerce Compare yith-woocommerce-compare allows Object Injection.This issue affects YITH WooCommerce Compare: from n/a through <= 3.6.0.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Plugin/yith-woocommerce-compare/vulnerability/wordpress-yith-woocommerce-compare-plugin-3-6-0-deserialization-of-untrusted-data-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://wordpress.org/plugins",
+          "defaultStatus": "unaffected",
+          "packageName": "yith-woocommerce-compare",
+          "product": "YITH WooCommerce Compare",
+          "vendor": "YITHEMES",
+          "versions": [
+            {
+              "changes": [
+                {
+                  "at": "3.7.0",
+                  "status": "unaffected"
+                }
+              ],
+              "lessThanOrEqual": "<= 3.6.0",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Deserialization of Untrusted Data"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
