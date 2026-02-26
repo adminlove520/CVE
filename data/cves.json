@@ -2,1034 +2,281 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 18,
-    "last_updated": "2026-02-26T20:54:37.839192",
+    "total_count": 7,
+    "last_updated": "2026-02-26T21:35:59.630519",
     "severity_distribution": {
       "critical": 0,
-      "high": 2,
-      "medium": 0,
+      "high": 0,
+      "medium": 2,
       "low": 0,
-      "none": 16
+      "none": 5
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-26955",
-      "publishedDate": "2026-02-25T20:47:14.660Z",
-      "lastModifiedDate": "2026-02-26T20:30:46.008Z",
-      "description": "FreeRDP is a free implementation of the Remote Desktop Protocol. Prior to version 3.23.0, a malicious RDP server can trigger a heap buffer overflow in FreeRDP clients using the GDI surface pipeline (e.g., `xfreerdp`) by sending an RDPGFX ClearCodec surface command with an out-of-bounds destination rectangle. The `gdi_SurfaceCommand_ClearCodec()` handler does not call `is_within_surface()` to validate the command rectangle against the destination surface dimensions, allowing attacker-controlled `cmd->left`/`cmd->top` (and subcodec rectangle offsets) to reach image copy routines that write into `surface->data` without bounds enforcement. The OOB write corrupts an adjacent `gdiGfxSurface` struct's `codecs*` pointer with attacker-controlled pixel data, and corruption of `codecs*` is sufficient to reach an indirect function pointer call (`NSC_CONTEXT.decode` at `nsc.c:500`) on a subsequent codec command — full instruction pointer (RIP) control demonstrated in exploitability harness. Users should upgrade to version 3.23.0 to receive a patch.",
-      "severity": 8.8,
+      "id": "CVE-2026-27521",
+      "publishedDate": "2026-02-24T15:08:14.170Z",
+      "lastModifiedDate": "2026-02-26T21:19:50.599Z",
+      "description": "Binardat 10G08-0800GSM network switch firmware version V300SP10260209 and prior do not implement rate limiting or account lockout on failed login attempts, enabling brute-force attacks against user credentials.",
+      "severity": 6.5,
       "references": [
         {
-          "url": "https://github.com/FreeRDP/FreeRDP/security/advisories/GHSA-mr6w-ch7c-mqqj",
+          "url": "https://www.binardat.com/products/8-port-10-gigabit-sfp-managed-switch,-support-1g-sfp-and-10g-sfp-module,-160gbps-bandwidth,-l3-web-managed,-metal-fanless-fiber-binardat-network-switch",
           "type": "reference"
         },
         {
-          "url": "https://github.com/FreeRDP/FreeRDP/commit/7d8fdce2d0ef337cb86cb37fc0c436c905e04d77",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "FreeRDP",
-          "product": "FreeRDP",
-          "versions": [
-            {
-              "version": "< 3.23.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-787: Out-of-bounds Write"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-27819",
-      "publishedDate": "2026-02-25T21:40:38.703Z",
-      "lastModifiedDate": "2026-02-26T20:24:45.237Z",
-      "description": "Vikunja is an open-source self-hosted task management platform. Prior to version 2.0.0, the restoreConfig function in vikunja/pkg/modules/dump/restore.go of the go-vikunja/vikunja repository fails to sanitize file paths within the provided ZIP archive. A maliciously crafted ZIP can bypass the intended extraction directory to overwrite arbitrary files on the host system. Additionally, we’ve discovered that a malformed archive triggers a runtime panic, crashing the process immediately after the database has been wiped permanently. The application trusts the metadata in the ZIP archive. It uses the Name attribute of the zip.File struct directly in os.OpenFile calls without validation, allowing files to be written outside the intended directory. The restoration logic assumes a specific directory structure within the ZIP. When provided with a \"minimalist\" malicious ZIP, the application fails to validate the length of slices derived from the archive contents. Specifically, at line 154, the code attempts to access an index of len(ms)-2 on an insufficiently populated slice, triggering a panic. Version 2.0.0 fixes the issue.",
-      "severity": 7.2,
-      "references": [
-        {
-          "url": "https://github.com/go-vikunja/vikunja/security/advisories/GHSA-42wg-38gx-85rh",
-          "type": "reference"
-        },
-        {
-          "url": "https://vikunja.io/changelog/vikunja-v2.0.0-was-released",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "go-vikunja",
-          "product": "vikunja",
-          "versions": [
-            {
-              "version": "< 2.0.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')",
-        "CWE-248: Uncaught Exception"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-22205",
-      "publishedDate": "2026-02-26T20:18:14.748Z",
-      "lastModifiedDate": "2026-02-26T20:18:14.748Z",
-      "description": "SPIP versions prior to 4.4.10 contain an authentication bypass vulnerability caused by PHP type juggling that allows unauthenticated attackers to access protected information. Attackers can exploit loose type comparisons in authentication logic to bypass login verification and retrieve sensitive internal data.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://blog.spip.net/Mise-a-jour-de-securite-sortie-de-SPIP-4-4-10.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.spip.net/spip/spip",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/spip-sql-injection-rce-via-union-php-tags",
+          "url": "https://www.vulncheck.com/advisories/binardat-10g08-0800gsm-network-switch-missing-login-rate-limiting",
           "type": "reference"
         }
       ],
       "affected": [
         {
           "defaultStatus": "unaffected",
-          "product": "SPIP",
-          "repo": "https://git.spip.net/spip/spip",
-          "vendor": "SPIP",
+          "product": "10G08-0800GSM Network Switch",
+          "vendor": "Binardat Ltd.",
           "versions": [
             {
-              "lessThan": "4.4.10",
+              "lessThanOrEqual": "V300SP10260209",
               "status": "affected",
               "version": "0",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-307 Improper Restriction of Excessive Authentication Attempts"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-27612",
+      "publishedDate": "2026-02-25T02:38:05.548Z",
+      "lastModifiedDate": "2026-02-26T21:19:56.136Z",
+      "description": "Repostat is a React component to fetch and display GitHub repository info. Prior to version 1.0.1, the `RepoCard` component is vulnerable to Reflected Cross-Site Scripting (XSS). The vulnerability occurs because the component uses React's `dangerouslySetInnerHTML` to render the repository name (`repo` prop) during the loading state without any sanitization. If a developer using this package passes unvalidated user input directly into the `repo` prop (for example, reading it from a URL query parameter), an attacker can execute arbitrary JavaScript in the context of the user's browser. In version 1.0.1, the use of dangerouslySetInnerHTML has been removed, and the repo prop is now safely rendered using standard React JSX data binding, which automatically escapes HTML entities.",
+      "severity": 6.1,
+      "references": [
+        {
+          "url": "https://github.com/denpiligrim/repostat/security/advisories/GHSA-fm8c-6m29-rp6j",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/denpiligrim/repostat/commit/715df5f73359d222fd7876e948d14290180e3c88",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "denpiligrim",
+          "product": "repostat",
+          "versions": [
+            {
+              "version": "< 1.0.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-28218",
+      "publishedDate": "2026-02-26T21:23:32.354Z",
+      "lastModifiedDate": "2026-02-26T21:23:32.354Z",
+      "description": "Discourse is an open source discussion platform. Prior to versions 2025.12.2, 2026.1.1, and 2026.2.0, fail-open access control in Data Explorer plugin allows any authenticated user to execute SQL queries that have no explicit group assignments, including built-in system queries. Versions 2025.12.2, 2026.1.1, and 2026.2.0 patch the issue. As a workaround, either explicitly set group permissions on each Data Explorer query that doesn't have permissions, or disable discourse-data-explorer plugin.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/discourse/discourse/security/advisories/GHSA-jxrc-72mr-mfh5",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "discourse",
+          "product": "discourse",
+          "versions": [
+            {
+              "version": "< 2025.12.2",
+              "status": "affected"
+            },
+            {
+              "version": ">= 2026.1.0-latest, < 2026.1.1",
+              "status": "affected"
+            },
+            {
+              "version": ">= 2026.2.0-latest, < 2026.2.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-284: Improper Access Control"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-27154",
+      "publishedDate": "2026-02-26T21:20:25.181Z",
+      "lastModifiedDate": "2026-02-26T21:20:25.181Z",
+      "description": "Discourse is an open source discussion platform. Prior to versions 2025.12.2, 2026.1.1, and 2026.2.0, a user full name can be evaluated as raw HTML when the following settings are set: `display_name_on_posts` => true; and `prioritize_username_in_ux` => false. Editing a post of a malicious user would trigger an XSS. Versions 2025.12.2, 2026.1.1, and 2026.2.0 patch the issue. No known workarounds are available.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/discourse/discourse/security/advisories/GHSA-xv43-5gcp-wgw8",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "discourse",
+          "product": "discourse",
+          "versions": [
+            {
+              "version": "< 2025.12.2",
+              "status": "affected"
+            },
+            {
+              "version": ">= 2026.1.0-latest, < 2026.1.1",
+              "status": "affected"
+            },
+            {
+              "version": ">= 2026.2.0-latest, < 2026.2.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-27153",
+      "publishedDate": "2026-02-26T21:16:41.077Z",
+      "lastModifiedDate": "2026-02-26T21:18:26.613Z",
+      "description": "Discourse is an open source discussion platform. Prior to versions 2025.12.2, 2026.1.1, and 2026.2.0, moderators could export user Chat DMs via the CSV export endpoint by exploiting an overly permissive allowlist in `can_export_entity?`. The method allowed moderators to export any entity not explicitly blocked instead of restricting to an explicit allowlist. Versions 2025.12.2, 2026.1.1, and 2026.2.0 patch the issue. No known workarounds are available.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/discourse/discourse/security/advisories/GHSA-5cp2-jq8m-33mf",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "discourse",
+          "product": "discourse",
+          "versions": [
+            {
+              "version": "< 2025.12.2",
+              "status": "affected"
+            },
+            {
+              "version": ">= 2026.1.0-latest, < 2026.1.1",
+              "status": "affected"
+            },
+            {
+              "version": ">= 2026.2.0-latest, < 2026.2.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-863: Incorrect Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-27510",
+      "publishedDate": "2026-02-26T18:56:56.654Z",
+      "lastModifiedDate": "2026-02-26T21:10:20.489Z",
+      "description": "Unitree Go2 firmware versions 1.1.7 through 1.1.11, when used with the Unitree Go2 Android application (com.unitree.doggo2), are vulnerable to remote code execution due to missing integrity protection and validation of user-created programmes. The Android application stores programs in a local SQLite database (unitree_go2.db, table dog_programme) and transmits the programme_text content, including the pyCode field, to the robot. The robot's actuator_manager.py executes the supplied Python as root without integrity verification or content validation. An attacker with local access to the Android device can tamper with the stored programme record to inject arbitrary Python that executes when the user triggers the program via a controller keybinding, and the malicious binding persists across reboots. Additionally, a malicious program shared through the application's community marketplace can result in arbitrary code execution on any robot that imports and runs it.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://boschko.ca/unitree-go2-rce/",
+          "type": "poc"
+        },
+        {
+          "url": "https://shop.unitree.com/products/unitree-go2",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/unitree-go2-mobile-program-tampering-enables-root-rce",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Unitree Go2",
+          "vendor": "UnitreeRobotics",
+          "versions": [
+            {
+              "lessThanOrEqual": "1.1.9",
+              "status": "affected",
+              "version": "1.1.7",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "1.1.11",
               "versionType": "semver"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-288 Authentication Bypass Using an Alternate Path or Channel"
+        "CWE-345 Insufficient Verification of Data Authenticity"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-22206",
-      "publishedDate": "2026-02-26T20:17:58.443Z",
-      "lastModifiedDate": "2026-02-26T20:17:58.443Z",
-      "description": "SPIP versions prior to 4.4.10 contain a SQL injection vulnerability that allows authenticated low-privilege users to execute arbitrary SQL queries by manipulating union-based injection techniques. Attackers can exploit this SQL injection flaw combined with PHP tag processing to achieve remote code execution on the server.",
+      "id": "CVE-2026-27585",
+      "publishedDate": "2026-02-24T16:06:05.030Z",
+      "lastModifiedDate": "2026-02-26T21:17:36.422Z",
+      "description": "Caddy is an extensible server platform that uses TLS by default. Prior to version 2.11.1, the path sanitization routine in file matcher doesn't sanitize backslashes which can lead to bypassing path related security protections. It affects users with specific Caddy and environment configurations. Version 2.11.1 fixes the issue.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://blog.spip.net/Mise-a-jour-de-securite-sortie-de-SPIP-4-4-10.html",
+          "url": "https://github.com/caddyserver/caddy/security/advisories/GHSA-4xrr-hq4w-6vf4",
           "type": "reference"
         },
         {
-          "url": "https://git.spip.net/spip/spip",
+          "url": "https://github.com/caddyserver/caddy/blob/68d50020eef0d4c3398b878f17c8092ca5b58ca0/modules/caddyhttp/fileserver/matcher.go#L361",
           "type": "reference"
         },
         {
-          "url": "https://www.vulncheck.com/advisories/spip-sql-injection-rce-via-union-php-tags",
+          "url": "https://github.com/caddyserver/caddy/blob/68d50020eef0d4c3398b878f17c8092ca5b58ca0/modules/caddyhttp/fileserver/matcher.go#L398",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/caddyserver/caddy/releases/tag/v2.11.1",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "unaffected",
-          "product": "SPIP",
-          "repo": "https://git.spip.net/spip/spip",
-          "vendor": "SPIP",
+          "vendor": "caddyserver",
+          "product": "caddy",
           "versions": [
             {
-              "lessThan": "4.4.10",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-23939",
-      "publishedDate": "2026-02-26T19:41:18.762Z",
-      "lastModifiedDate": "2026-02-26T20:24:24.772Z",
-      "description": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability in hexpm hexpm/hexpm ('Elixir.Hexpm.Store.Local' module) allows Relative Path Traversal. This vulnerability is associated with program files lib/hexpm/store/local.ex and program routines 'Elixir.Hexpm.Store.Local':get/3, 'Elixir.Hexpm.Store.Local':put/4, 'Elixir.Hexpm.Store.Local':delete/2, 'Elixir.Hexpm.Store.Local':delete_many/2.\n\nThis issue does NOT affect hex.pm the service. Only self-hosted deployments using the Local Storage backend are affected.\n\nThis issue affects hexpm: from 931ee0ed46fa89218e0400a4f6e6d15f96406050 before 5d2ccd2f14f45a63225a73fb5b1c937baf36fdc0.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/hexpm/hexpm/security/advisories/GHSA-42mv-r64p-4869",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/hexpm/hexpm/commit/5d2ccd2f14f45a63225a73fb5b1c937baf36fdc0",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://github.com",
-          "cpes": [
-            "cpe:2.3:a:hexpm:hexpm:*:*:*:*:*:*:*:*"
-          ],
-          "defaultStatus": "unaffected",
-          "modules": [
-            "'Elixir.Hexpm.Store.Local'"
-          ],
-          "packageName": "hexpm/hexpm",
-          "packageURL": "pkg:github/hexpm/hexpm",
-          "product": "hexpm",
-          "programFiles": [
-            "lib/hexpm/store/local.ex"
-          ],
-          "programRoutines": [
-            {
-              "name": "'Elixir.Hexpm.Store.Local':get/3"
-            },
-            {
-              "name": "'Elixir.Hexpm.Store.Local':put/4"
-            },
-            {
-              "name": "'Elixir.Hexpm.Store.Local':delete/2"
-            },
-            {
-              "name": "'Elixir.Hexpm.Store.Local':delete_many/2"
-            }
-          ],
-          "repo": "https://github.com/hexpm/hexpm.git",
-          "vendor": "hexpm",
-          "versions": [
-            {
-              "lessThan": "5d2ccd2f14f45a63225a73fb5b1c937baf36fdc0",
-              "status": "affected",
-              "version": "931ee0ed46fa89218e0400a4f6e6d15f96406050",
-              "versionType": "git"
-            },
-            {
-              "lessThan": "pkg:github/hexpm/hexpm@5d2ccd2f14f45a63225a73fb5b1c937baf36fdc0",
-              "status": "affected",
-              "version": "pkg:github/hexpm/hexpm@931ee0ed46fa89218e0400a4f6e6d15f96406050",
-              "versionType": "purl"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-22 Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-27613",
-      "publishedDate": "2026-02-25T22:58:16.358Z",
-      "lastModifiedDate": "2026-02-26T20:22:22.813Z",
-      "description": "TinyWeb is a web server (HTTP, HTTPS) written in Delphi for Win32. A vulnerability in versions prior to 2.01 allows unauthenticated remote attackers to bypass the web server's CGI parameter security controls. Depending on the server configuration and the specific CGI executable in use, the impact is either source code disclosure or remote code execution (RCE). Anyone hosting CGI scripts (particularly interpreted languages like PHP) using vulnerable versions of TinyWeb is impacted. The problem has been patched in version 2.01. If upgrading is not immediately possible, ensure `STRICT_CGI_PARAMS` is enabled (it is defined by default in `define.inc`) and/or do not use CGI executables that natively accept dangerous command-line flags (such as `php-cgi.exe`). If hosting PHP, consider placing the server behind a Web Application Firewall (WAF) that explicitly blocks URL query string parameters that begin with a hyphen (`-`) or contain encoded double quotes (`%22`).",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/maximmasiutin/TinyWeb/security/advisories/GHSA-rfx5-fh9m-9jj9",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/maximmasiutin/TinyWeb/commit/d9dbda8db49da69d2160e1c527e782b73b5ffb6b",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/maximmasiutin/TinyWeb/releases/tag/v2.01",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.masiutin.net/tinyweb-cve-2026-27613.html",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "maximmasiutin",
-          "product": "TinyWeb",
-          "versions": [
-            {
-              "version": "< 2.01",
+              "version": "< 2.11.1",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')",
-        "CWE-88: Improper Neutralization of Argument Delimiters in a Command ('Argument Injection')"
+        "CWE-20: Improper Input Validation"
       ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-27498",
-      "publishedDate": "2026-02-25T22:42:21.618Z",
-      "lastModifiedDate": "2026-02-26T20:21:05.587Z",
-      "description": "n8n is an open source workflow automation platform. Prior to versions 2.2.0 and 1.123.8, an authenticated user with permission to create or modify workflows could chain the Read/Write Files from Disk node with git operations to achieve remote code execution. By writing to specific configuration files and then triggering a git operation, the attacker could execute arbitrary shell commands on the n8n host. The issue has been fixed in n8n versions 2.2.0 and 1.123.8. Users should upgrade to one of these versions or later to remediate the vulnerability. If upgrading is not immediately possible, administrators should consider the following temporary mitigations. Limit workflow creation and editing permissions to fully trusted users only, and/or disable the Read/Write Files from Disk node by adding `n8n-nodes-base.readWriteFile` to the `NODES_EXCLUDE` environment variable. These workarounds do not fully remediate the risk and should only be used as short-term mitigation measures.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/n8n-io/n8n/security/advisories/GHSA-x2mw-7j39-93xq",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/n8n-io/n8n/commit/97365caf253978ba8e46d7bc53fa7ac3b6f67b32",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/n8n-io/n8n/commit/e22acaab3dcb2004e5fe0bf9ef2db975bde61866",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/n8n-io/n8n/releases/tag/n8n@1.123.8",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/n8n-io/n8n/releases/tag/n8n@2.2.0",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n8n-io",
-          "product": "n8n",
-          "versions": [
-            {
-              "version": "< 1.123.8",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.0.0, < 2.2.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-94: Improper Control of Generation of Code ('Code Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-27578",
-      "publishedDate": "2026-02-25T22:40:38.606Z",
-      "lastModifiedDate": "2026-02-26T20:16:20.758Z",
-      "description": "n8n is an open source workflow automation platform. Prior to versions 2.10.1, 2.9.3, and 1.123.22, an authenticated user with permission to create or modify workflows could inject arbitrary scripts into pages rendered by the n8n application using different techniques on various nodes (Form Trigger node, Chat Trigger node, Send & Wait node, Webhook Node, and Chat Node). Scripts injected by a malicious workflow execute in the browser of any user who visits the affected page, enabling session hijacking and account takeover. The issues have been fixed in n8n versions 2.10.1 and 1.123.21. Users should upgrade to one of these versions or later to remediate the vulnerability. If upgrading is not immediately possible, administrators should consider the following temporary mitigations. Limit workflow creation and editing permissions to fully trusted users only, and/or disable the Webhook node by adding `n8n-nodes-base.webhook` to the `NODES_EXCLUDE` environment variable. These workarounds do not fully remediate the risk and should only be used as short-term mitigation measures.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/n8n-io/n8n/security/advisories/GHSA-2p9h-rqjw-gm92",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/n8n-io/n8n/commit/062644ef786b6af480afe4a0f12bc6d70040534a",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/n8n-io/n8n/commit/1479aab2d32fe0ee087f82b9038b1035c98be2f6",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/n8n-io/n8n/commit/9e5212ecbc5d2d4e6f340b636a5e84be6369882e",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n8n-io",
-          "product": "n8n",
-          "versions": [
-            {
-              "version": "< 1.123.22",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.0.0, < 2.9.3",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.10.0, < 2.10.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-80: Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)",
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-27577",
-      "publishedDate": "2026-02-25T22:19:44.806Z",
-      "lastModifiedDate": "2026-02-26T20:14:30.327Z",
-      "description": "n8n is an open source workflow automation platform. Prior to versions 2.10.1, 2.9.3, and 1.123.22, additional exploits in the expression evaluation of n8n have been identified and patched following CVE-2025-68613. An authenticated user with permission to create or modify workflows could abuse crafted expressions in workflow parameters to trigger unintended system command execution on the host running n8n. The issues have been fixed in n8n versions 2.10.1, 2.9.3, and 1.123.22. Users should upgrade to one of these versions or later to remediate all known vulnerabilities. If upgrading is not immediately possible, administrators should consider the following temporary mitigations. Limit workflow creation and editing permissions to fully trusted users only, and/or deploy n8n in a hardened environment with restricted operating system privileges and network access to reduce the impact of potential exploitation. These workarounds do not fully remediate the risk and should only be used as short-term mitigation measures.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/n8n-io/n8n/security/advisories/GHSA-vpcf-gvg4-6qwr",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/n8n-io/n8n/security/advisories/GHSA-v98v-ff95-f3cp",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/n8n-io/n8n/commit/1479aab2d32fe0ee087f82b9038b1035c98be2f6",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/n8n-io/n8n/commit/9e5212ecbc5d2d4e6f340b636a5e84be6369882e",
-          "type": "reference"
-        },
-        {
-          "url": "https://docs.n8n.io/hosting/securing/overview",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n8n-io",
-          "product": "n8n",
-          "versions": [
-            {
-              "version": "< 1.123.22",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.0.0, < 2.9.3",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.10.0, < 2.10.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-94: Improper Control of Generation of Code ('Code Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-27495",
-      "publishedDate": "2026-02-25T22:10:04.054Z",
-      "lastModifiedDate": "2026-02-26T20:28:18.099Z",
-      "description": "n8n is an open source workflow automation platform. Prior to versions 2.10.1, 2.9.3, and 1.123.22, an authenticated user with permission to create or modify workflows could exploit a vulnerability in the JavaScript Task Runner sandbox to execute arbitrary code outside the sandbox boundary. On instances using internal Task Runners (default runner mode), this could result in full compromise of the n8n host. On instances using external Task Runners, the attacker might gain access to or impact other task executed on the Task Runner. Task Runners must be enabled using `N8N_RUNNERS_ENABLED=true`. The issue has been fixed in n8n versions 2.10.1, 2.9.3, and 1.123.22. Users should upgrade to one of these versions or later to remediate the vulnerability. If upgrading is not immediately possible, administrators should consider the following temporary mitigations. Limit workflow creation and editing permissions to fully trusted users only, and/or use external runner mode (`N8N_RUNNERS_MODE=external`) to limit the blast radius. These workarounds do not fully remediate the risk and should only be used as short-term mitigation measures.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/n8n-io/n8n/security/advisories/GHSA-jjpj-p2wh-qf23",
-          "type": "reference"
-        },
-        {
-          "url": "https://docs.n8n.io/hosting/configuration/task-runners",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/n8n-io/n8n/releases/tag/n8n@1.123.22",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/n8n-io/n8n/releases/tag/n8n@2.10.1",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/n8n-io/n8n/releases/tag/n8n@2.9.3",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n8n-io",
-          "product": "n8n",
-          "versions": [
-            {
-              "version": "< 1.123.22",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.0.0, < 2.9.3",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.10.0, < 2.10.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-94: Improper Control of Generation of Code ('Code Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-27494",
-      "publishedDate": "2026-02-25T22:08:00.520Z",
-      "lastModifiedDate": "2026-02-26T20:28:57.625Z",
-      "description": "n8n is an open source workflow automation platform. Prior to versions 2.10.1, 2.9.3, and 1.123.22, an authenticated user with permission to create or modify workflows could use the Python Code node to escape the sandbox. The sandbox did not sufficiently restrict access to certain built-in Python objects, allowing an attacker to exfiltrate file contents or achieve RCE. On instances using internal Task Runners (default runner mode), this could result in full compromise of the n8n host. On instances using external Task Runners, the attacker might gain access to or impact other task executed on the Task Runner. Task Runners must be enabled using `N8N_RUNNERS_ENABLED=true`. The issue has been fixed in n8n versions 2.10.1, 2.9.3, and 1.123.22. Users should upgrade to this version or later to remediate the vulnerability. If upgrading is not immediately possible, administrators should consider the following temporary mitigations. Limit workflow creation and editing permissions to fully trusted users only., and/or disable the Code node by adding `n8n-nodes-base.code` to the `NODES_EXCLUDE` environment variable. These workarounds do not fully remediate the risk and should only be used as short-term mitigation measures.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/n8n-io/n8n/security/advisories/GHSA-mmgg-m5j7-f83h",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/n8n-io/n8n/releases/tag/n8n@1.123.22",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/n8n-io/n8n/releases/tag/n8n@2.10.1",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/n8n-io/n8n/releases/tag/n8n@2.9.3",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n8n-io",
-          "product": "n8n",
-          "versions": [
-            {
-              "version": "< 1.123.22",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.0.0, < 2.9.3",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.10.0, < 2.10.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-497: Exposure of Sensitive System Information to an Unauthorized Control Sphere"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-27493",
-      "publishedDate": "2026-02-25T22:05:00.686Z",
-      "lastModifiedDate": "2026-02-26T20:27:26.036Z",
-      "description": "n8n is an open source workflow automation platform. Prior to versions 2.10.1, 2.9.3, and 1.123.22, a second-order expression injection vulnerability existed in n8n's Form nodes that could allow an unauthenticated attacker to inject and evaluate arbitrary n8n expressions by submitting crafted form data. When chained with an expression sandbox escape, this could escalate to remote code execution on the n8n host. The vulnerability requires a specific workflow configuration to be exploitable. First, a form node with a field interpolating a value provided by an unauthenticated user, e.g. a form submitted value. Second, the field value must begin with an `=` character, which caused n8n to treat it as an expression and triggered a double-evaluation of the field content. There is no practical reason for a workflow designer to prefix a field with `=` intentionally — the character is not rendered in the output, so the result would not match the designer's expectations. If added accidentally, it would be noticeable and very unlikely to persist. An unauthenticated attacker would need to either know about this specific circumstance on a target instance or discover a matching form by chance. Even when the preconditions are met, the expression injection alone is limited to data accessible within the n8n expression context. Escalation to remote code execution requires chaining with a separate sandbox escape vulnerability. The issue has been fixed in n8n versions 2.10.1, 2.9.3, and 1.123.22. Users should upgrade to one of these versions or later to remediate the vulnerability. If upgrading is not immediately possible, administrators should consider the following temporary mitigations. Review usage of form nodes manually for above mentioned preconditions, disable the Form node by adding `n8n-nodes-base.form` to the `NODES_EXCLUDE` environment variable, and/or disable the Form Trigger node by adding `n8n-nodes-base.formTrigger` to the `NODES_EXCLUDE` environment variable. These workarounds do not fully remediate the risk and should only be used as short-term mitigation measures.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/n8n-io/n8n/security/advisories/GHSA-75g8-rv7v-32f7",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/n8n-io/n8n/issues/19",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/n8n-io/n8n/commit/562d867483e871b0f1e31776252e23bd721df75b",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/n8n-io/n8n/releases/tag/n8n@1.123.22",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/n8n-io/n8n/releases/tag/n8n@2.10.1",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/n8n-io/n8n/releases/tag/n8n@2.9.3",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n8n-io",
-          "product": "n8n",
-          "versions": [
-            {
-              "version": "< 1.123.22",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.0.0, < 2.9.3",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.10.0, < 2.10.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-94: Improper Control of Generation of Code ('Code Injection')",
-        "CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-27148",
-      "publishedDate": "2026-02-25T21:46:48.967Z",
-      "lastModifiedDate": "2026-02-26T20:26:14.136Z",
-      "description": "Storybook is a frontend workshop for building user interface components and pages in isolation. Prior to versions 7.6.23, 8.6.17, 9.1.19, and 10.2.10, the WebSocket functionality in Storybook's dev server, used to create and update stories, is vulnerable to WebSocket hijacking. This vulnerability only affects the Storybook dev server; production builds are not impacted. Exploitation requires a developer to visit a malicious website while their local Storybook dev server is running. Because the WebSocket connection does not validate the origin of incoming connections, a malicious site can silently send WebSocket messages to the local instance without any further user interaction. If the Storybook dev server is intentionally exposed publicly (e.g. for design reviews or stakeholder demos) the risk is higher, as no malicious site visit is required. Any unauthenticated attacker can send WebSocket messages to it directly. The vulnerability affects the WebSocket message handlers for creating and saving stories. Both are vulnerable to injection via unsanitized input in the componentFilePath field, which can be exploited to achieve persistent XSS or Remote Code Execution (RCE). Versions 7.6.23, 8.6.17, 9.1.19, and 10.2.10 contain a fix for the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/storybookjs/storybook/security/advisories/GHSA-mjf5-7g4m-gx5w",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/storybookjs/storybook/commit/0affdf928bd6fafbadfb1dfe22ce6104805e10e8",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/storybookjs/storybook/commit/54689a8add18ea75d628c540f4bc677592a1e685",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/storybookjs/storybook/commit/b8cfa77c73940c140acdcd8a06ab1ea913c44761",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/storybookjs/storybook/commit/d34085f39c647f5c23c3a3b2d197c18602fcf876",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/storybookjs/storybook/releases/tag/v10.2.10",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/storybookjs/storybook/releases/tag/v7.6.23",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/storybookjs/storybook/releases/tag/v8.6.17",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/storybookjs/storybook/releases/tag/v9.1.19",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "storybookjs",
-          "product": "storybook",
-          "versions": [
-            {
-              "version": "< 7.6.23",
-              "status": "affected"
-            },
-            {
-              "version": ">= 8.1.0, < 8.6.17",
-              "status": "affected"
-            },
-            {
-              "version": ">= 9.0.0, < 9.1.19",
-              "status": "affected"
-            },
-            {
-              "version": ">= 10.0.0, < 10.2.10",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-74: Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection')",
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-2794",
-      "publishedDate": "2026-02-24T13:33:25.399Z",
-      "lastModifiedDate": "2026-02-26T20:18:07.820Z",
-      "description": "Information disclosure due to uninitialized memory in Firefox and Firefox Focus for Android. This vulnerability affects Firefox < 148.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://bugzilla.mozilla.org/show_bug.cgi?id=2008365",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-13/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Firefox",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "148",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-2790",
-      "publishedDate": "2026-02-24T13:33:21.600Z",
-      "lastModifiedDate": "2026-02-26T20:20:36.866Z",
-      "description": "Same-origin policy bypass in the Networking: JAR component. This vulnerability affects Firefox < 148, Firefox ESR < 140.8, Thunderbird < 148, and Thunderbird < 140.8.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://bugzilla.mozilla.org/show_bug.cgi?id=2008426",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-13/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-15/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-16/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-17/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Firefox",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "148",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "product": "Firefox ESR",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "140.8",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "product": "Thunderbird",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "148",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "product": "Thunderbird",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "140.8",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-2783",
-      "publishedDate": "2026-02-24T13:33:16.921Z",
-      "lastModifiedDate": "2026-02-26T20:10:05.132Z",
-      "description": "Information disclosure due to JIT miscompilation in the JavaScript Engine: JIT component. This vulnerability affects Firefox < 148, Firefox ESR < 140.8, Thunderbird < 148, and Thunderbird < 140.8.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://bugzilla.mozilla.org/show_bug.cgi?id=2010943",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-13/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-15/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-16/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-17/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Firefox",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "148",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "product": "Firefox ESR",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "140.8",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "product": "Thunderbird",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "148",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "product": "Thunderbird",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "140.8",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-2774",
-      "publishedDate": "2026-02-24T13:33:10.821Z",
-      "lastModifiedDate": "2026-02-26T20:21:19.007Z",
-      "description": "Integer overflow in the Audio/Video component. This vulnerability affects Firefox < 148, Firefox ESR < 115.33, Firefox ESR < 140.8, Thunderbird < 148, and Thunderbird < 140.8.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://bugzilla.mozilla.org/show_bug.cgi?id=2014883",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-13/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-14/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-15/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-16/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-17/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Firefox",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "148",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "product": "Firefox ESR",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "115.33",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "product": "Firefox ESR",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "140.8",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "product": "Thunderbird",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "148",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "product": "Thunderbird",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "140.8",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-2767",
-      "publishedDate": "2026-02-24T13:33:05.551Z",
-      "lastModifiedDate": "2026-02-26T20:10:59.598Z",
-      "description": "Use-after-free in the JavaScript: WebAssembly component. This vulnerability affects Firefox < 148, Firefox ESR < 140.8, Thunderbird < 148, and Thunderbird < 140.8.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://bugzilla.mozilla.org/show_bug.cgi?id=2013741",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-13/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-15/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-16/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-17/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Firefox",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "148",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "product": "Firefox ESR",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "140.8",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "product": "Thunderbird",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "148",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "product": "Thunderbird",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "140.8",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
       "fix_suggestion": "无法生成修复建议"
     }
   ]
