@@ -2,588 +2,579 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 31,
-    "last_updated": "2026-02-26T16:38:21.452745",
+    "total_count": 22,
+    "last_updated": "2026-02-26T17:45:14.049081",
     "severity_distribution": {
-      "critical": 1,
+      "critical": 0,
       "high": 4,
-      "medium": 9,
+      "medium": 8,
       "low": 0,
-      "none": 17
+      "none": 10
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-27941",
-      "publishedDate": "2026-02-26T01:17:22.532Z",
-      "lastModifiedDate": "2026-02-26T15:54:11.519Z",
-      "description": "OpenLIT is an open source platform for AI engineering. Prior to version 1.37.1, several GitHub Actions workflows in OpenLIT's GitHub repository use the `pull_request_target` event while checking out and executing untrusted code from forked pull requests. These workflows run with the security context of the base repository, including a write-privileged `GITHUB_TOKEN` and numerous sensitive secrets (API keys, database/vector store tokens, and a Google Cloud service account key). Version 1.37.1 contains a fix.",
-      "severity": 10,
-      "references": [
-        {
-          "url": "https://github.com/openlit/openlit/security/advisories/GHSA-9jgv-x8cq-296q",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openlit/openlit/commit/4a62039a1659d6cbb8913172693f587b5fc2546c",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "openlit",
-          "product": "openlit",
-          "versions": [
-            {
-              "version": "< 1.37.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-829: Inclusion of Functionality from Untrusted Control Sphere"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-27899",
-      "publishedDate": "2026-02-26T00:50:00.278Z",
-      "lastModifiedDate": "2026-02-26T16:02:52.876Z",
-      "description": "WireGuard Portal (or wg-portal) is a web-based configuration portal for WireGuard server management. Prior to version 2.1.3, any authenticated non-admin user can become a full administrator by sending a single PUT request to their own user profile endpoint with `\"IsAdmin\": true` in the JSON body. After logging out and back in, the session picks up admin privileges from the database. When a user updates their own profile, the server parses the full JSON body into the user model, including the `IsAdmin` boolean field. A function responsible for preserving calculated or protected attributes pins certain fields to their database values (such as base model data, linked peer count, and authentication data), but it does not do this for `IsAdmin`. As a result, whatever value the client sends for `IsAdmin` is written directly to the database. After the exploit, the attacker has full admin access to the WireGuard VPN management portal. The problem was fixed in v2.1.3. The docker images for the tag 'latest' built from the master branch also include the fix.",
+      "id": "CVE-2026-27976",
+      "publishedDate": "2026-02-25T23:34:40.103Z",
+      "lastModifiedDate": "2026-02-26T16:54:11.223Z",
+      "description": "Zed, a code editor, has an extension installer allows tar/gzip downloads. Prior to version 0.224.4, the tar extractor (`async_tar::Archive::unpack`) creates symlinks from the archive without validation, and the path guard (`writeable_path_from_extension`) only performs lexical prefix checks without resolving symlinks. An attacker can ship a tar that first creates a symlink inside the extension workdir pointing outside (e.g., `escape -> /`), then writes files through the symlink, causing writes to arbitrary host paths. This escapes the extension sandbox and enables code execution. Version 0.224.4 patches the issue.",
       "severity": 8.8,
       "references": [
         {
-          "url": "https://github.com/h44z/wg-portal/security/advisories/GHSA-5rmx-256w-8mj9",
+          "url": "https://github.com/zed-industries/zed/security/advisories/GHSA-59p4-3mhm-qm3r",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "h44z",
-          "product": "wg-portal",
+          "vendor": "zed-industries",
+          "product": "zed",
           "versions": [
             {
-              "version": "< 2.1.3",
+              "version": "< 0.224.4",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-269: Improper Privilege Management",
-        "CWE-863: Incorrect Authorization"
+        "CWE-61: UNIX Symbolic Link (Symlink) Following"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-22719",
-      "publishedDate": "2026-02-25T19:18:59.269Z",
-      "lastModifiedDate": "2026-02-26T15:50:38.075Z",
-      "description": "VMware Aria Operations contains a command injection vulnerability. A malicious unauthenticated actor may exploit this issue to execute arbitrary commands which may lead to remote code execution in VMware Aria Operations while support-assisted product migration is in progress. \n\nTo remediate CVE-2026-22719, apply the patches listed in the 'Fixed Version' column of the ' Response Matrix https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/36947 ' in VMSA-2026-0001 \n\nWorkarounds for CVE-2026-22719 are documented in the 'Workarounds' column of the ' Response Matrix https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/36947 ' in VMSA-2026-0001",
-      "severity": 8.1,
-      "references": [
-        {
-          "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/36947",
-          "type": "reference"
-        },
-        {
-          "url": "https://knowledge.broadcom.com/external/article/430349",
-          "type": "reference"
-        },
-        {
-          "url": "https://techdocs.broadcom.com/us/en/vmware-cis/aria/aria-operations/8-18/vmware-aria-operations-8186-release-notes.html",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "affected",
-          "packageName": "vmware-aria-operations",
-          "product": "Aria Operations",
-          "vendor": "VMware",
-          "versions": [
-            {
-              "lessThan": "8.18.6",
-              "status": "affected",
-              "version": "8.18.0",
-              "versionType": "custom"
-            },
-            {
-              "status": "unaffected",
-              "version": "8.18.6"
-            }
-          ]
-        },
-        {
-          "defaultStatus": "affected",
-          "packageName": "vmware-cloud-foundation-operations",
-          "product": "Cloud Foundationcust",
-          "vendor": "VMware",
-          "versions": [
-            {
-              "lessThan": "9.0.2",
-              "status": "affected",
-              "version": "9.0",
-              "versionType": "custom"
-            },
-            {
-              "status": "unaffected",
-              "version": "9.0.2",
-              "versionType": "custom"
-            },
-            {
-              "lessThan": "5.2.3",
-              "status": "affected",
-              "version": "4.0",
-              "versionType": "custom"
-            },
-            {
-              "status": "unaffected",
-              "version": "5.2.3"
-            }
-          ]
-        },
-        {
-          "defaultStatus": "affected",
-          "packageName": "vmware-telco-cloud-platform",
-          "product": "Telco Cloud Platform",
-          "vendor": "VMware",
-          "versions": [
-            {
-              "lessThan": "5.2.3",
-              "status": "affected",
-              "version": "2.0",
-              "versionType": "custom"
-            },
-            {
-              "status": "unaffected",
-              "version": "5.2.3",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "defaultStatus": "affected",
-          "packageName": "vmware-telco-cloud-infrastructure",
-          "product": "Telco Cloud Infrastructure",
-          "vendor": "VMware",
-          "versions": [
-            {
-              "lessThan": "5.2.3",
-              "status": "affected",
-              "version": "2.0",
-              "versionType": "custom"
-            },
-            {
-              "status": "unaffected",
-              "version": "5.2.3"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-14511",
-      "publishedDate": "2026-02-25T20:05:24.799Z",
-      "lastModifiedDate": "2026-02-26T15:57:25.416Z",
-      "description": "GitLab has remediated an issue in GitLab CE/EE affecting all versions from 12.2 before 18.7.5, 18.8 before 18.8.5, and 18.9 before 18.9.1 that could have allowed an unauthenticated user to cause denial of service by sending specially crafted files to the container registry event endpoint under certain conditions.",
+      "id": "CVE-2026-27635",
+      "publishedDate": "2026-02-25T23:10:27.951Z",
+      "lastModifiedDate": "2026-02-26T16:52:18.942Z",
+      "description": "Manyfold is an open source, self-hosted web application for managing a collection of 3d models, particularly focused on 3d printing. Prior to version 0.133.0, when model render generation is enabled, a logged-in user can achieve RCE by uploading a ZIP containing a file with a shell metacharacter in its name. The filename reaches a Ruby backtick call unsanitized. Version 0.133.0 fixes the issue.",
       "severity": 7.5,
       "references": [
         {
-          "url": "https://gitlab.com/gitlab-org/gitlab/-/issues/583717",
+          "url": "https://github.com/manyfold3d/manyfold/security/advisories/GHSA-p589-cf26-v7h2",
           "type": "reference"
         },
         {
-          "url": "https://hackerone.com/reports/3452200",
-          "type": "poc"
-        },
-        {
-          "url": "https://about.gitlab.com/releases/2026/02/25/patch-release-gitlab-18-9-1-released/",
+          "url": "https://github.com/manyfold3d/manyfold/releases/tag/v0.133.0",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "GitLab",
-          "product": "GitLab",
-          "repo": "git://git@gitlab.com:gitlab-org/gitlab.git",
-          "cpes": [
-            "cpe:2.3:a:gitlab:gitlab:*:*:*:*:*:*:*:*"
-          ],
+          "vendor": "manyfold3d",
+          "product": "manyfold",
           "versions": [
             {
-              "version": "12.2",
-              "status": "affected",
-              "lessThan": "18.7.5",
-              "versionType": "semver"
-            },
-            {
-              "version": "18.8",
-              "status": "affected",
-              "lessThan": "18.8.5",
-              "versionType": "semver"
-            },
-            {
-              "version": "18.9",
-              "status": "affected",
-              "lessThan": "18.9.1",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-1284: Improper Validation of Specified Quantity in Input"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-25733",
-      "publishedDate": "2026-02-25T19:30:55.695Z",
-      "lastModifiedDate": "2026-02-26T16:02:31.146Z",
-      "description": "Rucio is a software framework that provides functionality to organize, manage, and access large volumes of scientific data using customizable policies. Versions prior to 35.8.3, 38.5.4, and 39.3.1 have a stored Cross-Site Scripting (XSS) vulnerability in the Custom Rules function of the WebUI where attacker-controlled input is persisted by the backend and later rendered in the WebUI without proper output encoding. This allows arbitrary JavaScript execution in the context of the WebUI for users who view affected pages, potentially enabling session token theft or unauthorized actions. Versions 35.8.3, 38.5.4, and 39.3.1 fix the issue.",
-      "severity": 7.3,
-      "references": [
-        {
-          "url": "https://github.com/rucio/rucio/security/advisories/GHSA-rwj9-7j48-9f7q",
-          "type": "reference"
-        },
-        {
-          "url": "https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/rucio/rucio/releases/tag/35.8.3",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/rucio/rucio/releases/tag/38.5.4",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/rucio/rucio/releases/tag/39.3.1",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "rucio",
-          "product": "rucio",
-          "versions": [
-            {
-              "version": "< 35.8.3",
-              "status": "affected"
-            },
-            {
-              "version": ">= 36.0.0rc1, < 38.5.4",
-              "status": "affected"
-            },
-            {
-              "version": ">= 39.0.0rc1, < 39.3.1",
+              "version": "< 0.133.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
-        "CWE-1004: Sensitive Cookie Without 'HttpOnly' Flag"
+        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-2845",
-      "publishedDate": "2026-02-25T20:04:35.210Z",
-      "lastModifiedDate": "2026-02-26T15:45:14.406Z",
-      "description": "An issue has been discovered in GitLab CE/EE affecting all versions from 11.2 before 18.7.5, 18.8 before 18.8.5, and 18.9 before 18.9.1 that could have allowed an authenticated user to cause denial of service by exploiting a Bitbucket Server import endpoint via repeatedly sending large responses.",
+      "id": "CVE-2026-27800",
+      "publishedDate": "2026-02-25T23:25:45.400Z",
+      "lastModifiedDate": "2026-02-26T17:04:50.704Z",
+      "description": "Zed, a code editor, has a Zip Slip (Path Traversal) vulnerability exists in its extension archive extraction functionality prior to version 0.224.4. The `extract_zip()` function in `crates/util/src/archive.rs` fails to validate ZIP entry filenames for path traversal sequences (e.g., `../`). This allows a malicious extension to write files outside its designated sandbox directory by downloading and extracting a crafted ZIP archive. Version 0.224.4 fixes the issue.",
+      "severity": 7.4,
+      "references": [
+        {
+          "url": "https://github.com/zed-industries/zed/security/advisories/GHSA-v385-xh3h-rrfr",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "zed-industries",
+          "product": "zed",
+          "versions": [
+            {
+              "version": "< 0.224.4",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-27967",
+      "publishedDate": "2026-02-25T23:33:21.477Z",
+      "lastModifiedDate": "2026-02-26T17:05:29.709Z",
+      "description": "Zed, a code editor, has a symlink escape vulnerability in versions prior to 0.225.9 in Agent file tools (`read_file`, `edit_file`). It allows reading and writing files **outside the project directory** when a project contains symbolic links pointing to external paths. This bypasses the intended workspace boundary and privacy protections (`file_scan_exclusions`, `private_files`), potentially leaking sensitive user data to the LLM. Version 0.225.9 fixes the issue.",
+      "severity": 7.1,
+      "references": [
+        {
+          "url": "https://github.com/zed-industries/zed/security/advisories/GHSA-786m-x2vc-5235",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "zed-industries",
+          "product": "zed",
+          "versions": [
+            {
+              "version": "< 0.225.9",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-59: Improper Link Resolution Before File Access ('Link Following')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-26935",
+      "publishedDate": "2026-02-26T17:05:16.619Z",
+      "lastModifiedDate": "2026-02-26T17:05:16.619Z",
+      "description": "Improper Input Validation (CWE-20) in the internal Content Connectors search endpoint in Kibana can lead Denial of Service via Input Data Manipulation (CAPEC-153)",
       "severity": 6.5,
       "references": [
         {
-          "url": "https://gitlab.com/gitlab-org/gitlab/-/work_items/570554",
-          "type": "reference"
-        },
-        {
-          "url": "https://about.gitlab.com/releases/2026/02/25/patch-release-gitlab-18-9-1-released/",
+          "url": "https://discuss.elastic.co/t/kibana-8-19-12-9-2-6-9-3-1-security-update-esa-2026-13/385249",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "GitLab",
-          "product": "GitLab",
-          "repo": "git://git@gitlab.com:gitlab-org/gitlab.git",
-          "cpes": [
-            "cpe:2.3:a:gitlab:gitlab:*:*:*:*:*:*:*:*"
-          ],
+          "defaultStatus": "unaffected",
+          "product": "Kibana",
+          "vendor": "Elastic",
           "versions": [
             {
-              "version": "11.2",
+              "lessThanOrEqual": "9.3.0",
               "status": "affected",
-              "lessThan": "18.7.5",
+              "version": "9.3.0",
               "versionType": "semver"
             },
             {
-              "version": "18.8",
+              "lessThanOrEqual": "8.19.11",
               "status": "affected",
-              "lessThan": "18.8.5",
+              "version": "8.4.0",
               "versionType": "semver"
             },
             {
-              "version": "18.9",
+              "lessThanOrEqual": "9.2.5",
               "status": "affected",
-              "lessThan": "18.9.1",
+              "version": "9.0.0",
               "versionType": "semver"
             }
-          ],
-          "defaultStatus": "unaffected"
+          ]
         }
       ],
       "problemType": [
-        "CWE-770: Allocation of Resources Without Limits or Throttling"
+        "CWE-20 Improper Input Validation"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-2506",
-      "publishedDate": "2026-02-26T01:24:13.651Z",
-      "lastModifiedDate": "2026-02-26T15:42:01.642Z",
-      "description": "The EM Cost Calculator plugin for WordPress is vulnerable to Stored Cross-Site Scripting in versions up to, and including, 2.3.1. This is due to the plugin storing attacker-controlled 'customer_name' data and rendering it in the admin customer list without output escaping. This makes it possible for unauthenticated attackers to inject arbitrary web scripts that execute when an administrator views the EMCC Customers page.",
-      "severity": 6.1,
+      "id": "CVE-2026-26934",
+      "publishedDate": "2026-02-26T17:03:17.242Z",
+      "lastModifiedDate": "2026-02-26T17:03:17.242Z",
+      "description": "Improper Validation of Specified Quantity in Input (CWE-1284) in Kibana can allow an authenticated attacker with view-only privileges to cause a Denial of Service via Input Data Manipulation (CAPEC-153). An attacker can send a specially crafted, malformed payload causing excessive resource consumption and resulting in Kibana becoming unresponsive or crashing.",
+      "severity": 6.5,
       "references": [
         {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/1eef338a-ccc7-41a2-b87a-0945e39380d2?source=cve",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/cost-calculator/tags/2.3.1/em-cost-calculator-widget.php#L655",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/cost-calculator/tags/2.3.1/em-cost-calculator-widget.php#L682",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/cost-calculator/tags/2.3.1/em-cost-calculator-widget.php#L701",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/cost-calculator/tags/2.3.1/em-cost-calc-admin-page.php#L59",
+          "url": "https://discuss.elastic.co/t/kibana-8-19-12-9-2-6-9-3-1-security-update-esa-2026-12/385248",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "motahar1",
-          "product": "EM Cost Calculator",
+          "defaultStatus": "unaffected",
+          "product": "Kibana",
+          "vendor": "Elastic",
           "versions": [
             {
-              "version": "*",
+              "lessThanOrEqual": "8.19.11",
               "status": "affected",
-              "lessThanOrEqual": "2.3.1",
+              "version": "8.18.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThanOrEqual": "9.2.5",
+              "status": "affected",
+              "version": "9.0.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThanOrEqual": "9.3.0",
+              "status": "affected",
+              "version": "9.3.0",
               "versionType": "semver"
             }
-          ],
-          "defaultStatus": "unaffected"
+          ]
         }
       ],
       "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+        "CWE-1284 Improper Validation of Specified Quantity in Input"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-25736",
-      "publishedDate": "2026-02-25T19:50:52.820Z",
-      "lastModifiedDate": "2026-02-26T15:59:19.879Z",
-      "description": "Rucio is a software framework that provides functionality to organize, manage, and access large volumes of scientific data using customizable policies. Versions prior to 35.8.3, 38.5.4, and 39.3.1 have a stored Cross-Site Scripting (XSS) vulnerability in the Custom RSE Attribute of the WebUI where attacker-controlled input is persisted by the backend and later rendered in the WebUI without proper output encoding. This allows arbitrary JavaScript execution in the context of the WebUI for users who view affected pages, potentially enabling session token theft or unauthorized actions. Versions 35.8.3, 38.5.4, and 39.3.1 fix the issue.",
-      "severity": 6.1,
+      "id": "CVE-2026-26932",
+      "publishedDate": "2026-02-26T16:59:55.310Z",
+      "lastModifiedDate": "2026-02-26T16:59:55.310Z",
+      "description": "Improper Validation of Array Index (CWE-129) in the PostgreSQL protocol parser in Packetbeat can lead Denial of Service via Input Data Manipulation (CAPEC-153). An attacker can send a specially crafted packet causing a Go runtime panic that terminates the Packetbeat process. This vulnerability requires the pgsql protocol to be explicitly enabled and configured to monitor traffic on the targeted port.",
+      "severity": 5.7,
       "references": [
         {
-          "url": "https://github.com/rucio/rucio/security/advisories/GHSA-fq4f-4738-rqxm",
-          "type": "reference"
-        },
-        {
-          "url": "https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/rucio/rucio/releases/tag/35.8.3",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/rucio/rucio/releases/tag/38.5.4",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/rucio/rucio/releases/tag/39.3.1",
+          "url": "https://discuss.elastic.co/t/packetbeat-8-19-11-9-2-5-security-update-esa-2026-10/385247",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "rucio",
-          "product": "rucio",
+          "defaultStatus": "unaffected",
+          "product": "Packetbeat",
+          "vendor": "Elastic",
           "versions": [
             {
-              "version": "< 35.8.3",
+              "lessThanOrEqual": "9.2.4",
+              "status": "affected",
+              "version": "9.0.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThanOrEqual": "8.19.10",
+              "status": "affected",
+              "version": "8.0.0",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-129 Improper Validation of Array Index"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-5781",
+      "publishedDate": "2026-02-25T03:01:21.623Z",
+      "lastModifiedDate": "2026-02-26T17:00:34.754Z",
+      "description": "Information Exposure Vulnerability in Hitachi Ops Center API Configuration Manager, Hitachi Configuration Manager, Hitachi Device Manager allows Session Hijacking.This issue affects Hitachi Ops Center API Configuration Manager: from 10.0.0-00 before 11.0.5-00; Hitachi Configuration Manager: from 8.5.1-00 before 11.0.5-00; Hitachi Device Manager: from 8.4.1-00 before 8.6.5-00.",
+      "severity": 5.2,
+      "references": [
+        {
+          "url": "https://www.hitachi.com/products/it/software/security/info/vuls/hitachi-sec-2026-111/index.html",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "platforms": [
+            "Windows",
+            "Linux"
+          ],
+          "product": "Hitachi Ops Center API Configuration Manager",
+          "vendor": "Hitachi",
+          "versions": [
+            {
+              "changes": [
+                {
+                  "at": "11.0.5-00",
+                  "status": "unaffected"
+                }
+              ],
+              "lessThan": "11.0.5-00",
+              "status": "affected",
+              "version": "10.0.0-00",
+              "versionType": "custom"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "platforms": [
+            "Windows",
+            "Linux"
+          ],
+          "product": "Hitachi Configuration Manager",
+          "vendor": "Hitachi",
+          "versions": [
+            {
+              "changes": [
+                {
+                  "at": "11.0.5-00",
+                  "status": "unaffected"
+                }
+              ],
+              "lessThan": "11.0.5-00",
+              "status": "affected",
+              "version": "8.5.1-00",
+              "versionType": "custom"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "platforms": [
+            "Windows",
+            "Linux"
+          ],
+          "product": "Hitachi Device Manager",
+          "vendor": "Hitachi",
+          "versions": [
+            {
+              "changes": [
+                {
+                  "at": "8.6.5-00",
+                  "status": "unaffected"
+                }
+              ],
+              "lessThan": "8.6.5-00",
+              "status": "affected",
+              "version": "8.4.1-00",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-532 Insertion of Sensitive Information into Log File"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-26936",
+      "publishedDate": "2026-02-26T17:07:40.604Z",
+      "lastModifiedDate": "2026-02-26T17:07:40.604Z",
+      "description": "Inefficient Regular Expression Complexity (CWE-1333) in the AI Inference Anonymization Engine in Kibana can lead Denial of Service via Regular Expression Exponential Blowup (CAPEC-492).",
+      "severity": 4.9,
+      "references": [
+        {
+          "url": "https://discuss.elastic.co/t/kibana-8-19-11-9-2-5-security-update-esa-2026-14/385250",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Kibana",
+          "vendor": "Elastic",
+          "versions": [
+            {
+              "lessThanOrEqual": "9.2.4",
+              "status": "affected",
+              "version": "9.0.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThanOrEqual": "8.19.10",
+              "status": "affected",
+              "version": "8.0.0",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-1333 Inefficient Regular Expression Complexity"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-27840",
+      "publishedDate": "2026-02-26T00:27:08.933Z",
+      "lastModifiedDate": "2026-02-26T17:00:29.815Z",
+      "description": "ZITADEL is an open source identity management platform. Starting in version 2.31.0 and prior to versions 3.4.7 and 4.11.0, opaque OIDC access tokens in the v2 format truncated to 80 characters are still considered valid.  Zitadel uses a symmetric AES encryption for opaque tokens. The cleartext payload is a concatenation of a couple of identifiers, such as a token ID and user ID. Internally Zitadel has 2 different versions of token payloads. v1 tokens are no longer created, but are still verified as to not invalidate existing session after upgrade. The cleartext payload has a format of `<token_id>:<user_id>`. v2 tokens distinguished further where the `token_id` is of the format `v2_<oidc_session_id>-at_<access_token_id>`. V1 token authZ/N session data is retrieved from the database using the (simple) `token_id` value and `user_id` value. The `user_id` (called `subject` in some parts of our code) was used as being the trusted user ID. V2 token authZ/N session data is retrieved from the database using the `oidc_session_id` and `access_token_id` and in this case the `user_id` from the token is ignored and taken from the session data in the database. By truncating the token to 80 chars, the user_id is now missing from the cleartext of the v2 token. The back-end still accepts this for above reasons. This issue is not considered exploitable, but may look awkward when reproduced. The patch in versions 4.11.0 and 3.4.7 resolves the issue by verifying the `user_id` from the token against the session data from the database. No known workarounds are available.",
+      "severity": 4.3,
+      "references": [
+        {
+          "url": "https://github.com/zitadel/zitadel/security/advisories/GHSA-6mq3-xmgp-pjm5",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/zitadel/zitadel/releases/tag/v3.4.7",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/zitadel/zitadel/releases/tag/v4.11.0",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "zitadel",
+          "product": "zitadel",
+          "versions": [
+            {
+              "version": ">= 4.0.0, < 4.11.0",
               "status": "affected"
             },
             {
-              "version": ">= 36.0.0rc1, < 38.5.4",
+              "version": ">= 3.0.0, < 3.4.7",
               "status": "affected"
             },
             {
-              "version": ">= 39.0.0rc1, < 39.3.1",
+              "version": ">= 2.31.0, <= 2.71.19",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
-        "CWE-1004: Sensitive Cookie Without 'HttpOnly' Flag"
+        "CWE-302: Authentication Bypass by Assumed-Immutable Data"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-25735",
-      "publishedDate": "2026-02-25T19:43:36.463Z",
-      "lastModifiedDate": "2026-02-26T16:00:36.501Z",
-      "description": "Rucio is a software framework that provides functionality to organize, manage, and access large volumes of scientific data using customizable policies. Versions prior to 35.8.3, 38.5.4, and 39.3.1 have a stored Cross-Site Scripting (XSS) vulnerability in the Identity Name of the WebUI where attacker-controlled input is persisted by the backend and later rendered in the WebUI without proper output encoding. This allows arbitrary JavaScript execution in the context of the WebUI for users who view affected pages, potentially enabling session token theft or unauthorized actions. Versions 35.8.3, 38.5.4, and 39.3.1 fix the issue.",
-      "severity": 6.1,
+      "id": "CVE-2026-27799",
+      "publishedDate": "2026-02-25T23:20:25.204Z",
+      "lastModifiedDate": "2026-02-26T17:04:08.122Z",
+      "description": "ImageMagick is free and open-source software used for editing and manipulating digital images. Prior to versions 7.1.2-15 and 6.9.13-40, a heap buffer over-read vulnerability exists in the DJVU image format handler. The vulnerability occurs due to integer truncation when calculating the stride (row size) for pixel buffer allocation. The stride calculation overflows a 32-bit signed integer, resulting in an out-of-bounds memory reads. Versions 7.1.2-15 and 6.9.13-40 contain a patch.",
+      "severity": 4,
       "references": [
         {
-          "url": "https://github.com/rucio/rucio/security/advisories/GHSA-8wpv-6x3f-3rm5",
+          "url": "https://github.com/ImageMagick/ImageMagick/security/advisories/GHSA-r99p-5442-q2x2",
           "type": "reference"
         },
         {
-          "url": "https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html",
+          "url": "https://github.com/ImageMagick/ImageMagick/commit/e87695b3227978ad70b967b8d054baaf8ac2cced",
           "type": "reference"
         },
         {
-          "url": "https://github.com/rucio/rucio/releases/tag/35.8.3",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/rucio/rucio/releases/tag/38.5.4",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/rucio/rucio/releases/tag/39.3.1",
+          "url": "https://github.com/dlemstra/Magick.NET/releases/tag/14.10.3",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "rucio",
-          "product": "rucio",
+          "vendor": "ImageMagick",
+          "product": "ImageMagick",
           "versions": [
             {
-              "version": "< 35.8.3",
+              "version": "< 6.9.13-40",
               "status": "affected"
             },
             {
-              "version": ">= 36.0.0rc1, < 38.5.4",
-              "status": "affected"
-            },
-            {
-              "version": ">= 39.0.0rc1, < 39.3.1",
+              "version": ">= 7.0.0, < 7.1.2-15",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
-        "CWE-1004: Sensitive Cookie Without 'HttpOnly' Flag"
+        "CWE-122: Heap-based Buffer Overflow",
+        "CWE-126: Buffer Over-read"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-25734",
-      "publishedDate": "2026-02-25T19:33:44.627Z",
-      "lastModifiedDate": "2026-02-26T16:01:36.671Z",
-      "description": "Rucio is a software framework that provides functionality to organize, manage, and access large volumes of scientific data using customizable policies. Versions prior to 35.8.3, 38.5.4, and 39.3.1 have a stored Cross-Site Scripting (XSS) vulnerability in the RSE metadata of the WebUI where attacker-controlled input is persisted by the backend and later rendered in the WebUI without proper output encoding. This allows arbitrary JavaScript execution in the context of the WebUI for users who view affected pages, potentially enabling session token theft or unauthorized actions. Versions 35.8.3, 38.5.4, and 39.3.1 fix the issue.",
-      "severity": 6.1,
+      "id": "CVE-2026-27798",
+      "publishedDate": "2026-02-25T23:18:33.174Z",
+      "lastModifiedDate": "2026-02-26T16:54:57.532Z",
+      "description": "ImageMagick is free and open-source software used for editing and manipulating digital images. Prior to versions 7.1.2-15 and 6.9.13-40, a heap buffer over-read vulnerability occurs when processing an image with small dimension using the `-wavelet-denoise` operator. Versions 7.1.2-15 and 6.9.13-40 contain a patch.",
+      "severity": 4,
       "references": [
         {
-          "url": "https://github.com/rucio/rucio/security/advisories/GHSA-h9fp-p2p9-873q",
+          "url": "https://github.com/ImageMagick/ImageMagick/security/advisories/GHSA-qpgx-jfcq-r59f",
           "type": "reference"
         },
         {
-          "url": "https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html",
+          "url": "https://github.com/ImageMagick/ImageMagick/commit/0377e60b3c0d766bd7271221c95d9ee54f6a3738",
           "type": "reference"
         },
         {
-          "url": "https://github.com/rucio/rucio/releases/tag/35.8.3",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/rucio/rucio/releases/tag/38.5.4",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/rucio/rucio/releases/tag/39.3.1",
+          "url": "https://github.com/dlemstra/Magick.NET/releases/tag/14.10.3",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "rucio",
-          "product": "rucio",
+          "vendor": "ImageMagick",
+          "product": "ImageMagick",
           "versions": [
             {
-              "version": "< 35.8.3",
+              "version": "< 6.9.13-40",
               "status": "affected"
             },
             {
-              "version": ">= 36.0.0rc1, < 38.5.4",
-              "status": "affected"
-            },
-            {
-              "version": ">= 39.0.0rc1, < 39.3.1",
+              "version": ">= 7.0.0, < 7.1.2-15",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
-        "CWE-1004: Sensitive Cookie Without 'HttpOnly' Flag"
+        "CWE-125: Out-of-bounds Read",
+        "CWE-126: Buffer Over-read"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-27808",
-      "publishedDate": "2026-02-25T23:51:20.365Z",
-      "lastModifiedDate": "2026-02-26T15:47:56.826Z",
-      "description": "Mailpit is an email testing tool and API for developers. Prior to version 1.29.2, the Link Check API (/api/v1/message/{ID}/link-check) is vulnerable to Server-Side Request Forgery (SSRF). The server performs HTTP HEAD requests to every URL found in an email without validating target hosts or filtering private/internal IP addresses. The response returns status codes and status text per link, making this a non-blind SSRF. In the default configuration (no authentication on SMTP or API), this is fully exploitable remotely with zero user interaction. This is the same class of vulnerability that was fixed in the HTML Check API (CVE-2026-23845 / GHSA-6jxm-fv7w-rw5j) and the screenshot proxy (CVE-2026-21859 / GHSA-8v65-47jx-7mfr), but the Link Check code path was not included in either fix. Version 1.29.2 fixes this vulnerability.",
-      "severity": 5.8,
+      "id": "CVE-2026-27896",
+      "publishedDate": "2026-02-26T00:47:46.967Z",
+      "lastModifiedDate": "2026-02-26T17:06:41.150Z",
+      "description": "The Go MCP SDK used Go's standard encoding/json.Unmarshal for JSON-RPC and MCP protocol message parsing in versions prior to 1.3.1. Go's standard library performs case-insensitive matching of JSON keys to struct field tags — a field tagged json:\"method\" would also match \"Method\", \"METHOD\", etc. This violated the JSON-RPC 2.0 specification, which defines exact field names. A malicious MCP peer may have been able to send protocol messages with non-standard field casing that the SDK would silently accept. This had the potential for bypassing intermediary inspection and coss-implementation inconsistency. Go's standard JSON unmarshaling was replaced with a case-sensitive decoder in commit 7b8d81c. Users are advised to update to v1.3.1 to resolve this issue.",
+      "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/axllent/mailpit/security/advisories/GHSA-mpf7-p9x7-96r3",
+          "url": "https://github.com/modelcontextprotocol/go-sdk/security/advisories/GHSA-wvj2-96wp-fq3f",
           "type": "reference"
         },
         {
-          "url": "https://github.com/axllent/mailpit/commit/10ad4df8cc0cd9e51dea1b4410009545eef7fbf5",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/axllent/mailpit/releases/tag/v1.29.2",
+          "url": "https://github.com/modelcontextprotocol/go-sdk/commit/7b8d81c264074404abdf5aa16e2cf0c2d9c64cc0",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "axllent",
-          "product": "mailpit",
+          "vendor": "modelcontextprotocol",
+          "product": "go-sdk",
           "versions": [
             {
-              "version": "< 1.29.2",
+              "version": "< 1.3.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-178: Improper Handling of Case Sensitivity",
+        "CWE-436: Interpretation Conflict"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-27945",
+      "publishedDate": "2026-02-26T00:29:58.157Z",
+      "lastModifiedDate": "2026-02-26T16:51:23.606Z",
+      "description": "ZITADEL is an open source identity management platform. Zitadel Action V2 (introduced as early preview in 2.59.0, beta in 3.0.0 and GA in 4.0.0) is a webhook based approach to allow developers act on API request to Zitadel and customize flows such the issue of a token. Zitadel's Action target URLs can point to local hosts, potentially allowing adversaries to gather internal network information and connect to internal services. When the URL points to a local host / IP address, an adversary might gather information about the internal network structure, the services exposed on internal hosts etc. This is sometimes called a Server-Side Request Forgery (SSRF). Zitadel Actions expect responses according to specific schemas, which reduces the threat vector. The patch in version 4.11.1 resolves the issue by checking the target URL against a denylist. By default localhost, resp. loopback IPs are denied. Note that this fix was only released on v4.x. Due to the stage (preview / beta) in which the functionality was in v2.x and v3.x, the changes that have been applied to it since then and the severity, respectively the actual thread vector, a backport to the corresponding versions was not feasible. Please check the workaround section for alternative solutions if an upgrade to v4.x is not possible. If an upgrade is not possible, prevent actions from using unintended endpoints by setting network policies or firewall rules in one's own infrastructure. Note that this is outside of the functionality provided by Zitadel.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/zitadel/zitadel/security/advisories/GHSA-7777-fhq9-592v",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/zitadel/zitadel/releases/tag/v3.4.7",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/zitadel/zitadel/releases/tag/v4.11.0",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "zitadel",
+          "product": "zitadel",
+          "versions": [
+            {
+              "version": ">= 2.59.0, < 4.11.1",
               "status": "affected"
             }
           ]
@@ -595,1166 +586,304 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-2636",
-      "publishedDate": "2026-02-25T18:57:02.962Z",
-      "lastModifiedDate": "2026-02-26T15:56:55.089Z",
-      "description": "This vulnerability is caused by a CWE‑159: \"Improper Handling of Invalid Use of Special Elements\" weakness, which leads to an unrecoverable inconsistency in the CLFS.sys driver. This condition forces a call to the KeBugCheckEx function, allowing an unprivileged user to trigger a system crash. Microsoft silently fixed this vulnerability in the September 2025 cumulative update for Windows 11 2024 LTSC and Windows Server 2025. Windows 25H2 (released in September) was released with the patch. Windows 1123h2 and earlier versions remain vulnerable.",
-      "severity": 5.5,
+      "id": "CVE-2026-26682",
+      "publishedDate": "2026-02-26T00:00:00.000Z",
+      "lastModifiedDate": "2026-02-26T16:53:42.684Z",
+      "description": "An issue in fastCMS before v.0.1.6 allows a local attacker to execute arbitrary code via the PluginController.java component",
+      "severity": "N/A",
       "references": [
         {
-          "url": "https://www.fortra.com/security/advisories/research/fr-2026-001",
+          "url": "https://github.com/sorzs/test/tree/main/fastcms-rce",
+          "type": "reference"
+        },
+        {
+          "url": "https://gist.github.com/sorzs/e3913b814e2e5548aa66de6c25b0510a",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "n/a",
+          "versions": [
+            {
+              "version": "n/a",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "n/a"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-56605",
+      "publishedDate": "2026-02-26T00:00:00.000Z",
+      "lastModifiedDate": "2026-02-26T17:06:15.835Z",
+      "description": "A reflected Cross-Site Scripting (XSS) vulnerability exists in the register.php backend script of PuneethReddyHC Event Management System 1.0. The mobile POST parameter is improperly validated and echoed back in the HTTP response without sanitization, allowing an attacker to inject and execute arbitrary JavaScript code in the victim's browser.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/Userr404/CVE-2025-56605",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "n/a",
+          "versions": [
+            {
+              "version": "n/a",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "n/a"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-27804",
+      "publishedDate": "2026-02-25T23:48:20.858Z",
+      "lastModifiedDate": "2026-02-26T17:03:50.903Z",
+      "description": "Parse Server is an open source backend that can be deployed to any infrastructure that can run Node.js. Prior to versions 8.6.3 and 9.1.1-alpha.4, an unauthenticated attacker can forge a Google authentication token with `alg: \"none\"` to log in as any user linked to a Google account, without knowing their credentials. All deployments with Google authentication enabled are affected. The fix in versions 8.6.3 and 9.1.1-alpha.4 hardcodes the expected `RS256` algorithm instead of trusting the JWT header, and replaces the Google adapter's custom key fetcher with `jwks-rsa` which rejects unknown key IDs. As a workaround, dsable Google authentication until upgrading is possible.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/parse-community/parse-server/security/advisories/GHSA-4q3h-vp4r-prv2",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/parse-community/parse-server/commit/9b94083accb7f3e72c6b8126c195c7a03dd2dfd7",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/parse-community/parse-server/commit/9d5942d50e55c822924c27b05aa98f1393e7a330",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/parse-community/parse-server/releases/tag/8.6.3",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/parse-community/parse-server/releases/tag/9.3.1-alpha.4",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "parse-community",
+          "product": "parse-server",
+          "versions": [
+            {
+              "version": ">= 9.0.0, < 9.3.1-alpha.4",
+              "status": "affected"
+            },
+            {
+              "version": "< 8.6.3",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-327: Use of a Broken or Risky Cryptographic Algorithm",
+        "CWE-345: Insufficient Verification of Data Authenticity"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-27735",
+      "publishedDate": "2026-02-25T23:45:52.077Z",
+      "lastModifiedDate": "2026-02-26T17:04:59.103Z",
+      "description": "Model Context Protocol Servers is a collection of reference implementations for the model context protocol (MCP). In mcp-server-git versions prior to 2026.1.14, the git_add tool did not validate that file paths provided in the files argument were within the repository boundaries. Because the tool used GitPython's repo.index.add() rather than the Git CLI, relative paths containing `../` sequences that resolve outside the repository were accepted and staged into the Git index. Users are advised to upgrade to 2026.1.14 or newer to remediate this issue.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/modelcontextprotocol/servers/security/advisories/GHSA-vjqx-cfc4-9h6v",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/modelcontextprotocol/servers/pull/3164",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "modelcontextprotocol",
+          "product": "servers",
+          "versions": [
+            {
+              "version": "< 2026.1.14",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-27633",
+      "publishedDate": "2026-02-25T23:07:35.787Z",
+      "lastModifiedDate": "2026-02-26T16:51:43.475Z",
+      "description": "TinyWeb is a web server (HTTP, HTTPS) written in Delphi for Win32. Versions prior to version 2.02 have a Denial of Service (DoS) vulnerability via memory exhaustion. Unauthenticated remote attackers can send an HTTP POST request to the server with an exceptionally large `Content-Length` header (e.g., `2147483647`). The server continuously allocates memory for the request body (`EntityBody`) while streaming the payload without enforcing any maximum limit, leading to all available memory being consumed and causing the server to crash. Anyone hosting services using TinyWeb is impacted. Version 2.02 fixes the issue. The patch introduces a `CMaxEntityBodySize` limit (set to 10MB) for the maximum size of accepted payloads. As a temporary workaround if upgrading is not immediately possible, consider placing the server behind a Web Application Firewall (WAF) or reverse proxy (like nginx or Cloudflare) configured to explicitly limit the maximum allowed HTTP request body size (e.g., `client_max_body_size` in nginx).",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/maximmasiutin/TinyWeb/security/advisories/GHSA-992w-gmcm-fmgr",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/maximmasiutin/TinyWeb/commit/1cb5a1d",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.masiutin.net/tinyweb-cve-2026-27633.html",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "maximmasiutin",
+          "product": "TinyWeb",
+          "versions": [
+            {
+              "version": "< 2.02",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-400: Uncontrolled Resource Consumption"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-27630",
+      "publishedDate": "2026-02-25T23:05:16.563Z",
+      "lastModifiedDate": "2026-02-26T16:50:51.538Z",
+      "description": "TinyWeb is a web server (HTTP, HTTPS) written in Delphi for Win32. Versions prior to version 2.02 are vulnerable to a Denial of Service (DoS) attack known as Slowloris. The server spawns a new OS thread for every incoming connection without enforcing a maximum concurrency limit or an appropriate request timeout. An unauthenticated remote attacker can exhaust server concurrency limits and memory by opening numerous connections and sending data exceptionally slowly (e.g. 1 byte every few minutes). Anyone hosting services using TinyWeb is impacted. Version 2.02 fixes the issue. The patch introduces a `CMaxConnections` limit (set to 512) and a `CConnectionTimeoutSecs` idle timeout (set to 30 seconds). As a temporary workaround if upgrading is not immediately possible, consider placing the server behind a robust reverse proxy or Web Application Firewall (WAF) such as nginx, HAProxy, or Cloudflare, configured to buffer incomplete requests and aggressively enforce connection limits and timeouts.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/maximmasiutin/TinyWeb/security/advisories/GHSA-ccv5-8948-c99c",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/maximmasiutin/TinyWeb/commit/23268c8",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.masiutin.net/tinyweb-cve-2026-27630.html",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "maximmasiutin",
+          "product": "TinyWeb",
+          "versions": [
+            {
+              "version": "< 2.02",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-400: Uncontrolled Resource Consumption"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-27848",
+      "publishedDate": "2026-02-25T15:15:16.186Z",
+      "lastModifiedDate": "2026-02-26T16:51:13.433Z",
+      "description": "Due to missing neutralization of special elements, OS commands can be injected via the handshake of a TLS-SRP connection, which are ultimately run as the root user.\nThis issue affects MR9600: 1.0.4.205530; MX4200: 1.0.13.210200.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.syss.de/fileadmin/dokumente/Publikationen/Advisories/SYSS-2025-010.txt",
           "type": "reference"
         }
       ],
       "affected": [
         {
           "defaultStatus": "affected",
-          "product": "Windows OS",
-          "vendor": "Microsoft",
+          "product": "MR9600",
+          "vendor": "Linksys",
           "versions": [
             {
-              "lessThan": "25H2",
               "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            },
-            {
-              "lessThanOrEqual": "1123h2",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
+              "version": "1.0.4.205530"
             }
           ]
-        }
-      ],
-      "problemType": [
-        "CWE-159  Improper Handling of Invalid Use of Special Elements"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-1725",
-      "publishedDate": "2026-02-25T20:04:44.830Z",
-      "lastModifiedDate": "2026-02-26T15:42:29.688Z",
-      "description": "GitLab has remediated an issue in GitLab CE/EE affecting versions from 18.9 before 18.9.1 that could have under certain conditions, allowed an unauthenticated user to cause denial of service by sending specially crafted requests to a CI jobs API endpoint.",
-      "severity": 5.3,
-      "references": [
-        {
-          "url": "https://gitlab.com/gitlab-org/gitlab/-/issues/588338",
-          "type": "reference"
         },
-        {
-          "url": "https://hackerone.com/reports/3519773",
-          "type": "poc"
-        },
-        {
-          "url": "https://about.gitlab.com/releases/2026/02/25/patch-release-gitlab-18-9-1-released/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "GitLab",
-          "product": "GitLab",
-          "repo": "git://git@gitlab.com:gitlab-org/gitlab.git",
-          "cpes": [
-            "cpe:2.3:a:gitlab:gitlab:*:*:*:*:*:*:*:*"
-          ],
-          "versions": [
-            {
-              "version": "18.9",
-              "status": "affected",
-              "lessThan": "18.9.1",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-770: Allocation of Resources Without Limits or Throttling"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-22728",
-      "publishedDate": "2026-02-26T00:50:00.863Z",
-      "lastModifiedDate": "2026-02-26T15:58:32.372Z",
-      "description": "Bitnami Sealed Secrets is vulnerable to a scope-widening attack during\nthe secret rotation (/v1/rotate) flow. The rotation handler derives the\nsealing scope for the newly encrypted output from untrusted\nspec.template.metadata.annotations present in the input SealedSecret.\nBy submitting a victim SealedSecret to the rotate endpoint with the\nannotation sealedsecrets.bitnami.com/cluster-wide=true injected into the\ntemplate metadata, a remote attacker can obtain a rotated version of the\nsecret that is cluster-wide. This bypasses original \"strict\" or\n\"namespace-wide\" constraints, allowing the attacker to retarget and unseal\nthe secret in any namespace or under any name to recover the plaintext\ncredentials.",
-      "severity": 4.9,
-      "references": [
-        {
-          "url": "https://github.com/bitnami-labs/sealed-secrets/security/advisories/GHSA-465p-v42x-3fmj",
-          "type": "reference"
-        }
-      ],
-      "affected": [
         {
           "defaultStatus": "unaffected",
-          "product": "sealed-secrets",
-          "vendor": "Bitnami",
+          "product": "MX4200",
+          "vendor": "Linksys",
           "versions": [
             {
-              "lessThan": "<0.36.0",
               "status": "affected",
-              "version": "0.35.0",
-              "versionType": "custom"
+              "version": "1.0.13.210200"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-284"
+        "CWE-78 Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-27942",
-      "publishedDate": "2026-02-26T01:22:11.383Z",
-      "lastModifiedDate": "2026-02-26T15:49:35.449Z",
-      "description": "fast-xml-parser allows users to validate XML, parse XML to JS object, or build XML from JS object without C/C++ based libraries and no callback. Prior to version 5.3.8, the application crashes with stack overflow when user use XML builder with `preserveOrder:true`. Version 5.3.8 fixes the issue. As a workaround, use XML builder with `preserveOrder:false` or check the input data before passing to builder.",
+      "id": "CVE-2026-27847",
+      "publishedDate": "2026-02-25T15:10:30.771Z",
+      "lastModifiedDate": "2026-02-26T16:56:23.595Z",
+      "description": "Due to improper neutralization of special elements, SQL statements can be injected via the handshake of a TLS-SRP connection. This can be used to inject known credentials into the database that can be utilized to successfully complete the handshake and use the protected service.\nThis issue affects MR9600: 1.0.4.205530; MX4200: 1.0.13.210200.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/NaturalIntelligence/fast-xml-parser/security/advisories/GHSA-fj3w-jwp8-x2g3",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/NaturalIntelligence/fast-xml-parser/pull/791",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/NaturalIntelligence/fast-xml-parser/commit/c13a961910f14986295dd28484eee830fa1a0e8a",
+          "url": "https://www.syss.de/fileadmin/dokumente/Publikationen/Advisories/SYSS-2025-009.txt",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "NaturalIntelligence",
-          "product": "fast-xml-parser",
+          "defaultStatus": "affected",
+          "product": "MR9600",
+          "vendor": "Linksys",
           "versions": [
             {
-              "version": "< 5.3.8",
-              "status": "affected"
+              "status": "affected",
+              "version": "1.0.4.205530"
             }
           ]
-        }
-      ],
-      "problemType": [
-        "CWE-120: Buffer Copy without Checking Size of Input ('Classic Buffer Overflow')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-27710",
-      "publishedDate": "2026-02-25T23:43:28.219Z",
-      "lastModifiedDate": "2026-02-26T15:48:29.934Z",
-      "description": "NanaZip is an open source file archive. Starting in version 5.0.1252.0 and prior to versions 6.0.1638.0 and 6.5.1638.0, a denial-of-service vulnerability exists in NanaZip’s `.NET Single File Application` parser. A crafted bundle can force an integer underflow in header-size calculation and trigger an unbounded memory allocation attempt during archive open. Versions 6.0.1638.0 and 6.5.1638.0 fix the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/M2Team/NanaZip/security/advisories/GHSA-89qw-8p49-32wf",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "M2Team",
-          "product": "NanaZip",
-          "versions": [
-            {
-              "version": ">= 5.0.1252.0, < 6.0.1638.0",
-              "status": "affected"
-            },
-            {
-              "version": ">= 6.1, < 6.5.1638.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-191: Integer Underflow (Wrap or Wraparound)"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-27709",
-      "publishedDate": "2026-02-25T23:39:03.772Z",
-      "lastModifiedDate": "2026-02-26T15:49:04.311Z",
-      "description": "NanaZip is an open source file archive. Starting in version 5.0.1252.0 and prior to versions 6.0.1638.0 and 6.5.1638.0, NanaZip’s `.NET Single File Application` parser has an out-of-bounds read vulnerability in manifest parsing. A crafted bundle can provide a malformed `RelativePathLength` so the parser constructs a `std::string` from memory beyond `HeaderBuffer`, leading to crash and potential in-process memory disclosure. Versions 6.0.1638.0 and 6.5.1638.0 fix the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/M2Team/NanaZip/security/advisories/GHSA-vr4w-xc78-w6fv",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "M2Team",
-          "product": "NanaZip",
-          "versions": [
-            {
-              "version": ">= 5.0.1252.0, < 6.0.1638.0",
-              "status": "affected"
-            },
-            {
-              "version": ">= 6.1, < 6.5.1638.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-125: Out-of-bounds Read"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-27015",
-      "publishedDate": "2026-02-25T20:44:14.152Z",
-      "lastModifiedDate": "2026-02-26T15:49:52.553Z",
-      "description": "FreeRDP is a free implementation of the Remote Desktop Protocol. Prior to version 3.23.0, a missing bounds check in `smartcard_unpack_read_size_align()` (`libfreerdp/utils/smartcard_pack.c:1703`) allows a malicious RDP server to crash the FreeRDP client via a reachable `WINPR_ASSERT` → `abort()`. The crash occurs in upstream builds where `WITH_VERBOSE_WINPR_ASSERT=ON` (default in FreeRDP 3.22.0 / current WinPR CMake defaults). Smartcard redirection must be explicitly enabled by the user (e.g., `xfreerdp /smartcard`; `/smartcard-logon` implies `/smartcard`). Version 3.23.0 fixes the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/security/advisories/GHSA-7g72-39pq-4725",
-          "type": "reference"
         },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/commit/65d59d3b3c2f630f2ea862687ecf5f95f8115244",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "FreeRDP",
-          "product": "FreeRDP",
-          "versions": [
-            {
-              "version": "< 3.23.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-617: Reachable Assertion"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-26271",
-      "publishedDate": "2026-02-25T20:40:19.377Z",
-      "lastModifiedDate": "2026-02-26T15:50:49.130Z",
-      "description": "FreeRDP is a free implementation of the Remote Desktop Protocol. Prior to version 3.23.0, a buffer overread in `freerdp_image_copy_from_icon_data()` (libfreerdp/codec/color.c) can be triggered by crafted RDP Window Icon (TS_ICON_INFO) data. The bug is reachable over the network when a client processes icon data from an RDP server (or from a man-in-the-middle). Version 3.23.0 fixes the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/security/advisories/GHSA-hr4m-ph4g-48j6",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/commit/f5e20403d6e325e11b68129803f967fb5aeec1cb",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "FreeRDP",
-          "product": "FreeRDP",
-          "versions": [
-            {
-              "version": "< 3.23.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-126: Buffer Over-read"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-25959",
-      "publishedDate": "2026-02-25T20:36:09.791Z",
-      "lastModifiedDate": "2026-02-26T15:52:24.977Z",
-      "description": "FreeRDP is a free implementation of the Remote Desktop Protocol. Prior to version 3.23.0, `xf_cliprdr_provide_data_` passes freed `pDstData` to `XChangeProperty` because the cliprdr channel thread calls `xf_cliprdr_server_format_data_response` which converts and uses the clipboard data without holding any lock, while the X11 event thread concurrently calls `xf_cliprdr_clear_cached_data` → `HashTable_Clear` which frees the same data via `xf_cached_data_free`, triggering a heap use after free. Version 3.23.0 fixes the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/security/advisories/GHSA-78xg-v4p2-4w3c",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/commit/d3e8b3b9365be96a4f11dda149d71b3287227d0a",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/5c7aae27d0417b42b4806c2a5c583ca39dd9ef1e/client/X11/xf_cliprdr.c#L1229-L1243",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/5c7aae27d0417b42b4806c2a5c583ca39dd9ef1e/client/X11/xf_cliprdr.c#L1337-L1344",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/5c7aae27d0417b42b4806c2a5c583ca39dd9ef1e/client/X11/xf_cliprdr.c#L200-L208",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/5c7aae27d0417b42b4806c2a5c583ca39dd9ef1e/client/X11/xf_cliprdr.c#L2295",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/5c7aae27d0417b42b4806c2a5c583ca39dd9ef1e/client/X11/xf_cliprdr.c#L2323-L2334",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/5c7aae27d0417b42b4806c2a5c583ca39dd9ef1e/client/X11/xf_cliprdr.c#L2363",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/5c7aae27d0417b42b4806c2a5c583ca39dd9ef1e/client/X11/xf_cliprdr.c#L933",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "FreeRDP",
-          "product": "FreeRDP",
-          "versions": [
-            {
-              "version": "< 3.23.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-416: Use After Free"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-0542",
-      "publishedDate": "2026-02-25T20:35:27.303Z",
-      "lastModifiedDate": "2026-02-26T15:53:05.161Z",
-      "description": "ServiceNow has addressed a remote code execution vulnerability that was identified in the ServiceNow AI platform.  This vulnerability could enable an unauthenticated user, in certain circumstances, to execute code within the ServiceNow Sandbox.   \n\n\n\n\n\nServiceNow addressed this vulnerability by deploying a security update to hosted instances. Relevant security updates also have been provided to ServiceNow self-hosted customers and partners. Further, the vulnerability is addressed in the listed patches and hot fixes. While we are not currently aware of exploitation against customer instances, we recommend customers promptly apply appropriate updates or upgrade if they have not already done so.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://support.servicenow.com/kb?id=kb_article_view&sysparm_article=KB2693566",
-          "type": "reference"
-        }
-      ],
-      "affected": [
         {
           "defaultStatus": "unaffected",
-          "product": "ServiceNow AI Platform",
-          "vendor": "ServiceNow",
+          "product": "MX4200",
+          "vendor": "Linksys",
           "versions": [
             {
-              "lessThan": "Australia",
               "status": "affected",
-              "version": "0",
-              "versionType": "custom"
-            },
-            {
-              "lessThan": "Zurich Patch 5",
-              "status": "affected",
-              "version": "0",
-              "versionType": "custom"
-            },
-            {
-              "lessThan": "Zurich Patch 4 Hot Fix 3b",
-              "status": "affected",
-              "version": "0",
-              "versionType": "custom"
-            },
-            {
-              "lessThan": "Yokohama Patch 12",
-              "status": "affected",
-              "version": "0",
-              "versionType": "custom"
-            },
-            {
-              "lessThan": "Yokohama Patch 10 Hot Fix 1b",
-              "status": "affected",
-              "version": "0",
-              "versionType": "custom"
-            },
-            {
-              "lessThan": "Xanadu Patch 11 Hot Fix 1a",
-              "status": "affected",
-              "version": "0",
-              "versionType": "custom"
+              "version": "1.0.13.210200"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-653: Improper Isolation or Compartmentalization"
+        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
       ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-25955",
-      "publishedDate": "2026-02-25T20:32:42.458Z",
-      "lastModifiedDate": "2026-02-26T15:54:09.229Z",
-      "description": "FreeRDP is a free implementation of the Remote Desktop Protocol. Prior to version 3.23.0, `xf_AppUpdateWindowFromSurface` reuses a cached `XImage` whose `data` pointer references a freed RDPGFX surface buffer, because `gdi_DeleteSurface` frees `surface->data` without invalidating the `appWindow->image` that aliases it. Version 3.23.0 fixes the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/security/advisories/GHSA-4g54-x8v7-559x",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/commit/169d358734509e82663a0d6a0085ae726d439d8e",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/5c7aae27d0417b42b4806c2a5c583ca39dd9ef1e/client/X11/xf_window.c#L1484-L1492",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/5c7aae27d0417b42b4806c2a5c583ca39dd9ef1e/client/X11/xf_window.c#L1494-L1500",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/5c7aae27d0417b42b4806c2a5c583ca39dd9ef1e/client/X11/xf_window.c#L1528",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/5c7aae27d0417b42b4806c2a5c583ca39dd9ef1e/libfreerdp/gdi/gfx.c#L1224-L1227",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "FreeRDP",
-          "product": "FreeRDP",
-          "versions": [
-            {
-              "version": "< 3.23.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-416: Use After Free"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-25954",
-      "publishedDate": "2026-02-25T20:30:32.755Z",
-      "lastModifiedDate": "2026-02-26T15:54:47.557Z",
-      "description": "FreeRDP is a free implementation of the Remote Desktop Protocol. Prior to version 3.23.0, `xf_rail_server_local_move_size` dereferences a freed `xfAppWindow` pointer because `xf_rail_get_window` returns an unprotected pointer from the `railWindows` hash table, and the main thread can concurrently delete the window (via a window delete order) while the RAIL channel thread is still using the pointer. Version 3.23.0 fixes the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/security/advisories/GHSA-cc88-4j37-mw6j",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/commit/1994e9844212a6dfe0ff12309fef520e888986b5",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/5c7aae27d0417b42b4806c2a5c583ca39dd9ef1e/client/X11/xf_rail.c#L1076",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/5c7aae27d0417b42b4806c2a5c583ca39dd9ef1e/client/X11/xf_rail.c#L1133",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/5c7aae27d0417b42b4806c2a5c583ca39dd9ef1e/client/X11/xf_rail.c#L1230-L1238",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/5c7aae27d0417b42b4806c2a5c583ca39dd9ef1e/client/X11/xf_rail.c#L1347",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/5c7aae27d0417b42b4806c2a5c583ca39dd9ef1e/client/X11/xf_rail.c#L1350-L1359",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/5c7aae27d0417b42b4806c2a5c583ca39dd9ef1e/client/X11/xf_rail.c#L647",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "FreeRDP",
-          "product": "FreeRDP",
-          "versions": [
-            {
-              "version": "< 3.23.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-416: Use After Free"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-25953",
-      "publishedDate": "2026-02-25T20:27:00.424Z",
-      "lastModifiedDate": "2026-02-26T15:55:34.086Z",
-      "description": "FreeRDP is a free implementation of the Remote Desktop Protocol. Prior to version 3.23.0, `xf_AppUpdateWindowFromSurface` reads from a freed `xfAppWindow` because the RDPGFX DVC thread obtains a bare pointer via `xf_rail_get_window` without any lifetime protection, while the main thread can concurrently delete the window through a fastpath window-delete order. Version 3.23.0 fixes the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/security/advisories/GHSA-p6rq-rxpc-rh3p",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/commit/1994e9844212a6dfe0ff12309fef520e888986b5",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/5c7aae27d0417b42b4806c2a5c583ca39dd9ef1e/client/X11/xf_rail.c#L1230-L1237",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/5c7aae27d0417b42b4806c2a5c583ca39dd9ef1e/client/X11/xf_rail.c#L257-L290",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/5c7aae27d0417b42b4806c2a5c583ca39dd9ef1e/client/X11/xf_rail.c#L643-L647",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/5c7aae27d0417b42b4806c2a5c583ca39dd9ef1e/client/X11/xf_window.c#L1394-L1428",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/5c7aae27d0417b42b4806c2a5c583ca39dd9ef1e/client/X11/xf_window.c#L1462-L1470",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/5c7aae27d0417b42b4806c2a5c583ca39dd9ef1e/client/X11/xf_window.c#L1484-L1491",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/5c7aae27d0417b42b4806c2a5c583ca39dd9ef1e/libfreerdp/gdi/gfx.c#L254-L286",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/5c7aae27d0417b42b4806c2a5c583ca39dd9ef1e/libfreerdp/gdi/gfx.c#L278-L279",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "FreeRDP",
-          "product": "FreeRDP",
-          "versions": [
-            {
-              "version": "< 3.23.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-416: Use After Free"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-25952",
-      "publishedDate": "2026-02-25T20:24:07.396Z",
-      "lastModifiedDate": "2026-02-26T15:56:24.771Z",
-      "description": "FreeRDP is a free implementation of the Remote Desktop Protocol. Prior to version 3.23.0, `xf_SetWindowMinMaxInfo` dereferences a freed `xfAppWindow` pointer because `xf_rail_get_window` in `xf_rail_server_min_max_info` returns an unprotected pointer from the `railWindows` hash table, and the main thread can concurrently delete the window (via a window delete order) while the RAIL channel thread is still using the pointer. Version 3.23.0 fixes the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/security/advisories/GHSA-cgqm-cwjg-7w9x",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/commit/1994e9844212a6dfe0ff12309fef520e888986b5",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/5c7aae27d0417b42b4806c2a5c583ca39dd9ef1e/client/X11/xf_rail.c#L1167",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/5c7aae27d0417b42b4806c2a5c583ca39dd9ef1e/client/X11/xf_rail.c#L1174",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/5c7aae27d0417b42b4806c2a5c583ca39dd9ef1e/client/X11/xf_rail.c#L1178",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/5c7aae27d0417b42b4806c2a5c583ca39dd9ef1e/client/X11/xf_rail.c#L1230-L1238",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/5c7aae27d0417b42b4806c2a5c583ca39dd9ef1e/client/X11/xf_rail.c#L643",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/5c7aae27d0417b42b4806c2a5c583ca39dd9ef1e/client/X11/xf_window.c#L1111",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/5c7aae27d0417b42b4806c2a5c583ca39dd9ef1e/client/X11/xf_window.c#L1128",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/5c7aae27d0417b42b4806c2a5c583ca39dd9ef1e/client/X11/xf_window.c#L1394",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/blob/5c7aae27d0417b42b4806c2a5c583ca39dd9ef1e/client/X11/xf_window.c#L1428",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "FreeRDP",
-          "product": "FreeRDP",
-          "versions": [
-            {
-              "version": "< 3.23.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-416: Use After Free"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-3221",
-      "publishedDate": "2026-02-25T18:29:11.939Z",
-      "lastModifiedDate": "2026-02-26T16:03:04.217Z",
-      "description": "Sensitive\n user account information is not encrypted in the database in Devolutions Server 2025.3.14 and earlier, which allows an attacker with \naccess to the database to obtain sensitive user \ninformation via direct database access.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://devolutions.net/security/advisories/DEVO-2026-0004/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Server",
-          "vendor": "Devolutions",
-          "versions": [
-            {
-              "lessThan": "2025.3.15",
-              "status": "affected",
-              "version": "0",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-312 Cleartext Storage of Sensitive Information"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-2761",
-      "publishedDate": "2026-02-24T13:33:01.011Z",
-      "lastModifiedDate": "2026-02-26T15:53:16.322Z",
-      "description": "Sandbox escape in the Graphics: WebRender component. This vulnerability affects Firefox < 148, Firefox ESR < 115.33, Firefox ESR < 140.8, Thunderbird < 148, and Thunderbird < 140.8.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://bugzilla.mozilla.org/show_bug.cgi?id=2011063",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-13/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-14/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-15/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-16/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-17/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Firefox",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "148",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "product": "Firefox ESR",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "115.33",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "product": "Firefox ESR",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "140.8",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "product": "Thunderbird",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "148",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "product": "Thunderbird",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "140.8",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-2760",
-      "publishedDate": "2026-02-24T13:33:00.290Z",
-      "lastModifiedDate": "2026-02-26T15:51:08.823Z",
-      "description": "Sandbox escape due to incorrect boundary conditions in the Graphics: WebRender component. This vulnerability affects Firefox < 148, Firefox ESR < 115.33, Firefox ESR < 140.8, Thunderbird < 148, and Thunderbird < 140.8.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://bugzilla.mozilla.org/show_bug.cgi?id=2011062",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-13/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-14/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-15/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-16/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-17/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Firefox",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "148",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "product": "Firefox ESR",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "115.33",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "product": "Firefox ESR",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "140.8",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "product": "Thunderbird",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "148",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "product": "Thunderbird",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "140.8",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-2759",
-      "publishedDate": "2026-02-24T13:32:59.173Z",
-      "lastModifiedDate": "2026-02-26T15:47:54.766Z",
-      "description": "Incorrect boundary conditions in the Graphics: ImageLib component. This vulnerability affects Firefox < 148, Firefox ESR < 115.33, Firefox ESR < 140.8, Thunderbird < 148, and Thunderbird < 140.8.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://bugzilla.mozilla.org/show_bug.cgi?id=2010933",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-13/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-14/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-15/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-16/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-17/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Firefox",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "148",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "product": "Firefox ESR",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "115.33",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "product": "Firefox ESR",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "140.8",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "product": "Thunderbird",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "148",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "product": "Thunderbird",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "140.8",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-2758",
-      "publishedDate": "2026-02-24T13:32:58.501Z",
-      "lastModifiedDate": "2026-02-26T15:45:43.075Z",
-      "description": "Use-after-free in the JavaScript: GC component. This vulnerability affects Firefox < 148, Firefox ESR < 115.33, Firefox ESR < 140.8, Thunderbird < 148, and Thunderbird < 140.8.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://bugzilla.mozilla.org/show_bug.cgi?id=2009608",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-13/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-14/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-15/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-16/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-17/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Firefox",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "148",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "product": "Firefox ESR",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "115.33",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "product": "Firefox ESR",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "140.8",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "product": "Thunderbird",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "148",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "product": "Thunderbird",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "140.8",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-2757",
-      "publishedDate": "2026-02-24T13:32:57.740Z",
-      "lastModifiedDate": "2026-02-26T15:43:13.747Z",
-      "description": "Incorrect boundary conditions in the WebRTC: Audio/Video component. This vulnerability affects Firefox < 148, Firefox ESR < 115.33, Firefox ESR < 140.8, Thunderbird < 148, and Thunderbird < 140.8.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://bugzilla.mozilla.org/show_bug.cgi?id=2001637",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-13/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-14/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-15/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-16/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-17/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Firefox",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "148",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "product": "Firefox ESR",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "115.33",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "product": "Firefox ESR",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "140.8",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "product": "Thunderbird",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "148",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "product": "Thunderbird",
-          "vendor": "Mozilla",
-          "versions": [
-            {
-              "lessThan": "140.8",
-              "status": "affected",
-              "version": "unspecified",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
       "fix_suggestion": "无法生成修复建议"
     }
   ]
