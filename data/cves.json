@@ -2,63 +2,251 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 7,
-    "last_updated": "2026-02-26T14:37:52.890370",
+    "total_count": 28,
+    "last_updated": "2026-02-26T15:36:29.559255",
     "severity_distribution": {
       "critical": 0,
-      "high": 2,
-      "medium": 1,
-      "low": 0,
-      "none": 4
+      "high": 8,
+      "medium": 12,
+      "low": 1,
+      "none": 7
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-26965",
-      "publishedDate": "2026-02-25T20:59:17.828Z",
-      "lastModifiedDate": "2026-02-26T14:08:18.233Z",
-      "description": "FreeRDP is a free implementation of the Remote Desktop Protocol. Prior to version 3.23.0, in the RLE planar decode path, `planar_decompress_plane_rle()` writes into `pDstData` at `((nYDst+y) * nDstStep) + (4*nXDst) + nChannel` without verifying that `(nYDst+nSrcHeight)` fits in the destination height or that `(nXDst+nSrcWidth)` fits in the destination stride. When `TempFormat != DstFormat`, `pDstData` becomes `planar->pTempData` (sized for the desktop), while `nYDst` is only validated against the **surface** by `is_within_surface()`. A malicious RDP server can exploit this to perform a heap out-of-bounds write with attacker-controlled offset and pixel data on any connecting FreeRDP client. The OOB write reaches up to 132,096 bytes past the temp buffer end, and  on the brk heap (desktop ≤ 128×128), an adjacent `NSC_CONTEXT` struct's `decode` function pointer is overwritten with attacker-controlled pixel data — control-flow–relevant corruption (function pointer overwritten) demonstrated under deterministic heap layout (`nsc->decode = 0xFF414141FF414141`). Version 3.23.0 fixes the vulnerability.",
-      "severity": 8.8,
+      "id": "CVE-2026-25794",
+      "publishedDate": "2026-02-24T00:53:23.396Z",
+      "lastModifiedDate": "2026-02-26T15:05:26.408Z",
+      "description": "ImageMagick is free and open-source software used for editing and manipulating digital images. `WriteUHDRImage` in `coders/uhdr.c` uses `int` arithmetic to compute the pixel buffer size. Prior to version 7.1.2-15, when image dimensions are large, the multiplication overflows 32-bit `int`, causing an undersized heap allocation followed by an out-of-bounds write. This can crash the process or potentially lead to an out of bounds heap write. Version 7.1.2-15 contains a patch.",
+      "severity": 8.2,
       "references": [
         {
-          "url": "https://github.com/FreeRDP/FreeRDP/security/advisories/GHSA-5vgf-mw4f-r33h",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreeRDP/FreeRDP/commit/a0be5cb87d760bb1c803ad1bb835aa1e73e62abc",
+          "url": "https://github.com/ImageMagick/ImageMagick/security/advisories/GHSA-vhqj-f5cj-9x8h",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "FreeRDP",
-          "product": "FreeRDP",
+          "vendor": "ImageMagick",
+          "product": "ImageMagick",
           "versions": [
             {
-              "version": "< 3.23.0",
+              "version": "< 7.1.2-15",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-787: Out-of-bounds Write"
+        "CWE-122: Heap-based Buffer Overflow",
+        "CWE-190: Integer Overflow or Wraparound"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-0752",
-      "publishedDate": "2026-02-25T20:05:19.818Z",
-      "lastModifiedDate": "2026-02-26T14:08:35.820Z",
-      "description": "GitLab has remediated an issue in GitLab CE/EE affecting all versions from 16.2 before 18.7.5, 18.8 before 18.8.5, and 18.9 before 18.9.1 that under certain circumstances, could have allowed an unauthenticated user to inject arbitrary scripts into the Mermaid sandbox UI.",
-      "severity": 8,
+      "id": "CVE-2026-3172",
+      "publishedDate": "2026-02-25T20:59:10.051Z",
+      "lastModifiedDate": "2026-02-26T15:04:08.481Z",
+      "description": "Buffer overflow in parallel HNSW index build in pgvector 0.6.0 through 0.8.1 allows a database user to leak sensitive data from other relations or crash the database server.",
+      "severity": 8.1,
       "references": [
         {
-          "url": "https://gitlab.com/gitlab-org/gitlab/-/issues/585371",
+          "url": "https://github.com/pgvector/pgvector/issues/959",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "pgvector",
+          "vendor": "n/a",
+          "versions": [
+            {
+              "lessThan": "0.8.2",
+              "status": "affected",
+              "version": "0.8.0",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "0.7.0",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "0.6.0",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Integer Underflow or Wraparound",
+        "Out-of-bounds Write"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-25802",
+      "publishedDate": "2026-02-24T00:42:45.515Z",
+      "lastModifiedDate": "2026-02-26T14:58:43.459Z",
+      "description": "New API is a large language mode (LLM) gateway and artificial intelligence (AI) asset management system. Prior to version 0.10.8-alpha.9, a potential unsafe operation occurs in component `MarkdownRenderer.jsx`, allowing for Cross-Site Scripting(XSS) when the model outputs items containing `<script>` tag. Version 0.10.8-alpha.9 fixes the issue.",
+      "severity": 7.6,
+      "references": [
+        {
+          "url": "https://github.com/QuantumNous/new-api/security/advisories/GHSA-299v-8pq9-5gjq",
           "type": "reference"
         },
         {
-          "url": "https://hackerone.com/reports/3473276",
+          "url": "https://github.com/QuantumNous/new-api/commit/ab5456eb1049aa8a0f3e51f359907ec7fff38b4b",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "QuantumNous",
+          "product": "new-api",
+          "versions": [
+            {
+              "version": "< 0.10.8-alpha.9",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-26265",
+      "publishedDate": "2026-02-26T15:10:25.929Z",
+      "lastModifiedDate": "2026-02-26T15:10:25.929Z",
+      "description": "Discourse is an open source discussion platform. Prior to versions 2025.12.2, 2026.1.1, and 2026.2.0, an IDOR vulnerability in the directory items endpoint allows any user, including anonymous users, to retrieve private user field values for all users in the directory. The `user_field_ids` parameter in `DirectoryItemsController#index` accepts arbitrary user field IDs without authorization checks, bypassing the visibility restrictions (`show_on_profile` / `show_on_user_card`) that are enforced elsewhere (e.g., `UserCardSerializer` via `Guardian#allowed_user_field_ids`). An attacker can request `GET /directory_items.json?period=all&user_field_ids=<id>` with any private field ID and receive that field's value for every user in the directory response. This enables bulk exfiltration of private user data such as phone numbers, addresses, or other sensitive custom fields that admins have explicitly configured as non-public. The issue is patched in versions 2025.12.2, 2026.1.1, and 2026.2.0 by filtering `user_field_ids` against `UserField.public_fields` for non-staff users before building the custom field map. As a workaround, site administrators can remove sensitive data from private user fields, or disable the user directory via the `enable_user_directory` site setting.",
+      "severity": 7.5,
+      "references": [
+        {
+          "url": "https://github.com/discourse/discourse/security/advisories/GHSA-crxf-p6jm-vpgw",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "discourse",
+          "product": "discourse",
+          "versions": [
+            {
+              "version": "< 2025.12.2",
+              "status": "affected"
+            },
+            {
+              "version": ">= 2026.1.0-latest, < 2026.1.1",
+              "status": "affected"
+            },
+            {
+              "version": ">= 2026.2.0-latest, < 2026.2.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-863: Incorrect Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-26078",
+      "publishedDate": "2026-02-26T15:00:47.130Z",
+      "lastModifiedDate": "2026-02-26T15:00:47.130Z",
+      "description": "Discourse is an open source discussion platform. Prior to versions 2025.12.2, 2026.1.1, and 2026.2.0, when the `patreon_webhook_secret` site setting is blank, an attacker can forge valid webhook signatures by computing an HMAC-MD5 with an empty string as the key. Since the request body is known to the sender, the attacker can produce a matching signature and send arbitrary webhook payloads. This allows unauthorized creation, modification, or deletion of Patreon pledge data and triggering patron-to-group synchronization. This vulnerability is patched in versions 2025.12.2, 2026.1.1, and 2026.2.0. The fix rejects webhook requests when the webhook secret is not configured, preventing signature forgery with an empty key. As a workaround, configure the `patreon_webhook_secret` site setting with a strong, non-empty secret value. When the secret is non-empty, an attacker cannot forge valid signatures without knowing the secret.",
+      "severity": 7.5,
+      "references": [
+        {
+          "url": "https://github.com/discourse/discourse/security/advisories/GHSA-frx4-wg35-4r68",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "discourse",
+          "product": "discourse",
+          "versions": [
+            {
+              "version": "< 2025.12.2",
+              "status": "affected"
+            },
+            {
+              "version": ">= 2026.1.0-latest, < 2026.1.1",
+              "status": "affected"
+            },
+            {
+              "version": ">= 2026.2.0-latest, < 2026.2.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-639: Authorization Bypass Through User-Controlled Key"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-27831",
+      "publishedDate": "2026-02-26T00:11:45.608Z",
+      "lastModifiedDate": "2026-02-26T15:14:48.813Z",
+      "description": "rldns is an open source DNS server. Version 2.3 has a heap-based out-of-bounds read that leads to denial of service. Version 1.4 contains a patch for the issue.",
+      "severity": 7.5,
+      "references": [
+        {
+          "url": "https://github.com/bluedragonsecurity/rldns/security/advisories/GHSA-fv38-45j4-g9x4",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/bluedragonsecurity/rldns-1.3-heap-out-of-bounds-vulnerability-fixed-in-rldns-1.4",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/bluedragonsecurity/rldns_archives/blob/main/diff/rldns-1.4.diff",
+          "type": "reference"
+        },
+        {
+          "url": "https://medium.com/@w1sdom/heap-based-buffer-over-read-vulnerability-in-rldns-1-3-5da3bccdc031",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "bluedragonsecurity",
+          "product": "rldns",
+          "versions": [
+            {
+              "version": "= 1.3",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-125: Out-of-bounds Read"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-1388",
+      "publishedDate": "2026-02-25T20:05:05.289Z",
+      "lastModifiedDate": "2026-02-26T15:07:56.004Z",
+      "description": "GitLab has remediated an issue in GitLab CE/EE affecting all versions from 9.2 before 18.7.5, 18.8 before 18.8.5, and 18.9 before 18.9.1 that could have allowed an unauthenticated user to cause regular expression denial of service by sending specially crafted input to a merge request endpoint under certain conditions.",
+      "severity": 7.5,
+      "references": [
+        {
+          "url": "https://gitlab.com/gitlab-org/gitlab/-/issues/587560",
+          "type": "reference"
+        },
+        {
+          "url": "https://hackerone.com/reports/3482893",
           "type": "poc"
         },
         {
@@ -76,7 +264,7 @@
           ],
           "versions": [
             {
-              "version": "16.2",
+              "version": "9.2",
               "status": "affected",
               "lessThan": "18.7.5",
               "versionType": "semver"
@@ -98,234 +286,872 @@
         }
       ],
       "problemType": [
+        "CWE-1333: Inefficient Regular Expression Complexity"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-1662",
+      "publishedDate": "2026-02-25T20:04:59.913Z",
+      "lastModifiedDate": "2026-02-26T15:10:46.924Z",
+      "description": "GitLab has remediated an issue in GitLab CE/EE affecting all versions from 14.4 before 18.7.5, 18.8 before 18.8.5, and 18.9 before 18.9.1 that could have allowed an unauthenticated user to cause Denial of Service by sending specially crafted requests to the Jira events endpoint.",
+      "severity": 7.5,
+      "references": [
+        {
+          "url": "https://gitlab.com/gitlab-org/gitlab/-/issues/588206",
+          "type": "reference"
+        },
+        {
+          "url": "https://hackerone.com/reports/3519694",
+          "type": "poc"
+        },
+        {
+          "url": "https://about.gitlab.com/releases/2026/02/25/patch-release-gitlab-18-9-1-released/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "GitLab",
+          "product": "GitLab",
+          "repo": "git://git@gitlab.com:gitlab-org/gitlab.git",
+          "cpes": [
+            "cpe:2.3:a:gitlab:gitlab:*:*:*:*:*:*:*:*"
+          ],
+          "versions": [
+            {
+              "version": "14.4",
+              "status": "affected",
+              "lessThan": "18.7.5",
+              "versionType": "semver"
+            },
+            {
+              "version": "18.8",
+              "status": "affected",
+              "lessThan": "18.8.5",
+              "versionType": "semver"
+            },
+            {
+              "version": "18.9",
+              "status": "affected",
+              "lessThan": "18.9.1",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-770: Allocation of Resources Without Limits or Throttling"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-2029",
+      "publishedDate": "2026-02-26T01:24:15.342Z",
+      "lastModifiedDate": "2026-02-26T15:13:24.583Z",
+      "description": "The Livemesh Addons for Beaver Builder plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the `[labb_pricing_item]` shortcode's `title` and `value` attributes in all versions up to, and including, 3.9.2 due to insufficient input sanitization and output escaping. Specifically, the plugin uses `htmlspecialchars_decode()` after `wp_kses_post()`, which decodes HTML entities back into executable code after sanitization has occurred. This makes it possible for authenticated attackers, with Contributor-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page.",
+      "severity": 6.4,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/8bc96b4f-256e-491b-9d27-de1adbf67643?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/addons-for-beaver-builder/tags/3.9.2/includes/modules/labb-pricing-table/labb-pricing-table.php#L51",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/addons-for-beaver-builder/tags/3.9.2/includes/modules/labb-pricing-table/labb-pricing-table.php#L59",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "livemesh",
+          "product": "Livemesh Addons for Beaver Builder",
+          "versions": [
+            {
+              "version": "*",
+              "status": "affected",
+              "lessThanOrEqual": "3.9.2",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3051",
+      "publishedDate": "2026-02-24T01:02:11.539Z",
+      "lastModifiedDate": "2026-02-26T15:17:31.925Z",
+      "description": "A vulnerability has been found in DataLinkDC dinky up to 1.2.5. The affected element is the function getProjectDir of the file dinky-admin/src/main/java/org/dinky/utils/GitRepository.java of the component Project Name Handler. Such manipulation of the argument projectName leads to path traversal. The attack may be performed from remote. The exploit has been disclosed to the public and may be used. The vendor was contacted early about this disclosure but did not respond in any way.",
+      "severity": 6.3,
+      "references": [
+        {
+          "url": "https://vuldb.com/?id.347409",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?ctiid.347409",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?submit.757586",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/AnalogyC0de/public_exp/issues/5",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/AnalogyC0de/public_exp/issues/5#issue-3935000629",
+          "type": "poc"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "DataLinkDC",
+          "product": "dinky",
+          "versions": [
+            {
+              "version": "1.2.0",
+              "status": "affected"
+            },
+            {
+              "version": "1.2.1",
+              "status": "affected"
+            },
+            {
+              "version": "1.2.2",
+              "status": "affected"
+            },
+            {
+              "version": "1.2.3",
+              "status": "affected"
+            },
+            {
+              "version": "1.2.4",
+              "status": "affected"
+            },
+            {
+              "version": "1.2.5",
+              "status": "affected"
+            }
+          ],
+          "modules": [
+            "Project Name Handler"
+          ]
+        }
+      ],
+      "problemType": [
+        "Path Traversal"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-27729",
+      "publishedDate": "2026-02-24T00:46:15.945Z",
+      "lastModifiedDate": "2026-02-26T14:59:37.450Z",
+      "description": "Astro is a web framework. In versions 9.0.0 through 9.5.3, Astro server actions have no default request body size limit, which can lead to memory exhaustion DoS. A single large POST to a valid action endpoint can crash the server process on memory-constrained deployments. On-demand rendered sites built with Astro can define server actions, which automatically parse incoming request bodies (JSON or FormData). The body is buffered entirely into memory with no size limit — a single oversized request is sufficient to exhaust the process heap and crash the server. Astro's Node adapter (`mode: 'standalone'`) creates an HTTP server with no body size protection. In containerized environments, the crashed process is automatically restarted, and repeated requests cause a persistent crash-restart loop. Action names are discoverable from HTML form attributes on any public page, so no authentication is required. The vulnerability allows unauthenticated denial of service against SSR standalone deployments using server actions. A single oversized request crashes the server process, and repeated requests cause a persistent crash-restart loop in containerized environments. Version 9.5.4 contains a fix.",
+      "severity": 5.9,
+      "references": [
+        {
+          "url": "https://github.com/withastro/astro/security/advisories/GHSA-jm64-8m5q-4qh8",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/withastro/astro/pull/15564",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/withastro/astro/commit/522f880b07a4ea7d69a19b5507fb53a5ed6c87f8",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/withastro/astro/releases/tag/%40astrojs%2Fnode%409.5.4",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "withastro",
+          "product": "astro",
+          "versions": [
+            {
+              "version": ">= 9.0.0, < 9.5.4",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-770: Allocation of Resources Without Limits or Throttling"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-25797",
+      "publishedDate": "2026-02-24T01:01:22.025Z",
+      "lastModifiedDate": "2026-02-26T15:13:42.512Z",
+      "description": "ImageMagick is free and open-source software used for editing and manipulating digital images. Prior to versions 7.1.2-15 and 6.9.13-40, the ps coders, responsible for writing PostScript files, fails to sanitize the input before writing it into the PostScript header.  An attacker can provide a malicous file and inject arbitrary PostScript code. When the resulting file is processed by a printer or a viewer (like Ghostscript), the injected code is interpreted and executed. The html encoder does not properly escape strings that are written to in the html document. An attacker can provide a malicious file and injection arbitrary html code. Versions 7.1.2-15 and 6.9.13-40 contain a patch.",
+      "severity": 5.7,
+      "references": [
+        {
+          "url": "https://github.com/ImageMagick/ImageMagick/security/advisories/GHSA-rw6c-xp26-225v",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "ImageMagick",
+          "product": "ImageMagick",
+          "versions": [
+            {
+              "version": ">= 7.0.0, < 7.1.2-15",
+              "status": "affected"
+            },
+            {
+              "version": "< 6.9.13-40",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-94: Improper Control of Generation of Code ('Code Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-26207",
+      "publishedDate": "2026-02-26T15:04:14.557Z",
+      "lastModifiedDate": "2026-02-26T15:04:14.557Z",
+      "description": "Discourse is an open source discussion platform. Prior to versions 2025.12.2, 2026.1.1, and 2026.2.0, `discourse-policy` plugin allows any authenticated user to interact with policies on posts they do not have permission to view. The `PolicyController` loads posts by ID without verifying the current user's access, enabling policy group members to accept/unaccept policies on posts in private categories or PMs they cannot see and any authenticated user to enumerate which post IDs have policies attached via differentiated error responses (information disclosure). The issue is patched in versions 2025.12.2, 2026.1.1, and 2026.2.0 by adding a `guardian.can_see?(@post)` check in the `set_post` before_action, ensuring post visibility is verified before any policy action is processed. As a workaround, disabling the discourse-policy plugin (`policy_enabled = false`) eliminates the vulnerability. There is no other workaround without upgrading.",
+      "severity": 5.4,
+      "references": [
+        {
+          "url": "https://github.com/discourse/discourse/security/advisories/GHSA-jr4h-w6p5-w55r",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "discourse",
+          "product": "discourse",
+          "versions": [
+            {
+              "version": "< 2025.12.2",
+              "status": "affected"
+            },
+            {
+              "version": ">= 2026.1.0-latest, < 2026.1.1",
+              "status": "affected"
+            },
+            {
+              "version": ">= 2026.2.0-latest, < 2026.2.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-862: Missing Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-27948",
+      "publishedDate": "2026-02-26T01:32:15.184Z",
+      "lastModifiedDate": "2026-02-26T15:07:56.702Z",
+      "description": "Copyparty is a portable file server. In versions prior to 1.20.9, an XSS allows for reflected cross-site scripting via URL-parameter `?setck=...`. Version 1.20.9 fixes the issue.",
+      "severity": 5.4,
+      "references": [
+        {
+          "url": "https://github.com/9001/copyparty/security/advisories/GHSA-62cr-6wp5-q43h",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/9001/copyparty/commit/31b2801fd041f803f4a3d5c12c7d7cb5419048bc",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "9001",
+          "product": "copyparty",
+          "versions": [
+            {
+              "version": "< 1.20.9",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
         "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-22721",
-      "publishedDate": "2026-02-25T20:00:15.719Z",
-      "lastModifiedDate": "2026-02-26T14:07:49.065Z",
-      "description": "VMware Aria Operations contains a privilege escalation vulnerability. A malicious actor with privileges in vCenter to access Aria Operations may leverage this vulnerability to obtain administrative access in VMware Aria Operations. To remediate CVE-2026-22721, apply the patches listed in the 'Fixed Version' column of the 'Response Matrix' found in  VMSA-2026-0001 https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/36947 .",
-      "severity": 6.2,
+      "id": "CVE-2026-25796",
+      "publishedDate": "2026-02-24T00:57:27.441Z",
+      "lastModifiedDate": "2026-02-26T15:12:22.180Z",
+      "description": "ImageMagick is free and open-source software used for editing and manipulating digital images. Prior to versions 7.1.2-15 and 6.9.13-40, in `ReadSTEGANOImage()` (`coders/stegano.c`), the `watermark` Image object is not freed on three early-return paths, resulting in a definite memory leak (~13.5KB+ per invocation) that can be exploited for denial of service. Versions 7.1.2-15 and 6.9.13-40 contain a patch.",
+      "severity": 5.3,
       "references": [
         {
-          "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/36947",
-          "type": "reference"
-        },
-        {
-          "url": "https://techdocs.broadcom.com/us/en/vmware-cis/aria/aria-operations/8-18/vmware-aria-operations-8186-release-notes.html",
+          "url": "https://github.com/ImageMagick/ImageMagick/security/advisories/GHSA-g2pr-qxjg-7r2w",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "affected",
-          "packageName": "vmware-aria-operations",
-          "product": "VMware Aria Operations",
-          "vendor": "VMware",
+          "vendor": "ImageMagick",
+          "product": "ImageMagick",
           "versions": [
             {
-              "lessThan": "8.18.6",
-              "status": "affected",
-              "version": "8.18.0",
-              "versionType": "custom"
+              "version": ">= 7.0.0, < 7.1.2-15",
+              "status": "affected"
             },
             {
-              "status": "unaffected",
-              "version": "8.18.6"
-            }
-          ]
-        },
-        {
-          "defaultStatus": "affected",
-          "packageName": "vmware-cloud-foundation-operations",
-          "product": "VMware Cloud Foundation",
-          "vendor": "VMware",
-          "versions": [
-            {
-              "lessThan": "5.2.3",
-              "status": "affected",
-              "version": "4.0",
-              "versionType": "custom"
-            },
-            {
-              "lessThan": "9.0.2",
-              "status": "affected",
-              "version": "9.0",
-              "versionType": "custom"
-            },
-            {
-              "status": "unaffected",
-              "version": "5.2.3"
-            },
-            {
-              "status": "unaffected",
-              "version": "9.0.2"
-            }
-          ]
-        },
-        {
-          "defaultStatus": "affected",
-          "packageName": "vmware-telco-cloud-platform",
-          "product": "VMware Telco Cloud Platform",
-          "vendor": "VMware",
-          "versions": [
-            {
-              "lessThan": "5.2.3",
-              "status": "affected",
-              "version": "4.0",
-              "versionType": "custom"
-            },
-            {
-              "status": "unaffected",
-              "version": "5.2.3",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "defaultStatus": "affected",
-          "packageName": "vmware-telco-cloud-infrastructure",
-          "product": "VMware Telco Cloud Infrastructure",
-          "vendor": "VMware",
-          "versions": [
-            {
-              "lessThan": "5.2.3",
-              "status": "affected",
-              "version": "2.0",
-              "versionType": "custom"
-            },
-            {
-              "status": "unaffected",
-              "version": "5.2.3",
-              "versionType": "custom"
+              "version": "< 6.9.13-40",
+              "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-269 Improper Privilege Management"
+        "CWE-401: Missing Release of Memory after Effective Lifetime"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-2680",
-      "publishedDate": "2026-02-26T12:18:48.247Z",
-      "lastModifiedDate": "2026-02-26T14:04:31.184Z",
-      "description": "Reflected Cross-Site Scripting (XSS) on the A3factura web platform, in parameter 'customerVATNumber', in 'a3factura-app.wolterskluwer.es/#/incomes/salesDeliveryNotes' endpoint, which could allow an attacker to execute arbitrary code in the victim's browser.",
+      "id": "CVE-2026-25795",
+      "publishedDate": "2026-02-24T00:54:34.640Z",
+      "lastModifiedDate": "2026-02-26T15:08:55.743Z",
+      "description": "ImageMagick is free and open-source software used for editing and manipulating digital images. Prior to versions 7.1.2-15 and 6.9.13-40, in `ReadSFWImage()` (`coders/sfw.c`), when temporary file creation fails, `read_info` is destroyed before its `filename` member is accessed, causing a NULL pointer dereference and crash. Versions 7.1.2-15 and 6.9.13-40 contain a patch.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://github.com/ImageMagick/ImageMagick/security/advisories/GHSA-p33r-fqw2-rqmm",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "ImageMagick",
+          "product": "ImageMagick",
+          "versions": [
+            {
+              "version": ">= 7.0.0, < 7.1.2-15",
+              "status": "affected"
+            },
+            {
+              "version": "< 6.9.13-40",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-476: NULL Pointer Dereference"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-25638",
+      "publishedDate": "2026-02-24T00:49:57.947Z",
+      "lastModifiedDate": "2026-02-26T15:03:56.194Z",
+      "description": "ImageMagick is free and open-source software used for editing and manipulating digital images. Prior to versions 7.1.2-15 and 6.9.13-40, memory leak exists in `coders/msl.c`. In the `WriteMSLImage` function of the `msl.c` file, resources are allocated. But the function returns early without releasing these allocated resources. Versions 7.1.2-15 and 6.9.13-40 contain a patch.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://github.com/ImageMagick/ImageMagick/security/advisories/GHSA-gxcx-qjqp-8vjw",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "ImageMagick",
+          "product": "ImageMagick",
+          "versions": [
+            {
+              "version": ">= 7.0.0, < 7.1.2-15",
+              "status": "affected"
+            },
+            {
+              "version": "< 6.9.13-40",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-401: Missing Release of Memory after Effective Lifetime"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-25637",
+      "publishedDate": "2026-02-24T00:48:37.892Z",
+      "lastModifiedDate": "2026-02-26T15:01:32.626Z",
+      "description": "ImageMagick is free and open-source software used for editing and manipulating digital images. Prior to version 7.1.2-15, a memory leak in the ASHLAR image writer allows an attacker to exhaust process memory by providing a crafted image that results in small objects that are allocated but never freed. Version 7.1.2-15 contains a patch.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://github.com/ImageMagick/ImageMagick/security/advisories/GHSA-gm37-qx7w-p258",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/ImageMagick/ImageMagick/commit/30ce0e8efbd72fd6b50ed3a10ae22f57c8901137",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/dlemstra/Magick.NET/releases/tag/14.10.3",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "ImageMagick",
+          "product": "ImageMagick",
+          "versions": [
+            {
+              "version": "< 7.1.2-15",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-401: Missing Release of Memory after Effective Lifetime"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-2499",
+      "publishedDate": "2026-02-26T01:24:15.718Z",
+      "lastModifiedDate": "2026-02-26T15:10:28.820Z",
+      "description": "The Custom Logo plugin for WordPress is vulnerable to Stored Cross-Site Scripting via admin settings in all versions up to, and including, 2.2 due to insufficient input sanitization and output escaping. This makes it possible for authenticated attackers, with administrator-level permissions and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page. This only affects multi-site installations and installations where unfiltered_html has been disabled.",
+      "severity": 4.4,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/92705581-9a0d-4d23-9118-fec9100e4ce1?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/custom-logo/trunk/custom-logo.php#L18",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/custom-logo/tags/2.2/custom-logo.php#L18",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "tgrk",
+          "product": "Custom Logo",
+          "versions": [
+            {
+              "version": "*",
+              "status": "affected",
+              "lessThanOrEqual": "2.2",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-28296",
+      "publishedDate": "2026-02-26T15:10:47.917Z",
+      "lastModifiedDate": "2026-02-26T15:10:47.917Z",
+      "description": "A flaw was found in the FTP GVfs backend. A remote attacker could exploit this input validation vulnerability by supplying specially crafted file paths containing carriage return and line feed (CRLF) sequences. These unsanitized sequences allow the attacker to terminate intended FTP commands and inject arbitrary FTP commands, potentially leading to arbitrary code execution or other severe impacts.",
+      "severity": 4.3,
+      "references": [
+        {
+          "url": "https://access.redhat.com/security/cve/CVE-2026-28296",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2443003",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 10",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "gvfs",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:10"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 6",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "gvfs",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:6"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 7",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "gvfs",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:7"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 8",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "gvfs",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:8"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 9",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "gvfs",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:9"
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Neutralization of CRLF Sequences ('CRLF Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3050",
+      "publishedDate": "2026-02-24T01:02:09.321Z",
+      "lastModifiedDate": "2026-02-26T15:15:35.848Z",
+      "description": "A flaw has been found in horilla-opensource horilla up to 1.0.2. Impacted is an unknown function of the file static/assets/js/global.js of the component Leads Module. This manipulation of the argument Notes causes cross site scripting. The attack is possible to be carried out remotely. The exploit has been published and may be used. Upgrading to version 1.0.3 is recommended to address this issue. Patch name: fc5c8e55988e89273012491b5f097b762b474546. It is suggested to upgrade the affected component.",
+      "severity": 3.5,
+      "references": [
+        {
+          "url": "https://vuldb.com/?id.347408",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?ctiid.347408",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?submit.757314",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/Stolichnayer/Horilla-CRM-Stored-XSS",
+          "type": "poc"
+        },
+        {
+          "url": "https://github.com/Horilla-opensource/Horilla-crm/commit/fc5c8e55988e89273012491b5f097b762b474546",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/horilla-opensource/horilla-crm/releases/tag/1.0.3",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "horilla-opensource",
+          "product": "horilla",
+          "versions": [
+            {
+              "version": "1.0.0",
+              "status": "affected"
+            },
+            {
+              "version": "1.0.1",
+              "status": "affected"
+            },
+            {
+              "version": "1.0.2",
+              "status": "affected"
+            },
+            {
+              "version": "1.0.3",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:2.3:a:horilla:horilla:*:*:*:*:*:*:*:*"
+          ],
+          "modules": [
+            "Leads Module"
+          ]
+        }
+      ],
+      "problemType": [
+        "Cross Site Scripting",
+        "Code Injection"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-2244",
+      "publishedDate": "2026-02-26T14:14:46.460Z",
+      "lastModifiedDate": "2026-02-26T14:59:56.045Z",
+      "description": "A vulnerability in Google Cloud Vertex AI Workbench from 7/21/2025 to 01/30/2026 allows an attacker to exfiltrate valid Google Cloud access tokens of other users via abuse of a built-in startup script.\n\nAll instances after January 30th, 2026 have been patched to protect from this vulnerability. No user action is required for this.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-a3factura-software",
+          "url": "https://docs.cloud.google.com/vertex-ai/docs/workbench/release-notes#February_20_2026",
           "type": "reference"
         }
       ],
       "affected": [
         {
           "defaultStatus": "unaffected",
-          "product": "A3factura",
-          "vendor": "A3factura",
+          "product": "Vertex AI Workbench",
+          "vendor": "Google Cloud",
           "versions": [
             {
+              "lessThan": "01/30/2026",
               "status": "affected",
-              "version": "4.111.2-rev.1"
+              "version": "7/21/2025",
+              "versionType": "date"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting')"
+        "CWE-200 Exposure of Sensitive Information to an Unauthorized Actor"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-2679",
-      "publishedDate": "2026-02-26T12:18:13.402Z",
-      "lastModifiedDate": "2026-02-26T14:06:26.035Z",
-      "description": "Reflected Cross-Site Scripting (XSS) on the A3factura web platform, in parameter 'customerName', in 'a3factura-app.wolterskluwer.es/#/incomes/salesInvoices' endpoint, which could allow an attacker to execute arbitrary code in the victim's browser.",
+      "id": "CVE-2026-23999",
+      "publishedDate": "2026-02-26T02:45:48.099Z",
+      "lastModifiedDate": "2026-02-26T15:15:55.289Z",
+      "description": "Fleet is open source device management software. In versions prior to 4.80.1, Fleet generated device lock and wipe PINs using a predictable algorithm based solely on the current Unix timestamp. Because no secret key or additional entropy was used, the resulting PIN could potentially be derived if the approximate time the device was locked is known. Fleet’s device lock and wipe commands generate a 6-digit PIN that is displayed to administrators for unlocking a device. In affected versions, this PIN was deterministically derived from the current timestamp. An attacker with physical possession of a locked device and knowledge of the approximate time the lock command was issued could theoretically predict the correct PIN within a limited search window. However, successful exploitation is constrained by multiple factors: Physical access to the device is required, the approximate lock time must be known, the operating system enforces rate limiting on PIN entry attempts, attempts would need to be spread over, and device wipe operations would typically complete before sufficient attempts could be made. As a result, this issue does not allow remote exploitation, fleet-wide compromise, or bypass of Fleet authentication controls. Version 4.80.1 contains a patch. No known workarounds are available.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-a3factura-software",
+          "url": "https://github.com/fleetdm/fleet/security/advisories/GHSA-ppwx-5jq7-px2w",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "unaffected",
-          "product": "A3factura",
-          "vendor": "A3factura",
+          "vendor": "fleetdm",
+          "product": "fleet",
           "versions": [
             {
-              "status": "affected",
-              "version": "4.111.2-rev.1"
+              "version": "< 4.80.1",
+              "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting')"
+        "CWE-330: Use of Insufficiently Random Values"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-2678",
-      "publishedDate": "2026-02-26T12:17:17.445Z",
-      "lastModifiedDate": "2026-02-26T14:09:15.966Z",
-      "description": "Reflected Cross-Site Scripting (XSS) on the A3factura web platform, in parameter 'name', parameter 'name', in 'a3factura-app.wolterskluwer.es/#/incomes/customers' endpoint, which could allow an attacker to execute arbitrary code in the victim's browser.",
+      "id": "CVE-2026-27821",
+      "publishedDate": "2026-02-26T00:08:39.924Z",
+      "lastModifiedDate": "2026-02-26T15:15:39.671Z",
+      "description": "GPAC is an open-source multimedia framework. In versions up to and including 26.02.0, a stack buffer overflow occurs during NHML file parsing in `src/filters/dmx_nhml.c`. The value of the xmlHeaderEnd XML attribute is copied from att->value into szXmlHeaderEnd[1000] using strcpy() without any length validation. If the input exceeds 1000 bytes, it overwrites beyond the stack buffer boundary. Commit 9bd7137fded2db40de61a2cf3045812c8741ec52 patches the issue.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-a3factura-software",
+          "url": "https://github.com/gpac/gpac/security/advisories/GHSA-q7qh-8r2r-q559",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/gpac/gpac/commit/9bd7137fded2db40de61a2cf3045812c8741ec52",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "unaffected",
-          "product": "A3factura",
-          "vendor": "A3factura",
+          "vendor": "gpac",
+          "product": "gpac",
           "versions": [
             {
-              "status": "affected",
-              "version": "4.111.2-rev.1"
+              "version": "<= 26.02.0",
+              "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting')"
+        "CWE-121: Stack-based Buffer Overflow"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-2677",
-      "publishedDate": "2026-02-26T12:16:03.068Z",
-      "lastModifiedDate": "2026-02-26T14:13:41.794Z",
-      "description": "Reflected Cross-Site Scripting (XSS) on the A3factura web platform, in parameter 'name', in 'a3factura-app.wolterskluwer.es/#/incomes/representatives-management' endpoint, which could allow an attacker to execute arbitrary code in the victim's browser.",
+      "id": "CVE-2026-27818",
+      "publishedDate": "2026-02-26T00:02:45.127Z",
+      "lastModifiedDate": "2026-02-26T15:16:30.580Z",
+      "description": "TerriaJS-Server is a NodeJS Express server for TerriaJS, a library for building web-based geospatial data explorers. A validation bug in versions prior to 4.0.3 allows an attacker to proxy domains not explicitly allowed in the `proxyableDomains` configuration. Version 4.0.3 fixes the issue.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-a3factura-software",
+          "url": "https://github.com/TerriaJS/terriajs-server/security/advisories/GHSA-w789-49fc-v8hr",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/TerriaJS/terriajs-server/commit/3aaa5d9717162b245ae4569232bbe7d8673c913f",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "unaffected",
-          "product": "A3factura",
-          "vendor": "A3factura",
+          "vendor": "TerriaJS",
+          "product": "terriajs-server",
           "versions": [
             {
-              "status": "affected",
-              "version": "4.111.2-rev.1"
+              "version": "< 4.0.3",
+              "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting')"
+        "CWE-20: Improper Input Validation",
+        "CWE-918: Server-Side Request Forgery (SSRF)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-71057",
+      "publishedDate": "2026-02-26T00:00:00.000Z",
+      "lastModifiedDate": "2026-02-26T15:08:32.294Z",
+      "description": "Improper session management in D-Link Wireless N 300 ADSL2+ Modem Router DSL-124 ME_1.00 allows attackers to execute a session hijacking attack via spoofing the IP address of an authenticated user.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "http://d-link.com",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.dlink.com/en/security-bulletin/",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/theShinigami/CVE-Disclosures/tree/main/CVE-2025-71057",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "n/a",
+          "versions": [
+            {
+              "version": "n/a",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "n/a"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-27809",
+      "publishedDate": "2026-02-25T23:57:00.760Z",
+      "lastModifiedDate": "2026-02-26T15:17:34.807Z",
+      "description": "psd-tools is a Python package for working with Adobe Photoshop PSD files. Prior to version 1.12.2, when a PSD file contains malformed RLE-compressed image data (e.g. a literal run that extends past the expected row size), decode_rle() raises ValueError which propagated all the way to the user, crashing psd.composite() and psd-tools export. decompress() already had a fallback that replaces failed channels with black pixels when result is None, but it never triggered because the ValueError from decode_rle() was not caught. The fix in version 1.12.2 wraps the decode_rle() call in a try/except so the existing fallback handles the error gracefully.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/psd-tools/psd-tools/security/advisories/GHSA-24p2-j2jr-386w",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/psd-tools/psd-tools/commit/6c0a78f195b5942757886a1863793fd5946c1fb1",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/psd-tools/psd-tools/releases/tag/v1.12.2",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "psd-tools",
+          "product": "psd-tools",
+          "versions": [
+            {
+              "version": "< 1.12.2",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-409: Improper Handling of Highly Compressed Data (Data Amplification)",
+        "CWE-789: Memory Allocation with Excessive Size Value",
+        "CWE-617: Reachable Assertion",
+        "CWE-190: Integer Overflow or Wraparound",
+        "CWE-755: Improper Handling of Exceptional Conditions",
+        "CWE-704: Incorrect Type Conversion or Cast"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-27711",
+      "publishedDate": "2026-02-25T23:44:26.848Z",
+      "lastModifiedDate": "2026-02-26T15:07:47.597Z",
+      "description": "NanaZip is an open source file archive. Starting in version 5.0.1252.0 and prior to versions 6.0.1638.0 and 6.5.1638.0, a memory corruption vulnerability in NanaZip’s UFS parser allows a crafted `.ufs/.ufs2/.img` file to trigger out-of-bounds memory access during archive open/listing. The bug is reachable via normal user file-open flow and can cause process crash, hang, and potentially exploitable heap corruption. Versions 6.0.1638.0 and 6.5.1638.0 fix the issue.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/M2Team/NanaZip/security/advisories/GHSA-rjwv-4w7x-hc9c",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "M2Team",
+          "product": "NanaZip",
+          "versions": [
+            {
+              "version": ">= 5.0.1252.0, < 6.0.1638.0",
+              "status": "affected"
+            },
+            {
+              "version": ">= 6.1, < 6.5.1638.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-125: Out-of-bounds Read"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
