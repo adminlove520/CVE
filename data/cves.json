@@ -2,254 +2,402 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 5,
-    "last_updated": "2026-02-27T04:21:04.891718",
+    "total_count": 8,
+    "last_updated": "2026-02-27T05:33:56.249524",
     "severity_distribution": {
-      "critical": 1,
+      "critical": 2,
       "high": 2,
-      "medium": 1,
+      "medium": 2,
       "low": 0,
-      "none": 1
+      "none": 2
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-28363",
-      "publishedDate": "2026-02-27T03:17:37.343Z",
-      "lastModifiedDate": "2026-02-27T03:23:43.320Z",
-      "description": "In OpenClaw before 2026.2.23, tools.exec.safeBins validation for sort could be bypassed via GNU long-option abbreviations (such as --compress-prog) in allowlist mode, leading to approval-free execution paths that were intended to require approval. Only an exact string such as --compress-program was denied.",
-      "severity": 9.9,
+      "id": "CVE-2026-27966",
+      "publishedDate": "2026-02-26T01:55:18.580Z",
+      "lastModifiedDate": "2026-02-27T04:55:50.976Z",
+      "description": "Langflow is a tool for building and deploying AI-powered agents and workflows. Prior to version 1.8.0, the CSV Agent node in Langflow hardcodes `allow_dangerous_code=True`, which automatically exposes LangChain’s Python REPL tool (`python_repl_ast`). As a result, an attacker can execute arbitrary Python and OS commands on the server via prompt injection, leading to full Remote Code Execution (RCE). Version 1.8.0 fixes the issue.",
+      "severity": 9.8,
       "references": [
         {
-          "url": "https://github.com/openclaw/openclaw/security/advisories/GHSA-3c6h-g97w-fg78",
+          "url": "https://github.com/langflow-ai/langflow/security/advisories/GHSA-3645-fxcv-hqr4",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/langflow-ai/langflow/commit/d8c6480daa17b2f2af0b5470cdf5c3d28dc9e508",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "unaffected",
-          "packageURL": "pkg:npm/openclaw",
-          "product": "OpenClaw",
-          "vendor": "OpenClaw",
+          "vendor": "langflow-ai",
+          "product": "langflow",
           "versions": [
             {
-              "lessThan": "2026.2.23",
+              "version": "< 1.8.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-94: Improper Control of Generation of Code ('Code Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-28370",
+      "publishedDate": "2026-02-27T04:56:25.453Z",
+      "lastModifiedDate": "2026-02-27T05:01:49.069Z",
+      "description": "In the query parser in OpenStack Vitrage before 12.0.1, 13.0.0, 14.0.0, and 15.0.0, a user allowed to access the Vitrage API may trigger code execution on the Vitrage service host as the user the Vitrage service runs under. This may result in unauthorized access to the host and further compromise of the Vitrage service. All deployments exposing the Vitrage API are affected. This occurs in _create_query_function in vitrage/graph/query.py.",
+      "severity": 9.1,
+      "references": [
+        {
+          "url": "https://storyboard.openstack.org/#%21/story/2011539",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/openstack/vitrage/blob/a1f86950e1314b0c740f9cd9b7e9dbab7d02af51/vitrage/graph/query.py#L70",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "OpenStack",
+          "product": "Vitrage",
+          "versions": [
+            {
               "status": "affected",
               "version": "0",
+              "lessThan": "12.0.1",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "13.0.0",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "14.0.0",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "15.0.0",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unknown"
+        }
+      ],
+      "problemType": [
+        "CWE-95 Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-27976",
+      "publishedDate": "2026-02-25T23:34:40.103Z",
+      "lastModifiedDate": "2026-02-27T04:55:52.466Z",
+      "description": "Zed, a code editor, has an extension installer allows tar/gzip downloads. Prior to version 0.224.4, the tar extractor (`async_tar::Archive::unpack`) creates symlinks from the archive without validation, and the path guard (`writeable_path_from_extension`) only performs lexical prefix checks without resolving symlinks. An attacker can ship a tar that first creates a symlink inside the extension workdir pointing outside (e.g., `escape -> /`), then writes files through the symlink, causing writes to arbitrary host paths. This escapes the extension sandbox and enables code execution. Version 0.224.4 patches the issue.",
+      "severity": 8.8,
+      "references": [
+        {
+          "url": "https://github.com/zed-industries/zed/security/advisories/GHSA-59p4-3mhm-qm3r",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "zed-industries",
+          "product": "zed",
+          "versions": [
+            {
+              "version": "< 0.224.4",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-61: UNIX Symbolic Link (Symlink) Following"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-27967",
+      "publishedDate": "2026-02-25T23:33:21.477Z",
+      "lastModifiedDate": "2026-02-27T04:55:53.814Z",
+      "description": "Zed, a code editor, has a symlink escape vulnerability in versions prior to 0.225.9 in Agent file tools (`read_file`, `edit_file`). It allows reading and writing files **outside the project directory** when a project contains symbolic links pointing to external paths. This bypasses the intended workspace boundary and privacy protections (`file_scan_exclusions`, `private_files`), potentially leaking sensitive user data to the LLM. Version 0.225.9 fixes the issue.",
+      "severity": 7.1,
+      "references": [
+        {
+          "url": "https://github.com/zed-industries/zed/security/advisories/GHSA-786m-x2vc-5235",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "zed-industries",
+          "product": "zed",
+          "versions": [
+            {
+              "version": "< 0.225.9",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-59: Improper Link Resolution Before File Access ('Link Following')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3292",
+      "publishedDate": "2026-02-27T05:02:06.427Z",
+      "lastModifiedDate": "2026-02-27T05:02:06.427Z",
+      "description": "A security vulnerability has been detected in jizhiCMS up to 2.5.6. Affected is the function findAll in the library frphp/lib/Model.php of the component Batch Interface. The manipulation of the argument data leads to sql injection. The attack is possible to be carried out remotely. The exploit has been disclosed publicly and may be used. The vendor was contacted early about this disclosure but did not respond in any way.",
+      "severity": 6.3,
+      "references": [
+        {
+          "url": "https://vuldb.com/?id.348018",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?ctiid.348018",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?submit.760180",
+          "type": "reference"
+        },
+        {
+          "url": "https://gist.github.com/0psPwn/46468da7329f7c676c737b4b6b473ddc",
+          "type": "poc"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "jizhiCMS",
+          "versions": [
+            {
+              "version": "2.5.0",
+              "status": "affected"
+            },
+            {
+              "version": "2.5.1",
+              "status": "affected"
+            },
+            {
+              "version": "2.5.2",
+              "status": "affected"
+            },
+            {
+              "version": "2.5.3",
+              "status": "affected"
+            },
+            {
+              "version": "2.5.4",
+              "status": "affected"
+            },
+            {
+              "version": "2.5.5",
+              "status": "affected"
+            },
+            {
+              "version": "2.5.6",
+              "status": "affected"
+            }
+          ],
+          "cpes": [
+            "cpe:2.3:a:jizhicms:jizhicms:*:*:*:*:*:*:*:*"
+          ],
+          "modules": [
+            "Batch Interface"
+          ]
+        }
+      ],
+      "problemType": [
+        "SQL Injection",
+        "Injection"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-22721",
+      "publishedDate": "2026-02-25T20:00:15.719Z",
+      "lastModifiedDate": "2026-02-27T04:55:47.793Z",
+      "description": "VMware Aria Operations contains a privilege escalation vulnerability. A malicious actor with privileges in vCenter to access Aria Operations may leverage this vulnerability to obtain administrative access in VMware Aria Operations. To remediate CVE-2026-22721, apply the patches listed in the 'Fixed Version' column of the 'Response Matrix' found in  VMSA-2026-0001 https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/36947 .",
+      "severity": 6.2,
+      "references": [
+        {
+          "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/36947",
+          "type": "reference"
+        },
+        {
+          "url": "https://techdocs.broadcom.com/us/en/vmware-cis/aria/aria-operations/8-18/vmware-aria-operations-8186-release-notes.html",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "affected",
+          "packageName": "vmware-aria-operations",
+          "product": "VMware Aria Operations",
+          "vendor": "VMware",
+          "versions": [
+            {
+              "lessThan": "8.18.6",
+              "status": "affected",
+              "version": "8.18.0",
+              "versionType": "custom"
+            },
+            {
+              "status": "unaffected",
+              "version": "8.18.6"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "affected",
+          "packageName": "vmware-cloud-foundation-operations",
+          "product": "VMware Cloud Foundation",
+          "vendor": "VMware",
+          "versions": [
+            {
+              "lessThan": "5.2.3",
+              "status": "affected",
+              "version": "4.0",
+              "versionType": "custom"
+            },
+            {
+              "lessThan": "9.0.2",
+              "status": "affected",
+              "version": "9.0",
+              "versionType": "custom"
+            },
+            {
+              "status": "unaffected",
+              "version": "5.2.3"
+            },
+            {
+              "status": "unaffected",
+              "version": "9.0.2"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "affected",
+          "packageName": "vmware-telco-cloud-platform",
+          "product": "VMware Telco Cloud Platform",
+          "vendor": "VMware",
+          "versions": [
+            {
+              "lessThan": "5.2.3",
+              "status": "affected",
+              "version": "4.0",
+              "versionType": "custom"
+            },
+            {
+              "status": "unaffected",
+              "version": "5.2.3",
+              "versionType": "custom"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "affected",
+          "packageName": "vmware-telco-cloud-infrastructure",
+          "product": "VMware Telco Cloud Infrastructure",
+          "vendor": "VMware",
+          "versions": [
+            {
+              "lessThan": "5.2.3",
+              "status": "affected",
+              "version": "2.0",
+              "versionType": "custom"
+            },
+            {
+              "status": "unaffected",
+              "version": "5.2.3",
               "versionType": "custom"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-184 Incomplete List of Disallowed Inputs"
+        "CWE-269 Improper Privilege Management"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-28364",
-      "publishedDate": "2026-02-27T03:54:53.458Z",
-      "lastModifiedDate": "2026-02-27T03:58:04.453Z",
-      "description": "In OCaml before 4.14.3 and 5.x before 5.4.1, a buffer over-read in Marshal deserialization (runtime/intern.c) enables remote code execution through a multi-phase attack chain. The vulnerability stems from missing bounds validation in the readblock() function, which performs unbounded memcpy() operations using attacker-controlled lengths from crafted Marshal data.",
-      "severity": 7.9,
-      "references": [
-        {
-          "url": "https://github.com/ocaml/security-advisories/blob/generated-osv/2026/OSEC-2026-01.json",
-          "type": "reference"
-        },
-        {
-          "url": "https://osv.dev/vulnerability/OSEC-2026-01",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "packageURL": "pkg:opam/ocaml",
-          "product": "OCaml",
-          "vendor": "OCaml",
-          "versions": [
-            {
-              "lessThan": "4.14.3",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "5.4.1",
-              "status": "affected",
-              "version": "5.0.0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-126 Buffer Over-read"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-2428",
-      "publishedDate": "2026-02-27T03:23:19.329Z",
-      "lastModifiedDate": "2026-02-27T03:23:19.329Z",
-      "description": "The Fluent Forms Pro Add On Pack plugin for WordPress is vulnerable to Insufficient Verification of Data Authenticity in all versions up to, and including, 6.1.17. This is due to the PayPal IPN (Instant Payment Notification) verification being disabled by default (`disable_ipn_verification` defaults to `'yes'` in `PayPalSettings.php`). This makes it possible for unauthenticated attackers to send forged PayPal IPN notifications to the publicly accessible IPN endpoint, marking unpaid form submissions as \"paid\" and triggering post-payment automation (emails, access grants, digital product delivery).",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/e5c62e54-da06-4b44-ba70-63065e664b0d?source=cve",
-          "type": "reference"
-        },
-        {
-          "url": "https://fluentforms.com/docs/changelog/#2-toc-title",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "techjewel",
-          "product": "Fluent Forms Pro Add On Pack",
-          "versions": [
-            {
-              "version": "*",
-              "status": "affected",
-              "lessThanOrEqual": "6.1.17",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-345 Insufficient Verification of Data Authenticity"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-3286",
-      "publishedDate": "2026-02-27T03:32:43.266Z",
-      "lastModifiedDate": "2026-02-27T03:32:43.266Z",
-      "description": "A vulnerability was identified in itwanger paicoding 1.0.0/1.0.1/1.0.2/1.0.3. The impacted element is the function Save of the file paicoding-web/src/main/java/com/github/paicoding/forum/web/common/image/rest/ImageRestController.java of the component Image Save Endpoint. Such manipulation of the argument img leads to server-side request forgery. The attack may be launched remotely. The exploit is publicly available and might be used. The vendor was contacted early about this disclosure but did not respond in any way.",
-      "severity": 6.3,
-      "references": [
-        {
-          "url": "https://vuldb.com/?id.348015",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/?ctiid.348015",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/?submit.758974",
-          "type": "reference"
-        },
-        {
-          "url": "https://fx4tqqfvdw4.feishu.cn/docx/NK7KdbIrboeB6WxwfhucW1YgnCb?from=from_copylink",
-          "type": "poc"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "itwanger",
-          "product": "paicoding",
-          "versions": [
-            {
-              "version": "1.0.0",
-              "status": "affected"
-            },
-            {
-              "version": "1.0.1",
-              "status": "affected"
-            },
-            {
-              "version": "1.0.2",
-              "status": "affected"
-            },
-            {
-              "version": "1.0.3",
-              "status": "affected"
-            }
-          ],
-          "cpes": [
-            "cpe:2.3:a:itwanger:paicoding:*:*:*:*:*:*:*:*"
-          ],
-          "modules": [
-            "Image Save Endpoint"
-          ]
-        }
-      ],
-      "problemType": [
-        "Server-Side Request Forgery"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-23939",
-      "publishedDate": "2026-02-26T19:41:18.762Z",
-      "lastModifiedDate": "2026-02-27T03:57:08.485Z",
-      "description": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability in hexpm hexpm/hexpm ('Elixir.Hexpm.Store.Local' module) allows Relative Path Traversal. This vulnerability is associated with program files lib/hexpm/store/local.ex and program routines 'Elixir.Hexpm.Store.Local':get/3, 'Elixir.Hexpm.Store.Local':put/4, 'Elixir.Hexpm.Store.Local':delete/2, 'Elixir.Hexpm.Store.Local':delete_many/2.\n\nThis issue does NOT affect hex.pm the service. Only self-hosted deployments using the Local Storage backend are affected.\n\nThis issue affects hexpm: from 931ee0ed46fa89218e0400a4f6e6d15f96406050 before 5d2ccd2f14f45a63225a73fb5b1c937baf36fdc0.",
+      "id": "CVE-2026-27975",
+      "publishedDate": "2026-02-26T02:39:28.283Z",
+      "lastModifiedDate": "2026-02-27T04:55:49.912Z",
+      "description": "Ajenti is a Linux and BSD modular server admin panel. Prior to version 2.2.13, an unauthenticated user could gain access to a server to execute arbitrary code on this server. This is fixed in the version 2.2.13.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/hexpm/hexpm/security/advisories/GHSA-42mv-r64p-4869",
+          "url": "https://github.com/ajenti/ajenti/security/advisories/GHSA-vcw3-r3fx-j444",
           "type": "reference"
         },
         {
-          "url": "https://github.com/hexpm/hexpm/commit/5d2ccd2f14f45a63225a73fb5b1c937baf36fdc0",
+          "url": "https://github.com/ajenti/ajenti/releases/tag/v2.2.13",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "collectionURL": "https://github.com",
-          "cpes": [
-            "cpe:2.3:a:hexpm:hexpm:*:*:*:*:*:*:*:*"
-          ],
-          "defaultStatus": "unaffected",
-          "modules": [
-            "'Elixir.Hexpm.Store.Local'"
-          ],
-          "packageName": "hexpm/hexpm",
-          "packageURL": "pkg:github/hexpm/hexpm",
-          "product": "hexpm",
-          "programFiles": [
-            "lib/hexpm/store/local.ex"
-          ],
-          "programRoutines": [
-            {
-              "name": "'Elixir.Hexpm.Store.Local':get/3"
-            },
-            {
-              "name": "'Elixir.Hexpm.Store.Local':put/4"
-            },
-            {
-              "name": "'Elixir.Hexpm.Store.Local':delete/2"
-            },
-            {
-              "name": "'Elixir.Hexpm.Store.Local':delete_many/2"
-            }
-          ],
-          "repo": "https://github.com/hexpm/hexpm.git",
-          "vendor": "hexpm",
+          "vendor": "ajenti",
+          "product": "ajenti",
           "versions": [
             {
-              "lessThan": "5d2ccd2f14f45a63225a73fb5b1c937baf36fdc0",
-              "status": "affected",
-              "version": "931ee0ed46fa89218e0400a4f6e6d15f96406050",
-              "versionType": "git"
-            },
-            {
-              "lessThan": "pkg:github/hexpm/hexpm@5d2ccd2f14f45a63225a73fb5b1c937baf36fdc0",
-              "status": "affected",
-              "version": "pkg:github/hexpm/hexpm@931ee0ed46fa89218e0400a4f6e6d15f96406050",
-              "versionType": "purl"
+              "version": "< 2.2.13",
+              "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-22 Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+        "CWE-284: Improper Access Control"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-2635",
+      "publishedDate": "2026-02-20T22:25:03.494Z",
+      "lastModifiedDate": "2026-02-27T04:55:48.854Z",
+      "description": "MLflow Use of Default Password Authentication Bypass Vulnerability. This vulnerability allows remote attackers to bypass authentication on affected installations of MLflow. Authentication is not required to exploit this vulnerability.\n\nThe specific flaw exists within the basic_auth.ini file. The file contains hard-coded default credentials. An attacker can leverage this vulnerability to bypass authentication and execute arbitrary code in the context of the administrator. Was ZDI-CAN-28256.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.zerodayinitiative.com/advisories/ZDI-26-111/",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/mlflow/mlflow/pull/19260",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "MLflow",
+          "product": "MLflow",
+          "versions": [
+            {
+              "version": "3.4.0",
+              "status": "affected"
+            }
+          ],
+          "defaultStatus": "unknown"
+        }
+      ],
+      "problemType": [
+        "CWE-1393: Use of Default Password"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
