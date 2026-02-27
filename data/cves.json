@@ -2,161 +2,40 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 12,
-    "last_updated": "2026-02-27T16:24:11.570443",
+    "total_count": 5,
+    "last_updated": "2026-02-27T17:04:30.609264",
     "severity_distribution": {
       "critical": 0,
-      "high": 4,
+      "high": 1,
       "medium": 3,
-      "low": 2,
-      "none": 3
+      "low": 0,
+      "none": 1
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-26938",
-      "publishedDate": "2026-02-26T17:56:48.611Z",
-      "lastModifiedDate": "2026-02-27T16:03:59.847Z",
-      "description": "Improper Neutralization of Special Elements Used in a Template Engine (CWE-1336) exists in Workflows in Kibana which could allow an attacker to read arbitrary files from the Kibana server filesystem, and perform Server-Side Request Forgery (SSRF) via Code Injection (CAPEC-242). This requires an authenticated user who has the workflowsManagement:executeWorkflow privilege.",
-      "severity": 8.6,
+      "id": "CVE-2026-25147",
+      "publishedDate": "2026-02-27T16:44:40.734Z",
+      "lastModifiedDate": "2026-02-27T16:44:40.734Z",
+      "description": "OpenEMR is a free and open source electronic health records and medical practice management application. Prior to version 8.0.0, in `portal/portal_payment.php`, the patient id used for the page is taken from the request (`$pid = $_REQUEST['pid'] ?? $pid` and `$pid = ($_REQUEST['hidden_patient_code'] ?? null) > 0 ? $_REQUEST['hidden_patient_code'] : $pid`) instead of being fixed to the authenticated portal user. The portal session already has a valid `$pid` for the logged-in patient. Overwriting it with user-supplied values and using it without authorization allows a portal user to view and interact with another patient's demographics, invoices, and payment history—horizontal privilege escalation and IDOR. Version 8.0.0 contains a fix for the issue.",
+      "severity": 7.1,
       "references": [
         {
-          "url": "https://discuss.elastic.co/t/kibana-9-3-1-security-update-esa-2026-17/385253",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Kibana",
-          "vendor": "Elastic",
-          "versions": [
-            {
-              "lessThanOrEqual": "9.3.0",
-              "status": "affected",
-              "version": "9.3.0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-1336 Improper Neutralization of Special Elements Used in a Template Engine"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-23750",
-      "publishedDate": "2026-02-26T17:33:13.261Z",
-      "lastModifiedDate": "2026-02-27T16:05:34.974Z",
-      "description": "Golioth Pouch version 0.1.0, prior to commit 1b2219a1, contains a heap-based buffer overflow in BLE GATT server certificate handling. server_cert_write() allocates a heap buffer of size CONFIG_POUCH_SERVER_CERT_MAX_LEN when receiving the first fragment, then appends subsequent fragments using memcpy() without verifying that sufficient capacity remains. An adjacent BLE client can send unauthenticated fragments whose combined size exceeds the allocated buffer, causing a heap overflow and crash; integrity impact is also possible due to memory corruption.",
-      "severity": 8.1,
-      "references": [
-        {
-          "url": "https://secmate.dev/disclosures/SECMATE-2025-0018",
+          "url": "https://github.com/openemr/openemr/security/advisories/GHSA-mwmw-qxv3-8whh",
           "type": "reference"
         },
         {
-          "url": "https://blog.secmate.dev/posts/golioth-vulnerabilities-disclosure/",
-          "type": "poc"
-        },
-        {
-          "url": "https://github.com/golioth/pouch/commit/1b2219a1",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/golioth-pouch-ble-gatt-heap-based-buffer-overflow",
+          "url": "https://github.com/openemr/openemr/commit/d6ab3cd0b621b19b942cf49d2db2026e288aa214",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "unaffected",
-          "product": "Pouch",
-          "repo": "https://github.com/golioth/pouch",
-          "vendor": "Golioth",
+          "vendor": "openemr",
+          "product": "openemr",
           "versions": [
             {
-              "status": "affected",
-              "version": "0.1.0",
-              "versionType": "semver"
-            },
-            {
-              "status": "unaffected",
-              "version": "commit 1b2219a1"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-122 Heap-based Buffer Overflow"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-26265",
-      "publishedDate": "2026-02-26T15:10:25.929Z",
-      "lastModifiedDate": "2026-02-27T16:17:05.469Z",
-      "description": "Discourse is an open source discussion platform. Prior to versions 2025.12.2, 2026.1.1, and 2026.2.0, an IDOR vulnerability in the directory items endpoint allows any user, including anonymous users, to retrieve private user field values for all users in the directory. The `user_field_ids` parameter in `DirectoryItemsController#index` accepts arbitrary user field IDs without authorization checks, bypassing the visibility restrictions (`show_on_profile` / `show_on_user_card`) that are enforced elsewhere (e.g., `UserCardSerializer` via `Guardian#allowed_user_field_ids`). An attacker can request `GET /directory_items.json?period=all&user_field_ids=<id>` with any private field ID and receive that field's value for every user in the directory response. This enables bulk exfiltration of private user data such as phone numbers, addresses, or other sensitive custom fields that admins have explicitly configured as non-public. The issue is patched in versions 2025.12.2, 2026.1.1, and 2026.2.0 by filtering `user_field_ids` against `UserField.public_fields` for non-staff users before building the custom field map. As a workaround, site administrators can remove sensitive data from private user fields, or disable the user directory via the `enable_user_directory` site setting.",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://github.com/discourse/discourse/security/advisories/GHSA-crxf-p6jm-vpgw",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "discourse",
-          "product": "discourse",
-          "versions": [
-            {
-              "version": "< 2025.12.2",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2026.1.0-latest, < 2026.1.1",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2026.2.0-latest, < 2026.2.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-863: Incorrect Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-26078",
-      "publishedDate": "2026-02-26T15:00:47.130Z",
-      "lastModifiedDate": "2026-02-27T16:17:41.410Z",
-      "description": "Discourse is an open source discussion platform. Prior to versions 2025.12.2, 2026.1.1, and 2026.2.0, when the `patreon_webhook_secret` site setting is blank, an attacker can forge valid webhook signatures by computing an HMAC-MD5 with an empty string as the key. Since the request body is known to the sender, the attacker can produce a matching signature and send arbitrary webhook payloads. This allows unauthorized creation, modification, or deletion of Patreon pledge data and triggering patron-to-group synchronization. This vulnerability is patched in versions 2025.12.2, 2026.1.1, and 2026.2.0. The fix rejects webhook requests when the webhook secret is not configured, preventing signature forgery with an empty key. As a workaround, configure the `patreon_webhook_secret` site setting with a strong, non-empty secret value. When the secret is non-empty, an attacker cannot forge valid signatures without knowing the secret.",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://github.com/discourse/discourse/security/advisories/GHSA-frx4-wg35-4r68",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "discourse",
-          "product": "discourse",
-          "versions": [
-            {
-              "version": "< 2025.12.2",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2026.1.0-latest, < 2026.1.1",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2026.2.0-latest, < 2026.2.0",
+              "version": "< 8.0.0",
               "status": "affected"
             }
           ]
@@ -168,344 +47,190 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2024-10938",
-      "publishedDate": "2026-02-27T09:23:42.427Z",
-      "lastModifiedDate": "2026-02-27T16:15:28.956Z",
-      "description": "The OVRI Payment plugin for WordPress contains malicious .htaccess files in version 1.7.0. The files contain directives to prevent the execution of certain scripts while allowing execution of known malicious PHP files. If moved outside of the plugin's directory, they may interfere with the proper function of a site.",
-      "severity": 6.5,
+      "id": "CVE-2026-1585",
+      "publishedDate": "2026-02-26T23:39:13.778Z",
+      "lastModifiedDate": "2026-02-27T16:38:57.696Z",
+      "description": "An unquoted Windows service executable path vulnerability in IJ Scan Utility for Windows versions 1.1.2 through 1.5.0 may allow a local attacker to execute a malicious file with the privileges of the affected service.",
+      "severity": 6.7,
       "references": [
         {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/2b45674c-8446-44eb-a45a-15dab02c89cf?source=cve",
+          "url": "https://psirt.canon/advisory-information/cp2026-002/",
           "type": "reference"
         },
         {
-          "url": "https://plugins.trac.wordpress.org/browser/moneytigo/tags/1.7.0/.htaccess",
+          "url": "https://canon.jp/support/support-info/260226vulnerability-response",
           "type": "reference"
         },
         {
-          "url": "https://plugins.trac.wordpress.org/browser/moneytigo/tags/1.7.0/assets/.htaccess",
+          "url": "https://www.usa.canon.com/support/canon-product-advisories/CPE2026-002-Vulnerability-Remediation-for-IJ-Scan-Utility-for-Windows",
           "type": "reference"
-        }
-      ],
-      "affected": [
+        },
         {
-          "vendor": "moneytigo",
-          "product": "OVRI Payment",
-          "versions": [
-            {
-              "version": "1.7.0",
-              "status": "affected"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-506 Embedded Malicious Code"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-26937",
-      "publishedDate": "2026-02-26T17:51:35.421Z",
-      "lastModifiedDate": "2026-02-27T16:04:41.385Z",
-      "description": "Uncontrolled Resource Consumption (CWE-400) in the Timelion component in Kibana can lead Denial of Service via Input Data Manipulation (CAPEC-153)",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://discuss.elastic.co/t/kibana-8-19-11-9-2-5-security-update-esa-2026-15/385251",
+          "url": "https://www.canon-europe.com/support/product-security/",
           "type": "reference"
         }
       ],
       "affected": [
         {
           "defaultStatus": "unaffected",
-          "product": "Kibana",
-          "vendor": "Elastic",
+          "product": "IJ Scan Utility",
+          "vendor": "Canon Inc.",
           "versions": [
             {
-              "lessThanOrEqual": "9.2.4",
+              "lessThanOrEqual": "1.5.0",
               "status": "affected",
-              "version": "9.0.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThanOrEqual": "8.19.10",
-              "status": "affected",
-              "version": "8.0.0",
+              "version": "1.1.2",
               "versionType": "semver"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-400 Uncontrolled Resource Consumption"
+        "CWE-428: Unquoted Search Path or Element"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-26077",
-      "publishedDate": "2026-02-26T14:58:13.971Z",
-      "lastModifiedDate": "2026-02-27T16:19:00.984Z",
-      "description": "Discourse is an open source discussion platform. Prior to versions 2025.12.2, 2026.1.1, and 2026.2.0, several webhook endpoints (SendGrid, Mailjet, Mandrill, Postmark, SparkPost) in the `WebhooksController` accepted requests without a valid authentication token when no token was configured. This allowed unauthenticated attackers to forge webhook payloads and artificially inflate user bounce scores, potentially causing legitimate user emails to be disabled. The Mailpace endpoint had no token validation at all. Starting in versions 2025.12.2, 2026.1.1, and 2026.2.0, all webhook endpoints reject requests with a 406 response when no authentication token is configured. As a workaround, ensure that webhook authentication tokens are configured for all email provider integrations in site settings (e.g., `sendgrid_verification_key`, `mailjet_webhook_token`, `postmark_webhook_token`, `sparkpost_webhook_token`). There's no current workaround for mailpace before getting this fix.",
+      "id": "CVE-2026-24488",
+      "publishedDate": "2026-02-27T16:41:45.665Z",
+      "lastModifiedDate": "2026-02-27T16:41:45.665Z",
+      "description": "OpenEMR is a free and open source electronic health records and medical practice management application. In versions up to and including 8.0.0, an arbitrary file exfiltration vulnerability in the fax sending endpoint allows any authenticated user to read and transmit any file on the server (including database credentials, patient documents, system files, and source code) via fax to an attacker-controlled phone number. The vulnerability exists because the endpoint accepts arbitrary file paths from user input and streams them to the fax gateway without path restrictions or authorization checks. As of time of publication, no known patched versions are available.",
       "severity": 6.5,
       "references": [
         {
-          "url": "https://github.com/discourse/discourse/security/advisories/GHSA-j67c-53j2-4hfw",
+          "url": "https://github.com/openemr/openemr/security/advisories/GHSA-765x-8v97-c7g8",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/openemr/openemr/blob/v7_0_4/interface/modules/custom_modules/oe-module-faxsms/src/Controller/EtherFaxActions.php#L177-L221",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "discourse",
-          "product": "discourse",
+          "vendor": "openemr",
+          "product": "openemr",
           "versions": [
             {
-              "version": "< 2025.12.2",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2026.1.0-latest, < 2026.1.1",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2026.2.0-latest, < 2026.2.0",
+              "version": "<= 8.0.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-287: Improper Authentication"
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-23748",
-      "publishedDate": "2026-02-26T17:31:32.584Z",
-      "lastModifiedDate": "2026-02-27T16:06:24.182Z",
-      "description": "Golioth Firmware SDK version 0.10.0 prior to 0.22.0, fixed in commit d7f55b38, contain an out-of-bounds read in LightDB State string parsing. When processing a string payload, a payload_size value less than 2 can cause a size_t underflow when computing the number of bytes to copy (nbytes). The subsequent memcpy() reads past the end of the network buffer, which can crash the device. The condition is reachable from on_payload, and golioth_payload_is_null() does not block payload_size==1. A malicious server or MITM can trigger a denial of service.",
-      "severity": 3.7,
+      "id": "CVE-2026-3188",
+      "publishedDate": "2026-02-25T15:32:09.025Z",
+      "lastModifiedDate": "2026-02-27T16:52:23.121Z",
+      "description": "A security flaw has been discovered in feiyuchuixue sz-boot-parent up to 1.3.2-beta. This affects an unknown part of the file /api/admin/common/download/templates of the component API. Performing a manipulation of the argument templateName results in path traversal. Remote exploitation of the attack is possible. The exploit has been released to the public and may be used for attacks. Upgrading to version 1.3.3-beta is able to mitigate this issue. The patch is named aefaabfd7527188bfba3c8c9eee17c316d094802. It is recommended to upgrade the affected component. The project was informed beforehand and acted very professional: \"We have implemented path validity checks on parameters for the template download interface (...)\"",
+      "severity": 4.3,
       "references": [
         {
-          "url": "https://secmate.dev/disclosures/SECMATE-2025-0016",
+          "url": "https://vuldb.com/?id.347746",
           "type": "reference"
         },
         {
-          "url": "https://blog.secmate.dev/posts/golioth-vulnerabilities-disclosure/",
+          "url": "https://vuldb.com/?ctiid.347746",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?submit.754041",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/yuccun/CVE/blob/main/sz-boot-parent-Path_Traversal_to_Arbitrary_Resource_File_Read.md",
           "type": "poc"
         },
         {
-          "url": "https://github.com/golioth/golioth-firmware-sdk/releases/tag/v0.22.0",
+          "url": "https://github.com/feiyuchuixue/sz-boot-parent/commit/aefaabfd7527188bfba3c8c9eee17c316d094802",
           "type": "reference"
         },
         {
-          "url": "https://github.com/golioth/golioth-firmware-sdk/commit/d7f55b380d8be8b29bd101ce06e421af2e88c12b",
+          "url": "https://github.com/feiyuchuixue/sz-boot-parent/releases/tag/v1.3.3-beta",
           "type": "reference"
         },
         {
-          "url": "https://www.vulncheck.com/advisories/golioth-firmware-sdk-lightdb-state-out-of-bounds-read",
+          "url": "https://github.com/feiyuchuixue/sz-boot-parent/",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "unaffected",
-          "product": "Firmware SDK",
-          "repo": "https://github.com/golioth/golioth-firmware-sdk",
-          "vendor": "Golioth",
+          "vendor": "feiyuchuixue",
+          "product": "sz-boot-parent",
           "versions": [
             {
-              "lessThan": "0.22.0",
-              "status": "affected",
-              "version": "0.10.0",
-              "versionType": "semver"
+              "version": "1.3.2-beta",
+              "status": "affected"
             },
             {
-              "status": "unaffected",
-              "version": "commit d7f55b38",
-              "versionType": "custom"
+              "version": "1.3.3-beta",
+              "status": "unaffected"
             }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-191 Integer Underflow (Wrap or Wraparound)"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-23747",
-      "publishedDate": "2026-02-26T17:30:13.495Z",
-      "lastModifiedDate": "2026-02-27T16:07:30.232Z",
-      "description": "Golioth Firmware SDK version 0.10.0 prior to 0.22.0, fixed in commit 48f521b, contain a stack-based buffer overflow in Payload Utils. The golioth_payload_as_int() and golioth_payload_as_float() helpers copy network-supplied payload data into fixed-size stack buffers using memcpy() with a length derived from payload_size. The only length checks are guarded by assert(); in release builds, the asserts are compiled out and memcpy() may copy an unbounded payload_size. Payloads larger than 12 bytes (int) or 32 bytes (float) can overflow the stack, resulting in a crash/denial of service. This is reachable via LightDB State on_payload with a malicious server or MITM.",
-      "severity": 3.7,
-      "references": [
-        {
-          "url": "https://secmate.dev/disclosures/SECMATE-2025-0015",
-          "type": "reference"
-        },
-        {
-          "url": "https://blog.secmate.dev/posts/golioth-vulnerabilities-disclosure/",
-          "type": "poc"
-        },
-        {
-          "url": "https://github.com/golioth/golioth-firmware-sdk/releases/tag/v0.22.0",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/golioth/golioth-firmware-sdk/commit/48f521bcc0187ada2b9cbdad31dc380e6c7b7332",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/golioth-firmware-sdk-payload-utils-stack-based-buffer-overflow",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Firmware SDK",
-          "repo": "https://github.com/golioth/golioth-firmware-sdk",
-          "vendor": "Golioth",
-          "versions": [
-            {
-              "lessThan": "0.22.0",
-              "status": "affected",
-              "version": "0.10.0",
-              "versionType": "semver"
-            },
-            {
-              "status": "unaffected",
-              "version": "commit 48f521b",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-121 Stack-based Buffer Overflow"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-2293",
-      "publishedDate": "2026-02-27T16:15:11.784Z",
-      "lastModifiedDate": "2026-02-27T16:15:11.784Z",
-      "description": "A NestJS application using @nestjs/platform-fastify can allow bypass of authentication/authorization middleware when Fastify path-normalization options are enabled.\n\n\n\nThis issue affects nest.Js: 11.1.13.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://fluidattacks.com/advisories/neton",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/nestjs/nest/",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/nestjs/nest/releases/tag/v11.1.14",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://registry.npmjs.org",
-          "defaultStatus": "unaffected",
-          "packageName": "nestjs",
-          "platforms": [
-            "Windows",
-            "MacOS",
-            "iOS"
           ],
-          "product": "nest.js",
-          "vendor": "nest.js",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "11.1.13"
-            }
+          "modules": [
+            "API"
           ]
         }
       ],
       "problemType": [
-        "CWE-863 Incorrect Authorization"
+        "Path Traversal"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-21660",
-      "publishedDate": "2026-02-27T09:18:49.186Z",
-      "lastModifiedDate": "2026-02-27T16:17:45.915Z",
-      "description": "Hardcoded Email Credentials Saved as Plaintext in Firmware (CWE-256: Plaintext Storage of a Password) vulnerability in Frick Controls Quantum HD version 10.22 and prior lead to unauthorized access, exposure of sensitive information, and potential misuse or system compromise\nThis issue affects Frick Controls Quantum HD version 10.22 and prior.",
+      "id": "CVE-2021-4456",
+      "publishedDate": "2026-02-27T00:16:36.383Z",
+      "lastModifiedDate": "2026-02-27T16:53:23.671Z",
+      "description": "Net::CIDR versions before 0.24 for Perl mishandle leading zeros in IP CIDR addresses, which may have unspecified impact.\n\nThe functions `addr2cidr` and `cidrlookup` may return leading zeros in a CIDR string, which may in turn be parsed as octal numbers by subsequent users. In some cases an attacker may be able to leverage this to bypass access controls based on IP addresses.\n\nThe documentation advises validating untrusted CIDR strings with the `cidrvalidate` function. However, this mitigation is optional and not enforced by default. In practice, users may call `addr2cidr` or `cidrlookup` with untrusted input and without validation, incorrectly assuming that this is safe.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-057-01",
+          "url": "https://blog.urth.org/2021/03/29/security-issues-in-perl-ip-address-distros/",
           "type": "reference"
         },
         {
-          "url": "https://www.johnsoncontrols.com/trust-center/cybersecurity/security-advisories",
+          "url": "https://github.com/svarshavchik/Net-CIDR/commit/e3648c6bc6bdd018f90cca4149c467017d42bd10",
+          "type": "reference"
+        },
+        {
+          "url": "https://metacpan.org/dist/Net-CIDR/changes",
           "type": "reference"
         }
       ],
       "affected": [
         {
+          "collectionURL": "https://cpan.org/modules",
           "defaultStatus": "unaffected",
-          "product": "Frick Controls Quantum HD",
-          "vendor": "Johnson Controls",
-          "versions": [
+          "packageName": "Net-CIDR",
+          "product": "Net::CIDR",
+          "programRoutines": [
             {
-              "status": "affected",
-              "version": "Frick Controls Quantum HD version 10.22 and prior"
+              "name": "addr2cidr"
+            },
+            {
+              "name": "cidrlookup"
             }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-256: Plaintext Storage of a Password"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-24497",
-      "publishedDate": "2026-02-27T01:52:58.847Z",
-      "lastModifiedDate": "2026-02-27T16:07:55.454Z",
-      "description": "Stack-based Buffer Overflow vulnerability in SimTech Systems, Inc. ThinkWise allows Remote Code Inclusion.This issue affects ThinkWise: from 7 through 23.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://www.thinkwise.co.kr/bbs/board.php?bo_table=patch&wr_id=19352",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.boho.or.kr/kr/bbs/view.do?searchCnd=&bbsId=B0000302&searchWrd=&menuNo=205023&pageIndex=1&categoryCode=&nttId=71985",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "ThinkWise",
-          "vendor": "SimTech Systems, Inc.",
+          ],
+          "repo": "https://github.com/svarshavchik/Net-CIDR",
+          "vendor": "MRSAM",
           "versions": [
             {
-              "changes": [
-                {
-                  "at": "23",
-                  "status": "unaffected"
-                }
-              ],
-              "lessThanOrEqual": "23",
+              "lessThan": "0.24",
               "status": "affected",
-              "version": "7",
+              "version": "0",
               "versionType": "custom"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-121 Stack-based Buffer Overflow"
+        "CWE-704 Incorrect Type Conversion or Cast"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
