@@ -2,63 +2,97 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 9,
-    "last_updated": "2026-02-27T19:53:46.286621",
+    "total_count": 10,
+    "last_updated": "2026-02-27T20:31:23.873340",
     "severity_distribution": {
-      "critical": 0,
-      "high": 0,
-      "medium": 4,
+      "critical": 1,
+      "high": 2,
+      "medium": 3,
       "low": 0,
-      "none": 5
+      "none": 4
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-27734",
-      "publishedDate": "2026-02-27T19:41:30.418Z",
-      "lastModifiedDate": "2026-02-27T19:41:30.418Z",
-      "description": "Beszel is a server monitoring platform. Prior to version 0.18.2, the hub's authenticated API endpoints GET /api/beszel/containers/logs and GET /api/beszel/containers/info pass the user-supplied \"container\" query parameter to the agent without validation. The agent constructs Docker Engine API URLs using fmt.Sprintf with the raw value instead of url.PathEscape(). Since Go's http.Client does not sanitize `../` sequences from URL paths sent over unix sockets, an authenticated user (including readonly role) can traverse to arbitrary Docker API endpoints on agent hosts, exposing sensitive infrastructure details. Version 0.18.4 fixes the issue.",
-      "severity": 6.5,
+      "id": "CVE-2026-28268",
+      "publishedDate": "2026-02-27T20:16:29.842Z",
+      "lastModifiedDate": "2026-02-27T20:16:29.842Z",
+      "description": "Vikunja is an open-source self-hosted task management platform. Versions prior to 2.1.0 have a business logic vulnerability exists in the password reset mechanism of vikunja/api that allows password reset tokens to be reused indefinitely. Due to a failure to invalidate tokens upon use and a critical logic bug in the token cleanup cron job, reset tokens remain valid forever. This allows an attacker who intercepts a single reset token (via logs, browser history, or phishing) to perform a complete, persistent account takeover at any point in the future, bypassing standard authentication controls. Version 2.1.0 contains a patch for the issue.",
+      "severity": 9.8,
       "references": [
         {
-          "url": "https://github.com/henrygd/beszel/security/advisories/GHSA-phwh-4f42-gwf3",
+          "url": "https://github.com/go-vikunja/vikunja/security/advisories/GHSA-rfjg-6m84-crj2",
           "type": "reference"
         },
         {
-          "url": "https://github.com/henrygd/beszel/releases/tag/v0.18.4",
+          "url": "https://github.com/go-vikunja/vikunja/commit/5c2195f9fca9ad208477e865e6009c37889f87b2",
+          "type": "reference"
+        },
+        {
+          "url": "https://vikunja.io/changelog/vikunja-v2.1.0-was-released",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "henrygd",
-          "product": "beszel",
+          "vendor": "go-vikunja",
+          "product": "vikunja",
           "versions": [
             {
-              "version": "< 0.18.4",
+              "version": "< 2.1.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+        "CWE-459: Incomplete Cleanup",
+        "CWE-640: Weak Password Recovery Mechanism for Forgotten Password"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-27793",
-      "publishedDate": "2026-02-27T19:38:49.589Z",
-      "lastModifiedDate": "2026-02-27T19:38:49.589Z",
-      "description": "Seerr is an open-source media request and discovery manager for Jellyfin, Plex, and Emby. Prior to version 3.1.0, the `GET /api/v1/user/:id` endpoint returns the full settings object for any user, including Pushover, Pushbullet, and Telegram credentials, to any authenticated requester regardless of their privilege level. This vulnerability can be exploited alone or combined with the reported unauthenticated account creation vulnerability, CVE-2026-27707. When combined, the two vulnerabilities create a zero-prior-access chain that leaks third-party API credentials for all users, including administrators. Version 3.1.0 contains a fix for both this vulnerability and for CVE-2026-27707.",
-      "severity": 6.5,
+      "id": "CVE-2026-28272",
+      "publishedDate": "2026-02-27T20:22:59.656Z",
+      "lastModifiedDate": "2026-02-27T20:22:59.656Z",
+      "description": "Kiteworks is a private data network (PDN). Prior to version 9.2.0, a vulnerability in Kiteworks Email Protection Gateway allows authenticated administrators to inject malicious scripts through a configuration interface. The stored script executes when users interact with the affected user interface. Version 9.2.0 contains a patch for the issue.",
+      "severity": 8.1,
       "references": [
         {
-          "url": "https://github.com/seerr-team/seerr/security/advisories/GHSA-f7xw-jcqr-57hp",
+          "url": "https://github.com/kiteworks/security-advisories/security/advisories/GHSA-7hxj-ch78-xqgr",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "kiteworks",
+          "product": "security-advisories",
+          "versions": [
+            {
+              "version": "< 9.2.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-27707",
+      "publishedDate": "2026-02-27T19:29:18.768Z",
+      "lastModifiedDate": "2026-02-27T20:22:24.091Z",
+      "description": "Seerr is an open-source media request and discovery manager for Jellyfin, Plex, and Emby. Starting in version 2.0.0 and prior to version 3.1.0, an authentication guard logic flaw in `POST /api/v1/auth/jellyfin` allows an unauthenticated attacker to register a new Seerr account on any Plex-configured instance by authenticating with an attacker-controlled Jellyfin server. The attacker receives an authenticated session and can immediately use the application with default permissions, including the ability to submit media requests to Radarr/Sonarr. Any Seerr deployment where all three of the following are true may be vulnerable: `settings.main.mediaServerType` is set to `PLEX` (the most common deployment).; `settings.jellyfin.ip` is set to `\"\"` (default, meaning Jellyfin was never configured); and `settings.main.newPlexLogin` is set to `true` (default). Jellyfin-configured and Emby-configured deployments are not affected. Version 3.1.0 of Seerr fixes this issue.",
+      "severity": 7.3,
+      "references": [
+        {
+          "url": "https://github.com/seerr-team/seerr/security/advisories/GHSA-rc4w-7m3r-c2f7",
           "type": "reference"
         },
         {
-          "url": "https://github.com/seerr-team/seerr/commit/4f089b29d0bb41d382168b17aa152eb5b8a25303",
+          "url": "https://github.com/seerr-team/seerr/commit/4ae20684092b5b28527b23dfbc1a3417858fee8e",
           "type": "reference"
         },
         {
@@ -72,250 +106,250 @@
           "product": "seerr",
           "versions": [
             {
-              "version": "< 3.1.0",
+              "version": ">= 2.0.0, < 3.1.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-639: Authorization Bypass Through User-Controlled Key"
+        "CWE-288: Authentication Bypass Using an Alternate Path or Channel",
+        "CWE-807: Reliance on Untrusted Inputs in a Security Decision"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-27810",
-      "publishedDate": "2026-02-27T19:44:39.106Z",
-      "lastModifiedDate": "2026-02-27T19:44:39.106Z",
-      "description": "calibre is a cross-platform e-book manager for viewing, converting, editing, and cataloging e-books. Prior to version 9.4.0, an HTTP Response Header Injection vulnerability in the calibre Content Server allows any authenticated user to inject arbitrary HTTP headers into server responses via an unsanitized `content_disposition` query parameter in the `/get/` and `/data-files/get/` endpoints. All users running the calibre Content Server with authentication enabled are affected. The vulnerability is exploitable by any authenticated user and can also be triggered by tricking an authenticated victim into clicking a crafted link. Version 9.4.0 contains a fix for the issue.",
-      "severity": 6.4,
+      "id": "CVE-2026-28271",
+      "publishedDate": "2026-02-27T20:21:12.194Z",
+      "lastModifiedDate": "2026-02-27T20:21:29.444Z",
+      "description": "Kiteworks is a private data network (PDN). Prior to version 9.2.0, a vulnerability in Kiteworks configuration functionality allows bypassing of SSRF protections through DNS rebinding attacks. Malicious administrators could exploit this to access internal services that should be restricted. Version 9.2.0 contains a patch for the issue.",
+      "severity": 6.5,
       "references": [
         {
-          "url": "https://github.com/kovidgoyal/calibre/security/advisories/GHSA-5fpj-fxw7-8grw",
+          "url": "https://github.com/kiteworks/security-advisories/security/advisories/GHSA-rmfx-6h9w-fq87",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "kovidgoyal",
-          "product": "calibre",
+          "vendor": "kiteworks",
+          "product": "security-advisories",
           "versions": [
             {
-              "version": "< 9.4.0",
+              "version": "< 9.2.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-113: Improper Neutralization of CRLF Sequences in HTTP Headers ('HTTP Request/Response Splitting')"
+        "CWE-350: Reliance on Reverse DNS Resolution for a Security-Critical Action",
+        "CWE-918: Server-Side Request Forgery (SSRF)"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-27824",
-      "publishedDate": "2026-02-27T19:46:07.612Z",
-      "lastModifiedDate": "2026-02-27T19:46:07.612Z",
-      "description": "calibre is a cross-platform e-book manager for viewing, converting, editing, and cataloging e-books. Prior to version 9.4.0, the calibre Content Server's brute-force protection mechanism uses a ban key derived from both `remote_addr` and the `X-Forwarded-For` header. Since the `X-Forwarded-For` header is read directly from the HTTP request without any validation or trusted-proxy configuration, an attacker can bypass IP-based bans by simply changing or adding this header, rendering the brute-force protection completely ineffective. This is particularly dangerous for calibre servers exposed to the internet, where brute-force protection is the primary defense against credential stuffing and password guessing attacks. Version 9.4.0 contains a fix for the issue.",
-      "severity": 5.3,
+      "id": "CVE-2026-27792",
+      "publishedDate": "2026-02-27T19:33:18.469Z",
+      "lastModifiedDate": "2026-02-27T20:19:07.348Z",
+      "description": "Seerr is an open-source media request and discovery manager for Jellyfin, Plex, and Emby. A missing authorization vulnerability has been identified in the application starting in version 2.7.0 and prior to version 3.1.0. It allows authenticated users to access and modify data belonging to other users. This issue is due to the absence of the `isOwnProfileOrAdmin()` middleware on several push subscription API routes. Version 3.1.0 fixes the issue.",
+      "severity": 5.4,
       "references": [
         {
-          "url": "https://github.com/kovidgoyal/calibre/security/advisories/GHSA-vhxc-r7v8-2xrw",
+          "url": "https://github.com/seerr-team/seerr/security/advisories/GHSA-gx3h-3jg5-q65f",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/seerr-team/seerr/commit/946bdecec524b4e7f8aaf8f2b3856f319a3580c1",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/seerr-team/seerr/releases/tag/v3.1.0",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "kovidgoyal",
-          "product": "calibre",
+          "vendor": "seerr-team",
+          "product": "seerr",
           "versions": [
             {
-              "version": "< 9.4.0",
+              "version": ">= 2.7.0, < 3.1.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-307: Improper Restriction of Excessive Authentication Attempts",
-        "CWE-346: Origin Validation Error"
+        "CWE-862: Missing Authorization"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-27832",
-      "publishedDate": "2026-02-27T19:49:57.867Z",
-      "lastModifiedDate": "2026-02-27T19:49:57.867Z",
-      "description": "Group-Office is an enterprise customer relationship management and groupware tool. Versions prior to 26.0.8, 25.0.87, and 6.8.153 have a SQL Injection (SQLi) vulnerability, exploitable through the `advancedQueryData` parameter (`comparator` field) on an authenticated endpoint. The endpoint `index.php?r=email/template/emailSelection` processes `advancedQueryData` and forwards the SQL comparator without a strict allowlist into SQL condition building. This enables blind boolean-based exfiltration of the `core_auth_password` table. Versions 26.0.8, 25.0.87, and 6.8.153 fix the issue.",
+      "id": "CVE-2026-28270",
+      "publishedDate": "2026-02-27T20:19:54.611Z",
+      "lastModifiedDate": "2026-02-27T20:19:54.611Z",
+      "description": "Kiteworks is a private data network (PDN). Prior to version 9.2.0, a vulnerability in Kiteworks configuration allows uploading of arbitrary files without proper validation. Malicious administrators could exploit this to upload unauthorized file types to the system. Version 9.2.0 contains a patch for the issue.",
+      "severity": 4.9,
+      "references": [
+        {
+          "url": "https://github.com/kiteworks/security-advisories/security/advisories/GHSA-v8x9-vwg6-cj45",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "kiteworks",
+          "product": "security-advisories",
+          "versions": [
+            {
+              "version": "< 9.2.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-434: Unrestricted Upload of File with Dangerous Type"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-28288",
+      "publishedDate": "2026-02-27T20:25:24.599Z",
+      "lastModifiedDate": "2026-02-27T20:25:24.599Z",
+      "description": "Dify is an open-source LLM app development platform. Prior to 1.9.0, responses from the Dify API to existing and non-existent accounts differ, allowing an attacker to enumerate email addresses registered with Dify. Version 1.9.0 fixes the issue.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/Intermesh/groupoffice/security/advisories/GHSA-vfgv-8w8v-qpxr",
+          "url": "https://github.com/langgenius/dify/security/advisories/GHSA-9qpf-wcv3-w3qx",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/langgenius/dify/issues/24323",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Intermesh",
-          "product": "groupoffice",
+          "vendor": "langgenius",
+          "product": "dify",
           "versions": [
             {
-              "version": "< 6.8.153",
-              "status": "affected"
-            },
-            {
-              "version": ">= 25.0.0, < 25.0.87",
-              "status": "affected"
-            },
-            {
-              "version": ">= 26.0.0, < 26.0.8",
+              "version": "< 1.9.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+        "CWE-204: Observable Response Discrepancy"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-26861",
-      "publishedDate": "2026-02-27T00:00:00.000Z",
-      "lastModifiedDate": "2026-02-27T19:42:58.097Z",
-      "description": "CleverTap Web SDK version 1.15.2 and earlier is vulnerable to Cross-Site Scripting (XSS) via window.postMessage. The handleCustomHtmlPreviewPostMessageEvent function in src/util/campaignRender/nativeDisplay.js performs insufficient origin validation using the includes() method, which can be bypassed by an attacker using a subdomain",
+      "id": "CVE-2018-25160",
+      "publishedDate": "2026-02-27T20:15:31.418Z",
+      "lastModifiedDate": "2026-02-27T20:15:31.418Z",
+      "description": "HTTP::Session2 versions through 1.09 for Perl does not validate the format of user provided session ids, enabling code injection or other impact depending on session backend.\n\nFor example, if an application uses memcached for session storage, then it may be possible for a remote attacker to inject memcached commands in the session id value.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/CleverTap/clevertap-web-sdk/issues/424",
+          "url": "https://github.com/tokuhirom/HTTP-Session2/commit/813838f6d08034b6a265a70e53b59b941b5d3e6d.patch",
           "type": "reference"
         },
         {
-          "url": "https://github.com/CleverTap/clevertap-web-sdk/pull/417",
+          "url": "https://metacpan.org/release/TOKUHIROM/HTTP-Session2-1.10/source/Changes",
           "type": "reference"
         },
         {
-          "url": "https://github.com/CleverTap/clevertap-web-sdk/blob/cf1b65d/src/util/campaignRender/nativeDisplay.js#L118-L121",
+          "url": "https://metacpan.org/pod/Cache::Memcached::Fast::Safe",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "n/a",
-          "product": "n/a",
+          "collectionURL": "https://cpan.org/modules",
+          "defaultStatus": "unaffected",
+          "packageName": "HTTP-Session2",
+          "product": "HTTP::Session2",
+          "repo": "https://github.com/tokuhirom/HTTP-Session2",
+          "vendor": "TOKUHIROM",
           "versions": [
             {
-              "version": "n/a",
-              "status": "affected"
+              "lessThanOrEqual": "1.09",
+              "status": "affected",
+              "version": "0",
+              "versionType": "custom"
             }
           ]
         }
       ],
       "problemType": [
-        "n/a"
+        "CWE-20 Improper Input Validation"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-26862",
-      "publishedDate": "2026-02-27T00:00:00.000Z",
-      "lastModifiedDate": "2026-02-27T19:39:16.900Z",
-      "description": "CleverTap Web SDK version 1.15.2 and earlier is vulnerable to DOM-based Cross-Site Scripting (XSS) via window.postMessage in the Visual Builder module. The origin validation in src/modules/visualBuilder/pageBuilder.js (lines 56-60) uses the includes() method to verify the originUrl contains \"dashboard.clevertap.com\", which can be bypassed by an attacker using a crafted subdomain",
+      "id": "CVE-2026-28354",
+      "publishedDate": "2026-02-27T19:18:25.500Z",
+      "lastModifiedDate": "2026-02-27T20:23:22.876Z",
+      "description": "ClipBucket v5 is an open source video sharing platform. Prior to version 5.5.3 #59, collection item operations are vulnerable to authorization flaws, allowing a normal authenticated user to modify another user’s collection items. This affects both add item (/actions/add_to_collection.php) due to missing authorization checks and delete item (/manage_collections.php?mode=manage_items...) due to a broken ownership check in removeItemFromCollection(). As a result, attackers can insert and remove items from collections they do not own. Version 5.5.3 #59 fixes the issue.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/CleverTap/clevertap-web-sdk/issues/442",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/CleverTap/clevertap-web-sdk/pull/417",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/CleverTap/clevertap-web-sdk/blob/cf1b65d/src/modules/visualBuilder/pageBuilder.js#L56-L60",
+          "url": "https://github.com/MacWarrior/clipbucket-v5/security/advisories/GHSA-6wf8-rw5f-c9mv",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "n/a",
-          "product": "n/a",
+          "vendor": "MacWarrior",
+          "product": "clipbucket-v5",
           "versions": [
             {
-              "version": "n/a",
+              "version": "< 5.5.3 - #59",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "n/a"
+        "CWE-639: Authorization Bypass Through User-Controlled Key",
+        "CWE-863: Incorrect Authorization"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-69437",
-      "publishedDate": "2026-02-27T00:00:00.000Z",
-      "lastModifiedDate": "2026-02-27T19:47:56.667Z",
-      "description": "PublicCMS v5.202506.d and earlier is vulnerable to stored XSS. Uploaded PDFs can contain JavaScript payloads and bypass PDF security checks in the backend CmsFileUtils.java. If a user uploads a PDF file containing a malicious payload to the system and views it, the embedded JavaScript payload can be triggered, resulting in issues such as credential theft, arbitrary API execution, and other security concerns. This vulnerability affects all file upload endpoint, including /cmsTemplate/save, /file/doUpload, /cmsTemplate/doUpload, /file/doBatchUpload, /cmsWebFile/doUpload, etc.",
+      "id": "CVE-2026-26997",
+      "publishedDate": "2026-02-27T19:15:11.123Z",
+      "lastModifiedDate": "2026-02-27T20:24:08.947Z",
+      "description": "ClipBucket v5 is an open source video sharing platform. Prior to version 5.5.3 #59, a normal authenticated user can store the XSS payload. The payload is triggered by administrator. Version 5.5.3 #59 fixes the issue.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/sanluan/PublicCMS/issues/103",
+          "url": "https://github.com/MacWarrior/clipbucket-v5/security/advisories/GHSA-97r6-4hmx-hcrh",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/MacWarrior/clipbucket-v5/commit/2da4c8e41f9e4baf47ff89f8a674fbe9b63ac76d",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "n/a",
-          "product": "n/a",
+          "vendor": "MacWarrior",
+          "product": "clipbucket-v5",
           "versions": [
             {
-              "version": "n/a",
+              "version": "< 5.5.3 #59",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "n/a"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-27628",
-      "publishedDate": "2026-02-25T02:45:37.543Z",
-      "lastModifiedDate": "2026-02-27T19:49:02.019Z",
-      "description": "pypdf is a free and open-source pure-python PDF library. Prior to 6.7.2, an attacker who uses this vulnerability can craft a PDF which leads to an infinite loop. This requires reading the file. This has been fixed in pypdf 6.7.2. As a workaround, one may apply the patch manually.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/py-pdf/pypdf/security/advisories/GHSA-2rw7-x74f-jg35",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/py-pdf/pypdf/issues/3654",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/py-pdf/pypdf/commit/f0a462d36971cf077d74492a348d0d06fd60ea4d",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "py-pdf",
-          "product": "pypdf",
-          "versions": [
-            {
-              "version": "< 6.7.2",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-835: Loop with Unreachable Exit Condition ('Infinite Loop')"
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
