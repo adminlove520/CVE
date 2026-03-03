@@ -2,187 +2,183 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 5,
-    "last_updated": "2026-03-03T22:45:58.907220",
+    "total_count": 3,
+    "last_updated": "2026-03-03T23:13:05.542171",
     "severity_distribution": {
       "critical": 1,
-      "high": 1,
-      "medium": 0,
+      "high": 0,
+      "medium": 1,
       "low": 0,
-      "none": 3
+      "none": 1
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-26279",
-      "publishedDate": "2026-03-03T22:31:58.516Z",
-      "lastModifiedDate": "2026-03-03T22:31:58.516Z",
-      "description": "Froxlor is open source server administration software. Prior to 2.3.4, a typo in Froxlor's input validation code (== instead of =) completely disables email format checking for all settings fields declared as email type. This allows an authenticated admin to store arbitrary strings in the panel.adminmail setting. This value is later concatenated into a shell command executed as root by a cron job, where the pipe character | is explicitly whitelisted. The result is full root-level Remote Code Execution. This vulnerability is fixed in 2.3.4.",
-      "severity": 9.1,
+      "id": "CVE-2026-28289",
+      "publishedDate": "2026-03-03T22:59:08.679Z",
+      "lastModifiedDate": "2026-03-03T22:59:08.679Z",
+      "description": "FreeScout is a free help desk and shared inbox built with PHP's Laravel framework. A patch bypass vulnerability for CVE-2026-27636 in FreeScout 1.8.206 and earlier allows any authenticated user with file upload permissions to achieve Remote Code Execution (RCE) on the server by uploading a malicious .htaccess file using a zero-width space character prefix to bypass the security check. The vulnerability exists in the sanitizeUploadedFileName() function in app/Http/Helper.php. The function contains a Time-of-Check to Time-of-Use (TOCTOU) flaw where the dot-prefix check occurs before sanitization removes invisible characters. This vulnerability is fixed in 1.8.207.",
+      "severity": 10,
       "references": [
         {
-          "url": "https://github.com/froxlor/Froxlor/security/advisories/GHSA-33mp-8p67-xj7c",
+          "url": "https://github.com/freescout-help-desk/freescout/security/advisories/GHSA-5gpc-65p8-ffwp",
           "type": "reference"
         },
         {
-          "url": "https://github.com/froxlor/froxlor/commit/22249677107f8f39f8d4a238605641e87dab4343",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/froxlor/froxlor/releases/tag/2.3.4",
+          "url": "https://github.com/freescout-help-desk/freescout/commit/f7bc16c56a6b13c06da52ad51fd666546b40818f",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "froxlor",
-          "product": "Froxlor",
+          "vendor": "freescout-help-desk",
+          "product": "freescout",
           "versions": [
             {
-              "version": "< 2.3.4",
+              "version": "< 1.8.207",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')",
-        "CWE-482: Comparing instead of Assigning"
+        "CWE-434: Unrestricted Upload of File with Dangerous Type"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-27981",
-      "publishedDate": "2026-03-03T22:27:37.921Z",
-      "lastModifiedDate": "2026-03-03T22:27:37.921Z",
-      "description": "HomeBox is a home inventory and organization system. Prior to 0.24.0, the authentication rate limiter (authRateLimiter) tracks failed attempts per client IP. It determines the client IP by reading, 1. X-Real-IP header, 2. First entry of X-Forwarded-For header, and 3. r.RemoteAddr (TCP connection address). These headers were read unconditionally. An attacker connecting directly to Homebox could forge any value in X-Real-IP, effectively getting a fresh rate limit identity per request. There is a TrustProxy option in the configuration (Options.TrustProxy, default false), but this option was never read by any middleware or rate limiter code. Additionally, chi's middleware.RealIP was applied unconditionally in main.go, overwriting r.RemoteAddr with the forged header value before it reaches any handler. This vulnerability is fixed in 0.24.0.",
-      "severity": 7.4,
+      "id": "CVE-2026-3494",
+      "publishedDate": "2026-03-03T18:12:12.361Z",
+      "lastModifiedDate": "2026-03-03T22:56:22.439Z",
+      "description": "In MariaDB server version through 11.8.5, when server audit plugin is enabled with server_audit_events variable configured with QUERY_DCL, QUERY_DDL, or QUERY_DML filtering, if an authenticated database user invokes a SQL statement prefixed with double-hyphen (—) or hash (#) style comments, the statement is not logged.",
+      "severity": 4.3,
       "references": [
         {
-          "url": "https://github.com/sysadminsmedia/homebox/security/advisories/GHSA-j86g-v96v-jpp3",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "sysadminsmedia",
-          "product": "homebox",
-          "versions": [
-            {
-              "version": "< 0.24.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-307: Improper Restriction of Excessive Authentication Attempts"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-27622",
-      "publishedDate": "2026-03-03T22:42:49.086Z",
-      "lastModifiedDate": "2026-03-03T22:42:49.086Z",
-      "description": "OpenEXR provides the specification and reference implementation of the EXR file format, an image storage format for the motion picture industry. In CompositeDeepScanLine::readPixels, per-pixel totals are accumulated in vector<unsigned int> total_sizes for attacker-controlled large counts across many parts, total_sizes[ptr] wraps modulo 2^32.  overall_sample_count is then derived from wrapped totals and used in samples[channel].resize(overall_sample_count). Decode pointer setup/consumption proceeds with true sample counts, and write operations in core unpack (generic_unpack_deep_pointers) overrun the undersized composite sample buffer. This vulnerability is fixed in v3.2.6, v3.3.8, and v3.4.6.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/AcademySoftwareFoundation/openexr/security/advisories/GHSA-cr4v-6jm6-4963",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "AcademySoftwareFoundation",
-          "product": "openexr",
-          "versions": [
-            {
-              "version": ">= 2.3.0, < 3.2.6",
-              "status": "affected"
-            },
-            {
-              "version": ">= 3.3.0, < 3.3.8",
-              "status": "affected"
-            },
-            {
-              "version": ">= 3.4.0, < 3.4.6",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-787: Out-of-bounds Write"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-27601",
-      "publishedDate": "2026-03-03T22:38:38.955Z",
-      "lastModifiedDate": "2026-03-03T22:38:38.955Z",
-      "description": "Underscore.js is a utility-belt library for JavaScript. Prior to 1.13.8, the _.flatten and _.isEqual functions use recursion without a depth limit. Under very specific conditions, detailed below, an attacker could exploit this in a Denial of Service (DoS) attack by triggering a stack overflow. Untrusted input must be used to create a recursive datastructure, for example using JSON.parse, with no enforced depth limit. The datastructure thus created must be passed to _.flatten or _.isEqual. In the case of _.flatten, the vulnerability can only be exploited if it is possible for a remote client to prepare a datastructure that consists of arrays at all levels AND if no finite depth limit is passed as the second argument to _.flatten. In the case of _.isEqual, the vulnerability can only be exploited if there exists a code path in which two distinct datastructures that were submitted by the same remote client are compared using _.isEqual. For example, if a client submits data that are stored in a database, and the same client can later submit another datastructure that is then compared to the data that were saved in the database previously, OR if a client submits a single request, but its data are parsed twice, creating two non-identical but equivalent datastructures that are then compared. Exceptions originating from the call to _.flatten or _.isEqual, as a result of a stack overflow, are not being caught. This vulnerability is fixed in 1.13.8.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/jashkenas/underscore/security/advisories/GHSA-qpx9-hpmf-5gmw",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/jashkenas/underscore/commit/411e222eb0ca5d570cc4f6315c02c05b830ed2b4",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/jashkenas/underscore/commit/a6e23ae9647461ec33ad9f92a2ecfc220eea0a84",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "jashkenas",
-          "product": "underscore",
-          "versions": [
-            {
-              "version": "< 1.13.8",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-770: Allocation of Resources Without Limits or Throttling"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-3266",
-      "publishedDate": "2026-03-03T22:28:52.816Z",
-      "lastModifiedDate": "2026-03-03T22:28:52.816Z",
-      "description": "Missing Authorization vulnerability in OpenText™ Filr allows Authentication Bypass. The vulnerability could allow unauthenticated users to get XSRF token and do RPC with carefully crafted programs.\n\nThis issue affects Filr: through 25.1.2.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://portal.microfocus.com/s/article/KM000045579?language=en_US",
+          "url": "https://aws.amazon.com/security/security-bulletins/2026-006-AWS/",
           "type": "reference"
         }
       ],
       "affected": [
         {
           "defaultStatus": "unaffected",
-          "product": "Filr",
-          "vendor": "OpenText™",
+          "product": "MariaDB Server",
+          "vendor": "MariaDB Foundation",
           "versions": [
             {
-              "lessThanOrEqual": "25.1.2",
-              "status": "affected",
-              "version": "0",
-              "versionType": "custom"
+              "status": "unaffected",
+              "version": "10.6.25"
+            },
+            {
+              "status": "unaffected",
+              "version": "10.11.16"
+            },
+            {
+              "status": "unaffected",
+              "version": "11.4.10"
+            },
+            {
+              "status": "unaffected",
+              "version": "11.8.6"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "Aurora MySQL",
+          "vendor": "Amazon",
+          "versions": [
+            {
+              "status": "unaffected",
+              "version": "2.12.6"
+            },
+            {
+              "status": "unaffected",
+              "version": "3.04.6"
+            },
+            {
+              "status": "unaffected",
+              "version": "3.10.3"
+            },
+            {
+              "status": "unaffected",
+              "version": "3.11.1"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "RDS for MySQL",
+          "vendor": "Amazon",
+          "versions": [
+            {
+              "status": "unaffected",
+              "version": "5.7.44-RDS.20260212"
+            },
+            {
+              "status": "unaffected",
+              "version": "8.0.45"
+            },
+            {
+              "status": "unaffected",
+              "version": "8.4.8"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "RDS for MariaDB",
+          "vendor": "Amazon",
+          "versions": [
+            {
+              "status": "unaffected",
+              "version": "10.6.25"
+            },
+            {
+              "status": "unaffected",
+              "version": "10.11.16"
+            },
+            {
+              "status": "unaffected",
+              "version": "11.4.10"
+            },
+            {
+              "status": "unaffected",
+              "version": "11.8.6"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-862 Missing Authorization"
+        "CWE-778 (Insufficient Logging)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-27971",
+      "publishedDate": "2026-03-03T22:55:38.064Z",
+      "lastModifiedDate": "2026-03-03T22:55:38.064Z",
+      "description": "Qwik is a performance focused javascript framework. qwik <=1.19.0 is vulnerable to RCE due to an unsafe deserialization vulnerability in the server$ RPC mechanism that allows any unauthenticated user to execute arbitrary code on the server with a single HTTP request. Affects any deployment where require() is available at runtime. This vulnerability is fixed in 1.19.1.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/QwikDev/qwik/security/advisories/GHSA-p9x5-jp3h-96mm",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "QwikDev",
+          "product": "qwik",
+          "versions": [
+            {
+              "version": "< 1.19.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-502: Deserialization of Untrusted Data"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
