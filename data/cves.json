@@ -2,48 +2,77 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 1,
-    "last_updated": "2026-03-04T22:53:25.342173",
+    "total_count": 2,
+    "last_updated": "2026-03-04T23:31:21.037032",
     "severity_distribution": {
       "critical": 0,
       "high": 0,
-      "medium": 1,
+      "medium": 0,
       "low": 0,
-      "none": 0
+      "none": 2
     }
   },
   "cves": [
     {
-      "id": "CVE-2025-41257",
-      "publishedDate": "2026-03-04T22:43:53.077Z",
-      "lastModifiedDate": "2026-03-04T22:43:53.077Z",
-      "description": "Suprema’s BioStar 2 in version 2.9.11.6 allows users to set new password without providing the current one. Exploiting this flaw combined with other vulnerabilities can lead to unauthorized account access and potential system compromise.",
-      "severity": 4.8,
+      "id": "CVE-2026-22052",
+      "publishedDate": "2026-03-04T23:22:22.957Z",
+      "lastModifiedDate": "2026-03-04T23:22:22.957Z",
+      "description": "ONTAP versions 9.12.1 and higher with S3 NAS buckets are susceptible to an information disclosure vulnerability. Successful exploit could allow an authenticated attacker to view a listing of the contents in a directory for which they lack permission.",
+      "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/sbaresearch/advisories/tree/public/2025/SBA-ADV-20251104-02_Suprema_BioStar_2_Insecure_Password_Change",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.supremainc.com/en/platform/hybrid-security-platform-biostar-2.asp",
+          "url": "https://security.netapp.com/advisory/NTAP-20260304-0001",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "unknown",
-          "product": "BioStar 2",
-          "vendor": "Suprema",
+          "defaultStatus": "unaffected",
+          "product": "ONTAP 9",
+          "vendor": "NETAPP",
           "versions": [
             {
               "status": "affected",
-              "version": "2.9.11.6"
+              "version": "9.12.1 and higher"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-20 Improper Input Validation"
+        "209"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-2833",
+      "publishedDate": "2026-03-04T23:20:51.985Z",
+      "lastModifiedDate": "2026-03-04T23:20:51.985Z",
+      "description": "An HTTP request smuggling vulnerability (CWE-444) was found in Pingora's handling of HTTP/1.1 connection upgrades. The issue occurs when a Pingora proxy reads a request containing an Upgrade header, causing the proxy to pass through the rest of the bytes on the connection to a backend before the backend has accepted the upgrade. An attacker can thus directly forward a malicious payload after a request with an Upgrade header to that backend in a way that may be interpreted as a subsequent request header, bypassing proxy-level security controls and enabling cross-user session hijacking.\n\nImpact\n\nThis vulnerability primarily affects standalone Pingora deployments where a Pingora proxy is exposed to external traffic. An attacker could exploit this to:\n\n  *  Bypass proxy-level ACL controls and WAF logic\n\n\n\n\n  *  Poison caches and upstream connections, causing subsequent requests from legitimate users to receive responses intended for smuggled requests\n\n\n\n\n  *  Perform cross-user attacks by hijacking sessions or smuggling requests that appear to originate from the trusted proxy IP\n\n\n\n\nCloudflare's CDN infrastructure was not affected by this vulnerability, as ingress proxies in the CDN stack maintain proper HTTP parsing boundaries and do not prematurely switch to upgraded connection forwarding mode.\n\n\nMitigation:\n\nPingora users should upgrade to Pingora v0.8.0 or higher\n\n\nAs a workaround, users may return an error on requests with the Upgrade header present in their request filter logic in order to stop processing bytes beyond the request header and disable downstream connection reuse.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/cloudflare/pingora",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "https://github.com/cloudflare/pingora",
+          "repo": "https://github.com/cloudflare/pingora",
+          "vendor": "Cloudflare",
+          "versions": [
+            {
+              "lessThan": "0.8.0",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-444 Inconsistent Interpretation of HTTP Requests ('HTTP Request/Response Smuggling')"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
