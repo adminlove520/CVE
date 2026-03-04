@@ -2,360 +2,276 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 10,
-    "last_updated": "2026-03-04T15:53:24.525419",
+    "total_count": 8,
+    "last_updated": "2026-03-04T16:49:17.003079",
     "severity_distribution": {
       "critical": 0,
-      "high": 0,
+      "high": 1,
       "medium": 1,
       "low": 0,
-      "none": 9
+      "none": 6
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-21425",
-      "publishedDate": "2026-03-04T12:15:34.236Z",
-      "lastModifiedDate": "2026-03-04T15:50:14.991Z",
-      "description": "Dell PowerScale OneFS, versions prior to 9.10.1.6 and versions 9.11.0.0 through 9.12.0.1, contains an incorrect privilege assignment vulnerability. A low privileged attacker with local access could potentially exploit this vulnerability, leading to Elevation of privileges.",
-      "severity": 6.7,
+      "id": "CVE-2026-27981",
+      "publishedDate": "2026-03-03T22:27:37.921Z",
+      "lastModifiedDate": "2026-03-04T16:28:12.402Z",
+      "description": "HomeBox is a home inventory and organization system. Prior to 0.24.0, the authentication rate limiter (authRateLimiter) tracks failed attempts per client IP. It determines the client IP by reading, 1. X-Real-IP header, 2. First entry of X-Forwarded-For header, and 3. r.RemoteAddr (TCP connection address). These headers were read unconditionally. An attacker connecting directly to Homebox could forge any value in X-Real-IP, effectively getting a fresh rate limit identity per request. There is a TrustProxy option in the configuration (Options.TrustProxy, default false), but this option was never read by any middleware or rate limiter code. Additionally, chi's middleware.RealIP was applied unconditionally in main.go, overwriting r.RemoteAddr with the forged header value before it reaches any handler. This vulnerability is fixed in 0.24.0.",
+      "severity": 7.4,
       "references": [
         {
-          "url": "https://www.dell.com/support/kbdoc/en-sg/000432452/dsa-2026-038-security-update-for-dell-powerscale-onefs-multiple-vulnerabilities",
+          "url": "https://github.com/sysadminsmedia/homebox/security/advisories/GHSA-j86g-v96v-jpp3",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "unaffected",
-          "product": "PowerScale OneFS",
-          "vendor": "Dell",
+          "vendor": "sysadminsmedia",
+          "product": "homebox",
           "versions": [
             {
-              "lessThan": "9.10.1.6 or later",
-              "status": "affected",
-              "version": "prior to 9.10.1.6",
-              "versionType": "semver"
+              "version": "< 0.24.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-307: Improper Restriction of Excessive Authentication Attempts"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-27600",
+      "publishedDate": "2026-03-03T22:23:04.268Z",
+      "lastModifiedDate": "2026-03-04T16:28:41.237Z",
+      "description": "HomeBox is a home inventory and organization system. Prior to 0.24.0-rc.1, the notifier functionality allows authenticated users to specify arbitrary URLs to which the application sends HTTP POST requests. No validation or restriction is applied to the supplied host, IP address, or port. Although the application does not return the response body from the target service, its UI behavior differs depending on the network state of the destination. This creates a behavioral side-channel that enables internal service enumeration. This vulnerability is fixed in 0.24.0-rc.1.",
+      "severity": 5,
+      "references": [
+        {
+          "url": "https://github.com/sysadminsmedia/homebox/security/advisories/GHSA-cm7p-5mg5-82pm",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "sysadminsmedia",
+          "product": "homebox",
+          "versions": [
+            {
+              "version": "< 0.24.0-rc.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-918: Server-Side Request Forgery (SSRF)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-28782",
+      "publishedDate": "2026-03-04T16:36:49.511Z",
+      "lastModifiedDate": "2026-03-04T16:36:49.511Z",
+      "description": "Craft is a content management system (CMS). Prior to 5.9.0-beta.1 and 4.17.0-beta.1, the \"Duplicate\" entry action does not properly verify if the user has permission to perform this action on the specific target elements. Even with only \"View Entries\" permission (where the \"Duplicate\" action is restricted in the UI), a user can bypass this restriction by sending a direct request. Furthermore, this vulnerability allows duplicating other users' entries by specifying their Entry IDs. Since Entry IDs are incremental, an attacker can trivially brute-force these IDs to duplicate and access restricted content across the system. This vulnerability is fixed in 5.9.0-beta.1 and 4.17.0-beta.1.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/craftcms/cms/security/advisories/GHSA-jxm3-pmm2-9gf6",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/craftcms/cms/commit/fb61a91357f5761c852400185ba931f51d82783d",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "craftcms",
+          "product": "cms",
+          "versions": [
+            {
+              "version": ">= 5.0.0-RC1, < 5.9.0-beta.1",
+              "status": "affected"
             },
             {
-              "lessThan": "9.13.0.0 or later",
-              "status": "affected",
-              "version": "9.11.0.0 through 9.12.0.1",
-              "versionType": "semver"
+              "version": ">= 4.0.0-RC1, < 4.17.0-beta.1",
+              "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-266: Incorrect Privilege Assignment"
+        "CWE-639: Authorization Bypass Through User-Controlled Key"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-59787",
-      "publishedDate": "2026-03-04T15:31:59.211Z",
-      "lastModifiedDate": "2026-03-04T15:31:59.211Z",
-      "description": "2N Access Commander application version 3.4.2 and prior returns HTTP 500 Internal Server Error responses when receiving malformed or manipulated requests, indicating improper handling of invalid input and potential security or availability impacts.",
+      "id": "CVE-2026-28781",
+      "publishedDate": "2026-03-04T16:31:39.357Z",
+      "lastModifiedDate": "2026-03-04T16:31:39.357Z",
+      "description": "Craft is a content management system (CMS). Prior to 4.17.0-beta.1 and 5.9.0-beta.1, the entry creation process allows for Mass Assignment of the authorId attribute. A user with \"Create Entries\" permission can inject the authorIds[] (or authorId) parameter into the POST request, which the backend processes without verifying if the current user is authorized to assign authorship to others. Normally, this field is not present in the request for users without the necessary permissions. By manually adding this parameter, an attacker can attribute the new entry to any user, including Admins. This effectively \"spoofs\" the authorship. This vulnerability is fixed in 4.17.0-beta.1 and 5.9.0-beta.1.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://www.2n.com/en-GB/download/cve_2025_59787_acom_3_5_v1pdf",
+          "url": "https://github.com/craftcms/cms/security/advisories/GHSA-2xfc-g69j-x2mp",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/craftcms/cms/commit/830b403870cd784b47ae42a3f5a16e7ac2d7f5a8",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/craftcms/cms/commit/c6dcbdffaf6ab3ffe77d317336684d83699f4542",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "craftcms",
+          "product": "cms",
+          "versions": [
+            {
+              "version": ">= 5.0.0-RC1, < 5.9.0-beta.1",
+              "status": "affected"
+            },
+            {
+              "version": ">= 4.0.0-RC1, < 4.17.0-beta.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-639: Authorization Bypass Through User-Controlled Key",
+        "CWE-915: Improperly Controlled Modification of Dynamically-Determined Object Attributes"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-28697",
+      "publishedDate": "2026-03-04T16:26:37.476Z",
+      "lastModifiedDate": "2026-03-04T16:26:37.476Z",
+      "description": "Craft is a content management system (CMS). Prior to 4.17.0-beta.1 and 5.9.0-beta.1, an authenticated administrator can achieve Remote Code Execution (RCE) by injecting a Server-Side Template Injection (SSTI) payload into Twig template fields (e.g., Email Templates). By calling the craft.app.fs.write() method, an attacker can write a malicious PHP script to a web-accessible directory and subsequently access it via the browser to execute arbitrary system commands. This vulnerability is fixed in 4.17.0-beta.1 and 5.9.0-beta.1.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/craftcms/cms/security/advisories/GHSA-v47q-jxvr-p68x",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/craftcms/cms/pull/18216",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/craftcms/cms/pull/18219",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/craftcms/cms/commit/9dc2a4a3ec8e9cd5e8c0d1129f36371437519197",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "craftcms",
+          "product": "cms",
+          "versions": [
+            {
+              "version": ">= 5.0.0-RC1, < 5.9.0-beta.1",
+              "status": "affected"
+            },
+            {
+              "version": ">= 4.0.0-RC1, < 4.17.0-beta.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-1336: Improper Neutralization of Special Elements Used in a Template Engine"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3266",
+      "publishedDate": "2026-03-03T22:28:52.816Z",
+      "lastModifiedDate": "2026-03-04T16:26:30.989Z",
+      "description": "Missing Authorization vulnerability in OpenText™ Filr allows Authentication Bypass. The vulnerability could allow unauthenticated users to get XSRF token and do RPC with carefully crafted programs.\n\nThis issue affects Filr: through 25.1.2.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://portal.microfocus.com/s/article/KM000045579?language=en_US",
           "type": "reference"
         }
       ],
       "affected": [
         {
           "defaultStatus": "unaffected",
-          "platforms": [
-            "Linux"
-          ],
-          "product": "2N Access Commander",
-          "vendor": "2N Telekomunikace a.s.",
+          "product": "Filr",
+          "vendor": "OpenText™",
           "versions": [
             {
-              "lessThan": "3.5",
+              "lessThanOrEqual": "25.1.2",
               "status": "affected",
               "version": "0",
-              "versionType": "Release"
+              "versionType": "custom"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-703 – Improper Check or Handling of Exceptional Conditions"
+        "CWE-862 Missing Authorization"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-28775",
-      "publishedDate": "2026-03-04T07:24:50.693Z",
-      "lastModifiedDate": "2026-03-04T15:41:06.431Z",
-      "description": "An unauthenticated Remote Code Execution (RCE) vulnerability exists in the SNMP service of International Datacasting Corporation (IDC) SFX Series SuperFlex SatelliteReceiver. The deployment insecurely provisions the `private` SNMP community string with read/write access by default. Because the SNMP agent runs as root, an unauthenticated remote attacker can utilize `NET-SNMP-EXTEND-MIB` directives, abusing the fact that the system runs a vulnerable version of net-snmp pre 5.8, to execute arbitrary operating system commands with root privileges.",
+      "id": "CVE-2026-3204",
+      "publishedDate": "2026-03-03T21:24:30.044Z",
+      "lastModifiedDate": "2026-03-04T16:36:47.100Z",
+      "description": "Improper\n input validation in the error message page in Devolutions Server 2025.3.16 and earlier allows remote attackers to spoof the displayed error message via a specially crafted URL.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://www.abdulmhsblog.com/posts/spfx-vulnrabilities/",
+          "url": "https://devolutions.net/security/advisories/DEVO-2026-0005",
           "type": "reference"
         }
       ],
       "affected": [
         {
           "defaultStatus": "unaffected",
-          "product": "SFX2100 Series SuperFlex SatelliteReceiver",
-          "vendor": "International Datacasting Corporation (IDC)",
+          "product": "Server",
+          "vendor": "Devolutions",
           "versions": [
             {
+              "lessThanOrEqual": "2025.3.16",
               "status": "affected",
-              "version": "SFX2100"
+              "version": "0",
+              "versionType": "custom"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-1188: Insecure Default Initialization of Resource"
+        "CWE-20 Improper Input Validation"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-3240",
-      "publishedDate": "2026-03-04T02:15:53.400Z",
-      "lastModifiedDate": "2026-03-04T15:33:21.842Z",
-      "description": "In Concrete CMS below version 9.4.8, a user with permission to edit a page with element Legacy form can perform a stored XSS attack towards high-privilege accounts via the Question field. The Concrete CMS security team gave this vulnerability a CVSS v.4.0 score of 4.8 with vector CVSS:4.0/AV:N/AC:L/AT:N/PR:H/UI:P/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N Thanks minhnn42, namdi and quanlna2 from VCSLab-Viettel Cyber Security for reporting.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/concretecms/concretecms/pull/12826",
-          "type": "reference"
-        },
-        {
-          "url": "https://documentation.concretecms.org/9-x/developers/introduction/version-history/948-release-notes",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://github.com/concretecms/concretecms",
-          "defaultStatus": "unaffected",
-          "product": "Concrete CMS",
-          "repo": "https://github.com/concretecms/concretecms",
-          "vendor": "Concrete CMS",
-          "versions": [
-            {
-              "lessThan": "9.4.8",
-              "status": "affected",
-              "version": "5",
-              "versionType": "git"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-3241",
-      "publishedDate": "2026-03-04T02:12:51.092Z",
-      "lastModifiedDate": "2026-03-04T15:42:07.836Z",
-      "description": "In Concrete CMS below version 9.4.8, a stored cross-site scripting (XSS) vulnerability exists in the \"Legacy Form\" block. An authenticated user with permissions to create or edit forms (e.g., a rogue administrator) can inject a persistent JavaScript payload into the options of a multiple-choice question (Checkbox List, Radio Buttons, or Select Box). This payload is then executed in the browser of any user who views the page containing the form. The Concrete CMS security team gave this vulnerability a CVSS v.4.0 score of 4.8 with vector CVSS:4.0/AV:N/AC:L/AT:N/PR:H/UI:P/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N. Thanks M3dium for reporting.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/concretecms/concretecms/pull/12826",
-          "type": "reference"
-        },
-        {
-          "url": "https://documentation.concretecms.org/9-x/developers/introduction/version-history/948-release-notes",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://github.com/concretecms/concretecms",
-          "defaultStatus": "unaffected",
-          "platforms": [
-            "git"
-          ],
-          "product": "Concrete CMS",
-          "repo": "https://github.com/concretecms/concretecms",
-          "vendor": "Concrete CMS",
-          "versions": [
-            {
-              "lessThan": "9.4.8",
-              "status": "affected",
-              "version": "5",
-              "versionType": "git"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-3242",
-      "publishedDate": "2026-03-04T02:00:38.994Z",
-      "lastModifiedDate": "2026-03-04T15:42:32.198Z",
-      "description": "In Concrete CMS below version 9.4.8, a rogue administrator can add stored XSS via the Switch Language block.  The Concrete CMS security team gave this vulnerability a CVSS v.4.0 score of 4.8 with vector CVSS:4.0/AV:N/AC:L/AT:N/PR:H/UI:P/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N.  Thanks M3dium for reporting.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/concretecms/concretecms/pull/12826",
-          "type": "reference"
-        },
-        {
-          "url": "https://documentation.concretecms.org/9-x/developers/introduction/version-history/948-release-notes",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://github.com/concretecms/concretecms",
-          "defaultStatus": "unaffected",
-          "platforms": [
-            "git"
-          ],
-          "product": "Concrete CMS",
-          "repo": "https://github.com/concretecms/concretecms",
-          "vendor": "Concrete CMS",
-          "versions": [
-            {
-              "lessThan": "9.4.8",
-              "status": "affected",
-              "version": "5",
-              "versionType": "git"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-3244",
-      "publishedDate": "2026-03-04T01:55:46.612Z",
-      "lastModifiedDate": "2026-03-04T15:50:49.918Z",
-      "description": "In Concrete CMS below version 9.4.8, A stored cross-site scripting (XSS) vulnerability exists in the search block where page names and content are rendered without proper HTML encoding in search results. This allows authenticated, rogue administrators to inject malicious JavaScript through page names that executes when users search for and view those pages in search results. The Concrete CMS security team gave this vulnerability a CVSS v.4.0 score of 4.8 with vector CVSS:4.0/AV:N/AC:L/AT:N/PR:H/UI:P/VC:N/VI:L/VA:N/SC:N/SI:N/SA:N.  Thanks zolpak for reporting",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/concretecms/concretecms/pull/12826",
-          "type": "reference"
-        },
-        {
-          "url": "https://documentation.concretecms.org/9-x/developers/introduction/version-history/948-release-notes",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://github.com/concretecms/concretecms",
-          "defaultStatus": "unaffected",
-          "platforms": [
-            "git"
-          ],
-          "product": "Concrete CMS",
-          "repo": "https://github.com/concretecms/concretecms",
-          "vendor": "Concrete CMS",
-          "versions": [
-            {
-              "lessThan": "9.4.8",
-              "status": "affected",
-              "version": "5",
-              "versionType": "git"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-26673",
-      "publishedDate": "2026-03-04T00:00:00.000Z",
-      "lastModifiedDate": "2026-03-04T15:33:23.989Z",
-      "description": "An issue in DJI Mavic Mini, Spark, Mavic Air, Mini, Mini SE 0.1.00.0500 and below allows a remote attacker to cause a denial of service via the DJI Enhanced-WiFi transmission subsystem",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/ByteMe1001/DJI-CatNect",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n/a",
-          "product": "n/a",
-          "versions": [
-            {
-              "version": "n/a",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "n/a"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-26514",
-      "publishedDate": "2026-03-04T00:00:00.000Z",
-      "lastModifiedDate": "2026-03-04T15:39:12.164Z",
-      "description": "An Argument Injection vulnerability exists in bird-lg-go before commit 6187a4e. The traceroute module uses shlex.Split to parse user input without validation, allowing remote attackers to inject arbitrary flags (e.g., -w, -q) via the q parameter. This can be exploited to cause a Denial of Service (DoS) by exhausting system resources.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/xddxdd/bird-lg-go/issues/136",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/xddxdd/bird-lg-go/commit/6187a4e3afce6d8c29568f8c72ca497d1f5a2b56",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n/a",
-          "product": "n/a",
-          "versions": [
-            {
-              "version": "n/a",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "n/a"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2021-35485",
+      "id": "CVE-2025-66680",
       "publishedDate": "2026-03-03T00:00:00.000Z",
-      "lastModifiedDate": "2026-03-04T15:49:10.812Z",
-      "description": "The Applications component of Nokia IMPACT version through 19.11.2.10-20210118042150283 allows an authenticated user to arbitrarily upload server-side executable files via the /ui/rest-proxy/application fileupload parameter. This can occur during the adding of a new application, or during the editing of an existing one.",
+      "lastModifiedDate": "2026-03-04T16:41:39.169Z",
+      "description": "An issue in the WiseDelfile64.sys component of WiseCleaner Wise Force Deleter 7.3.2 and earlier allows attackers to delete arbitrary files via a crafted request.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://www.nokia.com/networks/solutions/impact-iot-platform/",
+          "url": "https://www.wisecleaner.com/wise-force-deleter.html",
           "type": "reference"
         },
         {
-          "url": "https://www.nokia.com/notices/responsible-disclosure/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.gruppotim.it/it/footer/red-team/2021/Motive-Impact-CVE-2021-35485.html",
+          "url": "https://github.com/cwjchoi01/CVE-2025-66680/tree/main",
           "type": "reference"
         }
       ],
