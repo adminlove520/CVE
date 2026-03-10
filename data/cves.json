@@ -2,255 +2,137 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 7,
-    "last_updated": "2026-03-10T21:37:58.376113",
+    "total_count": 4,
+    "last_updated": "2026-03-10T21:57:17.978581",
     "severity_distribution": {
       "critical": 0,
-      "high": 0,
-      "medium": 1,
+      "high": 2,
+      "medium": 2,
       "low": 0,
-      "none": 6
+      "none": 0
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-31823",
-      "publishedDate": "2026-03-10T21:29:13.828Z",
-      "lastModifiedDate": "2026-03-10T21:29:13.828Z",
-      "description": "Sylius is an Open Source eCommerce Framework on Symfony. An authenticated stored cross-site scripting (XSS) vulnerability exists in multiple places across the shop frontend and admin panel due to unsanitized entity names being rendered as raw HTML. Shop breadcrumbs (shared/breadcrumbs.html.twig): The breadcrumbs macro uses the Twig |raw filter on label values. Since taxon names, product names, and ancestor names flow directly into these labels, a malicious taxon name like <img src=x onerror=alert('XSS')> is rendered and executed as JavaScript on the storefront. Admin product taxon picker (ProductTaxonTreeController.js): The rowRenderer method interpolates ${name} directly into a template literal building HTML, allowing script injection through taxon names in the admin panel. Admin autocomplete fields (Tom Select): Dropdown items and options render entity names as raw HTML without escaping, allowing XSS through any autocomplete field displaying entity names. An authenticated administrator can inject arbitrary HTML or JavaScript via entity names (e.g. taxon name) that is persistently rendered for all users. The issue is fixed in versions: 1.9.12, 1.10.16, 1.11.17, 1.12.23, 1.13.15, 1.14.18, 2.0.16, 2.1.12, 2.2.3 and above.",
-      "severity": 4.8,
+      "id": "CVE-2026-31830",
+      "publishedDate": "2026-03-10T21:46:02.547Z",
+      "lastModifiedDate": "2026-03-10T21:46:02.547Z",
+      "description": "sigstore-ruby is a pure Ruby implementation of the sigstore verify command from the sigstore/cosign project. Prior to 0.2.3, Sigstore::Verifier#verify does not propagate the VerificationFailure returned by verify_in_toto when the artifact digest does not match the digest in the in-toto attestation subject. As a result, verification of DSSE bundles containing in-toto statements returns VerificationSuccess regardless of whether the artifact matches the attested subject. This vulnerability is fixed in 0.2.3.",
+      "severity": 7.5,
       "references": [
         {
-          "url": "https://github.com/Sylius/Sylius/security/advisories/GHSA-mx4q-xxc9-pf5q",
+          "url": "https://github.com/sigstore/sigstore-ruby/security/advisories/GHSA-mhg6-2q2v-9h2c",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Sylius",
-          "product": "Sylius",
+          "vendor": "sigstore",
+          "product": "sigstore-ruby",
           "versions": [
             {
-              "version": ">= 2.2.0, < 2.2.3",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.1.0, < 2.1.12",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.0.0, < 2.0.16",
+              "version": "< 0.2.3",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+        "CWE-252: Unchecked Return Value"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-28806",
-      "publishedDate": "2026-03-10T21:30:58.581Z",
-      "lastModifiedDate": "2026-03-10T21:30:58.581Z",
-      "description": "Improper Authorization vulnerability in nerves-hub nerves_hub_web allows cross-organization device control via device bulk actions and device update API.\n\nMissing authorization checks in the device bulk actions and device update API endpoints allow authenticated users to target devices belonging to other organizations and perform actions outside of their privilege level.\n\nAn attacker can select devices outside of their organization by manipulating device identifiers and perform management actions on them, such as moving them to products they control. This may allow attackers to interfere with firmware updates, access device functionality exposed by the platform, or disrupt device connectivity.\n\nIn environments where additional features such as remote console access are enabled, this could lead to full compromise of affected devices.\n\nThis issue affects nerves_hub_web: from 1.0.0 before 2.4.0.",
-      "severity": "N/A",
+      "id": "CVE-2026-31834",
+      "publishedDate": "2026-03-10T21:53:49.153Z",
+      "lastModifiedDate": "2026-03-10T21:53:49.153Z",
+      "description": "Umbraco is an ASP.NET CMS. From 15.3.1 to before 16.5.1 and 17.2.2, A privilege escalation vulnerability has been identified in Umbraco CMS. Under certain conditions, authenticated backoffice users with permission to manage users, may be able to elevate their privileges due to insufficient authorization enforcement when modifying user group memberships. The affected functionality does not properly validate whether a user has sufficient privileges to assign highly privileged roles. This vulnerability is fixed in 16.5.1 and 17.2.2.",
+      "severity": 7.2,
       "references": [
         {
-          "url": "https://github.com/nerves-hub/nerves_hub_web/security/advisories/GHSA-f8fr-mccc-xvcx",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/nerves-hub/nerves_hub_web/commit/1f69c9d595684a4650c3ac702f3dc7c5bcd7526c",
+          "url": "https://github.com/umbraco/Umbraco-CMS/security/advisories/GHSA-rhcg-3h8r-v6vp",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "cpes": [
-            "cpe:2.3:a:nerves-hub:nerves_hub_web:*:*:*:*:*:*:*:*"
-          ],
-          "defaultStatus": "unaffected",
-          "packageName": "nerves_hub",
-          "packageURL": "pkg:otp/nerves_hub?repository_url=https:%2F%2Fgithub.com%2Fnerves-hub%2Fnerves_hub_web&vcs_url=git%20https:%2F%2Fgithub.com%2Fnerves-hub%2Fnerves_hub_web.git",
-          "product": "nerves_hub_web",
-          "repo": "https://github.com/nerves-hub/nerves_hub_web",
-          "vendor": "nerves-hub",
+          "vendor": "umbraco",
+          "product": "Umbraco-CMS",
           "versions": [
             {
-              "lessThan": "2.4.0",
-              "status": "affected",
-              "version": "1.0.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "pkg:otp/nerves_hub@2.4.0",
-              "status": "affected",
-              "version": "pkg:otp/nerves_hub@1.0.0",
-              "versionType": "purl"
-            }
-          ]
-        },
-        {
-          "collectionURL": "https://ghcr.io",
-          "cpes": [
-            "cpe:2.3:a:nerves-hub:nerves_hub_web:*:*:*:*:*:*:*:*"
-          ],
-          "defaultStatus": "unaffected",
-          "packageName": "nerves-hub/nerves-hub",
-          "packageURL": "pkg:oci/nerves-hub?repository_url=ghcr.io/nerves-hub",
-          "product": "nerves_hub_web",
-          "vendor": "nerves-hub",
-          "versions": [
-            {
-              "lessThan": "2.4.0",
-              "status": "affected",
-              "version": "1.0.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "pkg:oci/nerves-hub?repository_url=ghcr.io/nerves-hub&tag=2.4.0",
-              "status": "affected",
-              "version": "pkg:oci/nerves-hub?repository_url=ghcr.io/nerves-hub&tag=1.0.0",
-              "versionType": "purl"
-            }
-          ]
-        },
-        {
-          "collectionURL": "https://github.com",
-          "cpes": [
-            "cpe:2.3:a:nerves-hub:nerves_hub_web:*:*:*:*:*:*:*:*"
-          ],
-          "defaultStatus": "unaffected",
-          "packageName": "nerves-hub/nerves_hub_web",
-          "packageURL": "pkg:github/nerves-hub/nerves_hub_web",
-          "product": "nerves_hub_web",
-          "repo": "https://github.com/nerves-hub/nerves_hub_web.git",
-          "vendor": "nerves-hub",
-          "versions": [
-            {
-              "lessThan": "1f69c9d595684a4650c3ac702f3dc7c5bcd7526c",
-              "status": "affected",
-              "version": "adaeefdb7a835525482588f43332ef988cc448c7",
-              "versionType": "git"
-            },
-            {
-              "lessThan": "pkg:github/nerves-hub/nerves_hub_web@1f69c9d595684a4650c3ac702f3dc7c5bcd7526c",
-              "status": "affected",
-              "version": "pkg:github/nerves-hub/nerves_hub_web@adaeefdb7a835525482588f43332ef988cc448c7",
-              "versionType": "purl"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-285 Improper Authorization",
-        "CWE-668 Exposure of Resource to Wrong Sphere"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-31822",
-      "publishedDate": "2026-03-10T21:27:38.691Z",
-      "lastModifiedDate": "2026-03-10T21:27:38.691Z",
-      "description": "Sylius is an Open Source eCommerce Framework on Symfony. A cross-site scripting (XSS) vulnerability exists in the shop checkout login form handled by the ApiLoginController Stimulus controller. When a login attempt fails, AuthenticationFailureHandler returns a JSON response whose message field is rendered into the DOM using innerHTML, allowing any HTML or JavaScript in that value to be parsed and executed by the browser. The issue is fixed in versions: 2.0.16, 2.1.12, 2.2.3 and above.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/Sylius/Sylius/security/advisories/GHSA-vgh8-c6fp-7gcg",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Sylius",
-          "product": "Sylius",
-          "versions": [
-            {
-              "version": ">= 2.2.0, < 2.2.3",
+              "version": ">= 15.3.1, < 16.5.1",
               "status": "affected"
             },
             {
-              "version": ">= 2.1.0, < 2.1.12",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.0.0, < 2.0.16",
+              "version": ">= 17.0.0, < 17.2.1",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-31821",
-      "publishedDate": "2026-03-10T21:25:20.368Z",
-      "lastModifiedDate": "2026-03-10T21:25:20.368Z",
-      "description": "Sylius is an Open Source eCommerce Framework on Symfony. The POST /api/v2/shop/orders/{tokenValue}/items endpoint does not verify cart ownership. An unauthenticated attacker can add items to other registered customers' carts by knowing the cart tokenValue. An attacker who obtains a cart tokenValue can add arbitrary items to another customer's cart. The endpoint returns the full cart representation in the response (HTTP 201). The issue is fixed in versions: 2.0.16, 2.1.12, 2.2.3 and above.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/Sylius/Sylius/security/advisories/GHSA-wjmg-4cq5-m8hg",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Sylius",
-          "product": "Sylius",
-          "versions": [
-            {
-              "version": ">= 2.2.0, < 2.2.3",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.1.0, < 2.1.12",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.0.0, < 2.0.16",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
+        "CWE-269: Improper Privilege Management",
+        "CWE-284: Improper Access Control",
         "CWE-862: Missing Authorization"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-31820",
-      "publishedDate": "2026-03-10T21:22:37.052Z",
-      "lastModifiedDate": "2026-03-10T21:22:37.052Z",
-      "description": "Sylius is an Open Source eCommerce Framework on Symfony. An authenticated Insecure Direct Object Reference (IDOR) vulnerability exists in multiple shop LiveComponents due to unvalidated resource IDs accepted via #[LiveArg] parameters. Unlike props, which are protected by LiveComponent's @checksum, args are fully user-controlled - any action that accepts a resource ID via #[LiveArg] and loads it with ->find() without ownership validation is vulnerable. Checkout address FormComponent (addressFieldUpdated action): Accepts an addressId via #[LiveArg] and loads it without verifying ownership, exposing another user's first name, last name, company, phone number, street, city, postcode, and country. Cart WidgetComponent (refreshCart action): Accepts a cartId via #[LiveArg] and loads any order directly from the repository, exposing order total and item count. Cart SummaryComponent (refreshCart action): Accepts a cartId via #[LiveArg] and loads any order directly from the repository, exposing subtotal, discount, shipping cost, taxes (excluded and included), and order total. Since sylius_order contains both active carts (state=cart) and completed orders (state=new/fulfilled) in the same ID space, the cart IDOR exposes data from all orders, not just active carts. The issue is fixed in versions: 2.0.16, 2.1.12, 2.2.3 and above.",
-      "severity": "N/A",
+      "id": "CVE-2026-31833",
+      "publishedDate": "2026-03-10T21:51:51.407Z",
+      "lastModifiedDate": "2026-03-10T21:51:51.407Z",
+      "description": "Umbraco is an ASP.NET CMS. From 16.2.0 to before 16.5.1 and 17.2.2, An authenticated backoffice user with access to Settings can inject malicious HTML into property type descriptions. Due to an overly permissive attributeNameCheck configuration (/.+/) in the UFM DOMPurify instance, event handler attributes such as onclick and onload, when used within Umbraco web components (umb-*, uui-*, ufm-*) were not filtered. This vulnerability is fixed in 16.5.1 and 17.2.2.",
+      "severity": 6.7,
       "references": [
         {
-          "url": "https://github.com/Sylius/Sylius/security/advisories/GHSA-2xc6-348p-c2x6",
+          "url": "https://github.com/umbraco/Umbraco-CMS/security/advisories/GHSA-vrqc-59mw-qqg7",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Sylius",
-          "product": "Sylius",
+          "vendor": "umbraco",
+          "product": "Umbraco-CMS",
           "versions": [
             {
-              "version": ">= 2.2.0, < 2.2.3",
+              "version": ">= 16.2.0, <  16.5.1",
               "status": "affected"
             },
             {
-              "version": ">= 2.1.0, < 2.1.12",
+              "version": ">= 17.0.0, < 17.2.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-31832",
+      "publishedDate": "2026-03-10T21:49:54.908Z",
+      "lastModifiedDate": "2026-03-10T21:49:54.908Z",
+      "description": "Umbraco is an ASP.NET CMS. From 14.0.0 to before 16.5.1 and 17.2.2, A broken object-level authorization vulnerability exists in a backoffice API endpoint that allows authenticated users to assign domain-related data to content nodes without proper authorization checks. The issue is caused by insufficient authorization enforcement on the affected API endpoint, whereby via an API call, domains can be set on content nodes that the editor does not have permission to access (either via user group privileges or start nodes). This vulnerability is fixed in 16.5.1 and 17.2.2.",
+      "severity": 5.4,
+      "references": [
+        {
+          "url": "https://github.com/umbraco/Umbraco-CMS/security/advisories/GHSA-fpvf-fvp5-996r",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "umbraco",
+          "product": "Umbraco-CMS",
+          "versions": [
+            {
+              "version": ">= 14.0.0, < 16.5.1",
               "status": "affected"
             },
             {
-              "version": ">= 2.0.0, < 2.0.16",
+              "version": ">= 17.0.0, < 17.2.0",
               "status": "affected"
             }
           ]
@@ -258,140 +140,6 @@
       ],
       "problemType": [
         "CWE-639: Authorization Bypass Through User-Controlled Key"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-31819",
-      "publishedDate": "2026-03-10T21:18:59.634Z",
-      "lastModifiedDate": "2026-03-10T21:18:59.634Z",
-      "description": "Sylius is an Open Source eCommerce Framework on Symfony. CurrencySwitchController::switchAction(), ImpersonateUserController::impersonateAction() and StorageBasedLocaleSwitcher::handle() use the HTTP Referer header directly when redirecting. The attack requires the victim to click a legitimate application link placed on an attacker-controlled page. The browser automatically sends the attacker's site as the Referer, and the application redirects back to it. This can be used for phishing or credential theft, as the redirect originates from a trusted domain. The severity varies by endpoint; public endpoints require no authentication and are trivially exploitable, while admin-only endpoints require an authenticated session but remain vulnerable if an admin follows a link from an external source such as email or chat. The issue is fixed in versions: 1.9.12, 1.10.16, 1.11.17, 1.12.23, 1.13.15, 1.14.18, 2.0.16, 2.1.12, 2.2.3 and above.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/Sylius/Sylius/security/advisories/GHSA-9ffx-f77r-756w",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Sylius",
-          "product": "Sylius",
-          "versions": [
-            {
-              "version": ">= 2.2.0, < 2.2.3",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.1.0, < 2.1.12",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.0.0, < 2.0.16",
-              "status": "affected"
-            },
-            {
-              "version": ">= 1.14.0, < 1.14.18",
-              "status": "affected"
-            },
-            {
-              "version": ">= 1.13.0, < 1.13.15",
-              "status": "affected"
-            },
-            {
-              "version": ">= 1.12.0, < 1.12.23",
-              "status": "affected"
-            },
-            {
-              "version": ">= 1.11.0, < 1.11.17",
-              "status": "affected"
-            },
-            {
-              "version": ">= 1.10.0, < 1.10.16",
-              "status": "affected"
-            },
-            {
-              "version": "< 1.9.12",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-601: URL Redirection to Untrusted Site ('Open Redirect')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-21622",
-      "publishedDate": "2026-03-05T21:18:03.883Z",
-      "lastModifiedDate": "2026-03-10T21:31:01.850Z",
-      "description": "Insufficient Session Expiration vulnerability in hexpm hexpm/hexpm ('Elixir.Hexpm.Accounts.PasswordReset' module) allows Account Takeover.\n\nPassword reset tokens generated via the \"Reset your password\" flow do not expire. When a user requests a password reset, Hex sends an email containing a reset link with a token. This token remains valid indefinitely until used. There is no time-based expiration enforced.\n\nIf a user's historical emails are exposed through a data breach (e.g., a leaked mailbox archive), any unused password reset email contained in that dataset could be used by an attacker to reset the victim's password. The attacker does not need current access to the victim's email account, only access to a previously leaked copy of the reset email.\n\nThis vulnerability is associated with program files lib/hexpm/accounts/password_reset.ex and program routines 'Elixir.Hexpm.Accounts.PasswordReset':can_reset?/3.\n\nThis issue affects hexpm: from 617e44c71f1dd9043870205f371d375c5c4d886d before bb0e42091995945deef10556f58d046a52eb7884.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/hexpm/hexpm/security/advisories/GHSA-6r94-pvwf-mxqm",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/hexpm/hexpm/commit/bb0e42091995945deef10556f58d046a52eb7884",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://github.com",
-          "cpes": [
-            "cpe:2.3:a:hexpm:hexpm:*:*:*:*:*:*:*:*"
-          ],
-          "defaultStatus": "unaffected",
-          "modules": [
-            "'Elixir.Hexpm.Accounts.PasswordReset'"
-          ],
-          "packageName": "hexpm/hexpm",
-          "packageURL": "pkg:github/hexpm/hexpm",
-          "product": "hexpm",
-          "programFiles": [
-            "lib/hexpm/accounts/password_reset.ex"
-          ],
-          "programRoutines": [
-            {
-              "name": "'Elixir.Hexpm.Accounts.PasswordReset':can_reset?/3"
-            }
-          ],
-          "repo": "https://github.com/hexpm/hexpm.git",
-          "vendor": "hexpm",
-          "versions": [
-            {
-              "lessThan": "bb0e42091995945deef10556f58d046a52eb7884",
-              "status": "affected",
-              "version": "617e44c71f1dd9043870205f371d375c5c4d886d",
-              "versionType": "git"
-            },
-            {
-              "lessThan": "pkg:github/hexpm/hexpm@bb0e42091995945deef10556f58d046a52eb7884",
-              "status": "affected",
-              "version": "pkg:github/hexpm/hexpm@617e44c71f1dd9043870205f371d375c5c4d886d",
-              "versionType": "purl"
-            }
-          ]
-        },
-        {
-          "defaultStatus": "unaffected",
-          "product": "hex.pm",
-          "vendor": "hexpm",
-          "versions": [
-            {
-              "lessThan": "2026-03-05",
-              "status": "affected",
-              "version": "2025-08-01",
-              "versionType": "date"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-613 Insufficient Session Expiration"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
