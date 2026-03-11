@@ -2,186 +2,65 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 11,
-    "last_updated": "2026-03-11T20:31:46.391624",
+    "total_count": 7,
+    "last_updated": "2026-03-11T21:00:49.548227",
     "severity_distribution": {
       "critical": 0,
       "high": 2,
-      "medium": 3,
-      "low": 2,
-      "none": 4
+      "medium": 4,
+      "low": 0,
+      "none": 1
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-31979",
-      "publishedDate": "2026-03-11T19:47:05.935Z",
-      "lastModifiedDate": "2026-03-11T20:07:29.194Z",
-      "description": "Himmelblau is an interoperability suite for Microsoft Azure Entra ID and Intune. Prior to 3.1.0 and 2.3.8, the himmelblaud-tasks daemon, running as root, writes Kerberos cache files under /tmp/krb5cc_<uid> without symlink protections. Since commit 87a51ee, PrivateTmp is explicitly removed from the tasks daemon's systemd hardening, exposing it to the host /tmp. A local user can exploit this via symlink attacks to chown or overwrite arbitrary files, achieving local privilege escalation. This vulnerability is fixed in 3.1.0 and 2.3.8.",
-      "severity": 8.8,
+      "id": "CVE-2026-32110",
+      "publishedDate": "2026-03-11T20:38:08.708Z",
+      "lastModifiedDate": "2026-03-11T20:38:08.708Z",
+      "description": "SiYuan is a personal knowledge management system. Prior to 3.6.0, the /api/network/forwardProxy endpoint allows authenticated users to make arbitrary HTTP requests from the server. The endpoint accepts a user-controlled URL and makes HTTP requests to it, returning the full response body and headers. There is no URL validation to prevent requests to internal networks, localhost, or cloud metadata services. This vulnerability is fixed in 3.6.0.",
+      "severity": 8.3,
       "references": [
         {
-          "url": "https://github.com/himmelblau-idm/himmelblau/security/advisories/GHSA-44wm-q286-ghq3",
+          "url": "https://github.com/siyuan-note/siyuan/security/advisories/GHSA-56cv-c5p2-j2wg",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "himmelblau-idm",
-          "product": "himmelblau",
+          "vendor": "siyuan-note",
+          "product": "siyuan",
           "versions": [
             {
-              "version": ">= 1.0.0, < 2.3.8",
-              "status": "affected"
-            },
-            {
-              "version": ">= 3.0.0-alpha, < 3.1.0",
+              "version": "< 3.6.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-59: Improper Link Resolution Before File Access ('Link Following')"
+        "CWE-918: Server-Side Request Forgery (SSRF)"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-32101",
-      "publishedDate": "2026-03-11T20:03:05.319Z",
-      "lastModifiedDate": "2026-03-11T20:03:05.319Z",
-      "description": "StudioCMS is a server-side-rendered, Astro native, headless content management system. Prior to 0.3.1, the S3 storage manager's isAuthorized() function is declared async (returns Promise<boolean>) but is called without await in both the POST and PUT handlers. Since a Promise object is always truthy in JavaScript, !isAuthorized(type) always evaluates to false, completely bypassing the authorization check. Any authenticated user with the lowest visitor role can upload, delete, rename, and list all files in the S3 bucket. This vulnerability is fixed in 0.3.1.",
-      "severity": 7.6,
+      "id": "CVE-2026-32121",
+      "publishedDate": "2026-03-11T20:47:31.777Z",
+      "lastModifiedDate": "2026-03-11T20:47:31.777Z",
+      "description": "OpenEMR is a free and open source electronic health records and medical practice management application. Prior to 8.0.0.1,  Stored XSS in prescription CSS/HTML print view via patient demographics. That finding involves server-side rendering of patient names via raw PHP echo. This finding involves client-side DOM-based rendering via jQuery .html() in a completely different component (portal/sign/assets/signer_api.js). The two share the same root cause (unsanitized patient names in patient_data), but they have different sinks, different affected components, different trigger actions, and require independent fixes. This vulnerability is fixed in 8.0.0.1.",
+      "severity": 7.7,
       "references": [
         {
-          "url": "https://github.com/withstudiocms/studiocms/security/advisories/GHSA-mm78-fgq8-6pgr",
+          "url": "https://github.com/openemr/openemr/security/advisories/GHSA-68fr-xm3v-p4vw",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "@studiocms",
-          "product": "s3-storage",
+          "vendor": "openemr",
+          "product": "openemr",
           "versions": [
             {
-              "version": "< 0.3.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-863: Incorrect Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-32103",
-      "publishedDate": "2026-03-11T20:06:58.276Z",
-      "lastModifiedDate": "2026-03-11T20:08:13.604Z",
-      "description": "StudioCMS is a server-side-rendered, Astro native, headless content management system. Prior to 0.4.3, the POST /studiocms_api/dashboard/create-reset-link endpoint allows any authenticated user with admin privileges to generate a password reset token for any other user, including the owner account. The handler verifies that the caller is an admin but does not enforce role hierarchy, nor does it validate that the target userId matches the caller's identity. Combined with the POST /studiocms_api/dashboard/reset-password endpoint, this allows a complete account takeover of the highest-privileged account in the system. This vulnerability is fixed in 0.4.3.",
-      "severity": 6.8,
-      "references": [
-        {
-          "url": "https://github.com/withstudiocms/studiocms/security/advisories/GHSA-h7vr-cg25-jf8c",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "withstudiocms",
-          "product": "studiocms",
-          "versions": [
-            {
-              "version": "< 0.4.3",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-639: Authorization Bypass Through User-Controlled Key",
-        "CWE-640: Weak Password Recovery Mechanism for Forgotten Password"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-32104",
-      "publishedDate": "2026-03-11T20:09:44.879Z",
-      "lastModifiedDate": "2026-03-11T20:09:44.879Z",
-      "description": "StudioCMS is a server-side-rendered, Astro native, headless content management system. Prior to 0.4.3, the updateUserNotifications endpoint accepts a user ID from the request payload and uses it to update that user's notification preferences. It checks that the caller is logged in but never verifies that the caller owns the target account (id !== userData.user.id). Any authenticated visitor can modify notification preferences for any user, including disabling admin notifications to suppress detection of malicious activity. This vulnerability is fixed in 0.4.3.",
-      "severity": 5.4,
-      "references": [
-        {
-          "url": "https://github.com/withstudiocms/studiocms/security/advisories/GHSA-9v82-xrm4-mp52",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "withstudiocms",
-          "product": "studiocms",
-          "versions": [
-            {
-              "version": "< 0.4.3",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-639: Authorization Bypass Through User-Controlled Key"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-32106",
-      "publishedDate": "2026-03-11T20:09:12.095Z",
-      "lastModifiedDate": "2026-03-11T20:09:12.095Z",
-      "description": "StudioCMS is a server-side-rendered, Astro native, headless content management system. Prior to 0.4.3, the REST API createUser endpoint uses string-based rank checks that only block creating owner accounts, while the Dashboard API uses indexOf-based rank comparison that prevents creating users at or above your own rank. This inconsistency allows an admin to create additional admin accounts via the REST API, enabling privilege proliferation and persistence. This vulnerability is fixed in 0.4.3.",
-      "severity": 4.7,
-      "references": [
-        {
-          "url": "https://github.com/withstudiocms/studiocms/security/advisories/GHSA-wj56-g96r-673q",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "withstudiocms",
-          "product": "studiocms",
-          "versions": [
-            {
-              "version": "< 0.4.3",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-269: Improper Privilege Management"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-32109",
-      "publishedDate": "2026-03-11T20:16:34.480Z",
-      "lastModifiedDate": "2026-03-11T20:16:34.480Z",
-      "description": "Copyparty is a portable file server. Prior to 1.20.12, if an attacker has been given both read- and write-permissions to the server, they can upload a malicious file with the filename .prologue.html and then craft a link to potentially execute arbitrary JavaScript in the victim's context. Note that it is intended behavior that the JavaScript would execute if the target clicks a link to the HTML file itself; \"https://example.com/foo/.prologue.html\". The vulnerability is that \"https://example.com/foo/?b\" would also evaluate the file, making the behavior unexpected. There are existing preventative measures (strict SameSite cookies) which makes it harder to leverage this vulnerability in an attack; in order to gain control of the target's authenticated session, the link must be clicked from a page served by the server itself -- most likely by editing an existing resource, which would require additional access permissions. Finally, for this attack to be successful, the attacker's target must click the specific crafted link given by the attacker. This vulnerability is not activated by normally browsing the web-UI on the server. This vulnerability is fixed in 1.20.12.",
-      "severity": 3.7,
-      "references": [
-        {
-          "url": "https://github.com/9001/copyparty/security/advisories/GHSA-rcp6-88mm-9vgf",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "9001",
-          "product": "copyparty",
-          "versions": [
-            {
-              "version": "< 1.20.12",
+              "version": "< 8.0.0.1",
               "status": "affected"
             }
           ]
@@ -193,151 +72,138 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-24508",
-      "publishedDate": "2026-03-11T18:56:10.153Z",
-      "lastModifiedDate": "2026-03-11T20:07:12.147Z",
-      "description": "Dell Alienware Command Center (AWCC), versions prior to 6.12.24.0, contain an Improper Certificate Validation vulnerability. A low privileged attacker with local access could potentially exploit this vulnerability, leading to Information exposure.",
-      "severity": 2.5,
+      "id": "CVE-2026-32112",
+      "publishedDate": "2026-03-11T20:42:30.381Z",
+      "lastModifiedDate": "2026-03-11T20:42:30.381Z",
+      "description": "ha-mcp is a Home Assistant MCP Server. Prior to 7.0.0, the ha-mcp OAuth consent form renders user-controlled parameters via Python f-strings with no HTML escaping. An attacker who can reach the OAuth endpoint and convince the server operator to follow a crafted authorization URL could execute JavaScript in the operator's browser. This affects only users running the beta OAuth mode (ha-mcp-oauth), which is not part of the standard setup and requires explicit configuration. This vulnerability is fixed in 7.0.0.",
+      "severity": 6.8,
       "references": [
         {
-          "url": "https://www.dell.com/support/kbdoc/en-us/000427573/dsa-2026-093",
+          "url": "https://github.com/homeassistant-ai/ha-mcp/security/advisories/GHSA-pf93-j98v-25pv",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Dell",
-          "product": "Alienware Command Center (AWCC)",
+          "vendor": "homeassistant-ai",
+          "product": "ha-mcp",
           "versions": [
             {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "6.12.24.0",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-295: Improper Certificate Validation"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-32108",
-      "publishedDate": "2026-03-11T20:14:18.998Z",
-      "lastModifiedDate": "2026-03-11T20:14:18.998Z",
-      "description": "Copyparty is a portable file server. Prior to 1.20.12, there was a missing permission-check in the shares feature (the shr global-option). This vulnerability only applies when the shares feature is used for the specific purpose of creating a share of just a single file inside a folder or either the FTP or SFTP server is enabled, and also made publicly accessible. Given these conditions, when a user is browsing a share through either FTP or SFTP (not http or https), they can gain read-access to the remaining files inside the shared folder by guessing/bruteforcing the filenames. It was not possible to descend into subdirectories in this manner; only the sibling files were accessible. This vulnerability is similar to CVE-2025-58753 which was previously fixed for HTTP and HTTPS, but not for FTP. The FTPS server did not yet exist at that time. This vulnerability is fixed in 1.20.12.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/9001/copyparty/security/advisories/GHSA-67rw-2x62-mqqm",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "9001",
-          "product": "copyparty",
-          "versions": [
-            {
-              "version": "< 1.20.12",
+              "version": "< 7.0.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-863: Incorrect Authorization"
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-32102",
-      "publishedDate": "2026-03-11T20:05:16.164Z",
-      "lastModifiedDate": "2026-03-11T20:05:16.164Z",
-      "description": "OliveTin gives access to predefined shell commands from a web interface. In 3000.10.2 and earlier, OliveTin’s live EventStream broadcasts execution events and action output to authenticated dashboard subscribers without enforcing per-action authorization. A low-privileged authenticated user can receive output from actions they are not allowed to view, resulting in broken access control and sensitive information disclosure.",
-      "severity": "N/A",
+      "id": "CVE-2026-32118",
+      "publishedDate": "2026-03-11T20:46:19.118Z",
+      "lastModifiedDate": "2026-03-11T20:46:39.404Z",
+      "description": "OpenEMR is a free and open source electronic health records and medical practice management application. Prior to 8.0.0.1, stored cross-site scripting (XSS) in the Graphical Pain Map (\"clickmap\") form allows any authenticated clinician to inject arbitrary JavaScript that executes in the browser of every subsequent user who views the affected encounter form. Because session cookies are not marked HttpOnly, this enables full session hijacking of other users, including administrators. This vulnerability is fixed in 8.0.0.1.",
+      "severity": 5.4,
       "references": [
         {
-          "url": "https://github.com/OliveTin/OliveTin/security/advisories/GHSA-228v-wc5r-j8m7",
+          "url": "https://github.com/openemr/openemr/security/advisories/GHSA-55qj-x8wh-m4rm",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "OliveTin",
-          "product": "OliveTin",
+          "vendor": "openemr",
+          "product": "openemr",
           "versions": [
             {
-              "version": "< 3000.10.2",
+              "version": "< 8.0.0.1",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-284: Improper Access Control",
-        "CWE-863: Incorrect Authorization"
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-1471",
-      "publishedDate": "2026-03-11T16:30:24.053Z",
-      "lastModifiedDate": "2026-03-11T20:09:18.652Z",
-      "description": "Excessive caching of authentication context in Neo4j Enterprise edition versions prior to 2026.01.4 leads to authenticated users inheriting the context of the first user who authenticated after restart. The issue is limited to certain non-default configurations of SSO (UserInfo endpoint). \nWe recommend upgrading to versions 2026.01.4 (or 5.26.22) where the issue is fixed.",
-      "severity": "N/A",
+      "id": "CVE-2026-32111",
+      "publishedDate": "2026-03-11T20:41:37.529Z",
+      "lastModifiedDate": "2026-03-11T20:41:37.529Z",
+      "description": "ha-mcp is a Home Assistant MCP Server. Prior to 7.0.0, the ha-mcp OAuth consent form (beta feature) accepts a user-supplied ha_url and makes a server-side HTTP request to {ha_url}/api/config with no URL validation. An unauthenticated attacker can submit arbitrary URLs to perform internal network reconnaissance via an error oracle. Two additional code paths in OAuth tool calls (REST and WebSocket) are affected by the same primitive. The primary deployment method (private URL with pre-configured HOMEASSISTANT_TOKEN) is not affected. This vulnerability is fixed in 7.0.0.",
+      "severity": 5.3,
       "references": [
         {
-          "url": "https://neo4j.com/security/CVE-2026-1471",
+          "url": "https://github.com/homeassistant-ai/ha-mcp/security/advisories/GHSA-fmfg-9g7c-3vq7",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Neo4j",
-          "product": "Enterprise edition",
+          "vendor": "homeassistant-ai",
+          "product": "ha-mcp",
           "versions": [
             {
-              "status": "affected",
-              "version": "2025.01",
-              "lessThan": "2026.01.4",
-              "versionType": "date"
-            },
-            {
-              "status": "affected",
-              "version": "4.4.0",
-              "lessThan": "5.26.22",
-              "versionType": "semver"
+              "version": "< 7.0.0",
+              "status": "affected"
             }
-          ],
-          "defaultStatus": "unaffected"
+          ]
         }
       ],
       "problemType": [
-        "CWE-863 Incorrect Authorization"
+        "CWE-918: Server-Side Request Forgery (SSRF)"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-66956",
+      "id": "CVE-2026-32122",
+      "publishedDate": "2026-03-11T20:48:26.510Z",
+      "lastModifiedDate": "2026-03-11T20:48:26.510Z",
+      "description": "OpenEMR is a free and open source electronic health records and medical practice management application. Prior to 8.0.0.1, The Claim File Tracker feature exposes an AJAX endpoint that returns billing claim metadata (claim IDs, payer info, transmission logs). The endpoint does not enforce the same ACL as the main billing/claims workflow, so authenticated users without appropriate billing permissions can access this data. This vulnerability is fixed in 8.0.0.1.",
+      "severity": 4.3,
+      "references": [
+        {
+          "url": "https://github.com/openemr/openemr/security/advisories/GHSA-rwf9-px3c-3prw",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "openemr",
+          "product": "openemr",
+          "versions": [
+            {
+              "version": "< 8.0.0.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-862: Missing Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-70041",
       "publishedDate": "2026-03-11T00:00:00.000Z",
-      "lastModifiedDate": "2026-03-11T20:13:28.831Z",
-      "description": "Insecure Access Control in Contact Plan, E-Mail, SMS and Fax components in Asseco SEE Live 2.0 allows remote attackers to access and execute attachments via a computable URL.",
+      "lastModifiedDate": "2026-03-11T20:40:20.340Z",
+      "description": "An issue pertaining to CWE-259: Use of Hard-coded Password was discovered in oslabs-beta ThermaKube master.",
       "severity": "N/A",
       "references": [
         {
-          "url": "http://asseco.com",
+          "url": "https://github.com/oslabs-beta",
           "type": "reference"
         },
         {
-          "url": "http://live.com",
+          "url": "https://github.com/oslabs-beta/ThermaKube",
           "type": "reference"
         },
         {
-          "url": "https://github.com/TheWoodenBench/CVE-2025-66956",
+          "url": "https://gist.github.com/zcxlighthouse/cbd6fd6ca486460573e0611ee547f763",
           "type": "reference"
         }
       ],
