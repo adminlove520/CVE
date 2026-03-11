@@ -2,99 +2,511 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 4,
-    "last_updated": "2026-03-11T19:09:13.998982",
+    "total_count": 28,
+    "last_updated": "2026-03-11T19:52:08.725205",
     "severity_distribution": {
-      "critical": 0,
-      "high": 1,
-      "medium": 1,
-      "low": 1,
+      "critical": 1,
+      "high": 10,
+      "medium": 11,
+      "low": 5,
       "none": 1
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-31881",
-      "publishedDate": "2026-03-11T18:37:11.360Z",
-      "lastModifiedDate": "2026-03-11T18:37:11.360Z",
-      "description": "Runtipi is a personal homeserver orchestrator. Prior to 4.8.0, an unauthenticated attacker can reset the operator (admin) password when a password-reset request is active, resulting in full account takeover. The endpoint POST /api/auth/reset-password is exposed without authentication/authorization checks. During the 15-minute reset window, any remote user can set a new operator password and log in as admin. This vulnerability is fixed in 4.8.0.",
-      "severity": 7.7,
+      "id": "CVE-2026-27478",
+      "publishedDate": "2026-03-11T19:36:03.271Z",
+      "lastModifiedDate": "2026-03-11T19:36:03.271Z",
+      "description": "Unity Catalog is an open, multi-modal Catalog for data and AI. In 0.4.0 and earlier, a critical authentication bypass vulnerability exists in the Unity Catalog token exchange endpoint (/api/1.0/unity-control/auth/tokens). The endpoint extracts the issuer (iss) claim from incoming JWTs and uses it to dynamically fetch the JWKS endpoint for signature validation without validating that the issuer is a trusted identity provider.",
+      "severity": 9.1,
       "references": [
         {
-          "url": "https://github.com/runtipi/runtipi/security/advisories/GHSA-96fm-whrc-cwg3",
+          "url": "https://github.com/unitycatalog/unitycatalog/security/advisories/GHSA-qqcj-rghw-829x",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "runtipi",
-          "product": "runtipi",
+          "vendor": "unitycatalog",
+          "product": "unitycatalog",
           "versions": [
             {
-              "version": "< 4.8.0",
+              "version": "<= 0.4.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-306: Missing Authentication for Critical Function"
+        "CWE-290: Authentication Bypass by Spoofing",
+        "CWE-346: Origin Validation Error",
+        "CWE-1390: Weak Authentication"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-31888",
-      "publishedDate": "2026-03-11T18:53:03.018Z",
-      "lastModifiedDate": "2026-03-11T18:53:03.018Z",
-      "description": "Shopware is an open commerce platform. Prior to 6.7.8.1 and 6.6.10.15, the Store API login endpoint (POST /store-api/account/login) returns different error codes depending on whether the submitted email address belongs to a registered customer (CHECKOUT__CUSTOMER_AUTH_BAD_CREDENTIALS) or is unknown (CHECKOUT__CUSTOMER_NOT_FOUND). The \"not found\" response also echoes the probed email address. This allows an unauthenticated attacker to enumerate valid customer accounts. The storefront login controller correctly unifies both error paths, but the Store API does not — indicating an inconsistent defense. This vulnerability is fixed in 6.7.8.1 and 6.6.10.15.",
-      "severity": 5.3,
+      "id": "CVE-2026-31979",
+      "publishedDate": "2026-03-11T19:47:05.935Z",
+      "lastModifiedDate": "2026-03-11T19:47:05.935Z",
+      "description": "Himmelblau is an interoperability suite for Microsoft Azure Entra ID and Intune. Prior to 3.1.0 and 2.3.8, the himmelblaud-tasks daemon, running as root, writes Kerberos cache files under /tmp/krb5cc_<uid> without symlink protections. Since commit 87a51ee, PrivateTmp is explicitly removed from the tasks daemon's systemd hardening, exposing it to the host /tmp. A local user can exploit this via symlink attacks to chown or overwrite arbitrary files, achieving local privilege escalation. This vulnerability is fixed in 3.1.0 and 2.3.8.",
+      "severity": 8.8,
       "references": [
         {
-          "url": "https://github.com/shopware/shopware/security/advisories/GHSA-gqc5-xv7m-gcjq",
+          "url": "https://github.com/himmelblau-idm/himmelblau/security/advisories/GHSA-44wm-q286-ghq3",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "shopware",
-          "product": "core",
+          "vendor": "himmelblau-idm",
+          "product": "himmelblau",
           "versions": [
             {
-              "version": ">= 6.7.0.0, < 6.7.8.1",
+              "version": ">= 1.0.0, < 2.3.8",
               "status": "affected"
             },
             {
-              "version": "< 6.6.10.15",
+              "version": ">= 3.0.0-alpha, < 3.1.0",
               "status": "affected"
             }
           ]
+        }
+      ],
+      "problemType": [
+        "CWE-59: Improper Link Resolution Before File Access ('Link Following')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-1090",
+      "publishedDate": "2026-03-11T16:05:05.863Z",
+      "lastModifiedDate": "2026-03-11T19:44:31.930Z",
+      "description": "GitLab has remediated an issue in GitLab CE/EE affecting all versions from 10.6 before 18.7.6, 18.8 before 18.8.6, and 18.9 before 18.9.2 that could have allowed an authenticated user, when the `markdown_placeholders` feature flag was enabled, to inject JavaScript in a browser due to improper sanitization of placeholder content in markdown processing.",
+      "severity": 8.7,
+      "references": [
+        {
+          "url": "https://hackerone.com/reports/3502450",
+          "type": "poc"
         },
         {
-          "vendor": "shopware",
-          "product": "platform",
+          "url": "https://gitlab.com/gitlab-org/gitlab/-/work_items/586478",
+          "type": "reference"
+        },
+        {
+          "url": "https://about.gitlab.com/releases/2026/03/11/patch-release-gitlab-18-9-2-released/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "GitLab",
+          "product": "GitLab",
+          "repo": "git://git@gitlab.com:gitlab-org/gitlab.git",
+          "cpes": [
+            "cpe:2.3:a:gitlab:gitlab:*:*:*:*:*:*:*:*"
+          ],
           "versions": [
             {
-              "version": ">= 6.7.0.0, < 6.7.8.1",
-              "status": "affected"
+              "version": "10.6",
+              "status": "affected",
+              "lessThan": "18.7.6",
+              "versionType": "semver"
             },
             {
-              "version": "< 6.6.10.14",
+              "version": "18.8",
+              "status": "affected",
+              "lessThan": "18.8.6",
+              "versionType": "semver"
+            },
+            {
+              "version": "18.9",
+              "status": "affected",
+              "lessThan": "18.9.2",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-27703",
+      "publishedDate": "2026-03-11T19:38:02.866Z",
+      "lastModifiedDate": "2026-03-11T19:38:02.866Z",
+      "description": "RIOT is an open-source microcontroller operating system, designed to match the requirements of Internet of Things (IoT) devices and other embedded devices. In 2026.01 and earlier, the default handler for the well_known_core resource coap_well_known_core_default_handler writes user-provided option data and other data into a fixed size buffer without validating the buffer is large enough to contain the response. This vulnerability allows an attacker to corrupt neighboring stack location, including security-sensitive addresses like the return address, leading to denial of service or arbitrary code execution.",
+      "severity": 7.5,
+      "references": [
+        {
+          "url": "https://github.com/RIOT-OS/RIOT/security/advisories/GHSA-qgj4-9jff-93cj",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "RIOT-OS",
+          "product": "RIOT",
+          "versions": [
+            {
+              "version": "<= 2026.01",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-204: Observable Response Discrepancy"
+        "CWE-787: Out-of-bounds Write"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-24509",
-      "publishedDate": "2026-03-11T18:51:04.154Z",
-      "lastModifiedDate": "2026-03-11T18:51:04.154Z",
-      "description": "Dell Alienware Command Center (AWCC), versions prior to 6.12.24.0, contain an Improper Access Control vulnerability. A low privileged attacker with local access could potentially exploit this vulnerability, leading to Denial of service.",
-      "severity": 3.6,
+      "id": "CVE-2026-1069",
+      "publishedDate": "2026-03-11T16:05:10.674Z",
+      "lastModifiedDate": "2026-03-11T19:39:56.098Z",
+      "description": "GitLab has remediated an issue in GitLab CE/EE affecting all versions from 18.9 before 18.9.2 that could have allowed an unauthenticated user to cause a denial of service by sending specially crafted GraphQL requests due to uncontrolled recursion under certain circumstances.",
+      "severity": 7.5,
+      "references": [
+        {
+          "url": "https://hackerone.com/reports/3483687",
+          "type": "poc"
+        },
+        {
+          "url": "https://gitlab.com/gitlab-org/gitlab/-/work_items/586474",
+          "type": "reference"
+        },
+        {
+          "url": "https://about.gitlab.com/releases/2026/03/11/patch-release-gitlab-18-9-2-released/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "GitLab",
+          "product": "GitLab",
+          "repo": "git://git@gitlab.com:gitlab-org/gitlab.git",
+          "cpes": [
+            "cpe:2.3:a:gitlab:gitlab:*:*:*:*:*:*:*:*"
+          ],
+          "versions": [
+            {
+              "version": "18.9",
+              "status": "affected",
+              "lessThan": "18.9.2",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-674: Uncontrolled Recursion"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3747",
+      "publishedDate": "2026-03-08T16:02:08.839Z",
+      "lastModifiedDate": "2026-03-11T19:43:15.342Z",
+      "description": "A vulnerability was identified in itsourcecode University Management System 1.0. Affected by this issue is some unknown functionality of the file /add_result.php. Such manipulation of the argument subject leads to sql injection. The attack may be launched remotely. The exploit is publicly available and might be used.",
+      "severity": 7.3,
+      "references": [
+        {
+          "url": "https://vuldb.com/?id.349725",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?ctiid.349725",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?submit.767947",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/1873454331sss/CVE/issues/1",
+          "type": "poc"
+        },
+        {
+          "url": "https://itsourcecode.com/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "itsourcecode",
+          "product": "University Management System",
+          "versions": [
+            {
+              "version": "1.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "SQL Injection",
+        "Injection"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3746",
+      "publishedDate": "2026-03-08T15:32:11.525Z",
+      "lastModifiedDate": "2026-03-11T19:42:44.520Z",
+      "description": "A vulnerability was determined in SourceCodester Simple Responsive Tourism Website 1.0. Affected by this vulnerability is an unknown functionality of the file /tourism/classes/Login.php?f=login of the component Login. This manipulation of the argument Username causes sql injection. The attack may be initiated remotely. The exploit has been publicly disclosed and may be utilized.",
+      "severity": 7.3,
+      "references": [
+        {
+          "url": "https://vuldb.com/?id.349724",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?ctiid.349724",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?submit.767882",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/CH0ico/CVE_choco_7",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/CH0ico/CVE_choco_7/blob/main/report.md",
+          "type": "poc"
+        },
+        {
+          "url": "https://www.sourcecodester.com/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "SourceCodester",
+          "product": "Simple Responsive Tourism Website",
+          "versions": [
+            {
+              "version": "1.0",
+              "status": "affected"
+            }
+          ],
+          "modules": [
+            "Login"
+          ]
+        }
+      ],
+      "problemType": [
+        "SQL Injection",
+        "Injection"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3744",
+      "publishedDate": "2026-03-08T15:02:12.810Z",
+      "lastModifiedDate": "2026-03-11T19:41:33.108Z",
+      "description": "A vulnerability has been found in code-projects Student Web Portal 1.0. This impacts the function valreg_passwdation of the file signup.php. The manipulation of the argument reg_passwd leads to sql injection. The attack can be initiated remotely. The exploit has been disclosed to the public and may be used.",
+      "severity": 7.3,
+      "references": [
+        {
+          "url": "https://vuldb.com/?id.349722",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?ctiid.349722",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?submit.767852",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/CH0ico/CVE_choco_2",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/CH0ico/CVE_choco_2/blob/main/report.md",
+          "type": "poc"
+        },
+        {
+          "url": "https://code-projects.org/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "code-projects",
+          "product": "Student Web Portal",
+          "versions": [
+            {
+              "version": "1.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "SQL Injection",
+        "Injection"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3736",
+      "publishedDate": "2026-03-08T13:02:13.187Z",
+      "lastModifiedDate": "2026-03-11T19:48:45.145Z",
+      "description": "A vulnerability was found in code-projects Simple Flight Ticket Booking System 1.0. Affected by this issue is some unknown functionality of the file SearchResultRoundtrip.php. Performing a manipulation of the argument from results in sql injection. The attack may be initiated remotely. The exploit has been made public and could be used.",
+      "severity": 7.3,
+      "references": [
+        {
+          "url": "https://vuldb.com/?id.349714",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?ctiid.349714",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?submit.768093",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/6Justdododo6/CVE/issues/12",
+          "type": "poc"
+        },
+        {
+          "url": "https://code-projects.org/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "code-projects",
+          "product": "Simple Flight Ticket Booking System",
+          "versions": [
+            {
+              "version": "1.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "SQL Injection",
+        "Injection"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3735",
+      "publishedDate": "2026-03-08T13:02:11.006Z",
+      "lastModifiedDate": "2026-03-11T19:45:15.837Z",
+      "description": "A vulnerability has been found in code-projects Simple Flight Ticket Booking System 1.0. Affected by this vulnerability is an unknown functionality of the file SearchResultOneway.php. Such manipulation of the argument from leads to sql injection. The attack can be launched remotely. The exploit has been disclosed to the public and may be used.",
+      "severity": 7.3,
+      "references": [
+        {
+          "url": "https://vuldb.com/?id.349713",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?ctiid.349713",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?submit.767396",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/6Justdododo6/CVE/issues/10",
+          "type": "poc"
+        },
+        {
+          "url": "https://code-projects.org/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "code-projects",
+          "product": "Simple Flight Ticket Booking System",
+          "versions": [
+            {
+              "version": "1.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "SQL Injection",
+        "Injection"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3730",
+      "publishedDate": "2026-03-08T10:32:15.574Z",
+      "lastModifiedDate": "2026-03-11T19:49:33.079Z",
+      "description": "A security flaw has been discovered in itsourcecode Free Hotel Reservation System 1.0. The affected element is an unknown function of the file /hotel/admin/mod_amenities/index.php?view=edit. Performing a manipulation of the argument amen_id/rmtype_id results in sql injection. The attack is possible to be carried out remotely. The exploit has been released to the public and may be used for attacks.",
+      "severity": 7.3,
+      "references": [
+        {
+          "url": "https://vuldb.com/?id.349708",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?ctiid.349708",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?submit.767010",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?submit.767385",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/anon387tdug/anon387/issues/1",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/yihaofuweng/cve/issues/62",
+          "type": "poc"
+        },
+        {
+          "url": "https://itsourcecode.com/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "itsourcecode",
+          "product": "Free Hotel Reservation System",
+          "versions": [
+            {
+              "version": "1.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "SQL Injection",
+        "Injection"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-24510",
+      "publishedDate": "2026-03-11T18:59:51.894Z",
+      "lastModifiedDate": "2026-03-11T19:35:11.455Z",
+      "description": "Dell Alienware Command Center (AWCC), versions prior to 6.12.24.0, contain an Improper Privilege Management vulnerability. A low privileged attacker with local access could potentially exploit this vulnerability, leading to Elevation of Privileges.",
+      "severity": 6.7,
       "references": [
         {
           "url": "https://www.dell.com/support/kbdoc/en-us/000427573/dsa-2026-093",
@@ -117,54 +529,891 @@
         }
       ],
       "problemType": [
-        "CWE-284: Improper Access Control"
+        "CWE-269: Improper Privilege Management"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-31887",
-      "publishedDate": "2026-03-11T18:49:46.294Z",
-      "lastModifiedDate": "2026-03-11T18:49:46.294Z",
-      "description": "Shopware is an open commerce platform. Prior to 6.7.8.1 and 6.6.10.15, an insufficient check on the filter types for unauthenticated customers allows access to orders of other customers. This is part of the deepLinkCode support on the store-api.order endpoint. This vulnerability is fixed in 6.7.8.1 and 6.6.10.15.",
-      "severity": "N/A",
+      "id": "CVE-2025-12576",
+      "publishedDate": "2026-03-11T16:06:15.686Z",
+      "lastModifiedDate": "2026-03-11T19:36:36.682Z",
+      "description": "GitLab has remediated an issue in GitLab CE/EE affecting all versions from 9.3 before 18.7.6, 18.8 before 18.8.6, and 18.9 before 18.9.2 that under certain conditions could have allowed an authenticated user to cause a denial of service due to improper handling of webhook response data.",
+      "severity": 6.5,
       "references": [
         {
-          "url": "https://github.com/shopware/shopware/security/advisories/GHSA-7vvp-j573-5584",
+          "url": "https://hackerone.com/reports/3395198",
+          "type": "poc"
+        },
+        {
+          "url": "https://gitlab.com/gitlab-org/gitlab/-/work_items/579170",
+          "type": "reference"
+        },
+        {
+          "url": "https://about.gitlab.com/releases/2026/03/11/patch-release-gitlab-18-9-2-released/",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "shopware",
-          "product": "core",
+          "vendor": "GitLab",
+          "product": "GitLab",
+          "repo": "git://git@gitlab.com:gitlab-org/gitlab.git",
+          "cpes": [
+            "cpe:2.3:a:gitlab:gitlab:*:*:*:*:*:*:*:*"
+          ],
           "versions": [
             {
-              "version": ">= 6.7.0.0, < 6.7.8.1",
-              "status": "affected"
+              "version": "9.3",
+              "status": "affected",
+              "lessThan": "18.7.6",
+              "versionType": "semver"
             },
             {
-              "version": "< 6.6.10.15",
-              "status": "affected"
+              "version": "18.8",
+              "status": "affected",
+              "lessThan": "18.8.6",
+              "versionType": "semver"
+            },
+            {
+              "version": "18.9",
+              "status": "affected",
+              "lessThan": "18.9.2",
+              "versionType": "semver"
             }
-          ]
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-770: Allocation of Resources Without Limits or Throttling"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3749",
+      "publishedDate": "2026-03-08T16:02:14.273Z",
+      "lastModifiedDate": "2026-03-11T19:39:49.199Z",
+      "description": "A weakness has been identified in Bytedesk up to 1.3.9. This vulnerability affects the function handleFileUpload of the file source-code/src/main/java/com/bytedesk/core/upload/UploadRestService.java of the component SVG File Handler. Executing a manipulation can lead to unrestricted upload. The attack can be executed remotely. The exploit has been made available to the public and could be used for attacks. Upgrading to version 1.4.5.1 is able to resolve this issue. This patch is called 975e39e4dd527596987559f56c5f9f973f64eff7. It is recommended to upgrade the affected component.",
+      "severity": 6.3,
+      "references": [
+        {
+          "url": "https://vuldb.com/?id.349727",
+          "type": "reference"
         },
         {
-          "vendor": "shopware",
-          "product": "platform",
+          "url": "https://vuldb.com/?ctiid.349727",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?submit.768030",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/Bytedesk/bytedesk/issues/19",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/Bytedesk/bytedesk/issues/19#issuecomment-3976672845",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/Bytedesk/bytedesk/issues/19#issue-3993480676",
+          "type": "poc"
+        },
+        {
+          "url": "https://github.com/Bytedesk/bytedesk/commit/975e39e4dd527596987559f56c5f9f973f64eff7",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/Bytedesk/bytedesk/releases/tag/v1.4.5.1",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/Bytedesk/bytedesk/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "Bytedesk",
           "versions": [
             {
-              "version": ">= 6.7.0.0, < 6.7.8.1",
+              "version": "1.3.0",
               "status": "affected"
             },
             {
-              "version": "< 6.6.10.15",
+              "version": "1.3.1",
+              "status": "affected"
+            },
+            {
+              "version": "1.3.2",
+              "status": "affected"
+            },
+            {
+              "version": "1.3.3",
+              "status": "affected"
+            },
+            {
+              "version": "1.3.4",
+              "status": "affected"
+            },
+            {
+              "version": "1.3.5",
+              "status": "affected"
+            },
+            {
+              "version": "1.3.6",
+              "status": "affected"
+            },
+            {
+              "version": "1.3.7",
+              "status": "affected"
+            },
+            {
+              "version": "1.3.8",
+              "status": "affected"
+            },
+            {
+              "version": "1.3.9",
+              "status": "affected"
+            },
+            {
+              "version": "1.4.5.1",
+              "status": "unaffected"
+            }
+          ],
+          "modules": [
+            "SVG File Handler"
+          ]
+        }
+      ],
+      "problemType": [
+        "Unrestricted Upload",
+        "Improper Access Controls"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3748",
+      "publishedDate": "2026-03-08T16:02:12.228Z",
+      "lastModifiedDate": "2026-03-11T19:34:42.331Z",
+      "description": "A security flaw has been discovered in Bytedesk up to 1.3.9. This affects the function uploadFile of the file source-code/src/main/java/com/bytedesk/core/upload/UploadRestController.java of the component SVG File Handler. Performing a manipulation results in unrestricted upload. Remote exploitation of the attack is possible. The exploit has been released to the public and may be used for attacks. Upgrading to version 1.4.5.1 is able to mitigate this issue. The patch is named 975e39e4dd527596987559f56c5f9f973f64eff7. Upgrading the affected component is recommended.",
+      "severity": 6.3,
+      "references": [
+        {
+          "url": "https://vuldb.com/?id.349726",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?ctiid.349726",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?submit.768028",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/Bytedesk/bytedesk/issues/18",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/Bytedesk/bytedesk/issues/18#issuecomment-3976672973",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/Bytedesk/bytedesk/issues/18#issue-3993448721",
+          "type": "poc"
+        },
+        {
+          "url": "https://github.com/Bytedesk/bytedesk/commit/975e39e4dd527596987559f56c5f9f973f64eff7",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/Bytedesk/bytedesk/releases/tag/v1.4.5.1",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/Bytedesk/bytedesk/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "Bytedesk",
+          "versions": [
+            {
+              "version": "1.3.0",
+              "status": "affected"
+            },
+            {
+              "version": "1.3.1",
+              "status": "affected"
+            },
+            {
+              "version": "1.3.2",
+              "status": "affected"
+            },
+            {
+              "version": "1.3.3",
+              "status": "affected"
+            },
+            {
+              "version": "1.3.4",
+              "status": "affected"
+            },
+            {
+              "version": "1.3.5",
+              "status": "affected"
+            },
+            {
+              "version": "1.3.6",
+              "status": "affected"
+            },
+            {
+              "version": "1.3.7",
+              "status": "affected"
+            },
+            {
+              "version": "1.3.8",
+              "status": "affected"
+            },
+            {
+              "version": "1.3.9",
+              "status": "affected"
+            },
+            {
+              "version": "1.4.5.1",
+              "status": "unaffected"
+            }
+          ],
+          "modules": [
+            "SVG File Handler"
+          ]
+        }
+      ],
+      "problemType": [
+        "Unrestricted Upload",
+        "Improper Access Controls"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3745",
+      "publishedDate": "2026-03-08T15:32:08.527Z",
+      "lastModifiedDate": "2026-03-11T19:42:15.646Z",
+      "description": "A vulnerability was found in code-projects Student Web Portal 1.0. Affected is an unknown function of the file profile.php. The manipulation of the argument User results in sql injection. The attack can be launched remotely. The exploit has been made public and could be used.",
+      "severity": 6.3,
+      "references": [
+        {
+          "url": "https://vuldb.com/?id.349723",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?ctiid.349723",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?submit.767854",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/CH0ico/CVE_choco_4",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/CH0ico/CVE_choco_4/blob/main/report.md",
+          "type": "poc"
+        },
+        {
+          "url": "https://code-projects.org/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "code-projects",
+          "product": "Student Web Portal",
+          "versions": [
+            {
+              "version": "1.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-863: Incorrect Authorization"
+        "SQL Injection",
+        "Injection"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3737",
+      "publishedDate": "2026-03-08T13:32:08.172Z",
+      "lastModifiedDate": "2026-03-11T19:48:21.192Z",
+      "description": "A vulnerability was determined in SourceCodester Pet Grooming Management Software 1.0. This affects an unknown part of the file add_user.php of the component User Creation Handler. Executing a manipulation can lead to improper authorization. The attack may be launched remotely. The exploit has been publicly disclosed and may be utilized.",
+      "severity": 6.3,
+      "references": [
+        {
+          "url": "https://vuldb.com/?id.349715",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?ctiid.349715",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?submit.767320",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/hiranerakkot/Pet-Grooming-Software/blob/main/Vulnerability_1.md",
+          "type": "poc"
+        },
+        {
+          "url": "https://www.sourcecodester.com/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "SourceCodester",
+          "product": "Pet Grooming Management Software",
+          "versions": [
+            {
+              "version": "1.0",
+              "status": "affected"
+            }
+          ],
+          "modules": [
+            "User Creation Handler"
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Authorization",
+        "Incorrect Privilege Assignment"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3752",
+      "publishedDate": "2026-03-08T17:02:08.465Z",
+      "lastModifiedDate": "2026-03-11T19:35:10.919Z",
+      "description": "A flaw has been found in SourceCodester Employee Task Management System up to 1.0. The affected element is an unknown function of the file /daily-task-report.php of the component GET Parameter Handler. This manipulation of the argument Date causes sql injection. It is possible to initiate the attack remotely. The exploit has been published and may be used.",
+      "severity": 4.7,
+      "references": [
+        {
+          "url": "https://vuldb.com/?id.349730",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?ctiid.349730",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?submit.768035",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/meifukun/Web-Security-PoCs/blob/main/Employee-Task-Management-System/SQLi-DailyTaskReport-date.md",
+          "type": "poc"
+        },
+        {
+          "url": "https://www.sourcecodester.com/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "SourceCodester",
+          "product": "Employee Task Management System",
+          "versions": [
+            {
+              "version": "1.0",
+              "status": "affected"
+            }
+          ],
+          "modules": [
+            "GET Parameter Handler"
+          ]
+        }
+      ],
+      "problemType": [
+        "SQL Injection",
+        "Injection"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3751",
+      "publishedDate": "2026-03-08T16:32:10.789Z",
+      "lastModifiedDate": "2026-03-11T19:35:35.927Z",
+      "description": "A vulnerability was detected in SourceCodester Employee Task Management System 1.0. Impacted is an unknown function of the file /daily-attendance-report.php of the component GET Parameter Handler. The manipulation of the argument Date results in sql injection. The attack may be performed from remote. The exploit is now public and may be used.",
+      "severity": 4.7,
+      "references": [
+        {
+          "url": "https://vuldb.com/?id.349729",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?ctiid.349729",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?submit.768034",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/meifukun/Web-Security-PoCs/blob/main/Employee-Task-Management-System/SQLi-DailyAttendanceReport-date.md",
+          "type": "poc"
+        },
+        {
+          "url": "https://www.sourcecodester.com/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "SourceCodester",
+          "product": "Employee Task Management System",
+          "versions": [
+            {
+              "version": "1.0",
+              "status": "affected"
+            }
+          ],
+          "modules": [
+            "GET Parameter Handler"
+          ]
+        }
+      ],
+      "problemType": [
+        "SQL Injection",
+        "Injection"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3750",
+      "publishedDate": "2026-03-08T16:32:07.822Z",
+      "lastModifiedDate": "2026-03-11T19:36:46.340Z",
+      "description": "A security vulnerability has been detected in ContiNew Admin up to 4.2.0. This issue affects the function URI.create of the file continew-system/src/main/java/top/continew/admin/system/factory/S3ClientFactory.java of the component Storage Management Module. The manipulation leads to server-side request forgery. The attack is possible to be carried out remotely. The exploit has been disclosed publicly and may be used. The vendor was contacted early about this disclosure but did not respond in any way.",
+      "severity": 4.7,
+      "references": [
+        {
+          "url": "https://vuldb.com/?id.349728",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?ctiid.349728",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?submit.768033",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.notion.so/ContiNew-Admin-Server-Side-Request-Forgery-SSRF-vulnerability-in-storage-management-module-313ea92a3c4180b897f5e6352906bf1f",
+          "type": "poc"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "ContiNew Admin",
+          "versions": [
+            {
+              "version": "4.0",
+              "status": "affected"
+            },
+            {
+              "version": "4.1",
+              "status": "affected"
+            },
+            {
+              "version": "4.2.0",
+              "status": "affected"
+            }
+          ],
+          "modules": [
+            "Storage Management Module"
+          ]
+        }
+      ],
+      "problemType": [
+        "Server-Side Request Forgery"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-0602",
+      "publishedDate": "2026-03-11T16:05:20.680Z",
+      "lastModifiedDate": "2026-03-11T19:36:50.673Z",
+      "description": "GitLab has remediated an issue in GitLab CE/EE affecting all versions from 15.6 before 18.7.6, 18.8 before 18.8.6, and 18.9 before 18.9.2 that could have allowed an authenticated user to disclose metadata from private issues, merge requests, epics, milestones, or commits due to improper filtering in the snippet rendering process under certain circumstances.",
+      "severity": 4.3,
+      "references": [
+        {
+          "url": "https://hackerone.com/reports/3486504",
+          "type": "poc"
+        },
+        {
+          "url": "https://gitlab.com/gitlab-org/gitlab/-/work_items/585007",
+          "type": "reference"
+        },
+        {
+          "url": "https://about.gitlab.com/releases/2026/03/11/patch-release-gitlab-18-9-2-released/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "GitLab",
+          "product": "GitLab",
+          "repo": "git://git@gitlab.com:gitlab-org/gitlab.git",
+          "cpes": [
+            "cpe:2.3:a:gitlab:gitlab:*:*:*:*:*:*:*:*"
+          ],
+          "versions": [
+            {
+              "version": "15.6",
+              "status": "affected",
+              "lessThan": "18.7.6",
+              "versionType": "semver"
+            },
+            {
+              "version": "18.8",
+              "status": "affected",
+              "lessThan": "18.8.6",
+              "versionType": "semver"
+            },
+            {
+              "version": "18.9",
+              "status": "affected",
+              "lessThan": "18.9.2",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-288: Authentication Bypass Using an Alternate Path or Channel"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-1230",
+      "publishedDate": "2026-03-11T16:05:00.849Z",
+      "lastModifiedDate": "2026-03-11T19:46:36.143Z",
+      "description": "GitLab has remediated an issue in GitLab CE/EE affecting all versions from 1.0 before 18.7.6, 18.8 before 18.8.6, and 18.9 before 18.9.2 that could have allowed an authenticated user to cause repository downloads to contain different code than displayed in the web interface due to incorrect validation of branch references under certain circumstances.",
+      "severity": 4.1,
+      "references": [
+        {
+          "url": "https://hackerone.com/reports/3505165",
+          "type": "poc"
+        },
+        {
+          "url": "https://gitlab.com/gitlab-org/gitlab/-/work_items/587002",
+          "type": "reference"
+        },
+        {
+          "url": "https://about.gitlab.com/releases/2026/03/11/patch-release-gitlab-18-9-2-released/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "GitLab",
+          "product": "GitLab",
+          "repo": "git://git@gitlab.com:gitlab-org/gitlab.git",
+          "cpes": [
+            "cpe:2.3:a:gitlab:gitlab:*:*:*:*:*:*:*:*"
+          ],
+          "versions": [
+            {
+              "version": "1.0",
+              "status": "affected",
+              "lessThan": "18.7.6",
+              "versionType": "semver"
+            },
+            {
+              "version": "18.8",
+              "status": "affected",
+              "lessThan": "18.8.6",
+              "versionType": "semver"
+            },
+            {
+              "version": "18.9",
+              "status": "affected",
+              "lessThan": "18.9.2",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-706: Use of Incorrectly-Resolved Name or Reference"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3743",
+      "publishedDate": "2026-03-08T15:02:10.017Z",
+      "lastModifiedDate": "2026-03-11T19:40:45.437Z",
+      "description": "A flaw has been found in YiFang CMS 2.0.5. This affects the function update of the file app/db/admin/D_singlePageGroup.php. Executing a manipulation of the argument Name can lead to cross site scripting. It is possible to launch the attack remotely. The exploit has been published and may be used. The vendor was contacted early about this disclosure but did not respond in any way.",
+      "severity": 3.5,
+      "references": [
+        {
+          "url": "https://vuldb.com/?id.349721",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?ctiid.349721",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?submit.767848",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/ZZCTD/CVE/issues/8",
+          "type": "poc"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "YiFang",
+          "product": "CMS",
+          "versions": [
+            {
+              "version": "2.0.5",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Cross Site Scripting",
+        "Code Injection"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3742",
+      "publishedDate": "2026-03-08T15:02:07.812Z",
+      "lastModifiedDate": "2026-03-11T19:45:55.360Z",
+      "description": "A vulnerability was detected in YiFang CMS 2.0.5. The impacted element is the function update of the file app/db/admin/D_singlePage.php. Performing a manipulation of the argument Title results in cross site scripting. It is possible to initiate the attack remotely. The exploit is now public and may be used. The vendor was contacted early about this disclosure but did not respond in any way.",
+      "severity": 3.5,
+      "references": [
+        {
+          "url": "https://vuldb.com/?id.349720",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?ctiid.349720",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?submit.767847",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/ZZCTD/CVE/issues/7",
+          "type": "poc"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "YiFang",
+          "product": "CMS",
+          "versions": [
+            {
+              "version": "2.0.5",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Cross Site Scripting",
+        "Code Injection"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3741",
+      "publishedDate": "2026-03-08T14:32:10.515Z",
+      "lastModifiedDate": "2026-03-11T19:46:18.525Z",
+      "description": "A security vulnerability has been detected in YiFang CMS 2.0.5. The affected element is the function update of the file app/db/admin/D_friendLink.php. Such manipulation of the argument linkName leads to cross site scripting. The attack may be performed from remote. The exploit has been disclosed publicly and may be used. The vendor was contacted early about this disclosure but did not respond in any way.",
+      "severity": 3.5,
+      "references": [
+        {
+          "url": "https://vuldb.com/?id.349719",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?ctiid.349719",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?submit.767273",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/ZZCTD/CVE/issues/6",
+          "type": "poc"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "YiFang",
+          "product": "CMS",
+          "versions": [
+            {
+              "version": "2.0.5",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Cross Site Scripting",
+        "Code Injection"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3949",
+      "publishedDate": "2026-03-11T18:32:09.358Z",
+      "lastModifiedDate": "2026-03-11T19:38:00.870Z",
+      "description": "A vulnerability was determined in strukturag libheif up to 1.21.2. This affects the function vvdec_push_data2 of the file libheif/plugins/decoder_vvdec.cc of the component HEIF File Parser. Executing a manipulation of the argument size can lead to out-of-bounds read. The attack needs to be launched locally. The exploit has been publicly disclosed and may be utilized. This patch is called b97c8b5f198b27f375127cd597a35f2113544d03. It is advisable to implement a patch to correct this issue.",
+      "severity": 3.3,
+      "references": [
+        {
+          "url": "https://vuldb.com/?id.350381",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?ctiid.350381",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?submit.765979",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/strukturag/libheif/issues/1712",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/strukturag/libheif/issues/1712#issuecomment-3947938531",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/biniamf/pocs/tree/main/libheif_vvdec",
+          "type": "poc"
+        },
+        {
+          "url": "https://github.com/strukturag/libheif/commit/b97c8b5f198b27f375127cd597a35f2113544d03",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/strukturag/libheif/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "strukturag",
+          "product": "libheif",
+          "versions": [
+            {
+              "version": "1.21.0",
+              "status": "affected"
+            },
+            {
+              "version": "1.21.1",
+              "status": "affected"
+            },
+            {
+              "version": "1.21.2",
+              "status": "affected"
+            }
+          ],
+          "modules": [
+            "HEIF File Parser"
+          ]
+        }
+      ],
+      "problemType": [
+        "Out-of-Bounds Read",
+        "Memory Corruption"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-31974",
+      "publishedDate": "2026-03-11T19:39:25.675Z",
+      "lastModifiedDate": "2026-03-11T19:39:25.675Z",
+      "description": "OpenProject is an open-source, web-based project management software. Prior to 17.2.0, OpenProject SMTP test endpoint (POST /admin/settings/mail_notifications) accepts arbitrary host and port values and exhibits measurable differences in response behaviour depending on whether the target IP exists and whether the port is open. An attacker with access can use these timing and error distinctions to map internal hosts and identify which services/ports are reachable. Similarly, you can create webhooks in OpenProject and point them to arbitrary IPs, resulting in the same kind of SSRF issue which allows attackers to scan the internal network. This vulnerability is fixed in 17.2.0.",
+      "severity": 3,
+      "references": [
+        {
+          "url": "https://github.com/opf/openproject/security/advisories/GHSA-9wr7-j98g-2jh3",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "opf",
+          "product": "openproject",
+          "versions": [
+            {
+              "version": "< 17.2.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-918: Server-Side Request Forgery (SSRF)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-31976",
+      "publishedDate": "2026-03-11T19:44:38.643Z",
+      "lastModifiedDate": "2026-03-11T19:44:38.643Z",
+      "description": "xygeni-action is the GitHub Action for Xygeni Scanner. On March 3, 2026, an attacker with access to compromised credentials created a series of pull requests (#46, #47, #48) injecting obfuscated shell code into action.yml. The PRs were blocked by branch protection rules and never merged into the main branch. However, the attacker used the compromised GitHub App credentials to move the mutable v5 tag to point at the malicious commit (4bf1d4e19ad81a3e8d4063755ae0f482dd3baf12) from one of the unmerged PRs. This commit remained in the repository's git object store, and any workflow referencing @v5 would fetch and execute it. This is a supply chain compromise via tag poisoning. Any GitHub Actions workflow referencing xygeni/xygeni-action@v5 during the affected window (approximately March 3–10, 2026) executed a C2 implant that granted the attacker arbitrary command execution on the CI runner for up to 180 seconds per workflow run.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/xygeni/xygeni-action/security/advisories/GHSA-f8q5-h5qh-33mh",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/xygeni/xygeni-action/issues/54",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "xygeni",
+          "product": "xygeni-action",
+          "versions": [
+            {
+              "version": ">= March 3, 2026, <= March 10, 2026",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-506: Embedded Malicious Code"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
