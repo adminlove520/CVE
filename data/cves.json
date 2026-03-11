@@ -2,365 +2,169 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 10,
-    "last_updated": "2026-03-11T18:05:34.241777",
+    "total_count": 4,
+    "last_updated": "2026-03-11T19:09:13.998982",
     "severity_distribution": {
-      "critical": 1,
+      "critical": 0,
       "high": 1,
       "medium": 1,
       "low": 1,
-      "none": 6
+      "none": 1
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-31852",
-      "publishedDate": "2026-03-11T17:04:53.881Z",
-      "lastModifiedDate": "2026-03-11T17:40:14.800Z",
-      "description": "Jellyfin is an open-source media system. The code-quality.yml GitHub Actions workflow in jellyfin/jellyfin-ios is vulnerable to arbitrary code execution via pull requests from forked repositories. Due to the workflow's elevated permissions (nearly all write permissions), this vulnerability enables full repository takeover of jellyfin/jellyfin-ios, exfiltration of highly privileged secrets, Apple App Store supply chain attack, GitHub Container Registry (ghcr.io) package poisoning, and full jellyfin organization compromise via cross-repository token usage. Note: This is not a code vulnerability, but a vulnerability in the GitHub Actions workflows. No new version is required for this GHSA and end users do not need to take any actions.",
-      "severity": 10,
+      "id": "CVE-2026-31881",
+      "publishedDate": "2026-03-11T18:37:11.360Z",
+      "lastModifiedDate": "2026-03-11T18:37:11.360Z",
+      "description": "Runtipi is a personal homeserver orchestrator. Prior to 4.8.0, an unauthenticated attacker can reset the operator (admin) password when a password-reset request is active, resulting in full account takeover. The endpoint POST /api/auth/reset-password is exposed without authentication/authorization checks. During the 15-minute reset window, any remote user can set a new operator password and log in as admin. This vulnerability is fixed in 4.8.0.",
+      "severity": 7.7,
       "references": [
         {
-          "url": "https://github.com/jellyfin/jellyfin-ios/security/advisories/GHSA-7qhm-2m45-7fmh",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/jellyfin/jellyfin-ios/commit/109217e75f38394b2f6e46e25dfe5a721203d3c8",
+          "url": "https://github.com/runtipi/runtipi/security/advisories/GHSA-96fm-whrc-cwg3",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "jellyfin",
-          "product": "code-quality.yml",
+          "vendor": "runtipi",
+          "product": "runtipi",
           "versions": [
             {
-              "version": "< 109217e75f38394b2f6e46e25dfe5a721203d3c8",
+              "version": "< 4.8.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-269: Improper Privilege Management"
+        "CWE-306: Missing Authentication for Critical Function"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-31866",
-      "publishedDate": "2026-03-11T17:49:48.520Z",
-      "lastModifiedDate": "2026-03-11T17:49:48.520Z",
-      "description": "flagd is a feature flag daemon with a Unix philosophy. Prior to 0.14.2, flagd exposes OFREP (/ofrep/v1/evaluate/...) and gRPC (evaluation.v1, evaluation.v2) endpoints for feature flag evaluation. These endpoints are designed to be publicly accessible by client applications. The evaluation context included in request payloads is read into memory without any size restriction. An attacker can send a single HTTP request with an arbitrarily large body, causing flagd to allocate a corresponding amount of memory. This leads to immediate memory exhaustion and process termination (e.g., OOMKill in Kubernetes environments). flagd does not natively enforce authentication on its evaluation endpoints. While operators may deploy flagd behind an authenticating reverse proxy or similar infrastructure, the endpoints themselves impose no access control by default. This vulnerability is fixed in 0.14.2.",
-      "severity": 7.5,
+      "id": "CVE-2026-31888",
+      "publishedDate": "2026-03-11T18:53:03.018Z",
+      "lastModifiedDate": "2026-03-11T18:53:03.018Z",
+      "description": "Shopware is an open commerce platform. Prior to 6.7.8.1 and 6.6.10.15, the Store API login endpoint (POST /store-api/account/login) returns different error codes depending on whether the submitted email address belongs to a registered customer (CHECKOUT__CUSTOMER_AUTH_BAD_CREDENTIALS) or is unknown (CHECKOUT__CUSTOMER_NOT_FOUND). The \"not found\" response also echoes the probed email address. This allows an unauthenticated attacker to enumerate valid customer accounts. The storefront login controller correctly unifies both error paths, but the Store API does not — indicating an inconsistent defense. This vulnerability is fixed in 6.7.8.1 and 6.6.10.15.",
+      "severity": 5.3,
       "references": [
         {
-          "url": "https://github.com/open-feature/flagd/security/advisories/GHSA-rmrf-g9r3-73pm",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/open-feature/flagd/commit/25c5fd7e80c26eb2c00b20317b2456fe6f927ea3",
+          "url": "https://github.com/shopware/shopware/security/advisories/GHSA-gqc5-xv7m-gcjq",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "open-feature",
-          "product": "flagd",
+          "vendor": "shopware",
+          "product": "core",
           "versions": [
             {
-              "version": "< 0.14.2",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-770: Allocation of Resources Without Limits or Throttling"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-31853",
-      "publishedDate": "2026-03-11T17:09:46.196Z",
-      "lastModifiedDate": "2026-03-11T17:42:31.029Z",
-      "description": "ImageMagick is free and open-source software used for editing and manipulating digital images. Prior to 7.1.2-16 and 6.9.13-41, an overflow on 32-bit systems can cause a crash in the SFW decoder when processing extremely large images. This vulnerability is fixed in 7.1.2-16 and 6.9.13-41.",
-      "severity": 5.7,
-      "references": [
-        {
-          "url": "https://github.com/ImageMagick/ImageMagick/security/advisories/GHSA-56jp-jfqg-f8f4",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "ImageMagick",
-          "product": "ImageMagick",
-          "versions": [
-            {
-              "version": ">= 7.0.0, < 7.1.2-16",
+              "version": ">= 6.7.0.0, < 6.7.8.1",
               "status": "affected"
             },
             {
-              "version": "< 6.9.13-41",
+              "version": "< 6.6.10.15",
+              "status": "affected"
+            }
+          ]
+        },
+        {
+          "vendor": "shopware",
+          "product": "platform",
+          "versions": [
+            {
+              "version": ">= 6.7.0.0, < 6.7.8.1",
+              "status": "affected"
+            },
+            {
+              "version": "< 6.6.10.14",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-122: Heap-based Buffer Overflow"
+        "CWE-204: Observable Response Discrepancy"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-31863",
-      "publishedDate": "2026-03-11T17:43:08.106Z",
-      "lastModifiedDate": "2026-03-11T17:43:08.106Z",
-      "description": "Anytype Heart is the middleware library for Anytype. The challenge-based authentication for the local gRPC client API can be bypassed, allowing an attacker to gain access without the 4-digit code. This vulnerability is fixed in anytype-heart 0.48.4, anytype-cli 0.1.11, and Anytype Desktop 0.54.5.",
+      "id": "CVE-2026-24509",
+      "publishedDate": "2026-03-11T18:51:04.154Z",
+      "lastModifiedDate": "2026-03-11T18:51:04.154Z",
+      "description": "Dell Alienware Command Center (AWCC), versions prior to 6.12.24.0, contain an Improper Access Control vulnerability. A low privileged attacker with local access could potentially exploit this vulnerability, leading to Denial of service.",
       "severity": 3.6,
       "references": [
         {
-          "url": "https://github.com/anyproto/anytype-heart/security/advisories/GHSA-vv3h-7qwr-722v",
+          "url": "https://www.dell.com/support/kbdoc/en-us/000427573/dsa-2026-093",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "anyproto",
-          "product": "anytype-heart",
+          "vendor": "Dell",
+          "product": "Alienware Command Center (AWCC)",
           "versions": [
             {
-              "version": "< 0.48.4",
-              "status": "affected"
+              "status": "affected",
+              "version": "0",
+              "lessThan": "6.12.24.0",
+              "versionType": "semver"
             }
-          ]
-        },
-        {
-          "vendor": "anyproto",
-          "product": "anytype-cli",
-          "versions": [
-            {
-              "version": "< 0.1.11",
-              "status": "affected"
-            }
-          ]
-        },
-        {
-          "vendor": "anyproto",
-          "product": "anytype-ts",
-          "versions": [
-            {
-              "version": "< 0.54.5",
-              "status": "affected"
-            }
-          ]
+          ],
+          "defaultStatus": "unaffected"
         }
       ],
       "problemType": [
-        "CWE-307: Improper Restriction of Excessive Authentication Attempts"
+        "CWE-284: Improper Access Control"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-31867",
-      "publishedDate": "2026-03-11T17:52:18.298Z",
-      "lastModifiedDate": "2026-03-11T17:52:18.298Z",
-      "description": "Craft Commerce is an ecommerce platform for Craft CMS. Prior to 4.11.0 and 5.6.0, An Insecure Direct Object Reference (IDOR) vulnerability exists in Craft Commerce’s cart functionality that allows users to hijack any shopping cart by knowing or guessing its 32-character number. The CartController accepts a user-supplied number parameter to load and modify shopping carts. No ownership validation is performed - the code only checks if the order exists and is incomplete, not whether the requester has authorization to access it. This vulnerability enables the takeover of shopping sessions and potential exposure of PII. This vulnerability is fixed in 4.11.0 and 5.6.0.",
+      "id": "CVE-2026-31887",
+      "publishedDate": "2026-03-11T18:49:46.294Z",
+      "lastModifiedDate": "2026-03-11T18:49:46.294Z",
+      "description": "Shopware is an open commerce platform. Prior to 6.7.8.1 and 6.6.10.15, an insufficient check on the filter types for unauthenticated customers allows access to orders of other customers. This is part of the deepLinkCode support on the store-api.order endpoint. This vulnerability is fixed in 6.7.8.1 and 6.6.10.15.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/craftcms/commerce/security/advisories/GHSA-vff3-pqq8-4cpq",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/craftcms/commerce/pull/4207",
+          "url": "https://github.com/shopware/shopware/security/advisories/GHSA-7vvp-j573-5584",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "craftcms",
-          "product": "commerce",
+          "vendor": "shopware",
+          "product": "core",
           "versions": [
             {
-              "version": ">= 4.0.0, < 4.11.0",
+              "version": ">= 6.7.0.0, < 6.7.8.1",
               "status": "affected"
             },
             {
-              "version": ">= 5.0.0, < 5.6.0",
+              "version": "< 6.6.10.15",
               "status": "affected"
             }
           ]
-        }
-      ],
-      "problemType": [
-        "CWE-639: Authorization Bypass Through User-Controlled Key"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-30226",
-      "publishedDate": "2026-03-11T17:47:40.016Z",
-      "lastModifiedDate": "2026-03-11T17:47:40.016Z",
-      "description": "Svelte devalue is a JavaScript library that serializes values into strings when JSON.stringify isn't sufficient for the job. In devalue v5.6.3 and earlier, devalue.parse and devalue.unflatten were susceptible to prototype pollution via maliciously crafted payloads. Successful exploitation could lead to Denial of Service (DoS) or type confusion. This vulnerability is fixed in 5.6.4.",
-      "severity": "N/A",
-      "references": [
+        },
         {
-          "url": "https://github.com/sveltejs/devalue/security/advisories/GHSA-cfw5-2vxh-hr84",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "sveltejs",
-          "product": "devalue",
+          "vendor": "shopware",
+          "product": "platform",
           "versions": [
             {
-              "version": "< 5.6.4",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-1321: Improperly Controlled Modification of Object Prototype Attributes ('Prototype Pollution')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-31859",
-      "publishedDate": "2026-03-11T17:37:19.065Z",
-      "lastModifiedDate": "2026-03-11T17:37:19.065Z",
-      "description": "Craft is a content management system (CMS). The fix for CVE-2025-35939 in craftcms/cms introduced a strip_tags() call in src/web/User.php to sanitize return URLs before they are stored in the session. However, strip_tags() only removes HTML tags (angle brackets) -- it does not inspect or filter URL schemes. Payloads like javascript:alert(document.cookie) contain no HTML tags and pass through strip_tags() completely unmodified, enabling reflected XSS when the return URL is rendered in an href attribute. This vulnerability is fixed in  5.9.7 and 4.17.3.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/craftcms/cms/security/advisories/GHSA-fvwq-45qv-xvhv",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "craftcms",
-          "product": "cms",
-          "versions": [
-            {
-              "version": ">= 4.15.3, < 4.17.3",
+              "version": ">= 6.7.0.0, < 6.7.8.1",
               "status": "affected"
             },
             {
-              "version": ">= 5.7.5, < 5.9.7",
+              "version": "< 6.6.10.15",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
-        "CWE-116: Improper Encoding or Escaping of Output"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-31858",
-      "publishedDate": "2026-03-11T17:35:07.438Z",
-      "lastModifiedDate": "2026-03-11T17:35:07.438Z",
-      "description": "Craft is a content management system (CMS). The ElementSearchController::actionSearch() endpoint is missing the unset() protection that was added to ElementIndexesController in CVE-2026-25495. The exact same SQL injection vulnerability (including criteria[orderBy], the original advisory vector) works on this controller because the fix was never applied to it. Any authenticated control panel user (no admin required) can inject arbitrary SQL via criteria[where], criteria[orderBy], or other query properties, and extract the full database contents via boolean-based blind injection. Users should update to the patched 5.9.9 release to mitigate the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/craftcms/cms/security/advisories/GHSA-g7j6-fmwx-7vp8",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/craftcms/cms/commit/e1a3dd669ae31491b86ad996e88a1d30d33d9a42",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "craftcms",
-          "product": "cms",
-          "versions": [
-            {
-              "version": ">= 5.0.0-RC1, <= 5.9.8",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-31854",
-      "publishedDate": "2026-03-11T17:11:52.028Z",
-      "lastModifiedDate": "2026-03-11T17:35:37.440Z",
-      "description": "Cursor is a code editor built for programming with AI. Prior to 2.0 ,if a visited website contains maliciously crafted instructions, the model may attempt to follow them in order to “assist” the user. When combined with a bypass of the command whitelist mechanism, such indirect prompt injections could result in commands being executed automatically, without the user’s explicit intent, thereby posing a significant security risk. This vulnerability is fixed in 2.0.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/cursor/cursor/security/advisories/GHSA-hf2x-r83r-qw5q",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "cursor",
-          "product": "cursor",
-          "versions": [
-            {
-              "version": "< 2.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-31840",
-      "publishedDate": "2026-03-11T16:53:17.164Z",
-      "lastModifiedDate": "2026-03-11T17:38:08.164Z",
-      "description": "Parse Server is an open source backend that can be deployed to any infrastructure that can run Node.js. Prior to 9.6.0-alpha.2 and 8.6.28, an attacker can use a dot-notation field name in combination with the sort query parameter to inject SQL into the PostgreSQL database through an improper escaping of sub-field values in dot-notation queries. The vulnerability may also affect queries that use dot-notation field names with the distinct and where query parameters. This vulnerability only affects deployments using a PostgreSQL database. This vulnerability is fixed in 9.6.0-alpha.2 and 8.6.28.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/parse-community/parse-server/security/advisories/GHSA-qpr4-jrj4-6f27",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/parse-community/parse-server/releases/tag/8.6.28",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/parse-community/parse-server/releases/tag/9.6.0-alpha.2",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "parse-community",
-          "product": "parse-server",
-          "versions": [
-            {
-              "version": ">= 9.0.0 < 9.6.0-alpha.2",
-              "status": "affected"
-            },
-            {
-              "version": "< 8.6.28",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+        "CWE-863: Incorrect Authorization"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
