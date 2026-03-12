@@ -2,254 +2,134 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 12,
-    "last_updated": "2026-03-12T19:54:08.679210",
+    "total_count": 3,
+    "last_updated": "2026-03-12T20:39:38.134175",
     "severity_distribution": {
       "critical": 0,
-      "high": 1,
-      "medium": 4,
-      "low": 1,
-      "none": 6
+      "high": 2,
+      "medium": 0,
+      "low": 0,
+      "none": 1
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-32260",
-      "publishedDate": "2026-03-12T19:41:17.965Z",
-      "lastModifiedDate": "2026-03-12T19:41:17.965Z",
-      "description": "Deno is a JavaScript, TypeScript, and WebAssembly runtime. From 2.7.0 to 2.7.1,  A command injection vulnerability exists in Deno's node:child_process polyfill (shell: true mode) that bypasses the fix for CVE-2026-27190. The two-stage argument sanitization in transformDenoShellCommand (ext/node/polyfills/internal/child_process.ts) has a priority bug: when an argument contains a $VAR pattern, it is wrapped in double quotes (L1290) instead of single quotes. Double quotes in POSIX sh do not suppress backtick command substitution, allowing injected commands to execute. An attacker who controls arguments passed to spawnSync or spawn with shell: true can execute arbitrary OS commands, bypassing Deno's permission system. This vulnerability is fixed in 2.7.2.",
-      "severity": 8.1,
+      "id": "CVE-2026-2229",
+      "publishedDate": "2026-03-12T20:27:05.600Z",
+      "lastModifiedDate": "2026-03-12T20:27:05.600Z",
+      "description": "ImpactThe undici WebSocket client is vulnerable to a denial-of-service attack due to improper validation of the server_max_window_bits parameter in the permessage-deflate extension. When a WebSocket client connects to a server, it automatically advertises support for permessage-deflate compression. A malicious server can respond with an out-of-range server_max_window_bits value (outside zlib's valid range of 8-15). When the server subsequently sends a compressed frame, the client attempts to create a zlib InflateRaw instance with the invalid windowBits value, causing a synchronous RangeError exception that is not caught, resulting in immediate process termination.\n\nThe vulnerability exists because:\n\n  *  The isValidClientWindowBits() function only validates that the value contains ASCII digits, not that it falls within the valid range 8-15\n  *  The createInflateRaw() call is not wrapped in a try-catch block\n  *  The resulting exception propagates up through the call stack and crashes the Node.js process",
+      "severity": 7.5,
       "references": [
         {
-          "url": "https://github.com/denoland/deno/security/advisories/GHSA-4c96-w8v2-p28j",
+          "url": "https://github.com/nodejs/undici/security/advisories/GHSA-v9p9-hfj2-hcw8",
+          "type": "reference"
+        },
+        {
+          "url": "https://hackerone.com/reports/3487486",
+          "type": "reference"
+        },
+        {
+          "url": "https://cna.openjsf.org/security-advisories.html",
+          "type": "reference"
+        },
+        {
+          "url": "https://datatracker.ietf.org/doc/html/rfc7692",
+          "type": "reference"
+        },
+        {
+          "url": "https://nodejs.org/api/zlib.html#class-zlibinflateraw",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "denoland",
-          "product": "deno",
+          "vendor": "undici",
+          "product": "undici",
+          "collectionURL": "https://github.com/nodejs/undici/",
+          "packageName": "undici",
+          "repo": "https://github.com/nodejs/undici/",
           "versions": [
             {
-              "version": ">= 2.7.0, < 2.7.2",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-32103",
-      "publishedDate": "2026-03-11T20:06:58.276Z",
-      "lastModifiedDate": "2026-03-12T19:48:56.254Z",
-      "description": "StudioCMS is a server-side-rendered, Astro native, headless content management system. Prior to 0.4.3, the POST /studiocms_api/dashboard/create-reset-link endpoint allows any authenticated user with admin privileges to generate a password reset token for any other user, including the owner account. The handler verifies that the caller is an admin but does not enforce role hierarchy, nor does it validate that the target userId matches the caller's identity. Combined with the POST /studiocms_api/dashboard/reset-password endpoint, this allows a complete account takeover of the highest-privileged account in the system. This vulnerability is fixed in 0.4.3.",
-      "severity": 6.8,
-      "references": [
-        {
-          "url": "https://github.com/withstudiocms/studiocms/security/advisories/GHSA-h7vr-cg25-jf8c",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "withstudiocms",
-          "product": "studiocms",
-          "versions": [
-            {
-              "version": "< 0.4.3",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-639: Authorization Bypass Through User-Controlled Key",
-        "CWE-640: Weak Password Recovery Mechanism for Forgotten Password"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-32259",
-      "publishedDate": "2026-03-12T19:38:12.192Z",
-      "lastModifiedDate": "2026-03-12T19:38:12.192Z",
-      "description": "ImageMagick is free and open-source software used for editing and manipulating digital images. Prior to 7.1.2-16 and 6.9.13-41, when a memory allocation fails in the sixel encoder it would be possible to write past the end of a buffer on the stack. This vulnerability is fixed in 7.1.2-16 and 6.9.13-41.",
-      "severity": 6.7,
-      "references": [
-        {
-          "url": "https://github.com/ImageMagick/ImageMagick/security/advisories/GHSA-49hx-7656-jpg3",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "ImageMagick",
-          "product": "ImageMagick",
-          "versions": [
-            {
-              "version": ">= 7.0.0, < 7.1.2-16",
-              "status": "affected"
+              "status": "affected",
+              "version": "< 6.24.0; 7.0.0 < 7.24.0"
             },
             {
-              "version": "< 6.9.13-41",
-              "status": "affected"
+              "status": "unaffected",
+              "version": "6.24.0: 7.24.0"
             }
-          ]
+          ],
+          "defaultStatus": "unaffected"
         }
       ],
       "problemType": [
-        "CWE-121: Stack-based Buffer Overflow"
+        "CWE-248 Uncaught exception",
+        "CWE-1284 Improper validation of specified quantity in input"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-32104",
-      "publishedDate": "2026-03-11T20:09:44.879Z",
-      "lastModifiedDate": "2026-03-12T19:48:05.180Z",
-      "description": "StudioCMS is a server-side-rendered, Astro native, headless content management system. Prior to 0.4.3, the updateUserNotifications endpoint accepts a user ID from the request payload and uses it to update that user's notification preferences. It checks that the caller is logged in but never verifies that the caller owns the target account (id !== userData.user.id). Any authenticated visitor can modify notification preferences for any user, including disabling admin notifications to suppress detection of malicious activity. This vulnerability is fixed in 0.4.3.",
-      "severity": 5.4,
+      "id": "CVE-2026-1528",
+      "publishedDate": "2026-03-12T20:21:57.775Z",
+      "lastModifiedDate": "2026-03-12T20:21:57.775Z",
+      "description": "ImpactA server can reply with a WebSocket frame using the 64-bit length form and an extremely large length. undici's ByteParser overflows internal math, ends up in an invalid state, and throws a fatal TypeError that terminates the process.\n\nPatches\n\nPatched in the undici version v7.24.0 and v6.24.0. Users should upgrade to this version or later.",
+      "severity": 7.5,
       "references": [
         {
-          "url": "https://github.com/withstudiocms/studiocms/security/advisories/GHSA-9v82-xrm4-mp52",
+          "url": "https://github.com/nodejs/undici/security/advisories/GHSA-f269-vfmq-vjvj",
+          "type": "reference"
+        },
+        {
+          "url": "https://hackerone.com/reports/3537648",
+          "type": "reference"
+        },
+        {
+          "url": "https://cna.openjsf.org/security-advisories.html",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "withstudiocms",
-          "product": "studiocms",
+          "vendor": "undici",
+          "product": "undici",
+          "collectionURL": "https://github.com/nodejs/undici/",
+          "packageName": "undici",
+          "repo": "https://github.com/nodejs/undici/",
           "versions": [
             {
-              "version": "< 0.4.3",
-              "status": "affected"
+              "status": "affected",
+              "version": ">= 6.0.0 < 6.24.0; 7.0.0 < 7.24.0"
+            },
+            {
+              "status": "unaffected",
+              "version": "6.24.0: 7.24.0"
             }
-          ]
+          ],
+          "defaultStatus": "unaffected"
         }
       ],
       "problemType": [
-        "CWE-639: Authorization Bypass Through User-Controlled Key"
+        "CWE-248 Uncaught exception",
+        "CWE-1284 Improper validation of specified quantity in input"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-32106",
-      "publishedDate": "2026-03-11T20:09:12.095Z",
-      "lastModifiedDate": "2026-03-12T19:48:33.042Z",
-      "description": "StudioCMS is a server-side-rendered, Astro native, headless content management system. Prior to 0.4.3, the REST API createUser endpoint uses string-based rank checks that only block creating owner accounts, while the Dashboard API uses indexOf-based rank comparison that prevents creating users at or above your own rank. This inconsistency allows an admin to create additional admin accounts via the REST API, enabling privilege proliferation and persistence. This vulnerability is fixed in 0.4.3.",
-      "severity": 4.7,
-      "references": [
-        {
-          "url": "https://github.com/withstudiocms/studiocms/security/advisories/GHSA-wj56-g96r-673q",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "withstudiocms",
-          "product": "studiocms",
-          "versions": [
-            {
-              "version": "< 0.4.3",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-269: Improper Privilege Management"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-32109",
-      "publishedDate": "2026-03-11T20:16:34.480Z",
-      "lastModifiedDate": "2026-03-12T19:45:30.412Z",
-      "description": "Copyparty is a portable file server. Prior to 1.20.12, if an attacker has been given both read- and write-permissions to the server, they can upload a malicious file with the filename .prologue.html and then craft a link to potentially execute arbitrary JavaScript in the victim's context. Note that it is intended behavior that the JavaScript would execute if the target clicks a link to the HTML file itself; \"https://example.com/foo/.prologue.html\". The vulnerability is that \"https://example.com/foo/?b\" would also evaluate the file, making the behavior unexpected. There are existing preventative measures (strict SameSite cookies) which makes it harder to leverage this vulnerability in an attack; in order to gain control of the target's authenticated session, the link must be clicked from a page served by the server itself -- most likely by editing an existing resource, which would require additional access permissions. Finally, for this attack to be successful, the attacker's target must click the specific crafted link given by the attacker. This vulnerability is not activated by normally browsing the web-UI on the server. This vulnerability is fixed in 1.20.12.",
-      "severity": 3.7,
-      "references": [
-        {
-          "url": "https://github.com/9001/copyparty/security/advisories/GHSA-rcp6-88mm-9vgf",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "9001",
-          "product": "copyparty",
-          "versions": [
-            {
-              "version": "< 1.20.12",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-32274",
-      "publishedDate": "2026-03-12T19:47:07.464Z",
-      "lastModifiedDate": "2026-03-12T19:47:07.464Z",
-      "description": "Black is the uncompromising Python code formatter. Prior to 26.3.1, Black writes a cache file, the name of which is computed from various formatting options. The value of the --python-cell-magics option was placed in the filename without sanitization, which allowed an attacker who controls the value of this argument to write cache files to arbitrary file system locations. Fixed in Black 26.3.1.",
+      "id": "CVE-2026-32242",
+      "publishedDate": "2026-03-12T18:49:01.228Z",
+      "lastModifiedDate": "2026-03-12T20:20:14.597Z",
+      "description": "Parse Server is an open source backend that can be deployed to any infrastructure that can run Node.js. Prior to 9.6.0-alpha.11 and 8.6.37, Parse Server's built-in OAuth2 auth adapter exports a singleton instance that is reused directly across all OAuth2 provider configurations. Under concurrent authentication requests for different OAuth2 providers, one provider's token validation may execute using another provider's configuration, potentially allowing a token that should be rejected by one provider to be accepted because it is validated against a different provider's policy. Deployments that configure multiple OAuth2 providers via the oauth2: true flag are affected. This vulnerability is fixed in 9.6.0-alpha.11 and 8.6.37.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/psf/black/security/advisories/GHSA-3936-cmfr-pm3m",
+          "url": "https://github.com/parse-community/parse-server/security/advisories/GHSA-2cjm-2gwv-m892",
           "type": "reference"
         },
         {
-          "url": "https://github.com/psf/black/pull/5038",
+          "url": "https://github.com/parse-community/parse-server/releases/tag/8.6.37",
           "type": "reference"
         },
         {
-          "url": "https://github.com/psf/black/commit/4937fe6cf241139ddbfc16b0bdbb5b422798909d",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/psf/black/releases/tag/26.3.1",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "psf",
-          "product": "black",
-          "versions": [
-            {
-              "version": "< 26.3.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-32269",
-      "publishedDate": "2026-03-12T19:43:23.632Z",
-      "lastModifiedDate": "2026-03-12T19:43:23.632Z",
-      "description": "Parse Server is an open source backend that can be deployed to any infrastructure that can run Node.js. Prior to 9.6.0-alpha.13 and 8.6.39, the OAuth2 authentication adapter does not correctly validate app IDs when appidField and appIds are configured. During app ID validation, a malformed value is sent to the token introspection endpoint instead of the user's actual access token. Depending on the introspection endpoint's behavior, this could either cause all OAuth2 logins to fail, or allow authentication from disallowed app contexts if the endpoint returns valid-looking data for the malformed request. Deployments using the OAuth2 adapter with appidField and appIds configured are affected. This vulnerability is fixed in 9.6.0-alpha.13 and 8.6.39.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/parse-community/parse-server/security/advisories/GHSA-69xg-f649-w5g2",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/parse-community/parse-server/releases/tag/8.6.39",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/parse-community/parse-server/releases/tag/9.6.0-alpha.13",
+          "url": "https://github.com/parse-community/parse-server/releases/tag/9.6.0-alpha.11",
           "type": "reference"
         }
       ],
@@ -259,169 +139,18 @@
           "product": "parse-server",
           "versions": [
             {
-              "version": ">= 9.0.0, < 9.6.0-alpha.13",
+              "version": ">= 9.0.0 < 9.6.0-alpha.11",
               "status": "affected"
             },
             {
-              "version": ">= 8.0.2, < 8.6.39",
+              "version": "< 8.6.37",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-683: Function Call With Incorrect Order of Arguments"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-32240",
-      "publishedDate": "2026-03-12T19:35:57.374Z",
-      "lastModifiedDate": "2026-03-12T19:35:57.374Z",
-      "description": "Cap'n Proto is a data interchange format and capability-based RPC system. Prior to 1.4.0, when using Transfer-Encoding: chunked, if a chunk's size parsed to a value of 2^64 or larger, it would be truncated to a 64-bit integer. In theory, this bug could enable HTTP request/response smuggling. This vulnerability is fixed in 1.4.0.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/capnproto/capnproto/security/advisories/GHSA-vpcq-mx5v-32wm",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/capnproto/capnproto/commit/2744b3c012b4aa3c31cefb61ec656829fa5c0e36",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/capnproto/capnproto/commit/e929f0ba7901a6b8f4b5ba9a4db00af43288cbb0",
-          "type": "reference"
-        },
-        {
-          "url": "https://capnproto.org/capnproto-c++-1.4.0.tar.gz",
-          "type": "reference"
-        },
-        {
-          "url": "https://capnproto.org/capnproto-c++-win32-1.4.0.zip",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "capnproto",
-          "product": "capnproto",
-          "versions": [
-            {
-              "version": "< 1.4.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-197: Numeric Truncation Error",
-        "CWE-444: Inconsistent Interpretation of HTTP Requests ('HTTP Request/Response Smuggling')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-32239",
-      "publishedDate": "2026-03-12T19:33:25.052Z",
-      "lastModifiedDate": "2026-03-12T19:33:25.052Z",
-      "description": "Cap'n Proto is a data interchange format and capability-based RPC system. Prior to 1.4.0, a negative Content-Length value was converted to unsigned, treating it as an impossibly large length instead. In theory, this bug could enable HTTP request/response smuggling. This vulnerability is fixed in 1.4.0.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/capnproto/capnproto/security/advisories/GHSA-qjx3-pp3m-9jpm",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/capnproto/capnproto/commit/2744b3c012b4aa3c31cefb61ec656829fa5c0e36",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/capnproto/capnproto/commit/e929f0ba7901a6b8f4b5ba9a4db00af43288cbb0",
-          "type": "reference"
-        },
-        {
-          "url": "https://capnproto.org/capnproto-c++-1.4.0.tar.gz",
-          "type": "reference"
-        },
-        {
-          "url": "https://capnproto.org/capnproto-c++-win32-1.4.0.zip",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "capnproto",
-          "product": "capnproto",
-          "versions": [
-            {
-              "version": "< 1.4.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-444: Inconsistent Interpretation of HTTP Requests ('HTTP Request/Response Smuggling')",
-        "CWE-190: Integer Overflow or Wraparound"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-32108",
-      "publishedDate": "2026-03-11T20:14:18.998Z",
-      "lastModifiedDate": "2026-03-12T19:47:10.628Z",
-      "description": "Copyparty is a portable file server. Prior to 1.20.12, there was a missing permission-check in the shares feature (the shr global-option). This vulnerability only applies when the shares feature is used for the specific purpose of creating a share of just a single file inside a folder or either the FTP or SFTP server is enabled, and also made publicly accessible. Given these conditions, when a user is browsing a share through either FTP or SFTP (not http or https), they can gain read-access to the remaining files inside the shared folder by guessing/bruteforcing the filenames. It was not possible to descend into subdirectories in this manner; only the sibling files were accessible. This vulnerability is similar to CVE-2025-58753 which was previously fixed for HTTP and HTTPS, but not for FTP. The FTPS server did not yet exist at that time. This vulnerability is fixed in 1.20.12.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/9001/copyparty/security/advisories/GHSA-67rw-2x62-mqqm",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "9001",
-          "product": "copyparty",
-          "versions": [
-            {
-              "version": "< 1.20.12",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-863: Incorrect Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-32102",
-      "publishedDate": "2026-03-11T20:05:16.164Z",
-      "lastModifiedDate": "2026-03-12T19:47:37.664Z",
-      "description": "OliveTin gives access to predefined shell commands from a web interface. In 3000.10.2 and earlier, OliveTin’s live EventStream broadcasts execution events and action output to authenticated dashboard subscribers without enforcing per-action authorization. A low-privileged authenticated user can receive output from actions they are not allowed to view, resulting in broken access control and sensitive information disclosure.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/OliveTin/OliveTin/security/advisories/GHSA-228v-wc5r-j8m7",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "OliveTin",
-          "product": "OliveTin",
-          "versions": [
-            {
-              "version": "< 3000.10.2",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-284: Improper Access Control",
-        "CWE-863: Incorrect Authorization"
+        "CWE-362: Concurrent Execution using Shared Resource with Improper Synchronization ('Race Condition')"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
