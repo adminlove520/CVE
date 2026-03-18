@@ -2,373 +2,38 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 17,
-    "last_updated": "2026-03-18T16:11:54.116627",
+    "total_count": 2,
+    "last_updated": "2026-03-18T17:18:44.425946",
     "severity_distribution": {
       "critical": 0,
-      "high": 2,
-      "medium": 3,
+      "high": 0,
+      "medium": 0,
       "low": 0,
-      "none": 12
+      "none": 2
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-32606",
-      "publishedDate": "2026-03-18T05:14:05.304Z",
-      "lastModifiedDate": "2026-03-18T15:43:57.731Z",
-      "description": "IncusOS is an immutable OS image dedicated to running Incus. Prior to 202603142010, the default configuration of systemd-cryptenroll as used by IncusOS through mkosi allows for an attacker with physical access to the machine to access the encrypted data without requiring any interaction by the system's owner or any tampering of Secure Boot state or kernel (UKI) boot image. That's because in this configuration, the LUKS key is made available by the TPM so long as the system has the expected PCR7 value and the PCR11 policy matches. That default PCR11 policy importantly allows for the TPM to release the key to the booted system rather than just from the initrd part of the signed kernel image (UKI). The attack relies on the attacker being able to substitute the original encrypted root partition for one that they control. By doing so, the system will prompt for a recovery key on boot, which the attacker has defined and can provide, before booting the system using the attacker's root partition rather than the system's original one. The attacker only needs to put a systemd unit starting on system boot within their root partition to have the system run that logic on boot. That unit will then run in an environment where the TPM will allow for the retrieval of the encryption key of the real root disk, allowing the attacker to steal the LUKS volume key (immutable master key) and then use it against the real root disk, altering it or getting data out before putting the disk back the way it was and returning the system without a trace of this attack having happened. This is all possible because the system will have still booted with Secure Boot enabled, will have measured and ran the expected bootloader and kernel image (UKI). The initrd selects the root disk based on GPT partition identifiers making it possible to easily substitute the real root disk for an attacker controlled one. This doesn't lead to any change in the TPM state and therefore allows for retrieval of the LUKS key by the attacker through a boot time systemd unit on their alternative root partition. IncusOS version 202603142010 (2026/03/14 20:10 UTC)  includes the new PCR15 logic and will automatically update the TPM policy on boot. Anyone suspecting that their system may have been physically accessed while shut down should perform a full system wipe and reinstallation as only that will rotate the LUKS volume key and prevent subsequent access to the encrypted data should the system have been previously compromised. There are no known workarounds other than updating to a version with corrected logic which will automatically rebind the LUKS keys to the new set of TPM registers and prevent this from being exploited.",
-      "severity": 7.7,
-      "references": [
-        {
-          "url": "https://github.com/lxc/incus-os/security/advisories/GHSA-wj2j-qwcf-cfcc",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/lxc/incus-os/pull/954",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/lxc/incus-os/commit/e3b35f230d23443d27752eac27ebb2b22c957b75",
-          "type": "reference"
-        },
-        {
-          "url": "https://discuss.linuxcontainers.org/t/potential-luks-encryption-bypass-through-filesystem-confusion/26348",
-          "type": "reference"
-        },
-        {
-          "url": "https://oddlama.org/blog/bypassing-disk-encryption-with-tpm2-unlock",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "lxc",
-          "product": "incus-os",
-          "versions": [
-            {
-              "version": "< 202603142010",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-522: Insufficiently Protected Credentials"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-32608",
-      "publishedDate": "2026-03-18T06:03:22.153Z",
-      "lastModifiedDate": "2026-03-18T15:39:15.123Z",
-      "description": "Glances is an open-source system cross-platform monitoring tool. The Glances action system allows administrators to configure shell commands that execute when monitoring thresholds are exceeded. These commands support Mustache template variables (e.g., `{{name}}`, `{{key}}`) that are populated with runtime monitoring data. The `secure_popen()` function, which executes these commands, implements its own pipe, redirect, and chain operator handling by splitting the command string before passing each segment to `subprocess.Popen(shell=False)`. Prior to 4.5.2, when a Mustache-rendered value (such as a process name, filesystem mount point, or container name) contains pipe, redirect, or chain metacharacters, the rendered command is split in unintended ways, allowing an attacker who controls a process name or container name to inject arbitrary commands. Version 4.5.2 fixes the issue.",
-      "severity": 7,
-      "references": [
-        {
-          "url": "https://github.com/nicolargo/glances/security/advisories/GHSA-vcv2-q258-wrg7",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/nicolargo/glances/commit/6f4ec53d967478e69917078e6f73f448001bf107",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/nicolargo/glances/releases/tag/v4.5.2",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "nicolargo",
-          "product": "glances",
-          "versions": [
-            {
-              "version": "< 4.5.2",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-22179",
-      "publishedDate": "2026-03-18T01:34:23.197Z",
-      "lastModifiedDate": "2026-03-18T16:00:54.669Z",
-      "description": "OpenClaw versions prior to 2026.2.22 in macOS node-host system.run contain an allowlist bypass vulnerability that allows remote attackers to execute non-allowlisted commands by exploiting improper parsing of command substitution tokens. Attackers can craft shell payloads with command substitution syntax within double-quoted text to bypass security restrictions and execute arbitrary commands on the system.",
-      "severity": 6.6,
-      "references": [
-        {
-          "url": "https://github.com/openclaw/openclaw/security/advisories/GHSA-9p38-94jf-hgjj",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openclaw/openclaw/commit/90a378ca3a9ecbf1634cd247f17a35f4612c6ca6",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/openclaw-allowlist-bypass-via-command-substitution-in-system-run",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "OpenClaw",
-          "product": "OpenClaw",
-          "defaultStatus": "unaffected",
-          "packageURL": "pkg:npm/openclaw",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "versionType": "semver",
-              "lessThan": "2026.2.22"
-            },
-            {
-              "version": "2026.2.22",
-              "status": "unaffected",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') (CWE-78)"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-27522",
-      "publishedDate": "2026-03-18T01:34:26.280Z",
-      "lastModifiedDate": "2026-03-18T16:00:17.502Z",
-      "description": "OpenClaw versions prior to 2026.2.24 contain a local media root bypass vulnerability in sendAttachment and setGroupIcon message actions when sandboxRoot is unset. Attackers can hydrate media from local absolute paths to read arbitrary host files accessible by the runtime user.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://github.com/openclaw/openclaw/security/advisories/GHSA-fqcm-97m6-w7rm",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openclaw/openclaw/commit/270ab03e379f9653e15f7033c9830399b66b7e51",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/openclaw-arbitrary-file-read-via-sendattachment-and-setgroupicon-message-actions",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "OpenClaw",
-          "product": "OpenClaw",
-          "defaultStatus": "unaffected",
-          "packageURL": "pkg:npm/openclaw",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "versionType": "semver",
-              "lessThan": "2026.2.24"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-22 Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-27523",
-      "publishedDate": "2026-03-18T01:34:27.047Z",
-      "lastModifiedDate": "2026-03-18T15:39:13.563Z",
-      "description": "OpenClaw versions prior to 2026.2.24 contain a sandbox bind validation vulnerability allowing attackers to bypass allowed-root and blocked-path checks via symlinked parent directories with non-existent leaf paths. Attackers can craft bind source paths that appear within allowed roots but resolve outside sandbox boundaries once missing leaf components are created, weakening bind-source isolation enforcement.",
-      "severity": 6.1,
-      "references": [
-        {
-          "url": "https://github.com/openclaw/openclaw/security/advisories/GHSA-m8v2-6wwh-r4gc",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openclaw/openclaw/commit/b5787e4abba0dcc6baf09051099f6773c1679ec1",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/openclaw-sandbox-bind-validation-bypass-via-symlink-parent-missing-leaf-paths",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "OpenClaw",
-          "product": "OpenClaw",
-          "defaultStatus": "unaffected",
-          "packageURL": "pkg:npm/openclaw",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "versionType": "semver",
-              "lessThan": "2026.2.24"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-22 Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-24063",
-      "publishedDate": "2026-03-18T15:33:35.010Z",
-      "lastModifiedDate": "2026-03-18T15:52:07.784Z",
-      "description": "When a plugin is installed using the Arturia Software Center (MacOS), it also installs an uninstall.sh bash script in a root owned path. This script is written to disk with the file permissions 777, meaning it is writable by any user. When uninstalling a plugin via the Arturia Software Center the Privileged Helper gets instructed to execute this script. When the bash script is manipulated by an attacker this scenario will lead to privilege escalation.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://r.sec-consult.com/arturia",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Arturia",
-          "product": "Software Center",
-          "platforms": [
-            "MacOS"
-          ],
-          "versions": [
-            {
-              "status": "affected",
-              "version": "2.12.0.3157"
-            }
-          ],
-          "defaultStatus": "unknown"
-        }
-      ],
-      "problemType": [
-        "CWE-276 Incorrect default permissions"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-24062",
-      "publishedDate": "2026-03-18T15:24:07.985Z",
-      "lastModifiedDate": "2026-03-18T15:55:32.532Z",
-      "description": "The \"Privileged Helper\" component of the Arturia Software Center (MacOS) does not perform sufficient client code signature validation when a client connects. This leads to an attacker being able to connect to the helper and execute privileged actions leading to local privilege escalation.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://r.sec-consult.com/arturia",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Arturia",
-          "product": "Software Center",
-          "platforms": [
-            "MacOS"
-          ],
-          "versions": [
-            {
-              "status": "affected",
-              "version": "2.12.0.3157"
-            }
-          ],
-          "defaultStatus": "unknown"
-        }
-      ],
-      "problemType": [
-        "CWE-306 Missing authentication for critical function"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-33003",
-      "publishedDate": "2026-03-18T15:15:25.768Z",
-      "lastModifiedDate": "2026-03-18T15:55:13.735Z",
-      "description": "Jenkins LoadNinja Plugin 2.1 and earlier stores LoadNinja API keys unencrypted in job config.xml files on the Jenkins controller where they can be viewed by users with Item/Extended Read permission or access to the Jenkins controller file system.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://www.jenkins.io/security/advisory/2026-03-18/#SECURITY-3642",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Jenkins Project",
-          "product": "Jenkins LoadNinja Plugin",
-          "versions": [
-            {
-              "version": "0",
-              "versionType": "maven",
-              "lessThanOrEqual": "2.1",
-              "status": "affected"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-32596",
-      "publishedDate": "2026-03-18T05:18:11.547Z",
-      "lastModifiedDate": "2026-03-18T15:45:18.808Z",
-      "description": "Glances is an open-source system cross-platform monitoring tool. Prior to 4.5.2, Glances web server runs without authentication by default when started with `glances -w`, exposing REST API with sensitive system information including process command-lines containing credentials (passwords, API keys, tokens) to any network client. Version 4.5.2 fixes the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/nicolargo/glances/security/advisories/GHSA-wvxv-4j8q-4wjq",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/nicolargo/glances/commit/208d876118fea5758970f33fd7474908bd403d25",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/nicolargo/glances/releases/tag/v4.5.2",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "nicolargo",
-          "product": "glances",
-          "versions": [
-            {
-              "version": "< 4.5.2",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-55040",
+      "id": "CVE-2026-30345",
       "publishedDate": "2026-03-18T00:00:00.000Z",
-      "lastModifiedDate": "2026-03-18T15:41:00.865Z",
-      "description": "The import form CSRF vulnerability in MuraCMS through 10.1.10 allows attackers to upload and install malicious form definitions through a CSRF attack. The vulnerable cForm.importform function lacks CSRF token validation, enabling malicious websites to forge file upload requests that install attacker-controlled forms when an authenticated administrator visits a crafted webpage. Full exploitation of this vulnerability would require the victim to select a malicious ZIP file containing form definitions, which can be automatically generated by the exploit page and used to create data collection forms that steal sensitive information. Successful exploitation of the import form CSRF vulnerability could result in the installation of malicious data collection forms on the target MuraCMS website that can steal sensitive user information. When an authenticated administrator visits a malicious webpage containing the CSRF exploit and selects the attacker-generated ZIP file, their browser uploads and installs form definitions that create legitimate forms that could be designed with malicious content.",
+      "lastModifiedDate": "2026-03-18T16:56:38.647Z",
+      "description": "A zip slip vulnerability in the Admin import functionality of CTFd v3.8.1-18-gdb5a18c4 allows attackers to write arbitrary files outside the intended directories via supplying a crafted import.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://www.murasoftware.com",
+          "url": "https://github.com/CTFd/CTFd",
           "type": "reference"
         },
         {
-          "url": "https://docs.murasoftware.com/v10/release-notes/#section-version-1014",
+          "url": "https://github.com/CTFd/CTFd/security/policy",
+          "type": "reference"
+        },
+        {
+          "url": "https://blog.ctfd.io/ctfd-3-8-2/",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/syphonetic/CVE-2026-30345",
           "type": "reference"
         }
       ],
@@ -390,18 +55,22 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-55046",
+      "id": "CVE-2026-30695",
       "publishedDate": "2026-03-18T00:00:00.000Z",
-      "lastModifiedDate": "2026-03-18T15:59:19.958Z",
-      "description": "MuraCMS through 10.1.10 contains a CSRF vulnerability that allows attackers to permanently destroy all deleted content stored in the trash system through a simple CSRF attack. The vulnerable cTrash.empty function lacks CSRF token validation, enabling malicious websites to forge requests that irreversibly delete all trashed content when an authenticated administrator visits a crated webpage. Successful exploitation of the CSRF vulnerability results in potentially catastrophic data loss within the MuraCMS system. When an authenticated administrator visits a malicious page containing the CSRF exploit, their browser automatically submits a hidden form that permanently empties the entire trash system without any validation, confirmation dialog, or user consent.",
+      "lastModifiedDate": "2026-03-18T16:52:39.295Z",
+      "description": "A Cross-Site Scripting (XSS) vulnerability exists in the web-based configuration interface of Zucchetti Axess access control devices, including XA4, X3/X3BIO, X4, X7, and XIO / i-door / i-door+. The vulnerability is caused by improper sanitization of user-supplied input in the dirBrowse parameter of the /file_manager.cgi endpoint.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://www.murasoftware.com",
+          "url": "http://zucchetti.com",
           "type": "reference"
         },
         {
-          "url": "https://docs.murasoftware.com/v10/release-notes/#section-version-1014",
+          "url": "http://firmware.com",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/iremnurylmz/CVE-2026-30695",
           "type": "reference"
         }
       ],
@@ -419,212 +88,6 @@
       ],
       "problemType": [
         "n/a"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-55045",
-      "publishedDate": "2026-03-18T00:00:00.000Z",
-      "lastModifiedDate": "2026-03-18T15:56:57.729Z",
-      "description": "The update address CSRF vulnerability in MuraCMS through 10.1.10 allows attackers to manipulate user address information through CSRF. The vulnerable cUsers.updateAddress function lacks CSRF token validation, enabling malicious websites to forge requests that add, modify, or delete user addresses when an authenticated administrator visits a crafted webpage. Successful exploitation of the update address CSRF vulnerability results in unauthorized manipulation of user address information within the MuraCMS system, potentially compromising user data integrity and organizational communications. When an authenticated administrator visits a malicious webpage containing the CSRF exploit, their browser automatically submits a hidden form that can add malicious addresses with attacker-controlled email addresses and phone numbers, update existing addresses to redirect communications to attacker-controlled locations or deleted legitimate address records to disrupt business operations. This can lead to misdirected sensitive communications, compromise of user privacy through injection of attacker contact information, disruption of legitimate business correspondence, and potential social engineering attacks via the corrupted address data.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://www.murasoftware.com",
-          "type": "reference"
-        },
-        {
-          "url": "https://docs.murasoftware.com/v10/release-notes/",
-          "type": "reference"
-        },
-        {
-          "url": "https://docs.murasoftware.com/v10/release-notes/#section-version-1014",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n/a",
-          "product": "n/a",
-          "versions": [
-            {
-              "version": "n/a",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "n/a"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-55041",
-      "publishedDate": "2026-03-18T00:00:00.000Z",
-      "lastModifiedDate": "2026-03-18T15:41:38.839Z",
-      "description": "MuraCMS through 10.1.10 contains a CSRF vulnerability in the Add To Group functionality for user management (cUsers.cfc addToGroup method) that allows attackers to escalate privileges by adding any user to any group without proper authorization checks. The vulnerable function lacks CSRF token validation and directly processes user-supplied userId and groupId parameters via getUserManager().createUserInGorup(), enabling malicious websites to forge requests that automatically execute when an authenticated administrator visits a crafted page. Adding a user to the Super Admins group (s2 user) is not possible. Successful exploitation results in the attacker gaining privilege escalation both horizontally to other groups and vertically to the admin group. Escalation to the s2 User group is not possible.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://www.murasoftware.com",
-          "type": "reference"
-        },
-        {
-          "url": "https://docs.murasoftware.com/v10/release-notes/#section-version-1014",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n/a",
-          "product": "n/a",
-          "versions": [
-            {
-              "version": "n/a",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "n/a"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-55043",
-      "publishedDate": "2026-03-18T00:00:00.000Z",
-      "lastModifiedDate": "2026-03-18T15:54:08.339Z",
-      "description": "MuraCMS through 10.1.10 contains a CSRF vulnerability in the bundle creation functionality (csettings.cfc createBundle method) that allows unauthenticated attackers to force administrators to create and save site bundles containing sensitive data to publicly accessible directories. This vulnerability enables complete data exfiltration including user accounts, password hashes, form submissions, email lists, plugins, and site content without administrator knowledge. This CSRF vulnerability enables complete data exfiltration from MuraCMS installations without requiring authentication. Attackers can force administrators to unknowingly create site bundles containing sensitive data, which are saved to publicly accessible web directories. The attack executes silently, leaving administrators unaware that confidential information has been compromised and is available for unauthorized download.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://www.murasoftware.com",
-          "type": "reference"
-        },
-        {
-          "url": "https://docs.murasoftware.com/v10/release-notes/#section-version-1014",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n/a",
-          "product": "n/a",
-          "versions": [
-            {
-              "version": "n/a",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "n/a"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-67829",
-      "publishedDate": "2026-03-18T00:00:00.000Z",
-      "lastModifiedDate": "2026-03-18T15:59:52.275Z",
-      "description": "Mura before 10.1.14 allows beanFeed.cfc getQuery sortDirection SQL injection.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://docs.murasoftware.com/v10/release-notes/#section-version-1014",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n/a",
-          "product": "n/a",
-          "versions": [
-            {
-              "version": "n/a",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "n/a"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-55044",
-      "publishedDate": "2026-03-18T00:00:00.000Z",
-      "lastModifiedDate": "2026-03-18T15:55:06.171Z",
-      "description": "The Trash Restore CSRF vulnerability in MuraCMS through 10.1.10 allows attackers to restore deleted content from the trash to unauthorized locations through CSRF. The vulnerable cTrash.restore function lacks CSRF token validation, enabling malicious websites to forge requests that restore content to arbitrary parent locations when an authenticated administrator visits a crafted webpage. Successful exploitation of the Trash Restore CSRF vulnerability results in unauthorized restoration of deleted content to potentially inappropriate or malicious locations within the MuraCMS website structure. When an authenticated administrator visits a malicious webpage containing the CSRF exploit, their browser automatically submits a hidden form that restores specified content from the trash to a location determined by the attacker through the parentid parameter. This can lead to restoration of previously deleted malicious content, placement of sensitive documents in public areas, manipulation of website navigation structure, or restoration of outdated content that was intentionally removed for security or compliance reasons.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://www.murasoftware.com",
-          "type": "reference"
-        },
-        {
-          "url": "https://docs.murasoftware.com/v10/release-notes/",
-          "type": "reference"
-        },
-        {
-          "url": "https://docs.murasoftware.com/v10/release-notes/#section-version-1014",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n/a",
-          "product": "n/a",
-          "versions": [
-            {
-              "version": "n/a",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "n/a"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-32267",
-      "publishedDate": "2026-03-16T19:04:47.781Z",
-      "lastModifiedDate": "2026-03-18T15:43:25.399Z",
-      "description": "Craft CMS is a content management system (CMS). From version 4.0.0-RC1 to before version 4.17.6 and from version 5.0.0-RC1 to before version 5.9.12, a low-privilege user (or an unauthenticated user who has been sent a shared URL) can escalate their privileges to admin by abusing UsersController->actionImpersonateWithToken. This issue has been patched in versions 4.17.6 and 5.9.12.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/craftcms/cms/security/advisories/GHSA-cc7p-2j3x-x7xf",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/craftcms/cms/commit/6301e217c5f15617d939c432cb770db50af14b33",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "craftcms",
-          "product": "cms",
-          "versions": [
-            {
-              "version": ">= 4.0.0-RC1, < 4.17.6",
-              "status": "affected"
-            },
-            {
-              "version": ">= 5.0.0-RC1, < 5.9.12",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-863: Incorrect Authorization"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
