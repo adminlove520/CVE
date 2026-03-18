@@ -2,75 +2,650 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 2,
-    "last_updated": "2026-03-18T17:18:44.425946",
+    "total_count": 10,
+    "last_updated": "2026-03-18T18:13:47.715058",
     "severity_distribution": {
-      "critical": 0,
-      "high": 0,
-      "medium": 0,
+      "critical": 1,
+      "high": 2,
+      "medium": 1,
       "low": 0,
-      "none": 2
+      "none": 6
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-30345",
-      "publishedDate": "2026-03-18T00:00:00.000Z",
-      "lastModifiedDate": "2026-03-18T16:56:38.647Z",
-      "description": "A zip slip vulnerability in the Admin import functionality of CTFd v3.8.1-18-gdb5a18c4 allows attackers to write arbitrary files outside the intended directories via supplying a crafted import.",
-      "severity": "N/A",
+      "id": "CVE-2026-32633",
+      "publishedDate": "2026-03-18T17:53:11.263Z",
+      "lastModifiedDate": "2026-03-18T17:53:11.263Z",
+      "description": "Glances is an open-source system cross-platform monitoring tool. Prior to version 4.5.2, in Central Browser mode, the `/api/4/serverslist` endpoint returns raw server objects from `GlancesServersList.get_servers_list()`. Those objects are mutated in-place during background polling and can contain a `uri` field with embedded HTTP Basic credentials for downstream Glances servers, using the reusable pbkdf2-derived Glances authentication secret. If the front Glances Browser/API instance is started without `--password`, which is supported and common for internal network deployments, `/api/4/serverslist` is completely unauthenticated. Any network user who can reach the Browser API can retrieve reusable credentials for protected downstream Glances servers once they have been polled by the browser instance. Version 4.5.2 fixes the issue.",
+      "severity": 9.1,
       "references": [
         {
-          "url": "https://github.com/CTFd/CTFd",
+          "url": "https://github.com/nicolargo/glances/security/advisories/GHSA-r297-p3v4-wp8m",
           "type": "reference"
         },
         {
-          "url": "https://github.com/CTFd/CTFd/security/policy",
+          "url": "https://github.com/nicolargo/glances/commit/879ef8688ffa1630839549751d3c7ef9961d361e",
           "type": "reference"
         },
         {
-          "url": "https://blog.ctfd.io/ctfd-3-8-2/",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/syphonetic/CVE-2026-30345",
+          "url": "https://github.com/nicolargo/glances/releases/tag/v4.5.2",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "n/a",
-          "product": "n/a",
+          "vendor": "nicolargo",
+          "product": "glances",
           "versions": [
             {
-              "version": "n/a",
+              "version": "< 4.5.2",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "n/a"
+        "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor",
+        "CWE-522: Insufficiently Protected Credentials"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-30695",
-      "publishedDate": "2026-03-18T00:00:00.000Z",
-      "lastModifiedDate": "2026-03-18T16:52:39.295Z",
-      "description": "A Cross-Site Scripting (XSS) vulnerability exists in the web-based configuration interface of Zucchetti Axess access control devices, including XA4, X3/X3BIO, X4, X7, and XIO / i-door / i-door+. The vulnerability is caused by improper sanitization of user-supplied input in the dirBrowse parameter of the /file_manager.cgi endpoint.",
+      "id": "CVE-2026-32634",
+      "publishedDate": "2026-03-18T17:55:30.552Z",
+      "lastModifiedDate": "2026-03-18T17:55:30.552Z",
+      "description": "Glances is an open-source system cross-platform monitoring tool. Prior to version 4.5.2, in Central Browser mode, Glances stores both the Zeroconf-advertised server name and the discovered IP address for dynamic servers, but later builds connection URIs from the untrusted advertised name instead of the discovered IP. When a dynamic server reports itself as protected, Glances also uses that same untrusted name as the lookup key for saved passwords and the global `[passwords] default` credential. An attacker on the same local network can advertise a fake Glances service over Zeroconf and cause the browser to automatically send a reusable Glances authentication secret to an attacker-controlled host. This affects the background polling path and the REST/WebUI click-through path in Central Browser mode. Version 4.5.2 fixes the issue.",
+      "severity": 8.1,
+      "references": [
+        {
+          "url": "https://github.com/nicolargo/glances/security/advisories/GHSA-vx5f-957p-qpvm",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/nicolargo/glances/commit/61d38eec521703e41e4933d18d5a5ef6f854abd5",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/nicolargo/glances/releases/tag/v4.5.2",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "nicolargo",
+          "product": "glances",
+          "versions": [
+            {
+              "version": "< 4.5.2",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-346: Origin Validation Error",
+        "CWE-522: Insufficiently Protected Credentials"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-27135",
+      "publishedDate": "2026-03-18T17:59:02.045Z",
+      "lastModifiedDate": "2026-03-18T17:59:02.045Z",
+      "description": "nghttp2 is an implementation of the Hypertext Transfer Protocol version 2 in C. Prior to version 1.68.1, the nghttp2 library stops reading the incoming data when user facing public API `nghttp2_session_terminate_session` or `nghttp2_session_terminate_session2` is called by the application. They might be called internally by the library when it detects the situation that is subject to connection error. Due to the missing internal state validation, the library keeps reading the rest of the data after one of those APIs is called. Then receiving a malformed frame that causes FRAME_SIZE_ERROR causes assertion failure. nghttp2 v1.68.1 adds missing state validation to avoid assertion failure. No known workarounds are available.",
+      "severity": 7.5,
+      "references": [
+        {
+          "url": "https://github.com/nghttp2/nghttp2/security/advisories/GHSA-6933-cjhr-5qg6",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/nghttp2/nghttp2/commit/5c7df8fa815ac1004d9ecb9d1f7595c4d37f46e1",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "nghttp2",
+          "product": "nghttp2",
+          "versions": [
+            {
+              "version": "< 1.68.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-617: Reachable Assertion"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4366",
+      "publishedDate": "2026-03-18T04:02:59.959Z",
+      "lastModifiedDate": "2026-03-18T17:58:48.644Z",
+      "description": "A flaw was identified in Keycloak, an identity and access management solution, where it improperly follows HTTP redirects when processing certain client configuration requests. This behavior allows an attacker to trick the server into making unintended requests to internal or restricted resources. As a result, sensitive internal services such as cloud metadata endpoints could be accessed. This issue may lead to information disclosure and enable attackers to map internal network infrastructure.",
+      "severity": 5.8,
+      "references": [
+        {
+          "url": "https://access.redhat.com/security/cve/CVE-2026-4366",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2448543",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Build of Keycloak",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhbk/keycloak-operator-bundle",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Build of Keycloak",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhbk/keycloak-rhel9",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Build of Keycloak",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhbk/keycloak-rhel9-operator",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat JBoss Enterprise Application Platform 8",
+          "collectionURL": "https://access.redhat.com/jbossnetwork/restricted/listSoftware.html",
+          "packageName": "keycloak-services",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:jboss_enterprise_application_platform:8"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat JBoss Enterprise Application Platform Expansion Pack",
+          "collectionURL": "https://access.redhat.com/jbossnetwork/restricted/listSoftware.html",
+          "packageName": "keycloak-services",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:jbosseapxp"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Single Sign-On 7",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "keycloak-services",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:red_hat_single_sign_on:7"
+          ]
+        }
+      ],
+      "problemType": [
+        "Server-Side Request Forgery (SSRF)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-31962",
+      "publishedDate": "2026-03-18T18:08:26.067Z",
+      "lastModifiedDate": "2026-03-18T18:08:26.067Z",
+      "description": "HTSlib is a library for reading and writing bioinformatics file formats. CRAM is a compressed format which stores DNA sequence alignment data. While most alignment records store DNA sequence and quality values, the format also allows them to omit this data in certain cases to save space. Due to some quirks of the CRAM format, it is necessary to handle these records carefully as they will actually store data that needs to be consumed and then discarded. Unfortunately the `cram_decode_seq()` did not handle this correctly in some cases. Where this happened it could result in reading a single byte from beyond the end of a heap allocation, followed by writing a single attacker-controlled byte to the same location. Exploiting this bug causes a heap buffer overflow. If a user opens a file crafted to exploit this issue, it could lead to the program crashing, or overwriting of data and heap structures in ways not expected by the program.  It may be possible to use this to obtain arbitrary code execution. Versions 1.23.1, 1.22.2 and 1.21.1 include fixes for this issue. There is no workaround for this issue.",
       "severity": "N/A",
       "references": [
         {
-          "url": "http://zucchetti.com",
+          "url": "https://github.com/samtools/htslib/security/advisories/GHSA-xxmp-v7h3-gpwp",
           "type": "reference"
         },
         {
-          "url": "http://firmware.com",
+          "url": "https://github.com/samtools/htslib/commit/d799b54c6401879187bba4741be83ff590ac73e3",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "samtools",
+          "product": "htslib",
+          "versions": [
+            {
+              "version": "< 1.21.1",
+              "status": "affected"
+            },
+            {
+              "version": ">= 1.22, < 1.22.2",
+              "status": "affected"
+            },
+            {
+              "version": "= 1.23",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-122: Heap-based Buffer Overflow",
+        "CWE-125: Out-of-bounds Read",
+        "CWE-129: Improper Validation of Array Index",
+        "CWE-787: Out-of-bounds Write"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-23270",
+      "publishedDate": "2026-03-18T17:54:43.803Z",
+      "lastModifiedDate": "2026-03-18T17:54:43.803Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet/sched: Only allow act_ct to bind to clsact/ingress qdiscs and shared blocks\n\nAs Paolo said earlier [1]:\n\n\"Since the blamed commit below, classify can return TC_ACT_CONSUMED while\nthe current skb being held by the defragmentation engine. As reported by\nGangMin Kim, if such packet is that may cause a UaF when the defrag engine\nlater on tries to tuch again such packet.\"\n\nact_ct was never meant to be used in the egress path, however some users\nare attaching it to egress today [2]. Attempting to reach a middle\nground, we noticed that, while most qdiscs are not handling\nTC_ACT_CONSUMED, clsact/ingress qdiscs are. With that in mind, we\naddress the issue by only allowing act_ct to bind to clsact/ingress\nqdiscs and shared blocks. That way it's still possible to attach act_ct to\negress (albeit only with clsact).\n\n[1] https://lore.kernel.org/netdev/674b8cbfc385c6f37fb29a1de08d8fe5c2b0fbee.1771321118.git.pabeni@redhat.com/\n[2] https://lore.kernel.org/netdev/cc6bfb4a-4a2b-42d8-b9ce-7ef6644fb22b@ovn.org/",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://git.kernel.org/stable/c/524ce8b4ea8f64900b6c52b6a28df74f6bc0801e",
           "type": "reference"
         },
         {
-          "url": "https://github.com/iremnurylmz/CVE-2026-30695",
+          "url": "https://git.kernel.org/stable/c/380ad8b7c65ea7aa10ef2258297079ed5ac1f5b6",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/9deda0fcda5c1f388c5e279541850b71a2ccfcf4",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/11cb63b0d1a0685e0831ae3c77223e002ef18189",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "unaffected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "include/net/act_api.h",
+            "net/sched/act_ct.c",
+            "net/sched/cls_api.c"
+          ],
+          "versions": [
+            {
+              "version": "3f14b377d01d8357eba032b4cabc8c1149b458b6",
+              "lessThan": "524ce8b4ea8f64900b6c52b6a28df74f6bc0801e",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "3f14b377d01d8357eba032b4cabc8c1149b458b6",
+              "lessThan": "380ad8b7c65ea7aa10ef2258297079ed5ac1f5b6",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "3f14b377d01d8357eba032b4cabc8c1149b458b6",
+              "lessThan": "9deda0fcda5c1f388c5e279541850b71a2ccfcf4",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "3f14b377d01d8357eba032b4cabc8c1149b458b6",
+              "lessThan": "11cb63b0d1a0685e0831ae3c77223e002ef18189",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "172ba7d46c202e679f3ccb10264c67416aaeb1c4",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "0b5b831122fc3789fff75be433ba3e4dd7b779d4",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "73f7da5fd124f2cda9161e2e46114915e6e82e97",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "f5346df0591d10bc948761ca854b1fae6d2ef441",
+              "status": "affected",
+              "versionType": "git"
+            }
+          ]
+        },
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "affected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "include/net/act_api.h",
+            "net/sched/act_ct.c",
+            "net/sched/cls_api.c"
+          ],
+          "versions": [
+            {
+              "version": "6.8",
+              "status": "affected"
+            },
+            {
+              "version": "0",
+              "lessThan": "6.8",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.12.77",
+              "lessThanOrEqual": "6.12.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.18.18",
+              "lessThanOrEqual": "6.18.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.19.8",
+              "lessThanOrEqual": "6.19.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "7.0-rc3",
+              "lessThanOrEqual": "*",
+              "status": "unaffected",
+              "versionType": "original_commit_for_fix"
+            }
+          ]
+        }
+      ],
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-23269",
+      "publishedDate": "2026-03-18T17:54:42.988Z",
+      "lastModifiedDate": "2026-03-18T17:54:42.988Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\napparmor: validate DFA start states are in bounds in unpack_pdb\n\nStart states are read from untrusted data and used as indexes into the\nDFA state tables. The aa_dfa_next() function call in unpack_pdb() will\naccess dfa->tables[YYTD_ID_BASE][start], and if the start state exceeds\nthe number of states in the DFA, this results in an out-of-bound read.\n\n==================================================================\n BUG: KASAN: slab-out-of-bounds in aa_dfa_next+0x2a1/0x360\n Read of size 4 at addr ffff88811956fb90 by task su/1097\n ...\n\nReject policies with out-of-bounds start states during unpacking\nto prevent the issue.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://git.kernel.org/stable/c/15c3eb8916e7db01cb246d04a1fe6f0fdc065b0c",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/0baadb0eece2c4d939db10d3c323b4652ac79a58",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/3bb7db43e32190c973d4019037cedb7895920184",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/9063d7e2615f4a7ab321de6b520e23d370e58816",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "unaffected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "security/apparmor/policy_unpack.c"
+          ],
+          "versions": [
+            {
+              "version": "ad5ff3db53c68c2f12936bc74ea5dfe0af943592",
+              "lessThan": "15c3eb8916e7db01cb246d04a1fe6f0fdc065b0c",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "ad5ff3db53c68c2f12936bc74ea5dfe0af943592",
+              "lessThan": "0baadb0eece2c4d939db10d3c323b4652ac79a58",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "ad5ff3db53c68c2f12936bc74ea5dfe0af943592",
+              "lessThan": "3bb7db43e32190c973d4019037cedb7895920184",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "ad5ff3db53c68c2f12936bc74ea5dfe0af943592",
+              "lessThan": "9063d7e2615f4a7ab321de6b520e23d370e58816",
+              "status": "affected",
+              "versionType": "git"
+            }
+          ]
+        },
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "affected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "security/apparmor/policy_unpack.c"
+          ],
+          "versions": [
+            {
+              "version": "3.4",
+              "status": "affected"
+            },
+            {
+              "version": "0",
+              "lessThan": "3.4",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.12.77",
+              "lessThanOrEqual": "6.12.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.18.18",
+              "lessThanOrEqual": "6.18.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.19.8",
+              "lessThanOrEqual": "6.19.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "7.0-rc4",
+              "lessThanOrEqual": "*",
+              "status": "unaffected",
+              "versionType": "original_commit_for_fix"
+            }
+          ]
+        }
+      ],
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-23268",
+      "publishedDate": "2026-03-18T17:54:41.974Z",
+      "lastModifiedDate": "2026-03-18T17:54:41.974Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\napparmor: fix unprivileged local user can do privileged policy management\n\nAn unprivileged local user can load, replace, and remove profiles by\nopening the apparmorfs interfaces, via a confused deputy attack, by\npassing the opened fd to a privileged process, and getting the\nprivileged process to write to the interface.\n\nThis does require a privileged target that can be manipulated to do\nthe write for the unprivileged process, but once such access is\nachieved full policy management is possible and all the possible\nimplications that implies: removing confinement, DoS of system or\ntarget applications by denying all execution, by-passing the\nunprivileged user namespace restriction, to exploiting kernel bugs for\na local privilege escalation.\n\nThe policy management interface can not have its permissions simply\nchanged from 0666 to 0600 because non-root processes need to be able\nto load policy to different policy namespaces.\n\nInstead ensure the task writing the interface has privileges that\nare a subset of the task that opened the interface. This is already\ndone via policy for confined processes, but unconfined can delegate\naccess to the opened fd, by-passing the usual policy check.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://git.kernel.org/stable/c/0fc63dd9170643d15c25681fca792539e23f4640",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/b60b3f7a35c46b2e0ca934f9c988b8fca06d76c6",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/b6a94eeca9c6c8f7c55ad44c62c98324f51ec596",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/6601e13e82841879406bf9f369032656f441a425",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "unaffected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "security/apparmor/apparmorfs.c",
+            "security/apparmor/include/policy.h",
+            "security/apparmor/policy.c"
+          ],
+          "versions": [
+            {
+              "version": "b7fd2c0340eacbee892425e9007647568b7f2a3c",
+              "lessThan": "0fc63dd9170643d15c25681fca792539e23f4640",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "b7fd2c0340eacbee892425e9007647568b7f2a3c",
+              "lessThan": "b60b3f7a35c46b2e0ca934f9c988b8fca06d76c6",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "b7fd2c0340eacbee892425e9007647568b7f2a3c",
+              "lessThan": "b6a94eeca9c6c8f7c55ad44c62c98324f51ec596",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "b7fd2c0340eacbee892425e9007647568b7f2a3c",
+              "lessThan": "6601e13e82841879406bf9f369032656f441a425",
+              "status": "affected",
+              "versionType": "git"
+            }
+          ]
+        },
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "affected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "security/apparmor/apparmorfs.c",
+            "security/apparmor/include/policy.h",
+            "security/apparmor/policy.c"
+          ],
+          "versions": [
+            {
+              "version": "4.11",
+              "status": "affected"
+            },
+            {
+              "version": "0",
+              "lessThan": "4.11",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.12.77",
+              "lessThanOrEqual": "6.12.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.18.18",
+              "lessThanOrEqual": "6.18.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.19.8",
+              "lessThanOrEqual": "6.19.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "7.0-rc4",
+              "lessThanOrEqual": "*",
+              "status": "unaffected",
+              "versionType": "original_commit_for_fix"
+            }
+          ]
+        }
+      ],
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-32266",
+      "publishedDate": "2026-03-18T03:46:00.150Z",
+      "lastModifiedDate": "2026-03-18T18:08:06.854Z",
+      "description": "The Google Cloud Storage for Craft CMS plugin provides a Google Cloud Storage integration for Craft CMS. In versions on the 2.x branch prior to 2.2.1, the `DefaultController->actionLoadBucketData()` endpoint allows unauthenticated users with a valid CSRF token to view a list of buckets that the plugin is allowed to see. Users should update to version 2.2.1 of the plugin to mitigate the issue.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/craftcms/google-cloud/security/advisories/GHSA-67cr-jmh8-4jpq",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/craftcms/google-cloud/commit/651bacaa5f5fd7813e4075e0747b1d706391fb2c",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "craftcms",
+          "product": "google-cloud",
+          "versions": [
+            {
+              "version": ">= 2.0.0-beta.1, < 2.2.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-26740",
+      "publishedDate": "2026-03-18T00:00:00.000Z",
+      "lastModifiedDate": "2026-03-18T17:53:19.684Z",
+      "description": "Buffer Overflow vulnerability in giflib v.5.2.2 allows a remote attacker to cause a denial of service via the EGifGCBToExtension overwriting an existing Graphic Control Extension block without validating its allocated size.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/zakkanijia/POC/blob/main/giflib/giftool/giflib_giftool_gce_len_heap_oobwrite_disclosure.md",
           "type": "reference"
         }
       ],
