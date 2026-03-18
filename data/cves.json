@@ -2,170 +2,47 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 4,
-    "last_updated": "2026-03-18T23:18:48.556774",
+    "total_count": 1,
+    "last_updated": "2026-03-18T23:48:48.821041",
     "severity_distribution": {
       "critical": 0,
-      "high": 1,
-      "medium": 0,
+      "high": 0,
+      "medium": 1,
       "low": 0,
-      "none": 3
+      "none": 0
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-32255",
-      "publishedDate": "2026-03-18T23:11:36.892Z",
-      "lastModifiedDate": "2026-03-18T23:11:36.892Z",
-      "description": "Kan is an open-source project management tool. In versions 0.5.4 and below, the /api/download/attatchment endpoint has no authentication and no URL validation. The Attachment Download endpoint accepts a user-supplied URL query parameter and passes it directly to fetch() server-side, and returns the full response body. An unauthenticated attacker can use this to make HTTP requests from the server to internal services, cloud metadata endpoints, or private network resources. This issue has been fixed in version 0.5.5. To workaround this issue, block or restrict access to /api/download/attatchment at the reverse proxy level (nginx, Cloudflare, etc.).",
-      "severity": 8.6,
+      "id": "CVE-2026-32743",
+      "publishedDate": "2026-03-18T23:26:51.255Z",
+      "lastModifiedDate": "2026-03-18T23:26:51.255Z",
+      "description": "PX4 is an open-source autopilot stack for drones and unmanned vehicles. Versions 1.17.0-rc2 and below are vulnerable to Stack-based Buffer Overflow through the MavlinkLogHandler, and are triggered via MAVLink log request. The LogEntry.filepath buffer is 60 bytes, but the sscanf function parses paths from the log list file with no width specifier, allowing a path longer than 60 characters to overflow the buffer. An attacker with MAVLink link access can trigger this by first creating deeply nested directories via MAVLink FTP, then requesting the log list. The flight controller MAVLink task crashes, losing telemetry and command capability and causing DoS. This issue has been fixed in this commit: https://github.com/PX4/PX4-Autopilot/commit/616b25a280e229c24d5cf12a03dbf248df89c474.",
+      "severity": 6.5,
       "references": [
         {
-          "url": "https://github.com/kanbn/kan/security/advisories/GHSA-qrx8-9hc6-jvqg",
+          "url": "https://github.com/PX4/PX4-Autopilot/security/advisories/GHSA-97c4-68r9-96p5",
           "type": "reference"
         },
         {
-          "url": "https://github.com/kanbn/kan/commit/53397d8e81dc1494d94132848c1f0416f1152bd7",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/kanbn/kan/releases/tag/v0.5.5",
+          "url": "https://github.com/PX4/PX4-Autopilot/commit/616b25a280e229c24d5cf12a03dbf248df89c474",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "kanbn",
-          "product": "kan",
+          "vendor": "PX4",
+          "product": "PX4-Autopilot",
           "versions": [
             {
-              "version": "< 0.5.5",
+              "version": "<= 1.17.0-rc2",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-918: Server-Side Request Forgery (SSRF)"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-31973",
-      "publishedDate": "2026-03-18T20:34:00.846Z",
-      "lastModifiedDate": "2026-03-18T23:08:20.721Z",
-      "description": "SAMtools is a program for reading, manipulating and writing bioinformatics file formats. Starting in version 1.17, in the cram-size command, used to write information about how well CRAM files are compressed, a check to see if the `cram_decode_compression_header()` was missing. If the function returned an error, this could lead to a NULL pointer dereference. Exploiting this bug causes a NULL pointer dereference. Typically this will cause the program to crash. Versions 1.23.1, 1.22.2 and 1.21.1 include fixes for this issue. There is no workaround for this issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/samtools/samtools/security/advisories/GHSA-x86f-q6fj-cm43",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/samtools/samtools/commit/06fc2a219b3d7c94d3f412c09f6d1efd51199f2f",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "samtools",
-          "product": "samtools",
-          "versions": [
-            {
-              "version": ">= 1.17, < 1.21.1",
-              "status": "affected"
-            },
-            {
-              "version": ">= 1.22, < 1.22.2",
-              "status": "affected"
-            },
-            {
-              "version": "= 1.23",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-476: NULL Pointer Dereference"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-31972",
-      "publishedDate": "2026-03-18T20:32:29.862Z",
-      "lastModifiedDate": "2026-03-18T23:08:19.727Z",
-      "description": "SAMtools is a program for reading, manipulating and writing bioinformatics file formats. The `mpileup` command outputs DNA sequences that have been aligned against a known reference. On each output line it writes the reference position, optionally the reference DNA base at that position (obtained from a separate file) and all of the DNA bases that aligned to that position. As the output is ordered by position, reference data that is no longer needed is discarded once it has been printed out. Under certain conditions the data could be discarded too early, leading to an attempt to read from a pointer to freed memory. This bug may allow information about program state to be leaked. It may also cause a program crash through an attempt to access invalid memory. This bug is fixed in versions 1.21.1 and 1.22. There is no workaround for this issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/samtools/samtools/security/advisories/GHSA-72c8-4jf3-f27p",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/samtools/samtools/commit/3036eb9af945fcef359427a2d359855553da4adf",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "samtools",
-          "product": "samtools",
-          "versions": [
-            {
-              "version": "< 1.21.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-416: Use After Free"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-31970",
-      "publishedDate": "2026-03-18T19:53:18.719Z",
-      "lastModifiedDate": "2026-03-18T23:08:18.668Z",
-      "description": "HTSlib is a library for reading and writing bioinformatics file formats. GZI files are used to index block-compressed GZIP [BGZF] files.  In the GZI loading function, `bgzf_index_load_hfile()`, it was possible to trigger an integer overflow, leading to an under- or zero-sized buffer being allocated to store the index.  Sixteen zero bytes would then be written to this buffer, and, depending on the result of the overflow the rest of the file may also be loaded into the buffer as well.  If the function did attempt to load the data, it would eventually fail due to not reading the expected number of records, and then try to free the overflowed heap buffer. Exploiting this bug causes a heap buffer overflow. If a user opens a file crafted to exploit this issue, it could lead to the program crashing, or overwriting of data and heap structures in ways not expected by the program.  It may be possible to use this to obtain arbitrary code execution. Versions 1.23.1, 1.22.2 and 1.21.1 include fixes for this issue. The easiest work-around is to discard any `.gzi` index files from untrusted sources, and use the `bgzip -r` option to recreate them.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/samtools/htslib/security/advisories/GHSA-p345-84hx-fq6q",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/samtools/htslib/commit/6dd0d7d0e9e7e2e173a28969e624db8bc8bb5828",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "samtools",
-          "product": "htslib",
-          "versions": [
-            {
-              "version": "< 1.21.1",
-              "status": "affected"
-            },
-            {
-              "version": ">= 1.22, < 1.22.2",
-              "status": "affected"
-            },
-            {
-              "version": "= 1.23",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-122: Heap-based Buffer Overflow",
-        "CWE-131: Incorrect Calculation of Buffer Size",
-        "CWE-190: Integer Overflow or Wraparound",
-        "CWE-787: Out-of-bounds Write",
-        "CWE-1284: Improper Validation of Specified Quantity in Input"
+        "CWE-121: Stack-based Buffer Overflow"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
