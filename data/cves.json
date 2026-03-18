@@ -3,7 +3,7 @@
   "dataVersion": "5.1",
   "cveMetadata": {
     "total_count": 3,
-    "last_updated": "2026-03-18T22:01:53.615946",
+    "last_updated": "2026-03-18T22:47:15.386747",
     "severity_distribution": {
       "critical": 0,
       "high": 0,
@@ -14,125 +14,79 @@
   },
   "cves": [
     {
-      "id": "CVE-2026-33163",
-      "publishedDate": "2026-03-18T21:58:04.293Z",
-      "lastModifiedDate": "2026-03-18T21:58:04.293Z",
-      "description": "Parse Server is an open source backend that can be deployed to any infrastructure that can run Node.js. Prior to 9.6.0-alpha.35 and 8.6.50, when a `Parse.Cloud.afterLiveQueryEvent` trigger is registered for a class, the LiveQuery server leaks protected fields and `authData` to all subscribers of that class. Fields configured as protected via Class-Level Permissions (`protectedFields`) are included in LiveQuery event payloads for all event types (create, update, delete, enter, leave). Any user with sufficient CLP permissions to subscribe to the affected class can receive protected field data of other users, including sensitive personal information and OAuth tokens from third-party authentication providers. The vulnerability was caused by a reference detachment bug. When an `afterEvent` trigger is registered, the LiveQuery server converts the event object to a `Parse.Object` for the trigger, then creates a new JSON copy via `toJSONwithObjects()`. The sensitive data filter was applied to the `Parse.Object` reference, but the unfiltered JSON copy was sent to clients. The fix in versions 9.6.0-alpha.35 and 8.6.50 ensures that the JSON copy is assigned back to the response object before filtering, so the filter operates on the actual data sent to clients. As a workaround, remove all `Parse.Cloud.afterLiveQueryEvent` trigger registrations. Without an `afterEvent` trigger, the reference detachment does not occur and protected fields are correctly filtered.",
+      "id": "CVE-2026-3181",
+      "publishedDate": "2026-03-18T22:47:13.937869+00:00",
+      "lastModifiedDate": "2026-03-18T22:19:02.698Z",
+      "description": "",
+      "severity": "N/A",
+      "references": [],
+      "affected": [],
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-32805",
+      "publishedDate": "2026-03-18T22:24:29.102Z",
+      "lastModifiedDate": "2026-03-18T22:24:29.102Z",
+      "description": "Romeo gives the capability to reach high code coverage of Go ≥1.20 apps by helping to measure code coverage for functional and integration tests within GitHub Actions. Prior to version 0.2.2, the `sanitizeArchivePath` function in `webserver/api/v1/decoder.go` (lines 80-88) is vulnerable to a path traversal bypass due to a missing trailing path separator in the `strings.HasPrefix` check. A crafted tar archive can write files outside the intended destination directory. Version 0.2.2 fixes the issue.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/parse-community/parse-server/security/advisories/GHSA-5hmj-jcgp-6hff",
+          "url": "https://github.com/ctfer-io/romeo/security/advisories/GHSA-p799-g7vv-f279",
           "type": "reference"
         },
         {
-          "url": "https://github.com/parse-community/parse-server/pull/10232",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/parse-community/parse-server/pull/10233",
+          "url": "https://github.com/ctfer-io/romeo/commit/c2ebcfb9f305fd5f6ef68858de82507dbac10263",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "parse-community",
-          "product": "parse-server",
+          "vendor": "ctfer-io",
+          "product": "romeo",
           "versions": [
             {
-              "version": ">= 9.0.0, < 9.6.0-alpha.35",
-              "status": "affected"
-            },
-            {
-              "version": "< 8.6.50",
+              "version": "< 0.2.2",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor"
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-33042",
-      "publishedDate": "2026-03-18T21:54:05.137Z",
-      "lastModifiedDate": "2026-03-18T21:54:05.137Z",
-      "description": "Parse Server is an open source backend that can be deployed to any infrastructure that can run Node.js. Prior to 9.6.0-alpha.29 and 8.6.49, a user can sign up without providing credentials by sending an empty `authData` object, bypassing the username and password requirement. This allows the creation of authenticated sessions without proper credentials, even when anonymous users are disabled. The fix in 9.6.0-alpha.29 and 8.6.49 ensures that empty or non-actionable `authData` is treated the same as absent `authData` for the purpose of credential validation on new user creation. Username and password are now required when no valid auth provider data is present. As a workaround, use a Cloud Code `beforeSave` trigger on the `_User` class to reject signups where `authData` is empty and no username/password is provided.",
+      "id": "CVE-2026-32737",
+      "publishedDate": "2026-03-18T22:23:09.952Z",
+      "lastModifiedDate": "2026-03-18T22:23:09.952Z",
+      "description": "Romeo gives the capability to reach high code coverage of Go ≥1.20 apps by helping to measure code coverage for functional and integration tests within GitHub Actions. Prior to version 0.2.1, due to a mis-written NetworkPolicy, a malicious actor can pivot from the \"hardened\" namespace to any Pod out of it. This breaks the security-by-default property expected as part of the deployment program, leading to a potential lateral movement. Removing the `inter-ns` NetworkPolicy patches the vulnerability in version 0.2.1. If updates are not possible in production environments, manually delete `inter-ns` and update as soon as possible. Given one's context, delete the failing network policy that should be prefixed by `inter-ns-` in the target namespace.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/parse-community/parse-server/security/advisories/GHSA-wjqw-r9x4-j59v",
+          "url": "https://github.com/ctfer-io/romeo/security/advisories/GHSA-fgm3-q9r5-43v9",
           "type": "reference"
         },
         {
-          "url": "https://github.com/parse-community/parse-server/pull/10219",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/parse-community/parse-server/pull/10220",
+          "url": "https://github.com/ctfer-io/romeo/commit/3bb5e9d9ce1199dfbb90fef8ad79ebdeb0bc5e78",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "parse-community",
-          "product": "parse-server",
+          "vendor": "ctfer-io",
+          "product": "romeo",
           "versions": [
             {
-              "version": ">= 9.0.0, < 9.6.0-alpha.29",
-              "status": "affected"
-            },
-            {
-              "version": "< 8.6.49",
+              "version": "< 0.2.1",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-287: Improper Authentication"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-32944",
-      "publishedDate": "2026-03-18T21:50:08.390Z",
-      "lastModifiedDate": "2026-03-18T21:50:08.390Z",
-      "description": "Parse Server is an open source backend that can be deployed to any infrastructure that can run Node.js. Prior to 9.6.0-alpha.21 and 8.6.45, an unauthenticated attacker can crash the Parse Server process by sending a single request with deeply nested query condition operators. This terminates the server and denies service to all connected clients. Starting in version 9.6.0-alpha.21 and 8.6.45, a depth limit for query condition operator nesting has been added via the `requestComplexity.queryDepth` server option. The option is disabled by default to avoid a breaking change. To mitigate, upgrade and set the option to a value appropriate for your app. No known workarounds are available.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/parse-community/parse-server/security/advisories/GHSA-9xp9-j92r-p88v",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/parse-community/parse-server/pull/10202",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/parse-community/parse-server/pull/10203",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "parse-community",
-          "product": "parse-server",
-          "versions": [
-            {
-              "version": ">= 9.0.0, < 9.6.0-alpha.21",
-              "status": "affected"
-            },
-            {
-              "version": "< 8.6.45",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-674: Uncontrolled Recursion"
+        "CWE-284: Improper Access Control"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
