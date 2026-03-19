@@ -2,231 +2,133 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 6,
-    "last_updated": "2026-03-19T23:17:06.393757",
+    "total_count": 3,
+    "last_updated": "2026-03-19T23:48:42.124212",
     "severity_distribution": {
       "critical": 0,
       "high": 0,
-      "medium": 5,
+      "medium": 0,
       "low": 1,
-      "none": 0
+      "none": 2
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-32818",
-      "publishedDate": "2026-03-19T23:00:40.299Z",
-      "lastModifiedDate": "2026-03-19T23:00:40.299Z",
-      "description": "Admidio is an open-source user management solution. In versions 5.0.0 through 5.0.6, the forum module in Admidio does not verify whether the current user has permission to delete forum topics or posts. Both the topic_delete and post_delete actions in forum.php only validate the CSRF token but perform no authorization check before calling delete(). Any authenticated user with forum access can delete any topic (with all its posts) or any individual post by providing its UUID. This is inconsistent with the save/edit operations, which properly check isAdministratorForum() and ownership before allowing modifications. Any logged-in user can permanently and irreversibly delete any forum topic (including all its posts) or any individual post by simply knowing its UUID (which is publicly visible in URLs), completely bypassing authorization checks. This issue has been fixed in version 5.0.7.",
-      "severity": 6.5,
+      "id": "CVE-2026-22735",
+      "publishedDate": "2026-03-19T23:37:35.587Z",
+      "lastModifiedDate": "2026-03-19T23:37:35.587Z",
+      "description": "Spring MVC and WebFlux applications are vulnerable to stream corruption when using Server-Sent Events (SSE). This issue affects Spring Foundation: from 7.0.0 through 7.0.5, from 6.2.0 through 6.2.16, from 6.1.0 through 6.1.25, from 5.3.0 through 5.3.46.",
+      "severity": 2.6,
       "references": [
         {
-          "url": "https://github.com/Admidio/admidio/security/advisories/GHSA-g375-5wmp-xr78",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/Admidio/admidio/releases/tag/v5.0.7",
+          "url": "https://spring.io/security/cve-2026-22735",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Admidio",
-          "product": "admidio",
+          "vendor": "Spring",
+          "product": "Spring Foundation",
           "versions": [
             {
-              "version": "< 5.0.7",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-862: Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-29106",
-      "publishedDate": "2026-03-19T23:02:19.944Z",
-      "lastModifiedDate": "2026-03-19T23:02:19.944Z",
-      "description": "SuiteCRM is an open-source, enterprise-ready Customer Relationship Management (CRM) software application. Prior to versions 7.15.1 and 8.9.3, the value of the return_id request parameter is copied into the value of an HTML tag attribute which is an event handler and is encapsulated in double quotation marks. Versions 7.15.1 and 8.9.3 patch the issue. Users should also use a Content Security Policy (CSP) header to completely mitigate XSS.",
-      "severity": 5.9,
-      "references": [
-        {
-          "url": "https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-7qrj-5hj6-7c2m",
-          "type": "reference"
-        },
-        {
-          "url": "https://docs.suitecrm.com/admin/releases/7.15.x",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "SuiteCRM",
-          "product": "SuiteCRM",
-          "versions": [
-            {
-              "version": "< 7.15.1",
-              "status": "affected"
+              "status": "affected",
+              "version": "7.0.0",
+              "lessThanOrEqual": "7.0.5",
+              "versionType": "custom"
             },
             {
-              "version": ">= 8.0.0, < 8.9.3",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
-        "CWE-80: Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)",
-        "CWE-116: Improper Encoding or Escaping of Output",
-        "CWE-159: Improper Handling of Invalid Use of Special Elements"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-32816",
-      "publishedDate": "2026-03-19T22:57:19.068Z",
-      "lastModifiedDate": "2026-03-19T22:57:19.068Z",
-      "description": "Admidio is an open-source user management solution. In versions 5.0.0 through 5.0.6, the delete, activate, and deactivate modes in modules/groups-roles/groups_roles.php perform destructive state changes on organizational roles but never validate an anti-CSRF token. The client-side UI passes a CSRF token to callUrlHideElement(), which includes it in the POST body, but the server-side handlers ignore $_POST[\"adm_csrf_token\"] entirely for these three modes. An attacker who can discover a role UUID (visible in the public cards view when the module is publicly accessible) can embed a forged POST form on any external page and trick any user with the rol_assign_roles right into deleting or toggling roles for the organization. Role deletion is permanent and cascades to all memberships, event associations, and rights data. If exploited, an attacker can trick any user with delegated role-assignment rights into permanently deleting roles, mass-revoking all associated memberships and access to events, documents, and mailing lists, or silently activating or deactivating entire groups, with target role UUIDs trivially harvested from the unauthenticated public cards view and no undo path short of a database restore. This issue has been fixed in version 5.0.7.",
-      "severity": 5.7,
-      "references": [
-        {
-          "url": "https://github.com/Admidio/admidio/security/advisories/GHSA-wwg8-6ffr-h4q2",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/Admidio/admidio/releases/tag/v5.0.7",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Admidio",
-          "product": "admidio",
-          "versions": [
-            {
-              "version": ">= 5.0.0, < 5.0.7",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-352: Cross-Site Request Forgery (CSRF)"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-29105",
-      "publishedDate": "2026-03-19T22:58:48.879Z",
-      "lastModifiedDate": "2026-03-19T22:59:06.863Z",
-      "description": "SuiteCRM is an open-source, enterprise-ready Customer Relationship Management (CRM) software application. Prior to versions 7.15.1 and 8.9.3, SuiteCRM contains an unauthenticated open redirect vulnerability in the WebToLead capture functionality. A user-supplied POST parameter is used as a redirect destination without validation, allowing attackers to redirect victims to arbitrary external websites. This vulnerability allows attackers to abuse the trusted SuiteCRM domain for phishing and social engineering attacks by redirecting users to malicious external websites. Versions 7.15.1 and 8.9.3 patch the issue.",
-      "severity": 5.4,
-      "references": [
-        {
-          "url": "https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-9crg-83cg-wv74",
-          "type": "reference"
-        },
-        {
-          "url": "https://docs.suitecrm.com/admin/releases/7.15.x",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "SuiteCRM",
-          "product": "SuiteCRM",
-          "versions": [
-            {
-              "version": "< 7.15.1",
-              "status": "affected"
+              "status": "affected",
+              "version": "6.2.0",
+              "lessThanOrEqual": "6.2.16",
+              "versionType": "custom"
             },
             {
-              "version": ">= 8.0.0, < 8.9.3",
-              "status": "affected"
+              "status": "affected",
+              "version": "6.1.0",
+              "lessThanOrEqual": "6.1.25",
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "5.3.0",
+              "lessThanOrEqual": "5.3.46",
+              "versionType": "custom"
             }
-          ]
+          ],
+          "defaultStatus": "unaffected"
         }
       ],
-      "problemType": [
-        "CWE-601: URL Redirection to Untrusted Site ('Open Redirect')"
-      ],
+      "problemType": [],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-29107",
-      "publishedDate": "2026-03-19T23:04:12.017Z",
-      "lastModifiedDate": "2026-03-19T23:04:12.017Z",
-      "description": "SuiteCRM is an open-source, enterprise-ready Customer Relationship Management (CRM) software application. Prior to versions 7.15.1 and 8.9.3, it is possible to create PDF templates with `<img>` tags. When a PDF is exported using this template, the content (for example, `<img src=http://{burp_collaborator_url}>` is rendered server side, and thus a request is issued from the server, resulting in Server-Side Request Forgery. Versions 7.15.1 and 8.9.3 patch the issue.",
-      "severity": 5,
+      "id": "CVE-2026-32760",
+      "publishedDate": "2026-03-19T23:39:54.116Z",
+      "lastModifiedDate": "2026-03-19T23:39:54.116Z",
+      "description": "File Browser is a file managing interface for uploading, deleting, previewing, renaming, and editing files within a specified directory. In versions 2.61.2 and below, any unauthenticated visitor can register a full administrator account when self-registration (signup = true) is enabled and the default user permissions have perm.admin = true. The signup handler blindly applies all default settings (including Perm.Admin) to the new user without any server-side guard that strips admin from self-registered accounts. The signupHandler is supposed to create unprivileged accounts for new visitors. It contains no explicit user.Perm.Admin = false reset after applying defaults. If an administrator (intentionally or accidentally) configures defaults.perm.admin = true and also enables signup, every account created via the public registration endpoint is an administrator with full control over all files, users, and server settings. This issue has been resolved in version 2.62.0.",
+      "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-g7cv-4ghj-x98h",
+          "url": "https://github.com/filebrowser/filebrowser/security/advisories/GHSA-5gg9-5g7w-hm73",
           "type": "reference"
         },
         {
-          "url": "https://docs.suitecrm.com/admin/releases/7.15.x",
+          "url": "https://github.com/filebrowser/filebrowser/commit/a63573b67eb302167b4c4f218361a2d0c138deab",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/filebrowser/filebrowser/releases/tag/v2.62.0",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "SuiteCRM",
-          "product": "SuiteCRM",
+          "vendor": "filebrowser",
+          "product": "filebrowser",
           "versions": [
             {
-              "version": "< 7.15.1",
-              "status": "affected"
-            },
-            {
-              "version": ">= 8.0.0, < 8.9.3",
+              "version": "< 2.62.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-918: Server-Side Request Forgery (SSRF)"
+        "CWE-269: Improper Privilege Management",
+        "CWE-284: Improper Access Control"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-29104",
-      "publishedDate": "2026-03-19T22:55:51.535Z",
-      "lastModifiedDate": "2026-03-19T22:55:51.535Z",
-      "description": "SuiteCRM is an open-source, enterprise-ready Customer Relationship Management (CRM) software application. Prior to versions 7.15.1 and 8.9.3, SuiteCRM contains an authenticated arbitrary file upload vulnerability in the Configurator module. An authenticated administrator can bypass intended file type restrictions when uploading PDF font files, allowing arbitrary files with attacker‑controlled filenames to be written to the server. Although the upload directory is not directly web‑accessible by default, this behavior breaks security boundaries and may enable further attacks when combined with other vulnerabilities or in certain deployment configurations. Versions 7.15.1 and 8.9.3 patch the issue.",
-      "severity": 2.7,
+      "id": "CVE-2026-32759",
+      "publishedDate": "2026-03-19T23:31:51.340Z",
+      "lastModifiedDate": "2026-03-19T23:31:51.340Z",
+      "description": "File Browser is a file managing interface for uploading, deleting, previewing, renaming, and editing files within a specified directory. In versions 2.61.2 and below, the TUS resumable upload handler parses the Upload-Length header as a signed 64-bit integer without validating that the value is non-negative, allowing an authenticated user to supply a negative value that instantly satisfies the upload completion condition upon the first PATCH request. This causes the server to fire after_upload exec hooks with empty or partial files, enabling an attacker to repeatedly trigger any configured hook with arbitrary filenames and zero bytes written. The impact ranges from DoS through expensive processing hooks, to command injection amplification when combined with malicious filenames, to abuse of upload-driven workflows like S3 ingestion or database inserts. Even without exec hooks enabled, the negative Upload-Length creates inconsistent cache entries where files are marked complete but contain no data. All deployments using the TUS upload endpoint (/api/tus) are affected, with the enableExec flag escalating the impact from cache inconsistency to remote command execution. At the time of publication, no patch or mitigation was available to address this issue.",
+      "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/SuiteCRM/SuiteCRM/security/advisories/GHSA-5hx9-cmmx-26p3",
+          "url": "https://github.com/filebrowser/filebrowser/security/advisories/GHSA-ffx7-75gc-jg7c",
           "type": "reference"
         },
         {
-          "url": "https://docs.suitecrm.com/admin/releases/7.15.x",
+          "url": "https://github.com/filebrowser/filebrowser/issues/5199",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "SuiteCRM",
-          "product": "SuiteCRM",
+          "vendor": "filebrowser",
+          "product": "filebrowser",
           "versions": [
             {
-              "version": "< 7.15.1",
-              "status": "affected"
-            },
-            {
-              "version": ">= 8.0.0, < 8.9.3",
+              "version": "<= 2.61.2",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-434: Unrestricted Upload of File with Dangerous Type"
+        "CWE-190: Integer Overflow or Wraparound"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
