@@ -2,325 +2,154 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 7,
-    "last_updated": "2026-03-20T08:54:34.104690",
+    "total_count": 4,
+    "last_updated": "2026-03-20T09:50:00.115261",
     "severity_distribution": {
       "critical": 0,
-      "high": 1,
-      "medium": 4,
-      "low": 1,
-      "none": 1
+      "high": 4,
+      "medium": 0,
+      "low": 0,
+      "none": 0
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-33072",
-      "publishedDate": "2026-03-20T08:31:08.452Z",
-      "lastModifiedDate": "2026-03-20T08:31:08.452Z",
-      "description": "FileRise is a self-hosted web file manager / WebDAV server. In versions prior to 3.9.0, a hardcoded default encryption key (default_please_change_this_key) is used for all cryptographic operations — HMAC token generation, AES config encryption, and session tokens — allowing any unauthenticated attacker to forge upload tokens for arbitrary file upload to shared folders, and to decrypt admin configuration secrets including OIDC client secrets and SMTP passwords. FileRise uses a single key (PERSISTENT_TOKENS_KEY) for all crypto operations. The default value default_please_change_this_key is hardcoded in two places and used unless the deployer explicitly overrides the environment variable. This issue is fixed in version 3.9.0.",
-      "severity": 8.2,
+      "id": "CVE-2026-22324",
+      "publishedDate": "2026-03-20T09:36:37.854Z",
+      "lastModifiedDate": "2026-03-20T09:36:37.854Z",
+      "description": "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion') vulnerability in ThemeREX Melania allows PHP Local File Inclusion.This issue affects Melania: from n/a through 2.5.0.",
+      "severity": 8.1,
       "references": [
         {
-          "url": "https://github.com/error311/FileRise/security/advisories/GHSA-f4xx-57cv-mg3x",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/error311/FileRise/releases/tag/v3.9.0",
+          "url": "https://patchstack.com/database/wordpress/theme/melania/vulnerability/wordpress-melania-theme-2-5-0-local-file-inclusion-vulnerability?_s_id=cve",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "error311",
-          "product": "FileRise",
+          "vendor": "ThemeREX",
+          "product": "Melania",
           "versions": [
             {
-              "version": "< 3.9.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-798: Use of Hard-coded Credentials",
-        "CWE-1188: Insecure Default Initialization of Resource"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-2421",
-      "publishedDate": "2026-03-20T08:25:57.708Z",
-      "lastModifiedDate": "2026-03-20T08:25:57.708Z",
-      "description": "The ilGhera Carta Docente for WooCommerce plugin for WordPress is vulnerable to Path Traversal in all versions up to, and including, 1.5.0 via the 'cert' parameter of the 'wccd-delete-certificate' AJAX action. This is due to insufficient file path validation before performing a file deletion. This makes it possible for authenticated attackers, with Administrator-level access and above, to delete arbitrary files on the server, such as wp-config.php, which can make site takeover and remote code execution possible.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/7aab1307-7fb5-46fb-ae12-087dce3086fc?source=cve",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/wc-carta-docente/trunk/includes/class-wccd-admin.php#L88",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/wc-carta-docente/tags/1.4.7/includes/class-wccd-admin.php#L88",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/wc-carta-docente/tags/1.5.1/includes/class-wccd-admin.php#L80",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "ghera74",
-          "product": "ilGhera Carta Docente for WooCommerce",
-          "versions": [
-            {
-              "version": "*",
               "status": "affected",
-              "lessThanOrEqual": "1.5.0",
-              "versionType": "semver"
+              "version": "n/a",
+              "lessThanOrEqual": "2.5.0",
+              "versionType": "custom"
             }
           ],
           "defaultStatus": "unaffected"
         }
       ],
       "problemType": [
-        "CWE-22 Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+        "CWE-98 Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-3550",
-      "publishedDate": "2026-03-20T08:25:58.364Z",
-      "lastModifiedDate": "2026-03-20T08:25:58.364Z",
-      "description": "The RockPress plugin for WordPress is vulnerable to Missing Authorization in all versions up to, and including, 1.0.17. This is due to missing capability checks on multiple AJAX actions (rockpress_import, rockpress_import_status, rockpress_last_import, rockpress_reset_import, and rockpress_check_services) combined with the plugin's nonce being exposed to all authenticated users via an unconditionally enqueued admin script. The plugin enqueues the 'rockpress-admin' script on all admin pages (including profile.php) without any page or capability restrictions, and the nonce for the 'rockpress-nonce' action is passed to this script via wp_localize_script. Since the AJAX handlers only verify this nonce and do not check current_user_can(), any authenticated user, including Subscribers, can extract the nonce from any admin page's HTML source and use it to trigger imports, reset import data (deleting options), check service connectivity, and read import status information. This makes it possible for authenticated attackers, with Subscriber-level access and above, to trigger resource-intensive import operations, reset import tracking data, and perform system connection checks that should be restricted to administrators.",
-      "severity": 5.3,
+      "id": "CVE-2026-33128",
+      "publishedDate": "2026-03-20T09:37:07.206Z",
+      "lastModifiedDate": "2026-03-20T09:37:07.206Z",
+      "description": "H3 is a minimal H(TTP) framework. In versions prior to 1.15.6 and between 2.0.0 through 2.0.1-rc.14, createEventStream is vulnerable to Server-Sent Events (SSE) injection due to missing newline sanitization in formatEventStreamMessage() and formatEventStreamComment(). An attacker who controls any part of an SSE message field (id, event, data, or comment) can inject arbitrary SSE events to connected clients. This issue is fixed in versions 1.15.6 and 2.0.1-rc.15.",
+      "severity": 7.5,
       "references": [
         {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/d5031631-9f12-47d3-997d-4418d348ab40?source=cve",
+          "url": "https://github.com/h3js/h3/security/advisories/GHSA-22cc-p3c6-wpvm",
           "type": "reference"
         },
         {
-          "url": "https://plugins.trac.wordpress.org/browser/ft-rockpress/trunk/includes/class-rockpress-import.php#L206",
+          "url": "https://github.com/h3js/h3/commit/7791538e15ca22437307c06b78fa155bb73632a6",
           "type": "reference"
         },
         {
-          "url": "https://plugins.trac.wordpress.org/browser/ft-rockpress/tags/1.0.17/includes/class-rockpress-import.php#L206",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/ft-rockpress/trunk/includes/class-rockpress-import.php#L125",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/ft-rockpress/tags/1.0.17/includes/class-rockpress-import.php#L125",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/ft-rockpress/trunk/includes/class-rockpress-import.php#L145",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/ft-rockpress/tags/1.0.17/includes/class-rockpress-import.php#L145",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/ft-rockpress/trunk/includes/class-rockpress-import.php#L184",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/ft-rockpress/tags/1.0.17/includes/class-rockpress-import.php#L184",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/ft-rockpress/trunk/includes/admin/admin-ajax.php#L33",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/ft-rockpress/tags/1.0.17/includes/admin/admin-ajax.php#L33",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/ft-rockpress/trunk/includes/admin/admin-scripts.php#L88",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/ft-rockpress/tags/1.0.17/includes/admin/admin-scripts.php#L88",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/ft-rockpress/trunk/includes/admin/admin-scripts.php#L50",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/ft-rockpress/tags/1.0.17/includes/admin/admin-scripts.php#L50",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=3477205%40ft-rockpress&new=3477205%40ft-rockpress&sfp_email=&sfph_mail=",
+          "url": "https://github.com/h3js/h3/blob/52c82e18bb643d124b8b9ec3b1f62b081f044611/src/utils/internal/event-stream.ts#L170-L187",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "firetree",
-          "product": "RockPress",
+          "vendor": "h3js",
+          "product": "h3",
           "versions": [
             {
-              "version": "*",
+              "version": ">= 2.0.0, < 2.0.1-rc.15",
+              "status": "affected"
+            },
+            {
+              "version": "< 1.15.6",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-93: Improper Neutralization of CRLF Sequences ('CRLF Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-0677",
+      "publishedDate": "2026-03-20T09:31:42.957Z",
+      "lastModifiedDate": "2026-03-20T09:31:42.957Z",
+      "description": "Deserialization of Untrusted Data vulnerability in TotalSuite TotalContest Lite allows Object Injection.This issue affects TotalContest Lite: from n/a through 2.9.1.",
+      "severity": 7.2,
+      "references": [
+        {
+          "url": "https://patchstack.com/database/wordpress/plugin/totalcontest-lite/vulnerability/wordpress-totalcontest-lite-plugin-2-9-1-php-object-injection-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "TotalSuite",
+          "product": "TotalContest Lite",
+          "collectionURL": "https://wordpress.org/plugins",
+          "packageName": "totalcontest-lite",
+          "versions": [
+            {
               "status": "affected",
-              "lessThanOrEqual": "1.0.17",
-              "versionType": "semver"
+              "version": "n/a",
+              "lessThanOrEqual": "2.9.1",
+              "versionType": "custom"
             }
           ],
           "defaultStatus": "unaffected"
         }
       ],
       "problemType": [
-        "CWE-862 Missing Authorization"
+        "CWE-502 Deserialization of Untrusted Data"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-2432",
-      "publishedDate": "2026-03-20T08:25:58.769Z",
-      "lastModifiedDate": "2026-03-20T08:25:58.769Z",
-      "description": "The CM Custom Reports – Flexible reporting to track what matters most plugin for WordPress is vulnerable to Stored Cross-Site Scripting via admin settings in all versions up to, and including, 1.2.7 due to insufficient input sanitization and output escaping. This makes it possible for authenticated attackers, with administrator-level permissions and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page. This only affects multi-site installations and installations where unfiltered_html has been disabled.",
-      "severity": 4.4,
+      "id": "CVE-2026-33125",
+      "publishedDate": "2026-03-20T09:22:39.139Z",
+      "lastModifiedDate": "2026-03-20T09:22:39.139Z",
+      "description": "Frigate is a network video recorder (NVR) with realtime local object detection for IP cameras. In versions 0.16.2 and below, users with the viewer role can delete admin and low-privileged user accounts. Exploitation can lead to DoS and affect data integrity. This issue has been patched in version 0.16.3.",
+      "severity": 7.1,
       "references": [
         {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/e642b5e1-62c1-4aa9-b579-6b2338227dd5?source=cve",
+          "url": "https://github.com/blakeblackshear/frigate/security/advisories/GHSA-vg28-83rp-8xx4",
           "type": "reference"
         },
         {
-          "url": "https://plugins.trac.wordpress.org/browser/cm-custom-reports/trunk/backend/classes/modules/GraphModule.php#L151",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/cm-custom-reports/tags/1.2.7/backend/classes/modules/GraphModule.php#L151",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=3464005%40cm-custom-reports&new=3464005%40cm-custom-reports&sfp_email=&sfph_mail=",
+          "url": "https://github.com/blakeblackshear/frigate/releases/tag/v0.16.3",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "creativemindssolutions",
-          "product": "CM Custom Reports – Flexible reporting to track what matters most",
+          "vendor": "blakeblackshear",
+          "product": "frigate",
           "versions": [
             {
-              "version": "*",
-              "status": "affected",
-              "lessThanOrEqual": "1.2.7",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-33071",
-      "publishedDate": "2026-03-20T08:27:37.149Z",
-      "lastModifiedDate": "2026-03-20T08:27:37.149Z",
-      "description": "FileRise is a self-hosted web file manager / WebDAV server. In versions prior to 3.8.0, the WebDAV upload endpoint accepts any file extension including .phtml, .php5, .htaccess, and other server-side executable types, bypassing the filename validation enforced by the regular upload path. In non-default deployments lacking Apache's LocationMatch protection, this leads to remote code execution. When files are uploaded via WebDAV, the createFile() method in FileRiseDirectory.php and the put() method in FileRiseFile.php accept the filename directly from the WebDAV client without any validation. In contrast, the regular upload endpoint in UploadModel::upload() validates filenames against REGEX_FILE_NAME. This issue is fixed in version 3.8.0.",
-      "severity": 4.3,
-      "references": [
-        {
-          "url": "https://github.com/error311/FileRise/security/advisories/GHSA-46gv-gf5f-wvr2",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/error311/FileRise/releases/tag/v3.8.0",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "error311",
-          "product": "FileRise",
-          "versions": [
-            {
-              "version": "< 3.8.0",
+              "version": "< 0.16.3",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-434: Unrestricted Upload of File with Dangerous Type",
-        "CWE-552: Files or Directories Accessible to External Parties"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-33070",
-      "publishedDate": "2026-03-20T08:25:07.081Z",
-      "lastModifiedDate": "2026-03-20T08:25:07.081Z",
-      "description": "FileRise is a self-hosted web file manager / WebDAV server. In versions prior to 3.8.0, a missing-authentication vulnerability in the deleteShareLink endpoint allows any unauthenticated user to delete arbitrary file share links by providing only the share token, causing denial of service to shared file access. The POST /api/file/deleteShareLink.php endpoint calls FileController::deleteShareLink() which performs no authentication, authorization, or CSRF validation before deleting a share link. Any anonymous HTTP client can destroy share links. This issue is fixed in version 3.8.0.",
-      "severity": 3.7,
-      "references": [
-        {
-          "url": "https://github.com/error311/FileRise/security/advisories/GHSA-vh5m-w36c-99xv",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/error311/FileRise/releases/tag/v3.8.0",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "error311",
-          "product": "FileRise",
-          "versions": [
-            {
-              "version": "< 3.8.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-306: Missing Authentication for Critical Function"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-33075",
-      "publishedDate": "2026-03-20T08:37:16.169Z",
-      "lastModifiedDate": "2026-03-20T08:37:16.169Z",
-      "description": "FastGPT is an AI Agent building platform. In versions 4.14.8.3 and below, the fastgpt-preview-image.yml workflow is vulnerable to arbitrary code execution and secret exfiltration by any external contributor. It uses pull_request_target (which runs with access to repository secrets) but checks out code from the pull request author's fork, then builds and pushes Docker images using attacker-controlled Dockerfiles. This also enables a supply chain attack via the production container registry. A patch was not available at the time of publication.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/labring/FastGPT/security/advisories/GHSA-xfx8-w35j-485c",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "labring",
-          "product": "FastGPT",
-          "versions": [
-            {
-              "version": "<= 4.14.8.3",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-494: Download of Code Without Integrity Check",
-        "CWE-829: Inclusion of Functionality from Untrusted Control Sphere"
+        "CWE-285: Improper Authorization"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
