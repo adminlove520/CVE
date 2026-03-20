@@ -2,133 +2,217 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 3,
-    "last_updated": "2026-03-19T23:48:42.124212",
+    "total_count": 5,
+    "last_updated": "2026-03-20T01:06:29.738922",
     "severity_distribution": {
-      "critical": 0,
+      "critical": 1,
       "high": 0,
       "medium": 0,
-      "low": 1,
-      "none": 2
+      "low": 0,
+      "none": 4
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-22735",
-      "publishedDate": "2026-03-19T23:37:35.587Z",
-      "lastModifiedDate": "2026-03-19T23:37:35.587Z",
-      "description": "Spring MVC and WebFlux applications are vulnerable to stream corruption when using Server-Sent Events (SSE). This issue affects Spring Foundation: from 7.0.0 through 7.0.5, from 6.2.0 through 6.2.16, from 6.1.0 through 6.1.25, from 5.3.0 through 5.3.46.",
-      "severity": 2.6,
+      "id": "CVE-2026-32767",
+      "publishedDate": "2026-03-20T00:13:31.384Z",
+      "lastModifiedDate": "2026-03-20T00:13:31.384Z",
+      "description": "SiYuan is a personal knowledge management system. Versions 3.6.0 and below contain an authorization bypass vulnerability in the /api/search/fullTextSearchBlock endpoint. When the method parameter is set to 2, the endpoint passes user-supplied input directly as a raw SQL statement to the underlying SQLite database without any authorization or read-only checks. This allows any authenticated user — including those with the Reader role — to execute arbitrary SQL statements (SELECT, DELETE, UPDATE, DROP TABLE, etc.) against the application's database. This is inconsistent with the application's own security model: the dedicated SQL endpoint (/api/query/sql) correctly requires both CheckAdminRole and CheckReadonly middleware, but the search endpoint bypasses these controls entirely. This issue has been fixed in version 3.6.1.",
+      "severity": 9.8,
       "references": [
         {
-          "url": "https://spring.io/security/cve-2026-22735",
+          "url": "https://github.com/siyuan-note/siyuan/security/advisories/GHSA-j7wh-x834-p3r7",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/siyuan-note/siyuan/issues/17209",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/siyuan-note/siyuan/commit/d5e2d0bce0dffef5f61bd8066954bc2d41181fc5",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/siyuan-note/siyuan/releases/tag/v3.6.1",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Spring",
-          "product": "Spring Foundation",
+          "vendor": "siyuan-note",
+          "product": "siyuan",
           "versions": [
             {
-              "status": "affected",
-              "version": "7.0.0",
-              "lessThanOrEqual": "7.0.5",
-              "versionType": "custom"
-            },
-            {
-              "status": "affected",
-              "version": "6.2.0",
-              "lessThanOrEqual": "6.2.16",
-              "versionType": "custom"
-            },
-            {
-              "status": "affected",
-              "version": "6.1.0",
-              "lessThanOrEqual": "6.1.25",
-              "versionType": "custom"
-            },
-            {
-              "status": "affected",
-              "version": "5.3.0",
-              "lessThanOrEqual": "5.3.46",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-32760",
-      "publishedDate": "2026-03-19T23:39:54.116Z",
-      "lastModifiedDate": "2026-03-19T23:39:54.116Z",
-      "description": "File Browser is a file managing interface for uploading, deleting, previewing, renaming, and editing files within a specified directory. In versions 2.61.2 and below, any unauthenticated visitor can register a full administrator account when self-registration (signup = true) is enabled and the default user permissions have perm.admin = true. The signup handler blindly applies all default settings (including Perm.Admin) to the new user without any server-side guard that strips admin from self-registered accounts. The signupHandler is supposed to create unprivileged accounts for new visitors. It contains no explicit user.Perm.Admin = false reset after applying defaults. If an administrator (intentionally or accidentally) configures defaults.perm.admin = true and also enables signup, every account created via the public registration endpoint is an administrator with full control over all files, users, and server settings. This issue has been resolved in version 2.62.0.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/filebrowser/filebrowser/security/advisories/GHSA-5gg9-5g7w-hm73",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/filebrowser/filebrowser/commit/a63573b67eb302167b4c4f218361a2d0c138deab",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/filebrowser/filebrowser/releases/tag/v2.62.0",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "filebrowser",
-          "product": "filebrowser",
-          "versions": [
-            {
-              "version": "< 2.62.0",
+              "version": "< 3.6.1",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-269: Improper Privilege Management",
+        "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')",
+        "CWE-863: Incorrect Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-32829",
+      "publishedDate": "2026-03-20T00:49:12.893Z",
+      "lastModifiedDate": "2026-03-20T00:49:12.893Z",
+      "description": "lz4_flex is a pure Rust implementation of LZ4 compression/decompression. In versions 0.11.5 and below, and 0.12.0,  decompressing invalid LZ4 data can leak sensitive information from uninitialized memory or from previous decompression operations. The library fails to properly validate offset values during LZ4 \"match copy operations,\" allowing out-of-bounds reads from the output buffer. The block-based API functions (`decompress_into`, `decompress_into_with_dict`, and others when `safe-decode` is disabled) are affected, while all frame APIs are unaffected. The impact is potential exposure of sensitive data and secrets through crafted or malformed LZ4 input. This issue has been fixed in versions 0.11.6 and 0.12.1.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/PSeitz/lz4_flex/security/advisories/GHSA-vvp9-7p8x-rfvv",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/PSeitz/lz4_flex/commit/055502ee5d297ecd6bf448ac91c055c7f6df9b6d",
+          "type": "reference"
+        },
+        {
+          "url": "https://rustsec.org/advisories/RUSTSEC-2026-0041.html",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "PSeitz",
+          "product": "lz4_flex",
+          "versions": [
+            {
+              "version": "< 0.11.6",
+              "status": "affected"
+            },
+            {
+              "version": ">= 0.12.0, < 0.12.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-201: Insertion of Sensitive Information Into Sent Data",
+        "CWE-823: Use of Out-of-range Pointer Offset"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-32828",
+      "publishedDate": "2026-03-20T00:39:25.548Z",
+      "lastModifiedDate": "2026-03-20T00:39:25.548Z",
+      "description": "Kargo manages and automates the promotion of software artifacts. In versions 1.4.0 through 1.6.3, 1.7.0-rc.1 through 1.7.8, 1.8.0-rc.1 through 1.8.11, and 1.9.0-rc.1 through 1.9.4, the http and http-download promotion steps allow Server-Side Request Forgery (SSRF) against link-local addresses, most critically the cloud instance metadata endpoint (169.254.169.254), enabling exfiltration of sensitive data such as IAM credentials. These steps provide full control over request headers and methods, rendering cloud provider header-based SSRF mitigations ineffective. An authenticated attacker with permissions to create/update Stages or craft Promotion resources can exploit this by submitting a malicious Promotion manifest, with response data retrievable via Promotion status fields, Git repositories, or a second http step. This issue has been fixed in versions 1.6.4, 1.7.9, 1.8.12 and 1.9.5.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/akuity/kargo/security/advisories/GHSA-j94x-8wcp-x7hm",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/akuity/kargo/commit/fd25620c2473ed19bec4be4d0f181287ef0f0391",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "akuity",
+          "product": "kargo",
+          "versions": [
+            {
+              "version": ">= 1.4.0, < 1.6.4",
+              "status": "affected"
+            },
+            {
+              "version": ">= 1.7.0-rc.1, < 1.7.9",
+              "status": "affected"
+            },
+            {
+              "version": ">= 1.8.0-rc.1, < 1.8.12",
+              "status": "affected"
+            },
+            {
+              "version": ">= 1.9.0-rc.1, < 1.9.5",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-918: Server-Side Request Forgery (SSRF)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-32771",
+      "publishedDate": "2026-03-20T00:29:23.804Z",
+      "lastModifiedDate": "2026-03-20T00:29:23.804Z",
+      "description": "The CTFer.io Monitoring component is in charge of the collection, process and storage of various signals (i.e. logs, metrics and distributed traces). In versions prior to 0.2.2, the sanitizeArchivePath function in pkg/extract/extract.go (lines 248–254) is vulnerable to Path Traversal due to a missing trailing path separator in the strings.HasPrefix check. The extractor allows arbitrary file writes (e.g., overwriting shell configs, SSH keys, kubeconfig, or crontabs), enabling RCE and persistent backdoors. The attack surface is further amplified by the default ReadWriteMany PVC access mode, which lets any pod in the cluster inject a malicious payload. This issue has been fixed in version 0.2.2.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/ctfer-io/monitoring/security/advisories/GHSA-f7cq-gvh6-qr25",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/ctfer-io/monitoring/commit/269dba165aa42210352628c0db6756f3b8fd3c8a",
+          "type": "reference"
+        },
+        {
+          "url": "https://security.snyk.io/research/zip-slip-vulnerability#expandable-socPI9fFAJ-title",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "ctfer-io",
+          "product": "monitoring",
+          "versions": [
+            {
+              "version": "< 0.2.2",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-32769",
+      "publishedDate": "2026-03-20T00:18:55.991Z",
+      "lastModifiedDate": "2026-03-20T00:18:55.991Z",
+      "description": "Fullchain is an umbrella project for deploying a ready-to-use CTF platform. In versions prior to  0.1.1, due to a mis-written NetworkPolicy, a malicious actor can pivot from a subverted application to any Pod out of the origin namespace. The flawed inter-ns NetworkPolicy breaks the security-by-default property expected as part of the deployment program, leading to a potential lateral movement. This issue has been fixed in version 0.1.1. To workaround, delete the failing network policy that should be prefixed by inter-ns- in the target namespace.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/ctfer-io/fullchain/security/advisories/GHSA-hxm7-9q36-c77f",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/ctfer-io/fullchain/commit/dbcb90178bcb07a3f5a1efa4c6350f3a6ce34f51",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/ctfer-io/fullchain/releases/tag/v0.1.1",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "ctfer-io",
+          "product": "fullchain",
+          "versions": [
+            {
+              "version": "< 0.1.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
         "CWE-284: Improper Access Control"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-32759",
-      "publishedDate": "2026-03-19T23:31:51.340Z",
-      "lastModifiedDate": "2026-03-19T23:31:51.340Z",
-      "description": "File Browser is a file managing interface for uploading, deleting, previewing, renaming, and editing files within a specified directory. In versions 2.61.2 and below, the TUS resumable upload handler parses the Upload-Length header as a signed 64-bit integer without validating that the value is non-negative, allowing an authenticated user to supply a negative value that instantly satisfies the upload completion condition upon the first PATCH request. This causes the server to fire after_upload exec hooks with empty or partial files, enabling an attacker to repeatedly trigger any configured hook with arbitrary filenames and zero bytes written. The impact ranges from DoS through expensive processing hooks, to command injection amplification when combined with malicious filenames, to abuse of upload-driven workflows like S3 ingestion or database inserts. Even without exec hooks enabled, the negative Upload-Length creates inconsistent cache entries where files are marked complete but contain no data. All deployments using the TUS upload endpoint (/api/tus) are affected, with the enableExec flag escalating the impact from cache inconsistency to remote command execution. At the time of publication, no patch or mitigation was available to address this issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/filebrowser/filebrowser/security/advisories/GHSA-ffx7-75gc-jg7c",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/filebrowser/filebrowser/issues/5199",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "filebrowser",
-          "product": "filebrowser",
-          "versions": [
-            {
-              "version": "<= 2.61.2",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-190: Integer Overflow or Wraparound"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
