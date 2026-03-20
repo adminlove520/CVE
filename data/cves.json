@@ -2,91 +2,160 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 2,
-    "last_updated": "2026-03-20T19:26:57.764355",
+    "total_count": 4,
+    "last_updated": "2026-03-20T19:58:29.138334",
     "severity_distribution": {
-      "critical": 0,
-      "high": 1,
+      "critical": 1,
+      "high": 0,
       "medium": 0,
       "low": 0,
-      "none": 1
+      "none": 3
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-32318",
-      "publishedDate": "2026-03-20T18:27:22.410Z",
-      "lastModifiedDate": "2026-03-20T19:20:49.867Z",
-      "description": "Cryptomator for IOS offers multi-platform transparent client-side encryption for files in the cloud. Prior to version 2.8.3, an integrity check vulnerability allows an attacker tamper with the vault configuration file leading to a man-in-the-middle vulnerability in Hub key loading mechanism. Before this fix, the client trusted endpoints from the vault config without host authenticity checks, which could allow token exfiltration by mixing a legitimate auth endpoint with a malicious API endpoint. Impacted are users unlocking Hub-backed vaults with affected client versions in environments where an attacker can alter the vault.cryptomator file. This issue has been patched in version 2.8.3.",
-      "severity": 7.6,
+      "id": "CVE-2026-32940",
+      "publishedDate": "2026-03-20T03:33:43.069Z",
+      "lastModifiedDate": "2026-03-20T19:53:35.414Z",
+      "description": "SiYuan is a personal knowledge management system. In versions 3.6.0 and below, SanitizeSVG has an incomplete blocklist — it blocks data:text/html and data:image/svg+xml in href attributes but misses data:text/xml and data:application/xml, both of which can render SVG with JavaScript execution. The unauthenticated /api/icon/getDynamicIcon endpoint serves user-controlled input (via the content parameter) directly into SVG markup using fmt.Sprintf with no escaping, served as Content-Type: image/svg+xml. This creates a click-through XSS: a victim navigates to a crafted URL, sees an SVG with an injected link, and clicking it triggers JavaScript via the bypassed MIME types. The attack requires direct navigation to the endpoint or <object>/<embed> embedding, since <img> tag rendering in the frontend doesn't allow interactive links. This issue has been fixed in version 3.6.1.",
+      "severity": 9.3,
       "references": [
         {
-          "url": "https://github.com/cryptomator/ios/security/advisories/GHSA-g7fr-c82r-hm6j",
+          "url": "https://github.com/siyuan-note/siyuan/security/advisories/GHSA-4mx9-3c2h-hwhg",
           "type": "reference"
         },
         {
-          "url": "https://github.com/cryptomator/ios/pull/444",
+          "url": "https://github.com/siyuan-note/siyuan/commit/d01d561875d4f744e9f6232f1d4831e3642b8696",
           "type": "reference"
         },
         {
-          "url": "https://github.com/cryptomator/ios/commit/98c31280304af65c0932eb547d5fe4be2d16929c",
+          "url": "https://github.com/advisories/GHSA-6865-qjcf-286f",
           "type": "reference"
         },
         {
-          "url": "https://github.com/cryptomator/ios/releases/tag/2.8.3",
+          "url": "https://github.com/siyuan-note/siyuan/releases/tag/v3.6.1",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "cryptomator",
-          "product": "ios",
+          "vendor": "siyuan-note",
+          "product": "siyuan",
           "versions": [
             {
-              "version": "< 2.8.3",
+              "version": "< 3.6.1",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-346: Origin Validation Error",
-        "CWE-354: Improper Validation of Integrity Check Value",
-        "CWE-451: User Interface (UI) Misrepresentation of Critical Information",
-        "CWE-923: Improper Restriction of Communication Channel to Intended Endpoints"
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
+        "CWE-184: Incomplete List of Disallowed Inputs"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-33312",
-      "publishedDate": "2026-03-20T14:42:14.137Z",
-      "lastModifiedDate": "2026-03-20T19:24:20.400Z",
-      "description": "Vikunja is an open-source self-hosted task management platform. Starting in version 0.20.2 and prior to version 2.2.0, the `DELETE /api/v1/projects/:project/background` endpoint checks `CanRead` permission instead of `CanUpdate`, allowing any user with read-only access to a project to permanently delete its background image. Version 2.2.0 fixes the issue.",
+      "id": "CVE-2026-32949",
+      "publishedDate": "2026-03-20T04:08:43.142Z",
+      "lastModifiedDate": "2026-03-20T19:50:35.555Z",
+      "description": "SQLBot is an intelligent data query system based on a large language model and RAG. Versions prior to 1.7.0 contain a Server-Side Request Forgery (SSRF) vulnerability that allows an attacker to retrieve arbitrary system and application files from the server. An attacker can exploit the /api/v1/datasource/check endpoint by configuring a forged MySQL data source with a malicious parameter extraJdbc=\"local_infile=1\". When the SQLBot backend attempts to verify the connectivity of this data source, an attacker-controlled Rogue MySQL server issues a malicious LOAD DATA LOCAL INFILE command during the MySQL handshake. This forces the target server to read arbitrary files from its local filesystem (such as /etc/passwd or configuration files) and transmit the contents back to the attacker. This issue was fixed in version 1.7.0.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/go-vikunja/vikunja/security/advisories/GHSA-564f-wx8x-878h",
+          "url": "https://github.com/dataease/SQLBot/security/advisories/GHSA-wqj3-xcxf-j9m9",
           "type": "reference"
         },
         {
-          "url": "https://vikunja.io/changelog/vikunja-v2.2.0-was-released",
+          "url": "https://github.com/dataease/SQLBot/commit/ff98514827bad99b8fa4b39385adecc6e3d44355",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/dataease/SQLBot/releases/tag/v1.7.0",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "go-vikunja",
-          "product": "vikunja",
+          "vendor": "dataease",
+          "product": "SQLBot",
           "versions": [
             {
-              "version": ">= 0.20.2, < 2.2.0",
+              "version": "< 1.7.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-863: Incorrect Authorization"
+        "CWE-918: Server-Side Request Forgery (SSRF)",
+        "CWE-73: External Control of File Name or Path"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-63260",
+      "publishedDate": "2026-03-20T00:00:00.000Z",
+      "lastModifiedDate": "2026-03-20T19:53:21.306Z",
+      "description": "SyncFusion 30.1.37 is vulnerable to Cross Site Scripting (XSS) via the Document-Editor reply to comment field and Chat-UI Chat message.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "http://syncfusion.com",
+          "type": "reference"
+        },
+        {
+          "url": "https://pentest-tools.com/PTT-2025-023-Multiple-Stored-XSS.pdf",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "n/a",
+          "versions": [
+            {
+              "version": "n/a",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "n/a"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-30924",
+      "publishedDate": "2026-03-19T20:45:43.039Z",
+      "lastModifiedDate": "2026-03-20T19:46:41.711Z",
+      "description": "qui is a web interface for managing qBittorrent instances. Versions 1.14.1 and below use a permissive CORS policy that reflects arbitrary origins while also returning Access-Control-Allow-Credentials: true, effectively allowing any external webpage to make authenticated requests on behalf of a logged-in user. An attacker can exploit this by tricking a victim into loading a malicious webpage, which silently interacts with the application using the victim's session and potentially exfiltrating sensitive data such as API keys and account credentials, or even achieving full system compromise through the built-in External Programs manager. Exploitation requires that the victim access the application via a non-localhost hostname and load an attacker-controlled webpage, making highly targeted social-engineering attacks the most likely real-world scenario. This issue was not fixed at the time of publication.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/autobrr/qui/security/advisories/GHSA-h8vw-ph9r-xpch",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/autobrr/qui/commit/424f7a0de089dce881e8bbecd220163a78e0295f",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "autobrr",
+          "product": "qui",
+          "versions": [
+            {
+              "version": "<= 1.14.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-942: Permissive Cross-domain Policy with Untrusted Domains"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
