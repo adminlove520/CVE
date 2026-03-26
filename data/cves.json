@@ -2,470 +2,115 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 21,
-    "last_updated": "2026-03-26T19:44:17.656145",
+    "total_count": 28,
+    "last_updated": "2026-03-26T20:22:06.355890",
     "severity_distribution": {
       "critical": 0,
-      "high": 3,
-      "medium": 3,
-      "low": 1,
-      "none": 14
+      "high": 1,
+      "medium": 5,
+      "low": 2,
+      "none": 20
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-33631",
-      "publishedDate": "2026-03-26T19:30:30.379Z",
-      "lastModifiedDate": "2026-03-26T19:32:15.556Z",
-      "description": "ClearanceKit intercepts file-system access events on macOS and enforces per-process access policies. In versions on the 4.1 branch and earlier, the opfilter Endpoint Security system extension enforced file access policy exclusively by intercepting ES_EVENT_TYPE_AUTH_OPEN events. Seven additional file operation event types were not intercepted, allowing any locally running process to bypass the configured FAA policy without triggering a denial. Commit a3d1733 adds subscriptions for all seven event types and routes them through the existing FAA policy evaluator. AUTH_RENAME and AUTH_UNLINK additionally preserve XProtect change detection: events on the XProtect path are allowed and trigger the existing onXProtectChanged callback rather than being evaluated against user policy. All versions on the 4.2 branch contain the fix. No known workarounds are available.",
-      "severity": 8.7,
+      "id": "CVE-2026-33243",
+      "publishedDate": "2026-03-20T22:51:15.938Z",
+      "lastModifiedDate": "2026-03-26T20:08:12.009Z",
+      "description": "barebox is a bootloader. In barebox from version 2016.03.0 to before version 2026.03.1 (and the corresponding backport to 2025.09.3), an attacker could exploit a FIT signature verification vulnerability to trick the bootloader into booting different images than those that were verified as part of a signed configuration. mkimage(1) sets the hashed-nodes property of the FIT signature node to list which nodes of the FIT were hashed as part of the signing process as these will need to be verified later on by the bootloader. However, hashed-nodes itself is not part of the hash and could therefore be modified to allow booting different images than those that have been verified. This issue has been patched in barebox versions 2026.03.1 and backported to 2025.09.3.",
+      "severity": 8.3,
       "references": [
         {
-          "url": "https://github.com/craigjbass/clearancekit/security/advisories/GHSA-25f8-8cj2-m887",
+          "url": "https://github.com/barebox/barebox/security/advisories/GHSA-3fvj-q26p-j6h4",
           "type": "reference"
         },
         {
-          "url": "https://github.com/craigjbass/clearancekit/commit/a3d1733d2691a0d40209c48b01bf9291bf645207",
+          "url": "https://github.com/barebox/barebox/commit/aca01795056d51060cb096f9a1ea309361743e05",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "craigjbass",
-          "product": "clearancekit",
+          "vendor": "barebox",
+          "product": "barebox",
           "versions": [
             {
-              "version": "< 4.2",
+              "version": ">= 2016.03.0, < 2025.09.3",
+              "status": "affected"
+            },
+            {
+              "version": ">= 2025.10.0, < 2026.03.1",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-862: Missing Authorization"
+        "CWE-345: Insufficient Verification of Data Authenticity"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-33530",
-      "publishedDate": "2026-03-26T19:34:51.294Z",
-      "lastModifiedDate": "2026-03-26T19:34:51.294Z",
-      "description": "InvenTree is an Open Source Inventory Management System. Prior to version 1.2.6, certain API endpoints associated with bulk data operations can be hijacked to exfiltrate sensitive information from the database. The bulk operation API endpoints (e.g. `/api/part/`, `/api/stock/`, `/api/order/so/allocation/`, and others) accept a filters parameter that is passed directly to Django's ORM queryset.filter(**filters) without any field allowlisting. This enables any authenticated user to traverse model relationships using Django's __ lookup syntax and perform blind boolean-based data extraction. This issue is patched in version 1.2.6, and 1.3.0 (or above). Users should update to the patched versions. No known workarounds are available.",
-      "severity": 7.7,
+      "id": "CVE-2026-33375",
+      "publishedDate": "2026-03-26T20:05:52.564Z",
+      "lastModifiedDate": "2026-03-26T20:05:52.564Z",
+      "description": "The Grafana MSSQL data source plugin contains a logic flaw that allows a low-privileged user (Viewer) to bypass API restrictions and trigger a catastrophic Out-Of-Memory (OOM) memory exhaustion, crashing the host container.",
+      "severity": 6.5,
       "references": [
         {
-          "url": "https://github.com/inventree/InvenTree/security/advisories/GHSA-m8j2-vfmq-p6qg",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/inventree/InvenTree/pull/11581",
+          "url": "https://grafana.com/security/security-advisories/cve-2026-33375",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "inventree",
-          "product": "InvenTree",
+          "vendor": "Grafana",
+          "product": "Grafana OSS",
+          "platforms": [
+            "OnPrem"
+          ],
+          "defaultStatus": "unaffected",
           "versions": [
             {
-              "version": "< 1.2.6",
-              "status": "affected"
+              "version": "11.6.0",
+              "status": "affected",
+              "versionType": "semver",
+              "lessThan": "11.6.14+security-01"
+            },
+            {
+              "version": "12.1.0",
+              "status": "affected",
+              "versionType": "semver",
+              "lessThan": "12.1.10+security-01"
+            },
+            {
+              "version": "12.2.0",
+              "status": "affected",
+              "versionType": "semver",
+              "lessThan": "12.2.8+security-01"
+            },
+            {
+              "version": "12.3.0",
+              "status": "affected",
+              "versionType": "semver",
+              "lessThan": "12.3.6+security-01"
+            },
+            {
+              "version": "12.4.0",
+              "status": "affected",
+              "versionType": "semver",
+              "lessThan": "12.4.2"
             }
           ]
         }
       ],
-      "problemType": [
-        "CWE-202: Exposure of Sensitive Information Through Data Queries"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2023-7338",
-      "publishedDate": "2026-03-26T19:20:53.252Z",
-      "lastModifiedDate": "2026-03-26T19:20:53.252Z",
-      "description": "Ruckus Unleashed contains a remote code execution vulnerability in the web-based management interface that allows authenticated remote attackers to execute arbitrary code on the system when gateway mode is enabled. Attackers can exploit this vulnerability by sending specially crafted requests through the management interface to achieve arbitrary code execution on affected systems.",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://support.ruckuswireless.com/security_bulletins/320",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/ruckus-unleashed-authenticated-rce-in-gateway-mode",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Ruckus Networks",
-          "product": "RUCKUS H350",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "unknown",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "affected"
-        },
-        {
-          "vendor": "Ruckus Networks",
-          "product": "RUCKUS H550",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "unknown",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "affected"
-        },
-        {
-          "vendor": "Ruckus Networks",
-          "product": "RUCKUS R350",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "unknown",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "affected"
-        },
-        {
-          "vendor": "Ruckus Networks",
-          "product": "RUCKUS R550",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "unknown",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "affected"
-        },
-        {
-          "vendor": "Ruckus Networks",
-          "product": "RUCKUS R650",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "unknown",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "affected"
-        },
-        {
-          "vendor": "Ruckus Networks",
-          "product": "RUCKUS R750",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "unknown",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "affected"
-        },
-        {
-          "vendor": "Ruckus Networks",
-          "product": "RUCKUS R850",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "unknown",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "affected"
-        },
-        {
-          "vendor": "Ruckus Networks",
-          "product": "RUCKUS T350c",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "unknown",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "affected"
-        },
-        {
-          "vendor": "Ruckus Networks",
-          "product": "RUCKUS T350d",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "unknown",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "affected"
-        },
-        {
-          "vendor": "Ruckus Networks",
-          "product": "RUCKUS T350se",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "unknown",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "affected"
-        },
-        {
-          "vendor": "Ruckus Networks",
-          "product": "RUCKUS T750",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "unknown",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "affected"
-        },
-        {
-          "vendor": "Ruckus Networks",
-          "product": "RUCKUS T750SE",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "unknown",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "affected"
-        },
-        {
-          "vendor": "Ruckus Networks",
-          "product": "RUCKUS Unleashed",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "unknown",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "affected"
-        },
-        {
-          "vendor": "Ruckus Networks",
-          "product": "Ruckus C110",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "unknown",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "affected"
-        },
-        {
-          "vendor": "Ruckus Networks",
-          "product": "Ruckus E510",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "unknown",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "affected"
-        },
-        {
-          "vendor": "Ruckus Networks",
-          "product": "Ruckus H320",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "unknown",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "affected"
-        },
-        {
-          "vendor": "Ruckus Networks",
-          "product": "Ruckus H510",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "unknown",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "affected"
-        },
-        {
-          "vendor": "Ruckus Networks",
-          "product": "Ruckus M510-JP",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "unknown",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "affected"
-        },
-        {
-          "vendor": "Ruckus Networks",
-          "product": "Ruckus R320",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "unknown",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "affected"
-        },
-        {
-          "vendor": "Ruckus Networks",
-          "product": "Ruckus R510",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "unknown",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "affected"
-        },
-        {
-          "vendor": "Ruckus Networks",
-          "product": "Ruckus R610",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "unknown",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "affected"
-        },
-        {
-          "vendor": "Ruckus Networks",
-          "product": "Ruckus R710",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "unknown",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "affected"
-        },
-        {
-          "vendor": "Ruckus Networks",
-          "product": "Ruckus R720",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "unknown",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "affected"
-        },
-        {
-          "vendor": "Ruckus Networks",
-          "product": "Ruckus T310c",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "unknown",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "affected"
-        },
-        {
-          "vendor": "Ruckus Networks",
-          "product": "Ruckus T310d",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "unknown",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "affected"
-        },
-        {
-          "vendor": "Ruckus Networks",
-          "product": "Ruckus T310n",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "unknown",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "affected"
-        },
-        {
-          "vendor": "Ruckus Networks",
-          "product": "Ruckus T310s",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "unknown",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "affected"
-        },
-        {
-          "vendor": "Ruckus Networks",
-          "product": "Ruckus T610",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "unknown",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "affected"
-        },
-        {
-          "vendor": "Ruckus Networks",
-          "product": "Ruckus T710",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "unknown",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "affected"
-        },
-        {
-          "vendor": "Ruckus Networks",
-          "product": "Ruckus T710s",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "unknown",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "affected"
-        }
-      ],
-      "problemType": [
-        "Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') (CWE-78)"
-      ],
+      "problemType": [],
       "fix_suggestion": "无法生成修复建议"
     },
     {
       "id": "CVE-2026-2436",
       "publishedDate": "2026-03-26T19:31:34.270Z",
-      "lastModifiedDate": "2026-03-26T19:31:34.270Z",
+      "lastModifiedDate": "2026-03-26T20:05:31.217Z",
       "description": "A flaw was found in libsoup's SoupServer. A remote attacker could exploit a use-after-free vulnerability where the `soup_server_disconnect()` function frees connection objects prematurely, even if a TLS handshake is still pending. If the handshake completes after the connection object has been freed, a dangling pointer is accessed, leading to a server crash and a Denial of Service.",
       "severity": 6.5,
       "references": [
@@ -475,6 +120,10 @@
         },
         {
           "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2442909",
+          "type": "reference"
+        },
+        {
+          "url": "https://gitlab.gnome.org/GNOME/libsoup/-/issues/501",
           "type": "reference"
         }
       ],
@@ -536,369 +185,756 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-33528",
-      "publishedDate": "2026-03-26T19:24:50.452Z",
-      "lastModifiedDate": "2026-03-26T19:24:50.452Z",
-      "description": "GoDoxy is a reverse proxy and container orchestrator for self-hosters. Prior to version 0.27.5, the file content API endpoint at `/api/v1/file/content` is vulnerable to path traversal. The `filename` query parameter is passed directly to `path.Join(common.ConfigBasePath, filename)` where `ConfigBasePath = \"config\"` (a relative path). No sanitization or validation is applied beyond checking that the field is non-empty (`binding:\"required\"`). An authenticated attacker can use `../` sequences to read or write files outside the intended `config/` directory, including TLS private keys, OAuth refresh tokens, and any file accessible to the container's UID. Version 0.27.5 fixes the issue.",
-      "severity": 6.5,
+      "id": "CVE-2026-21724",
+      "publishedDate": "2026-03-26T20:06:18.829Z",
+      "lastModifiedDate": "2026-03-26T20:06:18.829Z",
+      "description": "A vulnerability has been discovered in Grafana OSS where an authorization bypass in the provisioning contact points API allows users with Editor role to modify protected webhook URLs without the required alert.notifications.receivers.protected:write permission.",
+      "severity": 5.4,
       "references": [
         {
-          "url": "https://github.com/yusing/godoxy/security/advisories/GHSA-4753-cmc8-8j9v",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/yusing/godoxy/commit/a541d75bb50f1b542c096d8bc8082c3549f5c059",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/yusing/godoxy/releases/tag/v0.27.5",
+          "url": "https://grafana.com/security/security-advisories/cve-2026-21724",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "yusing",
-          "product": "godoxy",
+          "vendor": "Grafana",
+          "product": "Grafana OSS",
+          "platforms": [
+            "OnPrem"
+          ],
+          "defaultStatus": "unaffected",
           "versions": [
             {
-              "version": "< 0.27.5",
-              "status": "affected"
+              "version": ">=v12.3.1",
+              "status": "affected",
+              "versionType": "semver",
+              "lessThan": "<v12.3.6"
+            },
+            {
+              "version": ">=v12.2.2",
+              "status": "affected",
+              "versionType": "semver",
+              "lessThan": "<v.12.2.8"
+            },
+            {
+              "version": ">=v.12.1.5",
+              "status": "affected",
+              "versionType": "semver",
+              "lessThan": "<v.12.1.10"
+            },
+            {
+              "version": ">=v11.6.9",
+              "status": "affected",
+              "versionType": "semver",
+              "lessThan": "<v11.6.14"
             }
           ]
         }
       ],
-      "problemType": [
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
-      ],
+      "problemType": [],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2021-4474",
-      "publishedDate": "2026-03-26T19:28:25.096Z",
-      "lastModifiedDate": "2026-03-26T19:28:25.096Z",
-      "description": "Ruckus Access Point products contain an arbitrary file read vulnerability in the command-line interface that allows authenticated remote attackers with administrative privileges to read arbitrary files from the underlying filesystem. Attackers can exploit this vulnerability to access sensitive information including configuration files, credentials, and system data stored on the device.",
-      "severity": 4.9,
+      "id": "CVE-2026-2100",
+      "publishedDate": "2026-03-26T20:01:46.174Z",
+      "lastModifiedDate": "2026-03-26T20:01:46.174Z",
+      "description": "A flaw was found in p11-kit. A remote attacker could exploit this vulnerability by calling the C_DeriveKey function on a remote token with specific IBM kyber or IBM btc derive mechanism parameters set to NULL. This could lead to the RPC-client attempting to return an uninitialized value, potentially resulting in a NULL dereference or undefined behavior. This issue may cause an application level denial of service or other unpredictable system states.",
+      "severity": 5.3,
       "references": [
         {
-          "url": "https://support.ruckuswireless.com/security_bulletins/306",
+          "url": "https://access.redhat.com/security/cve/CVE-2026-2100",
           "type": "reference"
         },
         {
-          "url": "https://www.vulncheck.com/advisories/ruckus-ap-cli-arbitrary-file-read-allows-authenticated-remote-file-access",
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2437308",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Ruckus Wireless",
-          "product": "RUCKUS Access Point",
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 10",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "p11-kit",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:10"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 6",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "p11-kit",
+          "defaultStatus": "unaffected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:6"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 7",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "p11-kit",
+          "defaultStatus": "unaffected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:7"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 8",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "p11-kit",
+          "defaultStatus": "unaffected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:8"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 9",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "p11-kit",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat OpenShift Container Platform 4",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhcos",
+          "defaultStatus": "unaffected",
+          "cpes": [
+            "cpe:/a:redhat:openshift:4"
+          ]
+        }
+      ],
+      "problemType": [
+        "Access of Uninitialized Pointer"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-2272",
+      "publishedDate": "2026-03-26T20:00:10.110Z",
+      "lastModifiedDate": "2026-03-26T20:00:10.110Z",
+      "description": "A flaw was found in GIMP. An integer overflow vulnerability exists when processing ICO image files, specifically in the `ico_read_info` and `ico_read_icon` functions. This issue arises because a size calculation for image buffers can wrap around due to a 32-bit integer evaluation, allowing oversized image headers to bypass security checks. A remote attacker could exploit this by providing a specially crafted ICO file, leading to a buffer overflow and memory corruption, which may result in an application level denial of service.",
+      "severity": 4.3,
+      "references": [
+        {
+          "url": "https://access.redhat.com/security/cve/CVE-2026-2272",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2438428",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 6",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "gimp",
+          "defaultStatus": "unknown",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:6"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 7",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "gimp",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:7"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 8",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "gimp:2.8/gimp",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:8"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 9",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "gimp",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:9"
+          ]
+        }
+      ],
+      "problemType": [
+        "Integer Overflow or Wraparound"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-2271",
+      "publishedDate": "2026-03-26T20:00:09.397Z",
+      "lastModifiedDate": "2026-03-26T20:00:09.397Z",
+      "description": "A flaw was found in GIMP's PSP (Paint Shop Pro) file parser. A remote attacker could exploit an integer overflow vulnerability in the read_creator_block() function by providing a specially crafted PSP image file. This vulnerability occurs when a 32-bit length value from the file is used for memory allocation without proper validation, leading to a heap overflow and an out-of-bounds write. Successful exploitation could result in an application level denial of service.",
+      "severity": 3.3,
+      "references": [
+        {
+          "url": "https://access.redhat.com/security/cve/CVE-2026-2271",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2438429",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 6",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "gimp",
+          "defaultStatus": "unknown",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:6"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 7",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "gimp",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:7"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 8",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "gimp:2.8/gimp",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:8"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 9",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "gimp",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:9"
+          ]
+        }
+      ],
+      "problemType": [
+        "Integer Overflow or Wraparound"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-2239",
+      "publishedDate": "2026-03-26T20:00:28.595Z",
+      "lastModifiedDate": "2026-03-26T20:00:28.595Z",
+      "description": "A flaw was found in GIMP. Heap-buffer-overflow vulnerability exists in the fread_pascal_string function when processing a specially crafted PSD (Photoshop Document) file. This occurs because the buffer allocated for a Pascal string is not properly null-terminated, leading to an out-of-bounds read when strlen() is subsequently called. Successfully exploiting this vulnerability can cause the application to crash, resulting in an application level Denial of Service.",
+      "severity": 2.8,
+      "references": [
+        {
+          "url": "https://access.redhat.com/security/cve/CVE-2026-2239",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2437675",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 7",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "gimp",
+          "defaultStatus": "unknown",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:7"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 8",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "gimp:2.8/gimp",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:8"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 9",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "gimp",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:9"
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Null Termination"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4393",
+      "publishedDate": "2026-03-26T20:10:40.090Z",
+      "lastModifiedDate": "2026-03-26T20:10:40.090Z",
+      "description": "Cross-Site Request Forgery (CSRF) vulnerability in Drupal Automated Logout allows Cross Site Request Forgery.This issue affects Automated Logout: from 0.0.0 before 1.7.0, from 2.0.0 before 2.0.2.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.drupal.org/sa-contrib-2026-030",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Drupal",
+          "product": "Automated Logout",
+          "collectionURL": "https://www.drupal.org/project/autologout",
+          "repo": "https://git.drupalcode.org/project/autologout",
           "versions": [
             {
               "status": "affected",
-              "version": "0",
+              "version": "0.0.0",
+              "lessThan": "1.7.0",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "2.0.0",
+              "lessThan": "2.0.2",
               "versionType": "semver"
             }
           ],
           "defaultStatus": "unaffected"
-        },
-        {
-          "defaultStatus": "affected",
-          "vendor": "Ruckus",
-          "product": "RUCKUS Unleashed",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        },
-        {
-          "defaultStatus": "affected",
-          "vendor": "Ruckus",
-          "product": "SmartZone 100 (SZ-100) (EOL)",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        },
-        {
-          "defaultStatus": "affected",
-          "vendor": "Ruckus",
-          "product": "SmartZone 100-D (SZ100-D) (EOL)",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        },
-        {
-          "defaultStatus": "affected",
-          "vendor": "Ruckus",
-          "product": "SmartZone 144 (SZ-144)",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        },
-        {
-          "defaultStatus": "affected",
-          "vendor": "Ruckus",
-          "product": "SmartZone 144-Dataplane (SZ144-D)",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        },
-        {
-          "defaultStatus": "affected",
-          "vendor": "Ruckus",
-          "product": "SmartZone 300 (SZ300) (EOL)",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        },
-        {
-          "defaultStatus": "affected",
-          "vendor": "Ruckus",
-          "product": "ZoneDirector 1200 (EOL)",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
         }
       ],
       "problemType": [
-        "CWE-552 Files or Directories Accessible to External Parties"
+        "CWE-352 Cross-Site Request Forgery (CSRF)"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-33529",
-      "publishedDate": "2026-03-26T19:26:32.646Z",
-      "lastModifiedDate": "2026-03-26T19:26:32.646Z",
-      "description": "Zoraxy is a general purpose HTTP reverse proxy and forwarding tool. Prior to version 3.3.2, an authenticated path traversal vulnerability in the configuration import endpoint allows an authenticated user to write arbitrary files outside the config directory, which can lead to RCE by creating a plugin. Version 3.3.2 patches the issue.",
-      "severity": 3.3,
-      "references": [
-        {
-          "url": "https://github.com/tobychui/zoraxy/security/advisories/GHSA-7pq3-326h-f8q9",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/tobychui/zoraxy/commit/69ac755aeec5d15ba4c62099f7f1ed77a855b40b",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/tobychui/zoraxy/releases/tag/v3.3.2",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "tobychui",
-          "product": "zoraxy",
-          "versions": [
-            {
-              "version": "< 3.3.2",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-33632",
-      "publishedDate": "2026-03-26T19:32:49.565Z",
-      "lastModifiedDate": "2026-03-26T19:32:49.565Z",
-      "description": "ClearanceKit intercepts file-system access events on macOS and enforces per-process access policies. Prior to version 4.2.4, two file operation event types — ES_EVENT_TYPE_AUTH_EXCHANGEDATA and ES_EVENT_TYPE_AUTH_CLONE — were not intercepted by ClearanceKit's opfilter system extension, allowing local processes to bypass file access policies. Commit 6181c4a patches the vulnerability by subscribing to both event types and routing them through the existing policy evaluator. Users must upgrade to v4.2.4 or later and reactivate the system extension.",
+      "id": "CVE-2026-4933",
+      "publishedDate": "2026-03-26T20:10:26.886Z",
+      "lastModifiedDate": "2026-03-26T20:10:26.886Z",
+      "description": "Incorrect Authorization vulnerability in Drupal Unpublished Node Permissions allows Forceful Browsing.This issue affects Unpublished Node Permissions: from 0.0.0 before 1.7.0.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/craigjbass/clearancekit/security/advisories/GHSA-wpxj-vhfp-hhvm",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/craigjbass/clearancekit/commit/6181c4a22eccbeca973c77f4bd023eb795c13786",
+          "url": "https://www.drupal.org/sa-contrib-2026-029",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "craigjbass",
-          "product": "clearancekit",
-          "versions": [
-            {
-              "version": "< 4.2.4",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-862: Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-33525",
-      "publishedDate": "2026-03-26T19:22:57.418Z",
-      "lastModifiedDate": "2026-03-26T19:22:57.418Z",
-      "description": "Authelia is an open-source authentication and authorization server providing two-factor authentication and single sign-on (SSO) for applications via a web portal. In version 4.39.15, an attacker may potentially be able to inject javascript into the Authelia login page if several conditions are met simultaneously. Unless both the `script-src` and `connect-src` directives have been modified it's almost impossible for this to have a meaningful impact. However if both of these are and they are done so without consideration to their potential impact; there is a are situations where this vulnerability could be exploited. This is caused to the lack of neutralization of the `langauge` cookie value when rendering the HTML template. This vulnerability is likely difficult to discover though fingerprinting due to the way Authelia is designed but it should not be considered impossible. The additional requirement to identify the secondary application is however likely to be significantly harder to identify along side this, but also likely easier to fingerprint. Users should upgrade to 4.39.16 or downgrade to 4.39.14 to mitigate the issue. The overwhelming majority of installations will not be affected and no workarounds are necessary. The default value for the Content Security Policy makes exploiting this weakness completely impossible. It's only possible via the deliberate removal of the Content Security Policy or deliberate inclusion of clearly noted unsafe policies.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/authelia/authelia/security/advisories/GHSA-gmfg-3v4q-9qr4",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "authelia",
-          "product": "authelia",
-          "versions": [
-            {
-              "version": "= 4.39.15",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-26213",
-      "publishedDate": "2026-03-26T19:00:32.716Z",
-      "lastModifiedDate": "2026-03-26T19:21:33.135Z",
-      "description": "thingino-firmware versions up to the firmware-2026-03-16 release contains an unauthenticated os command injection vulnerability in the WiFi captive portal CGI script that allows remote attackers to execute arbitrary commands as root by injecting malicious code through unsanitized HTTP parameter names. Attackers can exploit the eval function in parse_query() and parse_post() functions to achieve remote code execution and perform privileged configuration changes including root password reset and SSH authorized_keys modification, resulting in full persistent device compromise.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/themactep/thingino-firmware/releases/tag/firmware-2026-03-15",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/thingino-firmware-api-cgi-unauthenticated-command-injection-in-captive-portal",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "themactep",
-          "product": "thingino-firmware",
-          "repo": "https://github.com/themactep/thingino-firmware",
+          "vendor": "Drupal",
+          "product": "Unpublished Node Permissions",
+          "collectionURL": "https://www.drupal.org/project/unpublished_node_permissions",
+          "repo": "https://git.drupalcode.org/project/unpublished_node_permissions",
           "versions": [
             {
               "status": "affected",
-              "version": "0",
-              "lessThanOrEqual": "firmware-2026-03-16",
-              "versionType": "custom"
+              "version": "0.0.0",
+              "lessThan": "1.7.0",
+              "versionType": "semver"
             }
           ],
-          "defaultStatus": "unknown"
+          "defaultStatus": "unaffected"
         }
       ],
       "problemType": [
-        "CWE-78 Improper neutralization of special elements used in an OS command ('OS command injection')"
+        "CWE-863 Incorrect Authorization"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-32498",
-      "publishedDate": "2026-03-25T16:14:59.903Z",
-      "lastModifiedDate": "2026-03-26T19:21:28.823Z",
-      "description": "Missing Authorization vulnerability in Metagauss RegistrationMagic custom-registration-form-builder-with-submission-manager allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects RegistrationMagic: from n/a through <= 6.0.7.6.",
+      "id": "CVE-2026-3573",
+      "publishedDate": "2026-03-26T20:10:13.350Z",
+      "lastModifiedDate": "2026-03-26T20:10:13.350Z",
+      "description": "Incorrect Authorization vulnerability in Drupal AI (Artificial Intelligence) allows Resource Injection.This issue affects AI (Artificial Intelligence): from 0.0.0 before 1.1.11, from 1.2.0 before 1.2.12.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://patchstack.com/database/Wordpress/Plugin/custom-registration-form-builder-with-submission-manager/vulnerability/wordpress-registrationmagic-plugin-6-0-7-6-broken-access-control-vulnerability-2?_s_id=cve",
+          "url": "https://www.drupal.org/sa-contrib-2026-028",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "collectionURL": "https://wordpress.org/plugins",
-          "defaultStatus": "unaffected",
-          "packageName": "custom-registration-form-builder-with-submission-manager",
-          "product": "RegistrationMagic",
-          "vendor": "Metagauss",
+          "vendor": "Drupal",
+          "product": "AI (Artificial Intelligence)",
+          "collectionURL": "https://www.drupal.org/project/ai",
+          "repo": "https://git.drupalcode.org/project/ai",
           "versions": [
             {
-              "changes": [
-                {
-                  "at": "6.0.7.7",
-                  "status": "unaffected"
-                }
-              ],
-              "lessThanOrEqual": "<= 6.0.7.6",
               "status": "affected",
-              "version": "n/a",
-              "versionType": "custom"
+              "version": "0.0.0",
+              "lessThan": "1.1.11",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "1.2.0",
+              "lessThan": "1.2.12",
+              "versionType": "semver"
             }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-863 Incorrect Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-0965",
+      "publishedDate": "2026-03-26T20:06:33.336Z",
+      "lastModifiedDate": "2026-03-26T20:06:33.336Z",
+      "description": "A flaw was found in libssh where it can attempt to open arbitrary files during configuration parsing. A local attacker can exploit this by providing a malicious configuration file or when the system is misconfigured. This vulnerability could lead to a Denial of Service (DoS) by causing the system to try and access dangerous files, such as block devices or large system files, which can disrupt normal operations.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://access.redhat.com/security/cve/CVE-2026-0965",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2436980",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 10",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "libssh",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:10"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 6",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "libssh2",
+          "defaultStatus": "unaffected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:6"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 7",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "libssh2",
+          "defaultStatus": "unaffected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:7"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 8",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "libssh",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:8"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 9",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "libssh",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat OpenShift Container Platform 4",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhcos",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:openshift:4"
           ]
         }
       ],
       "problemType": [
-        "Missing Authorization"
+        "External Control of File Name or Path"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-32496",
-      "publishedDate": "2026-03-25T16:14:59.586Z",
-      "lastModifiedDate": "2026-03-26T19:28:30.059Z",
-      "description": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability in NYSL Spam Protect for Contact Form 7 wp-contact-form-7-spam-blocker allows Path Traversal.This issue affects Spam Protect for Contact Form 7: from n/a through <= 1.2.9.",
+      "id": "CVE-2026-0967",
+      "publishedDate": "2026-03-26T20:06:30.707Z",
+      "lastModifiedDate": "2026-03-26T20:06:30.707Z",
+      "description": "A flaw was found in libssh. A remote attacker, by controlling client configuration files or known_hosts files, could craft specific hostnames that when processed by the `match_pattern()` function can lead to inefficient regular expression backtracking. This can cause timeouts and resource exhaustion, resulting in a Denial of Service (DoS) for the client.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://patchstack.com/database/Wordpress/Plugin/wp-contact-form-7-spam-blocker/vulnerability/wordpress-spam-protect-for-contact-form-7-plugin-1-2-9-arbitrary-file-deletion-vulnerability?_s_id=cve",
+          "url": "https://access.redhat.com/security/cve/CVE-2026-0967",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2436981",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "collectionURL": "https://wordpress.org/plugins",
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 10",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "libssh",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:10"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 6",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "libssh2",
           "defaultStatus": "unaffected",
-          "packageName": "wp-contact-form-7-spam-blocker",
-          "product": "Spam Protect for Contact Form 7",
-          "vendor": "NYSL",
-          "versions": [
-            {
-              "changes": [
-                {
-                  "at": "1.2.10",
-                  "status": "unaffected"
-                }
-              ],
-              "lessThanOrEqual": "<= 1.2.9",
-              "status": "affected",
-              "version": "n/a",
-              "versionType": "custom"
-            }
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:6"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 7",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "libssh2",
+          "defaultStatus": "unaffected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:7"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 8",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "libssh",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:8"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 9",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "libssh",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat OpenShift Container Platform 4",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhcos",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:openshift:4"
+          ]
+        }
+      ],
+      "problemType": [
+        "Inefficient Regular Expression Complexity"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-0968",
+      "publishedDate": "2026-03-26T20:06:29.554Z",
+      "lastModifiedDate": "2026-03-26T20:06:29.554Z",
+      "description": "A flaw was found in libssh in which a malicious SFTP (SSH File Transfer Protocol) server can exploit this by sending a malformed 'longname' field within an `SSH_FXP_NAME` message during a file listing operation. This missing null check can lead to reading beyond allocated memory on the heap. This can cause unexpected behavior or lead to a denial of service (DoS) due to application crashes.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://access.redhat.com/security/cve/CVE-2026-0968",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2436982",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 10",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "libssh",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:10"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 6",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "libssh2",
+          "defaultStatus": "unaffected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:6"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 7",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "libssh2",
+          "defaultStatus": "unaffected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:7"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 8",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "libssh",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:8"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 9",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "libssh",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat OpenShift Container Platform 4",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhcos",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:openshift:4"
+          ]
+        }
+      ],
+      "problemType": [
+        "NULL Pointer Dereference"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-0964",
+      "publishedDate": "2026-03-26T20:06:28.871Z",
+      "lastModifiedDate": "2026-03-26T20:06:28.871Z",
+      "description": "A malicious SCP server can send unexpected paths that could make the\nclient application override local files outside of working directory.\nThis could be misused to create malicious executable or configuration\nfiles and make the user execute them under specific consequences.\n\nThis is the same issue as in OpenSSH, tracked as CVE-2019-6111.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://access.redhat.com/security/cve/CVE-2026-0964",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2436979",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 10",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "libssh",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:10"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 6",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "libssh2",
+          "defaultStatus": "unaffected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:6"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 7",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "libssh2",
+          "defaultStatus": "unaffected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:7"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 8",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "libssh",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:8"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 9",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "libssh",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat OpenShift Container Platform 4",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhcos",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:openshift:4"
           ]
         }
       ],
@@ -908,14 +944,435 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-32492",
-      "publishedDate": "2026-03-25T16:14:58.909Z",
-      "lastModifiedDate": "2026-03-26T19:34:28.982Z",
-      "description": "Authentication Bypass by Spoofing vulnerability in Joe Dolson My Tickets my-tickets allows Identity Spoofing.This issue affects My Tickets: from n/a through <= 2.1.1.",
+      "id": "CVE-2026-0966",
+      "publishedDate": "2026-03-26T20:06:28.313Z",
+      "lastModifiedDate": "2026-03-26T20:06:28.313Z",
+      "description": "The API function `ssh_get_hexa()` is vulnerable, when 0-lenght\ninput is provided to this function. This function is used internally\nin `ssh_get_fingerprint_hash()` and `ssh_print_hexa()` (deprecated),\nwhich is vulnerable to the same input (length is provided by the\ncalling application).\n\nThe function is also used internally in the gssapi code for logging\nthe OIDs received by the server during GSSAPI authentication. This\ncould be triggered remotely, when the server allows GSSAPI authentication\nand logging verbosity is set at least to SSH_LOG_PACKET (3). This\ncould cause self-DoS of the per-connection daemon process.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://patchstack.com/database/Wordpress/Plugin/my-tickets/vulnerability/wordpress-my-tickets-plugin-2-1-1-bypass-vulnerability-vulnerability?_s_id=cve",
+          "url": "https://access.redhat.com/security/cve/CVE-2026-0966",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2433121",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 10",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "libssh",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:10"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 6",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "libssh2",
+          "defaultStatus": "unaffected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:6"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 7",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "libssh2",
+          "defaultStatus": "unaffected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:7"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 8",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "libssh",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:8"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 9",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "libssh",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat OpenShift Container Platform 4",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhcos",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:openshift:4"
+          ]
+        }
+      ],
+      "problemType": [
+        "Buffer Underwrite ('Buffer Underflow')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-33644",
+      "publishedDate": "2026-03-26T20:04:18.728Z",
+      "lastModifiedDate": "2026-03-26T20:04:18.728Z",
+      "description": "Lychee is a free, open-source photo-management tool. Prior to version 7.5.2, the SSRF protection in `PhotoUrlRule.php` can be bypassed using DNS rebinding. The IP validation check (line 86-89) only activates when the hostname is an IP address. When a domain name is used, `filter_var($host, FILTER_VALIDATE_IP)` returns `false`, skipping the entire check. Version 7.5.2 patches the issue.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/LycheeOrg/Lychee/security/advisories/GHSA-5245-4p8c-jwff",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/LycheeOrg/Lychee/commit/28c5261fb9deab4f9420c8cc2f73a87425939107",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "LycheeOrg",
+          "product": "Lychee",
+          "versions": [
+            {
+              "version": "< 7.5.2",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-918: Server-Side Request Forgery (SSRF)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3532",
+      "publishedDate": "2026-03-26T20:04:03.160Z",
+      "lastModifiedDate": "2026-03-26T20:04:03.160Z",
+      "description": "Improper Handling of Case Sensitivity vulnerability in Drupal OpenID Connect / OAuth client allows Privilege Escalation.This issue affects OpenID Connect / OAuth client: from 0.0.0 before 1.5.0.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.drupal.org/sa-contrib-2026-027",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Drupal",
+          "product": "OpenID Connect / OAuth client",
+          "collectionURL": "https://www.drupal.org/project/openid_connect",
+          "repo": "https://git.drupalcode.org/project/openid_connect",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0.0.0",
+              "lessThan": "1.5.0",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-178 Improper Handling of Case Sensitivity"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3531",
+      "publishedDate": "2026-03-26T20:03:48.873Z",
+      "lastModifiedDate": "2026-03-26T20:03:48.873Z",
+      "description": "Authentication Bypass Using an Alternate Path or Channel vulnerability in Drupal OpenID Connect / OAuth client allows Authentication Bypass.This issue affects OpenID Connect / OAuth client: from 0.0.0 before 1.5.0.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.drupal.org/sa-contrib-2026-026",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Drupal",
+          "product": "OpenID Connect / OAuth client",
+          "collectionURL": "https://www.drupal.org/project/openid_connect",
+          "repo": "https://git.drupalcode.org/project/openid_connect",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0.0.0",
+              "lessThan": "1.5.0",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-288 Authentication Bypass Using an Alternate Path or Channel"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3530",
+      "publishedDate": "2026-03-26T20:03:39.756Z",
+      "lastModifiedDate": "2026-03-26T20:03:39.756Z",
+      "description": "Server-Side Request Forgery (SSRF) vulnerability in Drupal OpenID Connect / OAuth client allows Server Side Request Forgery.This issue affects OpenID Connect / OAuth client: from 0.0.0 before 1.5.0.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.drupal.org/sa-contrib-2026-025",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Drupal",
+          "product": "OpenID Connect / OAuth client",
+          "collectionURL": "https://www.drupal.org/project/openid_connect",
+          "repo": "https://git.drupalcode.org/project/openid_connect",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0.0.0",
+              "lessThan": "1.5.0",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-918 Server-Side Request Forgery (SSRF)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3529",
+      "publishedDate": "2026-03-26T20:03:28.917Z",
+      "lastModifiedDate": "2026-03-26T20:03:28.917Z",
+      "description": "Improper Neutralization of Input During Web Page Generation (\"Cross-site Scripting\") vulnerability in Drupal Google Analytics GA4 allows Cross-Site Scripting (XSS).This issue affects Google Analytics GA4: from 0.0.0 before 1.1.14.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.drupal.org/sa-contrib-2026-024",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Drupal",
+          "product": "Google Analytics GA4",
+          "collectionURL": "https://www.drupal.org/project/ga4_google_analytics",
+          "repo": "https://git.drupalcode.org/project/ga4_google_analytics",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0.0.0",
+              "lessThan": "1.1.14",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation (\"Cross-site Scripting\")"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3528",
+      "publishedDate": "2026-03-26T20:03:20.863Z",
+      "lastModifiedDate": "2026-03-26T20:03:20.863Z",
+      "description": "Improper Neutralization of Input During Web Page Generation (\"Cross-site Scripting\") vulnerability in Drupal Calculation Fields allows Cross-Site Scripting (XSS).This issue affects Calculation Fields: from 0.0.0 before 1.0.4.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.drupal.org/sa-contrib-2026-023",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Drupal",
+          "product": "Calculation Fields",
+          "collectionURL": "https://www.drupal.org/project/calculation_fields",
+          "repo": "https://git.drupalcode.org/project/calculation_fields",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0.0.0",
+              "lessThan": "1.0.4",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation (\"Cross-site Scripting\")"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3527",
+      "publishedDate": "2026-03-26T20:03:05.935Z",
+      "lastModifiedDate": "2026-03-26T20:03:05.935Z",
+      "description": "Missing Authentication for Critical Function vulnerability in Drupal AJAX Dashboard allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects AJAX Dashboard: from 0.0.0 before 3.1.0.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.drupal.org/sa-contrib-2026-022",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Drupal",
+          "product": "AJAX Dashboard",
+          "collectionURL": "https://www.drupal.org/project/ajax_dashboard",
+          "repo": "https://git.drupalcode.org/project/ajax_dashboard",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0.0.0",
+              "lessThan": "3.1.0",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-306 Missing Authentication for Critical Function"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3526",
+      "publishedDate": "2026-03-26T20:02:55.103Z",
+      "lastModifiedDate": "2026-03-26T20:02:55.103Z",
+      "description": "Incorrect Authorization vulnerability in Drupal File Access Fix (deprecated) allows Forceful Browsing.This issue affects File Access Fix (deprecated): from 0.0.0 before 1.2.0.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.drupal.org/sa-contrib-2026-021",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Drupal",
+          "product": "File Access Fix (deprecated)",
+          "collectionURL": "https://www.drupal.org/project/file_access_fix",
+          "repo": "https://git.drupalcode.org/project/file_access_fix",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0.0.0",
+              "lessThan": "1.2.0",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-863 Incorrect Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3525",
+      "publishedDate": "2026-03-26T20:02:25.154Z",
+      "lastModifiedDate": "2026-03-26T20:02:25.154Z",
+      "description": "Incorrect Authorization vulnerability in Drupal File Access Fix (deprecated) allows Forceful Browsing.This issue affects File Access Fix (deprecated): from 0.0.0 before 1.2.0.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.drupal.org/sa-contrib-2026-020",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Drupal",
+          "product": "File Access Fix (deprecated)",
+          "collectionURL": "https://www.drupal.org/project/file_access_fix",
+          "repo": "https://git.drupalcode.org/project/file_access_fix",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0.0.0",
+              "lessThan": "1.2.0",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-863 Incorrect Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-33537",
+      "publishedDate": "2026-03-26T20:01:19.377Z",
+      "lastModifiedDate": "2026-03-26T20:01:19.377Z",
+      "description": "Lychee is a free, open-source photo-management tool. The patch introduced for GHSA-cpgw-wgf3-xc6v (SSRF via `Photo::fromUrl`) contains an incomplete IP validation check that fails to block loopback addresses and link-local addresses. Prior to version 7.5.1, an authenticated user can still reach internal services using direct IP addresses, bypassing all four protection configuration settings even when they are set to their secure defaults. Version 7.5.1 contains a fix for the issue.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/LycheeOrg/Lychee/security/advisories/GHSA-vq6w-prpf-h287",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/LycheeOrg/Lychee/commit/41386677681d18cd04e42a35b50bd88bf53a4a6a",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "LycheeOrg",
+          "product": "Lychee",
+          "versions": [
+            {
+              "version": "< 7.5.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-918: Server-Side Request Forgery (SSRF)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-24372",
+      "publishedDate": "2026-03-25T16:14:32.017Z",
+      "lastModifiedDate": "2026-03-26T20:12:44.413Z",
+      "description": "Authentication Bypass by Spoofing vulnerability in WP Swings Subscriptions for WooCommerce subscriptions-for-woocommerce allows Input Data Manipulation.This issue affects Subscriptions for WooCommerce: from n/a through <= 1.8.10.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://patchstack.com/database/Wordpress/Plugin/subscriptions-for-woocommerce/vulnerability/wordpress-subscriptions-for-woocommerce-plugin-1-8-10-bypass-vulnerability-vulnerability?_s_id=cve",
           "type": "reference"
         }
       ],
@@ -923,18 +1380,18 @@
         {
           "collectionURL": "https://wordpress.org/plugins",
           "defaultStatus": "unaffected",
-          "packageName": "my-tickets",
-          "product": "My Tickets",
-          "vendor": "Joe Dolson",
+          "packageName": "subscriptions-for-woocommerce",
+          "product": "Subscriptions for WooCommerce",
+          "vendor": "WP Swings",
           "versions": [
             {
               "changes": [
                 {
-                  "at": "2.1.2",
+                  "at": "1.9.0",
                   "status": "unaffected"
                 }
               ],
-              "lessThanOrEqual": "<= 2.1.1",
+              "lessThanOrEqual": "<= 1.8.10",
               "status": "affected",
               "version": "n/a",
               "versionType": "custom"
@@ -948,14 +1405,14 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-25456",
-      "publishedDate": "2026-03-25T16:14:50.530Z",
-      "lastModifiedDate": "2026-03-26T19:14:14.630Z",
-      "description": "Missing Authorization vulnerability in Aarsiv Groups Automated FedEx live/manual rates with shipping labels a2z-fedex-shipping allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Automated FedEx live/manual rates with shipping labels: from n/a through <= 5.1.8.",
+      "id": "CVE-2026-24359",
+      "publishedDate": "2026-03-25T16:14:31.035Z",
+      "lastModifiedDate": "2026-03-26T20:01:35.761Z",
+      "description": "Authentication Bypass Using an Alternate Path or Channel vulnerability in Dokan, Inc. Dokan dokan-lite allows Authentication Abuse.This issue affects Dokan: from n/a through <= 4.2.4.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://patchstack.com/database/Wordpress/Plugin/a2z-fedex-shipping/vulnerability/wordpress-automated-fedex-live-manual-rates-with-shipping-labels-plugin-5-1-8-broken-access-control-vulnerability?_s_id=cve",
+          "url": "https://patchstack.com/database/Wordpress/Plugin/dokan-lite/vulnerability/wordpress-dokan-plugin-4-2-4-broken-authentication-vulnerability?_s_id=cve",
           "type": "reference"
         }
       ],
@@ -963,52 +1420,18 @@
         {
           "collectionURL": "https://wordpress.org/plugins",
           "defaultStatus": "unaffected",
-          "packageName": "a2z-fedex-shipping",
-          "product": "Automated FedEx live/manual rates with shipping labels",
-          "vendor": "Aarsiv Groups",
-          "versions": [
-            {
-              "lessThanOrEqual": "<= 5.1.8",
-              "status": "affected",
-              "version": "n/a",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-25317",
-      "publishedDate": "2026-03-25T16:14:40.043Z",
-      "lastModifiedDate": "2026-03-26T19:27:44.666Z",
-      "description": "Missing Authorization vulnerability in tychesoftwares Print Invoice & Delivery Notes for WooCommerce woocommerce-delivery-notes allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Print Invoice & Delivery Notes for WooCommerce: from n/a through <= 5.9.0.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://patchstack.com/database/Wordpress/Plugin/woocommerce-delivery-notes/vulnerability/wordpress-print-invoice-delivery-notes-for-woocommerce-plugin-5-9-0-broken-access-control-vulnerability?_s_id=cve",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://wordpress.org/plugins",
-          "defaultStatus": "unaffected",
-          "packageName": "woocommerce-delivery-notes",
-          "product": "Print Invoice & Delivery Notes for WooCommerce",
-          "vendor": "tychesoftwares",
+          "packageName": "dokan-lite",
+          "product": "Dokan",
+          "vendor": "Dokan, Inc.",
           "versions": [
             {
               "changes": [
                 {
-                  "at": "6.0.0",
+                  "at": "4.2.5",
                   "status": "unaffected"
                 }
               ],
-              "lessThanOrEqual": "<= 5.9.0",
+              "lessThanOrEqual": "<= 4.2.4",
               "status": "affected",
               "version": "n/a",
               "versionType": "custom"
@@ -1017,446 +1440,7 @@
         }
       ],
       "problemType": [
-        "Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-24382",
-      "publishedDate": "2026-03-25T16:14:32.688Z",
-      "lastModifiedDate": "2026-03-26T19:39:26.349Z",
-      "description": "Missing Authorization vulnerability in wproyal News Magazine X news-magazine-x allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects News Magazine X: from n/a through <= 1.2.50.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://patchstack.com/database/Wordpress/Theme/news-magazine-x/vulnerability/wordpress-news-magazine-x-theme-1-2-50-broken-access-control-vulnerability?_s_id=cve",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://wordpress.org/plugins",
-          "defaultStatus": "unaffected",
-          "packageName": "news-magazine-x",
-          "product": "News Magazine X",
-          "vendor": "wproyal",
-          "versions": [
-            {
-              "changes": [
-                {
-                  "at": "1.2.51",
-                  "status": "unaffected"
-                }
-              ],
-              "lessThanOrEqual": "<= 1.2.50",
-              "status": "affected",
-              "version": "n/a",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-20694",
-      "publishedDate": "2026-03-25T00:32:02.873Z",
-      "lastModifiedDate": "2026-03-26T19:23:21.098Z",
-      "description": "This issue was addressed with improved handling of symlinks. This issue is fixed in iOS 26.3 and iPadOS 26.3, macOS Sequoia 15.7.4, macOS Sequoia 15.7.5, macOS Sonoma 14.8.4, macOS Sonoma 14.8.5, macOS Tahoe 26.3, macOS Tahoe 26.4. An app may be able to access user-sensitive data.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://support.apple.com/en-us/126346",
-          "type": "reference"
-        },
-        {
-          "url": "https://support.apple.com/en-us/126348",
-          "type": "reference"
-        },
-        {
-          "url": "https://support.apple.com/en-us/126349",
-          "type": "reference"
-        },
-        {
-          "url": "https://support.apple.com/en-us/126350",
-          "type": "reference"
-        },
-        {
-          "url": "https://support.apple.com/en-us/126794",
-          "type": "reference"
-        },
-        {
-          "url": "https://support.apple.com/en-us/126795",
-          "type": "reference"
-        },
-        {
-          "url": "https://support.apple.com/en-us/126796",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Apple",
-          "product": "iOS and iPadOS",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "lessThan": "26.3",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "vendor": "Apple",
-          "product": "macOS",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "lessThan": "14.8.4",
-              "versionType": "custom"
-            },
-            {
-              "version": "0",
-              "status": "affected",
-              "lessThan": "14.8.5",
-              "versionType": "custom"
-            },
-            {
-              "version": "0",
-              "status": "affected",
-              "lessThan": "15.7.4",
-              "versionType": "custom"
-            },
-            {
-              "version": "0",
-              "status": "affected",
-              "lessThan": "15.7.5",
-              "versionType": "custom"
-            },
-            {
-              "version": "0",
-              "status": "affected",
-              "lessThan": "26.3",
-              "versionType": "custom"
-            },
-            {
-              "version": "0",
-              "status": "affected",
-              "lessThan": "26.4",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "An app may be able to access user-sensitive data"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-28820",
-      "publishedDate": "2026-03-25T00:32:01.392Z",
-      "lastModifiedDate": "2026-03-26T19:21:02.851Z",
-      "description": "This issue was addressed with improved checks. This issue is fixed in macOS Tahoe 26.4. An app may be able to access sensitive user data.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://support.apple.com/en-us/126794",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Apple",
-          "product": "macOS",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "lessThan": "26.4",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "An app may be able to access sensitive user data"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-28877",
-      "publishedDate": "2026-03-25T00:32:00.502Z",
-      "lastModifiedDate": "2026-03-26T19:15:38.195Z",
-      "description": "An authorization issue was addressed with improved state management. This issue is fixed in iOS 26.4 and iPadOS 26.4, macOS Sequoia 15.7.5, macOS Tahoe 26.4, visionOS 26.4, watchOS 26.4. An app may be able to access sensitive user data.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://support.apple.com/en-us/126792",
-          "type": "reference"
-        },
-        {
-          "url": "https://support.apple.com/en-us/126794",
-          "type": "reference"
-        },
-        {
-          "url": "https://support.apple.com/en-us/126795",
-          "type": "reference"
-        },
-        {
-          "url": "https://support.apple.com/en-us/126798",
-          "type": "reference"
-        },
-        {
-          "url": "https://support.apple.com/en-us/126799",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Apple",
-          "product": "iOS and iPadOS",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "lessThan": "26.4",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "vendor": "Apple",
-          "product": "macOS",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "lessThan": "15.7.5",
-              "versionType": "custom"
-            },
-            {
-              "version": "0",
-              "status": "affected",
-              "lessThan": "26.4",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "vendor": "Apple",
-          "product": "visionOS",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "lessThan": "26.4",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "vendor": "Apple",
-          "product": "watchOS",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "lessThan": "26.4",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "An app may be able to access sensitive user data"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-20698",
-      "publishedDate": "2026-03-25T00:31:57.939Z",
-      "lastModifiedDate": "2026-03-26T19:15:05.106Z",
-      "description": "The issue was addressed with improved memory handling. This issue is fixed in iOS 26.4 and iPadOS 26.4, macOS Tahoe 26.4, tvOS 26.4, visionOS 26.4, watchOS 26.4. An app may be able to cause unexpected system termination or corrupt kernel memory.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://support.apple.com/en-us/126792",
-          "type": "reference"
-        },
-        {
-          "url": "https://support.apple.com/en-us/126794",
-          "type": "reference"
-        },
-        {
-          "url": "https://support.apple.com/en-us/126797",
-          "type": "reference"
-        },
-        {
-          "url": "https://support.apple.com/en-us/126798",
-          "type": "reference"
-        },
-        {
-          "url": "https://support.apple.com/en-us/126799",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Apple",
-          "product": "iOS and iPadOS",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "lessThan": "26.4",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "vendor": "Apple",
-          "product": "macOS",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "lessThan": "26.4",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "vendor": "Apple",
-          "product": "tvOS",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "lessThan": "26.4",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "vendor": "Apple",
-          "product": "visionOS",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "lessThan": "26.4",
-              "versionType": "custom"
-            }
-          ]
-        },
-        {
-          "vendor": "Apple",
-          "product": "watchOS",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "lessThan": "26.4",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "An app may be able to cause unexpected system termination or corrupt kernel memory"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-33634",
-      "publishedDate": "2026-03-23T21:47:29.636Z",
-      "lastModifiedDate": "2026-03-26T19:37:07.989Z",
-      "description": "Trivy is a security scanner. On March 19, 2026, a threat actor used compromised credentials to publish a malicious Trivy v0.69.4 release, force-push 76 of 77 version tags in `aquasecurity/trivy-action` to credential-stealing malware, and replace all 7 tags in `aquasecurity/setup-trivy` with malicious commits. This incident is a continuation of the supply chain attack that began in late February 2026. Following the initial disclosure on March 1, credential rotation was performed but was not atomic (not all credentials were revoked simultaneously). The attacker could have use a valid token to exfiltrate newly rotated secrets during the rotation window (which lasted a few days). This could have allowed the attacker to retain access and execute the March 19 attack. Affected components include the `aquasecurity/trivy` Go / Container image version 0.69.4, the `aquasecurity/trivy-action` GitHub Action versions 0.0.1 – 0.34.2 (76/77), and the`aquasecurity/setup-trivy` GitHub Action versions 0.2.0 – 0.2.6, prior to the recreation of 0.2.6 with a safe commit. Known safe versions include versions 0.69.2 and 0.69.3 of the Trivy binary, version 0.35.0 of trivy-action, and version 0.2.6 of setup-trivy. Additionally, take other mitigations to ensure the safety of secrets. If there is any possibility that a compromised version ran in one's environment, all secrets accessible to affected pipelines must be treated as exposed and rotated immediately. Check whether one's organization pulled or executed Trivy v0.69.4 from any source. Remove any affected artifacts immediately. Review all workflows using `aquasecurity/trivy-action` or `aquasecurity/setup-trivy`. Those who referenced a version tag rather than a full commit SHA should check workflow run logs from March 19–20, 2026 for signs of compromise. Look for repositories named `tpcp-docs` in one's GitHub organization. The presence of such a repository may indicate that the fallback exfiltration mechanism was triggered and secrets were successfully stolen. Pin GitHub Actions to full, immutable commit SHA hashes, don't use mutable version tags.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/aquasecurity/trivy/security/advisories/GHSA-69fq-xp46-6x23",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/BerriAI/litellm/issues/24518",
-          "type": "reference"
-        },
-        {
-          "url": "https://futuresearch.ai/blog/litellm-pypi-supply-chain-attack",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/aquasecurity/trivy/discussions/10425",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/pypa/advisory-database/tree/main/vulns/litellm/PYSEC-2026-2.yaml",
-          "type": "reference"
-        },
-        {
-          "url": "https://inspector.pypi.io/project/litellm/1.82.7/packages/79/5f/b6998d42c6ccd32d36e12661f2734602e72a576d52a51f4245aef0b20b4d/litellm-1.82.7-py3-none-any.whl/litellm/proxy/proxy_server.py#line.130",
-          "type": "reference"
-        },
-        {
-          "url": "https://inspector.pypi.io/project/litellm/1.82.8/packages/f6/2c/731b614e6cee0bca1e010a36fd381fba69ee836fe3cb6753ba23ef2b9601/litellm-1.82.8.tar.gz/litellm-1.82.8/litellm_init.pth#line.1",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.wiz.io/blog/teampcp-attack-kics-github-action",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "aquasecurity",
-          "product": "setup-trivy",
-          "versions": [
-            {
-              "version": "< 0.2.6",
-              "status": "affected"
-            }
-          ]
-        },
-        {
-          "vendor": "aquasecurity",
-          "product": "trivy-action",
-          "versions": [
-            {
-              "version": "< 0.35.0",
-              "status": "affected"
-            }
-          ]
-        },
-        {
-          "vendor": "aquasecurity",
-          "product": "trivy",
-          "versions": [
-            {
-              "version": "= 0.69.4",
-              "status": "affected"
-            }
-          ]
-        },
-        {
-          "vendor": "BerriAI",
-          "product": "LiteLLM",
-          "versions": [
-            {
-              "version": ">= 1.82.7, <= 1.82.8",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-506: Embedded Malicious Code"
+        "Authentication Bypass Using an Alternate Path or Channel"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
