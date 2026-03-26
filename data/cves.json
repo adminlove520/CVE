@@ -2,267 +2,101 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 5,
-    "last_updated": "2026-03-26T21:59:49.124132",
+    "total_count": 1,
+    "last_updated": "2026-03-26T22:47:27.416629",
     "severity_distribution": {
       "critical": 0,
-      "high": 3,
-      "medium": 1,
-      "low": 1,
-      "none": 0
+      "high": 0,
+      "medium": 0,
+      "low": 0,
+      "none": 1
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-33686",
-      "publishedDate": "2026-03-26T21:54:25.294Z",
-      "lastModifiedDate": "2026-03-26T21:54:25.294Z",
-      "description": "Sharp is a content management framework built for Laravel as a package. Versions prior to 9.20.0 have a path traversal vulnerability  in the FileUtil class. The application fails to sanitize file extensions properly, allowing path separators to be passed into the storage layer. In `src/Utils/FileUtil.php`, the `FileUtil::explodeExtension()` function extracts a file's extension by splitting the filename at the last dot. This issue has been patched in version 9.20.0 by properly sanitizing the extension using `pathinfo(PATHINFO_EXTENSION)` instead of `strrpos()`, alongside applying strict regex replacements to both the base name and the extension.",
-      "severity": 8.8,
+      "id": "CVE-2026-33634",
+      "publishedDate": "2026-03-23T21:47:29.636Z",
+      "lastModifiedDate": "2026-03-26T22:20:22.704Z",
+      "description": "Trivy is a security scanner. On March 19, 2026, a threat actor used compromised credentials to publish a malicious Trivy v0.69.4 release, force-push 76 of 77 version tags in `aquasecurity/trivy-action` to credential-stealing malware, and replace all 7 tags in `aquasecurity/setup-trivy` with malicious commits. This incident is a continuation of the supply chain attack that began in late February 2026. Following the initial disclosure on March 1, credential rotation was performed but was not atomic (not all credentials were revoked simultaneously). The attacker could have use a valid token to exfiltrate newly rotated secrets during the rotation window (which lasted a few days). This could have allowed the attacker to retain access and execute the March 19 attack. Affected components include the `aquasecurity/trivy` Go / Container image version 0.69.4, the `aquasecurity/trivy-action` GitHub Action versions 0.0.1 – 0.34.2 (76/77), and the`aquasecurity/setup-trivy` GitHub Action versions 0.2.0 – 0.2.6, prior to the recreation of 0.2.6 with a safe commit. Known safe versions include versions 0.69.2 and 0.69.3 of the Trivy binary, version 0.35.0 of trivy-action, and version 0.2.6 of setup-trivy. Additionally, take other mitigations to ensure the safety of secrets. If there is any possibility that a compromised version ran in one's environment, all secrets accessible to affected pipelines must be treated as exposed and rotated immediately. Check whether one's organization pulled or executed Trivy v0.69.4 from any source. Remove any affected artifacts immediately. Review all workflows using `aquasecurity/trivy-action` or `aquasecurity/setup-trivy`. Those who referenced a version tag rather than a full commit SHA should check workflow run logs from March 19–20, 2026 for signs of compromise. Look for repositories named `tpcp-docs` in one's GitHub organization. The presence of such a repository may indicate that the fallback exfiltration mechanism was triggered and secrets were successfully stolen. Pin GitHub Actions to full, immutable commit SHA hashes, don't use mutable version tags.",
+      "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/code16/sharp/security/advisories/GHSA-9ffq-6457-8958",
+          "url": "https://github.com/aquasecurity/trivy/security/advisories/GHSA-69fq-xp46-6x23",
           "type": "reference"
         },
         {
-          "url": "https://github.com/code16/sharp/pull/715",
+          "url": "https://github.com/BerriAI/litellm/issues/24518",
+          "type": "reference"
+        },
+        {
+          "url": "https://futuresearch.ai/blog/litellm-pypi-supply-chain-attack",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/aquasecurity/trivy/discussions/10425",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/pypa/advisory-database/tree/main/vulns/litellm/PYSEC-2026-2.yaml",
+          "type": "reference"
+        },
+        {
+          "url": "https://inspector.pypi.io/project/litellm/1.82.7/packages/79/5f/b6998d42c6ccd32d36e12661f2734602e72a576d52a51f4245aef0b20b4d/litellm-1.82.7-py3-none-any.whl/litellm/proxy/proxy_server.py#line.130",
+          "type": "reference"
+        },
+        {
+          "url": "https://inspector.pypi.io/project/litellm/1.82.8/packages/f6/2c/731b614e6cee0bca1e010a36fd381fba69ee836fe3cb6753ba23ef2b9601/litellm-1.82.8.tar.gz/litellm-1.82.8/litellm_init.pth#line.1",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.wiz.io/blog/teampcp-attack-kics-github-action",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "code16",
-          "product": "sharp",
+          "vendor": "aquasecurity",
+          "product": "setup-trivy",
           "versions": [
             {
-              "version": "< 9.20.0",
+              "version": "< 0.2.6",
+              "status": "affected"
+            }
+          ]
+        },
+        {
+          "vendor": "aquasecurity",
+          "product": "trivy-action",
+          "versions": [
+            {
+              "version": "< 0.35.0",
+              "status": "affected"
+            }
+          ]
+        },
+        {
+          "vendor": "aquasecurity",
+          "product": "trivy",
+          "versions": [
+            {
+              "version": "= 0.69.4",
+              "status": "affected"
+            }
+          ]
+        },
+        {
+          "vendor": "BerriAI",
+          "product": "LiteLLM",
+          "versions": [
+            {
+              "version": ">= 1.82.7, <= 1.82.8",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-33687",
-      "publishedDate": "2026-03-26T21:47:55.573Z",
-      "lastModifiedDate": "2026-03-26T21:53:26.004Z",
-      "description": "Sharp is a content management framework built for Laravel as a package. Versions prior to 9.20.0 contain a vulnerability in the file upload endpoint that allows authenticated users to bypass all file type restrictions. The upload endpoint within the `ApiFormUploadController` accepts a client-controlled `validation_rule` parameter. This parameter is directly passed into the Laravel validator without sufficient server-side enforcement. By intercepting the request and sending `validation_rule[]=file`, an attacker can completely bypass all MIME type and file extension restrictions. This issue has been addressed in version 9.20.0 by removing the client-controlled validation rules and strictly defining upload rules server-side. As a workaround, ensure that the storage disk used for Sharp uploads is strictly private. Under default configurations, an attacker cannot directly execute uploaded PHP files unless a public disk configuration is explicitly used.",
-      "severity": 8.8,
-      "references": [
-        {
-          "url": "https://github.com/code16/sharp/security/advisories/GHSA-fr76-5637-w3g9",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/code16/sharp/pull/714",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/code16/sharp/releases/tag/v9.20.0",
-          "type": "reference"
-        },
-        {
-          "url": "https://laravel.com/docs/13.x/filesystem",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "code16",
-          "product": "sharp",
-          "versions": [
-            {
-              "version": "< 9.20.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-434: Unrestricted Upload of File with Dangerous Type"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-12805",
-      "publishedDate": "2026-03-26T21:48:16.762Z",
-      "lastModifiedDate": "2026-03-26T21:48:16.762Z",
-      "description": "A flaw was found in Red Hat OpenShift AI (RHOAI) llama-stack-operator. This vulnerability allows unauthorized access to Llama Stack services deployed in other namespaces via direct network requests, because no NetworkPolicy restricts access to the llama-stack service endpoint. As a result, a user in one namespace can access another user’s Llama Stack instance and potentially view or manipulate sensitive data.",
-      "severity": 8.1,
-      "references": [
-        {
-          "url": "https://access.redhat.com/errata/RHSA-2026:2106",
-          "type": "reference"
-        },
-        {
-          "url": "https://access.redhat.com/errata/RHSA-2026:2695",
-          "type": "reference"
-        },
-        {
-          "url": "https://access.redhat.com/security/cve/CVE-2025-12805",
-          "type": "reference"
-        },
-        {
-          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2413101",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat OpenShift AI 2.25",
-          "collectionURL": "https://catalog.redhat.com/software/containers/",
-          "packageName": "rhoai/odh-llama-stack-k8s-operator-rhel9",
-          "defaultStatus": "affected",
-          "versions": [
-            {
-              "version": "sha256:c0d95dfbae20e87113ffb81026d379bb63ad300447df98b27d1bf9a83b084744",
-              "lessThan": "*",
-              "versionType": "rpm",
-              "status": "unaffected"
-            }
-          ],
-          "cpes": [
-            "cpe:/a:redhat:openshift_ai:2.25::el9"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat OpenShift AI 2.25",
-          "collectionURL": "https://catalog.redhat.com/software/containers/",
-          "packageName": "rhoai/odh-llama-stack-k8s-operator-rhel9",
-          "defaultStatus": "affected",
-          "versions": [
-            {
-              "version": "sha256:1d258fe98c2477e4256a9b936f412f2501fb7ca9e3b810347f9712e0d5ce5c92",
-              "lessThan": "*",
-              "versionType": "rpm",
-              "status": "unaffected"
-            }
-          ],
-          "cpes": [
-            "cpe:/a:redhat:openshift_ai:2.25::el9"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat OpenShift AI (RHOAI)",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "rhoai/odh-dashboard-rhel9",
-          "defaultStatus": "unaffected",
-          "cpes": [
-            "cpe:/a:redhat:openshift_ai"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat OpenShift AI (RHOAI)",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "rhoai/odh-mod-arch-model-registry-rhel9",
-          "defaultStatus": "unaffected",
-          "cpes": [
-            "cpe:/a:redhat:openshift_ai"
-          ]
-        }
-      ],
-      "problemType": [
-        "Improper Isolation or Compartmentalization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-4900",
-      "publishedDate": "2026-03-26T21:56:46.312Z",
-      "lastModifiedDate": "2026-03-26T21:56:46.312Z",
-      "description": "A weakness has been identified in code-projects Online Food Ordering System 1.0. This affects an unknown part of the file /dbfood/localhost.sql. This manipulation causes files or directories accessible. The attack can be initiated remotely. The exploit has been made available to the public and could be used for attacks. It is advisable to modify the configuration settings.",
-      "severity": 5.3,
-      "references": [
-        {
-          "url": "https://vuldb.com/?id.353642",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/?ctiid.353642",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/?submit.776980",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/ahmadmarz10-hub/CVEsMarz/blob/main/Online%20Food%20Ordering%20System%20in%20PHP%201.0%20%E2%80%93%20Sensitive%20Information%20Disclosure.md",
-          "type": "poc"
-        },
-        {
-          "url": "https://code-projects.org/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "code-projects",
-          "product": "Online Food Ordering System",
-          "versions": [
-            {
-              "version": "1.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Files or Directories Accessible",
-        "Direct Request"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-4899",
-      "publishedDate": "2026-03-26T21:56:43.372Z",
-      "lastModifiedDate": "2026-03-26T21:56:43.372Z",
-      "description": "A security flaw has been discovered in code-projects Online Food Ordering System 1.0. Affected by this issue is some unknown functionality of the file /dbfood/food.php. The manipulation of the argument cuisines results in cross site scripting. It is possible to launch the attack remotely. The exploit has been released to the public and may be used for attacks.",
-      "severity": 2.4,
-      "references": [
-        {
-          "url": "https://vuldb.com/?id.353641",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/?ctiid.353641",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/?submit.776444",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/ahmadmarz10-hub/CVEsMarz/blob/main/Stored%20Cross-Site%20Scripting%20(XSS)%20in%20Online%20Food%20Ordering%20System%20in%20PHP%20cuisines%20Parameter.md",
-          "type": "poc"
-        },
-        {
-          "url": "https://code-projects.org/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "code-projects",
-          "product": "Online Food Ordering System",
-          "versions": [
-            {
-              "version": "1.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Cross Site Scripting",
-        "Code Injection"
+        "CWE-506: Embedded Malicious Code"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
