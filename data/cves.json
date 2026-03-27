@@ -2,132 +2,58 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 4,
-    "last_updated": "2026-03-26T23:52:17.178862",
+    "total_count": 1,
+    "last_updated": "2026-03-27T02:12:52.345386",
     "severity_distribution": {
       "critical": 0,
-      "high": 2,
-      "medium": 2,
+      "high": 0,
+      "medium": 1,
       "low": 0,
       "none": 0
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-33697",
-      "publishedDate": "2026-03-26T23:34:53.414Z",
-      "lastModifiedDate": "2026-03-26T23:34:53.414Z",
-      "description": "Cocos AI is a confidential computing system for AI. The current implementation of attested TLS (aTLS) in CoCoS is vulnerable to a relay attack affecting all versions from v0.4.0 through v0.8.2. This vulnerability is present in both the AMD SEV-SNP and Intel TDX deployment targets supported by CoCoS. In the affected design, an attacker may be able to extract the ephemeral TLS private key used during the intra-handshake attestation. Because the attestation evidence is bound to the ephemeral key but not to the TLS channel, possession of that key is sufficient to relay or divert the attested TLS session. A client will accept the connection under false assumptions about the endpoint it is communicating with — the attestation report cannot distinguish the genuine attested service from the attacker's relay. This undermines the intended authentication guarantees of attested TLS. A successful attack may allow an attacker to impersonate an attested CoCoS service and access data or operations that the client intended to send only to the genuine attested endpoint. Exploitation requires the attacker to first extract the ephemeral TLS private key, which is possible through physical access to the server hardware, transient execution attacks, or side-channel attacks. Note that the aTLS implementation was fully redesigned in v0.7.0, but the redesign does not address this vulnerability. The relay attack weakness is architectural and affects all releases in the v0.4.0–v0.8.2 range. This vulnerability class was formally analyzed and demonstrated across multiple attested TLS implementations, including CoCoS, by researchers whose findings were disclosed to the IETF TLS Working Group. Formal verification was conducted using ProVerif. As of time of publication, there is no patch available. No complete workaround is available. The following hardening measures reduce but do not eliminate the risk: Keep TEE firmware and microcode up to date to reduce the key-extraction surface; define strict attestation policies that validate all available report fields, including firmware versions, TCB levels, and platform configuration registers; and/or enable mutual aTLS with CA-signed certificates where deployment architecture permits.",
-      "severity": 7.5,
+      "id": "CVE-2026-4907",
+      "publishedDate": "2026-03-27T01:33:14.205Z",
+      "lastModifiedDate": "2026-03-27T01:33:14.205Z",
+      "description": "A vulnerability was identified in Page-Replica Page Replica up to e4a7f52e75093ee318b4d5a9a9db6751050d2ad0. The impacted element is the function sitemap.fetch of the file /sitemap of the component Endpoint. The manipulation of the argument url leads to server-side request forgery. The attack is possible to be carried out remotely. The exploit is publicly available and might be used. This product adopts a rolling release strategy to maintain continuous delivery. Therefore, version details for affected or updated releases cannot be specified. The vendor was contacted early about this disclosure but did not respond in any way.",
+      "severity": 6.3,
       "references": [
         {
-          "url": "https://github.com/ultravioletrs/cocos/security/advisories/GHSA-vfgg-mvxx-mgg7",
+          "url": "https://vuldb.com/?id.353658",
           "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?ctiid.353658",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?submit.777447",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/lakshayyverma/CVE-Discovery/blob/main/page_replica.md",
+          "type": "poc"
         }
       ],
       "affected": [
         {
-          "vendor": "ultravioletrs",
-          "product": "cocos",
+          "vendor": "Page-Replica",
+          "product": "Page Replica",
           "versions": [
             {
-              "version": ">= 0.4.0, < 0.8.2",
+              "version": "e4a7f52e75093ee318b4d5a9a9db6751050d2ad0",
               "status": "affected"
             }
+          ],
+          "modules": [
+            "Endpoint"
           ]
         }
       ],
       "problemType": [
-        "CWE-322: Key Exchange without Entity Authentication",
-        "CWE-346: Origin Validation Error"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-28788",
-      "publishedDate": "2026-03-26T23:38:20.726Z",
-      "lastModifiedDate": "2026-03-26T23:38:20.726Z",
-      "description": "Open WebUI is a self-hosted artificial intelligence platform designed to operate entirely offline. Prior to version 0.8.6, any authenticated user can overwrite any file's content by ID through the `POST /api/v1/retrieval/process/files/batch` endpoint. The endpoint performs no ownership check, so a regular user with read access to a shared knowledge base can obtain file UUIDs via `GET /api/v1/knowledge/{id}/files` and then overwrite those files, escalating from read to write. The overwritten content is served to the LLM via RAG, meaning the attacker controls what the model tells other users. Version 0.8.6 patches the issue.",
-      "severity": 7.1,
-      "references": [
-        {
-          "url": "https://github.com/open-webui/open-webui/security/advisories/GHSA-jjp7-g2jw-wh3j",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "open-webui",
-          "product": "open-webui",
-          "versions": [
-            {
-              "version": "< 0.8.6",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-639: Authorization Bypass Through User-Controlled Key"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-29070",
-      "publishedDate": "2026-03-26T23:39:33.197Z",
-      "lastModifiedDate": "2026-03-26T23:39:33.197Z",
-      "description": "Open WebUI is a self-hosted artificial intelligence platform designed to operate entirely offline. Prior to version 0.8.6, an access control check is missing when deleting a file from a knowledge base. The only check being done is that the user has write access to the knowledge base (or is admin), but NOT that the file actually belongs to this knowledge base. It is thus possible to delete arbitrary files from arbitrary knowledge bases (as long as one knows the file id). Version 0.8.6 patches the issue.",
-      "severity": 5.4,
-      "references": [
-        {
-          "url": "https://github.com/open-webui/open-webui/security/advisories/GHSA-26gm-93rw-cchf",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "open-webui",
-          "product": "open-webui",
-          "versions": [
-            {
-              "version": "< 0.8.6",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-862: Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-28786",
-      "publishedDate": "2026-03-26T23:37:25.673Z",
-      "lastModifiedDate": "2026-03-26T23:37:25.673Z",
-      "description": "Open WebUI is a self-hosted artificial intelligence platform designed to operate entirely offline. Prior to version 0.8.6, an unsanitized filename field in the speech-to-text transcription endpoint allows any authenticated non-admin user to trigger a `FileNotFoundError` whose message — including the server's absolute `DATA_DIR` path — is returned verbatim in the HTTP 400 response body, confirming information disclosure on all default deployments. Version 0.8.6 patches the issue.",
-      "severity": 4.3,
-      "references": [
-        {
-          "url": "https://github.com/open-webui/open-webui/security/advisories/GHSA-vvxm-vxmr-624h",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "open-webui",
-          "product": "open-webui",
-          "versions": [
-            {
-              "version": "< 0.8.6",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')",
-        "CWE-209: Generation of Error Message Containing Sensitive Information"
+        "Server-Side Request Forgery"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
