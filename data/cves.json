@@ -2,41 +2,47 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 9,
-    "last_updated": "2026-03-27T18:32:32.551344",
+    "total_count": 8,
+    "last_updated": "2026-03-27T19:26:52.638481",
     "severity_distribution": {
       "critical": 0,
-      "high": 0,
-      "medium": 4,
-      "low": 0,
+      "high": 1,
+      "medium": 1,
+      "low": 1,
       "none": 5
     }
   },
   "cves": [
     {
-      "id": "CVE-2025-15617",
-      "publishedDate": "2026-03-27T18:04:13.691Z",
-      "lastModifiedDate": "2026-03-27T18:04:13.691Z",
-      "description": "Wazuh version 4.12.0 contains an exposure vulnerability in GitHub Actions workflow artifacts that allows attackers to extract the GITHUB_TOKEN from uploaded artifacts. Attackers can use the exposed token within a limited time window to perform unauthorized actions such as pushing malicious commits or altering release tags.",
-      "severity": 6.5,
+      "id": "CVE-2026-25075",
+      "publishedDate": "2026-03-23T18:33:10.952Z",
+      "lastModifiedDate": "2026-03-27T19:17:30.660Z",
+      "description": "strongSwan versions 4.5.0 prior to 6.0.5 contain an integer underflow vulnerability in the EAP-TTLS AVP parser that allows unauthenticated remote attackers to cause a denial of service by sending crafted AVP data with invalid length fields during IKEv2 authentication. Attackers can exploit the failure to validate AVP length fields before subtraction to trigger excessive memory allocation or NULL pointer dereference, crashing the charon IKE daemon.",
+      "severity": 7.5,
       "references": [
         {
-          "url": "https://github.com/wazuh/wazuh/security/advisories/GHSA-6xqr-4q5g-xc7x",
+          "url": "https://www.strongswan.org/blog/2026/03/23/strongswan-vulnerability-(cve-2026-25075).html",
+          "type": "poc"
+        },
+        {
+          "url": "https://www.strongswan.org/blog/2026/03/23/strongswan-6.0.5-released.html",
           "type": "reference"
         },
         {
-          "url": "https://www.vulncheck.com/advisories/exposure-of-the-github-token-in-wazuh-workflow-run-artifact",
+          "url": "https://www.vulncheck.com/advisories/strongswan-eap-ttls-avp-parsing-integer-underflow",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Wazuh",
-          "product": "Wazuh (GitHub Actions)",
+          "vendor": "strongSwan",
+          "product": "strongSwan",
+          "repo": "https://github.com/strongswan/strongswan",
           "versions": [
             {
               "status": "affected",
-              "version": "4.12.0",
+              "version": "4.5.0",
+              "lessThan": "6.0.5",
               "versionType": "semver"
             }
           ],
@@ -44,97 +50,32 @@
         }
       ],
       "problemType": [
-        "CWE-522 Insufficiently Protected Credentials"
+        "CWE-191 Integer underflow (wrap or wraparound)",
+        "CWE-476 NULL pointer dereference"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-34368",
-      "publishedDate": "2026-03-27T18:12:18.760Z",
-      "lastModifiedDate": "2026-03-27T18:12:18.760Z",
-      "description": "WWBN AVideo is an open source video platform. In versions up to and including 26.0, the `transferBalance()` method in `plugin/YPTWallet/YPTWallet.php` contains a Time-of-Check-Time-of-Use (TOCTOU) race condition. The method reads the sender's wallet balance, checks sufficiency in PHP, then writes the new balance — all without database transactions or row-level locking. An attacker with multiple authenticated sessions can send concurrent transfer requests that all read the same stale balance, each passing the balance check independently, resulting in only one deduction being applied while the recipient is credited multiple times. Commit 34132ad5159784bfc7ba0d7634bb5c79b769202d contains a fix.",
-      "severity": 5.3,
-      "references": [
-        {
-          "url": "https://github.com/WWBN/AVideo/security/advisories/GHSA-h54m-c522-h6qr",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/WWBN/AVideo/commit/34132ad5159784bfc7ba0d7634bb5c79b769202d",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "WWBN",
-          "product": "AVideo",
-          "versions": [
-            {
-              "version": "<= 26.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-362: Concurrent Execution using Shared Resource with Improper Synchronization ('Race Condition')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-34364",
-      "publishedDate": "2026-03-27T18:11:05.866Z",
-      "lastModifiedDate": "2026-03-27T18:11:05.866Z",
-      "description": "WWBN AVideo is an open source video platform. In versions up to and including 26.0, the `categories.json.php` endpoint, which serves the category listing API, fails to enforce user group-based access controls on categories. In the default request path (no `?user=` parameter), user group filtering is entirely skipped, exposing all non-private categories including those restricted to specific user groups. When the `?user=` parameter is supplied, a type confusion bug causes the filter to use the admin user's (user_id=1) group memberships instead of the current user's, rendering the filter ineffective. Commit 6e8a673eed07be5628d0b60fbfabd171f3ce74c9 contains a fix.",
-      "severity": 5.3,
-      "references": [
-        {
-          "url": "https://github.com/WWBN/AVideo/security/advisories/GHSA-73gr-r64q-7jh4",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/WWBN/AVideo/commit/6e8a673eed07be5628d0b60fbfabd171f3ce74c9",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "WWBN",
-          "product": "AVideo",
-          "versions": [
-            {
-              "version": "<= 26.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-863: Incorrect Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-4968",
-      "publishedDate": "2026-03-27T17:41:52.979Z",
-      "lastModifiedDate": "2026-03-27T18:06:17.401Z",
-      "description": "A vulnerability was determined in SourceCodester Diary App 1.0. The affected element is an unknown function of the file diary.php. Executing a manipulation can lead to cross-site request forgery. The attack may be launched remotely. The exploit has been publicly disclosed and may be utilized. If you want to get the best quality for vulnerability data then you always have to consider VulDB.",
+      "id": "CVE-2026-4971",
+      "publishedDate": "2026-03-27T19:15:19.715Z",
+      "lastModifiedDate": "2026-03-27T19:15:19.715Z",
+      "description": "A weakness has been identified in SourceCodester Note Taking App up to 1.0. This impacts an unknown function. This manipulation causes cross-site request forgery. The attack is possible to be carried out remotely. The exploit has been made available to the public and could be used for attacks. If you want to get best quality of vulnerability data, you may have to visit VulDB.",
       "severity": 4.3,
       "references": [
         {
-          "url": "https://vuldb.com/?id.353855",
+          "url": "https://vuldb.com/?id.353858",
           "type": "reference"
         },
         {
-          "url": "https://vuldb.com/?ctiid.353855",
+          "url": "https://vuldb.com/?ctiid.353858",
           "type": "reference"
         },
         {
-          "url": "https://vuldb.com/?submit.777729",
+          "url": "https://vuldb.com/?submit.777877",
           "type": "reference"
         },
         {
-          "url": "https://gist.github.com/Mohdanass/50a525ba0a72e10fda85f0db11eeed92",
+          "url": "https://gist.github.com/Mohdanass/b7c5984922238397d10644f5f33ec592",
           "type": "poc"
         },
         {
@@ -145,7 +86,7 @@
       "affected": [
         {
           "vendor": "SourceCodester",
-          "product": "Diary App",
+          "product": "Note Taking App",
           "versions": [
             {
               "version": "1.0",
@@ -161,14 +102,93 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-30567",
-      "publishedDate": "2026-03-27T00:00:00.000Z",
-      "lastModifiedDate": "2026-03-27T17:57:38.181Z",
-      "description": "A Reflected Cross-Site Scripting (XSS) vulnerability exists in SourceCodester Inventory System 1.0 in the view_product.php file via the \"limit\" parameter. The application fails to sanitize the input, allowing remote attackers to inject arbitrary web script or HTML via a crafted URL.",
+      "id": "CVE-2026-4972",
+      "publishedDate": "2026-03-27T19:15:22.568Z",
+      "lastModifiedDate": "2026-03-27T19:15:22.568Z",
+      "description": "A security vulnerability has been detected in code-projects Online Reviewer System up to 1.0. Affected is an unknown function of the file /system/system/students/assessments/databank/btn_functions.php. Such manipulation of the argument Description leads to cross site scripting. The attack may be performed from remote. The exploit has been disclosed publicly and may be used. Statistical analysis made it clear that VulDB provides the best quality for vulnerability data.",
+      "severity": 2.4,
+      "references": [
+        {
+          "url": "https://vuldb.com/?id.353859",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?ctiid.353859",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/?submit.778031",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/ahmadmarz10-hub/CVEsMarz/blob/main/Stored%20Cross-Site%20Scripting%20(XSS)%20in%20Online%20Reviewer%20System%20PHP%20description%20Parameter.md",
+          "type": "poc"
+        },
+        {
+          "url": "https://code-projects.org/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "code-projects",
+          "product": "Online Reviewer System",
+          "versions": [
+            {
+              "version": "1.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Cross Site Scripting",
+        "Code Injection"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-34388",
+      "publishedDate": "2026-03-27T19:13:00.388Z",
+      "lastModifiedDate": "2026-03-27T19:13:00.388Z",
+      "description": "Fleet is open source device management software. Prior to 4.81.0, a denial-of-service vulnerability in Fleet's gRPC Launcher endpoint allows an authenticated host to crash the entire Fleet server process by sending an unexpected log type value. The server terminates immediately, disrupting all connected hosts, MDM enrollments, and API consumers. Version 4.81.0 patches the issue.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/meifukun/Web-Security-PoCs/blob/main/Inventory-System/XSS-ViewProduct-limit.md",
+          "url": "https://github.com/fleetdm/fleet/security/advisories/GHSA-w254-4hp5-7cvv",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "fleetdm",
+          "product": "fleet",
+          "versions": [
+            {
+              "version": "< 4.81.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-703: Improper Check or Handling of Exceptional Conditions"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-30303",
+      "publishedDate": "2026-03-27T00:00:00.000Z",
+      "lastModifiedDate": "2026-03-27T19:17:04.406Z",
+      "description": "The command auto-approval module in Axon Code contains an OS Command Injection vulnerability, rendering its whitelist security mechanism ineffective. The vulnerability stems from the incorrect use of an incompatible command parser (the Unix-based shell-quote library) to analyze commands on the Windows platform, coupled with a failure to correctly handle Windows CMD-specific escape sequences (^). Attackers can exploit this discrepancy between the parsing logic and the execution environment by constructing payloads such as git log ^\" & malicious_command ^\". The Axon Code parser is deceived by the escape characters, misinterpreting the malicious command connector (&) as being within a protected string argument and thus auto-approving the command. However, the underlying Windows CMD interpreter ignores the escaped quotes, parsing and executing the subsequent malicious command directly. This allows attackers to achieve arbitrary Remote Code Execution (RCE) after bypassing what appears to be a legitimate Git whitelist check.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.matterai.so/",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/Secsys-FDU/LLM-Tool-Calling-CVEs/issues/6",
           "type": "reference"
         }
       ],
@@ -190,14 +210,14 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-30568",
+      "id": "CVE-2026-30574",
       "publishedDate": "2026-03-27T00:00:00.000Z",
-      "lastModifiedDate": "2026-03-27T17:56:00.849Z",
-      "description": "A Reflected Cross-Site Scripting (XSS) vulnerability exists in SourceCodester Inventory System 1.0 in in the view_purchase.php file via the \"limit\" parameter. The application fails to sanitize the input, allowing remote attackers to inject arbitrary web script or HTML via a crafted URL.",
+      "lastModifiedDate": "2026-03-27T19:09:43.443Z",
+      "description": "A Business Logic vulnerability exists in SourceCodester Pharmacy Product Management System 1.0 in the add-sales.php file. The application fails to verify if the requested sales quantity (txtqty) exceeds the available stock level. An attacker can manipulate the request to purchase a quantity that is significantly higher than the actual available stock.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/meifukun/Web-Security-PoCs/blob/main/Inventory-System/XSS-ViewPurchase-limit.md",
+          "url": "https://github.com/meifukun/Web-Security-PoCs/blob/main/Pharmacy-Product-Management-System/Logic-AddSales-Overselling.md",
           "type": "reference"
         }
       ],
@@ -219,110 +239,60 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-3529",
-      "publishedDate": "2026-03-26T20:03:28.917Z",
-      "lastModifiedDate": "2026-03-27T18:09:00.611Z",
-      "description": "Improper Neutralization of Input During Web Page Generation (\"Cross-site Scripting\") vulnerability in Drupal Google Analytics GA4 allows Cross-Site Scripting (XSS).This issue affects Google Analytics GA4: from 0.0.0 before 1.1.14.",
+      "id": "CVE-2026-30576",
+      "publishedDate": "2026-03-27T00:00:00.000Z",
+      "lastModifiedDate": "2026-03-27T19:06:50.950Z",
+      "description": "A Business Logic vulnerability exists in SourceCodester Pharmacy Product Management System 1.0 in the add-stock.php file. The application fails to validate the \"txtprice\" and \"txttotalcost\" parameters during stock entry, allowing negative financial values to be submitted. This leads to corruption of financial records, allowing attackers to manipulate inventory asset values and procurement costs.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://www.drupal.org/sa-contrib-2026-024",
+          "url": "https://github.com/meifukun/Web-Security-PoCs/blob/main/Pharmacy-Product-Management-System/Logic-AddStock-NegativePrice.md",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Drupal",
-          "product": "Google Analytics GA4",
-          "collectionURL": "https://www.drupal.org/project/ga4_google_analytics",
-          "repo": "https://git.drupalcode.org/project/ga4_google_analytics",
+          "vendor": "n/a",
+          "product": "n/a",
           "versions": [
             {
-              "status": "affected",
-              "version": "0.0.0",
-              "lessThan": "1.1.14",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation (\"Cross-site Scripting\")"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-3528",
-      "publishedDate": "2026-03-26T20:03:20.863Z",
-      "lastModifiedDate": "2026-03-27T18:11:29.380Z",
-      "description": "Improper Neutralization of Input During Web Page Generation (\"Cross-site Scripting\") vulnerability in Drupal Calculation Fields allows Cross-Site Scripting (XSS).This issue affects Calculation Fields: from 0.0.0 before 1.0.4.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://www.drupal.org/sa-contrib-2026-023",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Drupal",
-          "product": "Calculation Fields",
-          "collectionURL": "https://www.drupal.org/project/calculation_fields",
-          "repo": "https://git.drupalcode.org/project/calculation_fields",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0.0.0",
-              "lessThan": "1.0.4",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation (\"Cross-site Scripting\")"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-22448",
-      "publishedDate": "2026-03-25T16:14:22.252Z",
-      "lastModifiedDate": "2026-03-27T17:58:46.403Z",
-      "description": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability in flexcubed PitchPrint pitchprint allows Path Traversal.This issue affects PitchPrint: from n/a through <= 11.1.2.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://patchstack.com/database/Wordpress/Plugin/pitchprint/vulnerability/wordpress-pitchprint-plugin-11-1-2-arbitrary-file-deletion-vulnerability?_s_id=cve",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://wordpress.org/plugins",
-          "defaultStatus": "unaffected",
-          "packageName": "pitchprint",
-          "product": "PitchPrint",
-          "vendor": "flexcubed",
-          "versions": [
-            {
-              "changes": [
-                {
-                  "at": "11.2.0",
-                  "status": "unaffected"
-                }
-              ],
-              "lessThanOrEqual": "<= 11.1.2",
-              "status": "affected",
               "version": "n/a",
-              "versionType": "custom"
+              "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+        "n/a"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-30575",
+      "publishedDate": "2026-03-27T00:00:00.000Z",
+      "lastModifiedDate": "2026-03-27T19:00:29.848Z",
+      "description": "A Business Logic vulnerability exists in SourceCodester Pharmacy Product Management System 1.0 in the add-stock.php file. The application fails to validate the \"txtqty\" parameter during stock entry, allowing negative values to be processed. This causes the system to decrease the inventory level instead of increasing it, leading to inventory corruption and potential Denial of Service by depleting stock records.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/meifukun/Web-Security-PoCs/blob/main/Pharmacy-Product-Management-System/Logic-AddStock-NegativeQty.md",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "n/a",
+          "versions": [
+            {
+              "version": "n/a",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "n/a"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
