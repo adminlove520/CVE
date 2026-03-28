@@ -2,72 +2,122 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 1,
-    "last_updated": "2026-03-28T19:59:20.181996",
+    "total_count": 2,
+    "last_updated": "2026-03-28T20:46:06.476680",
     "severity_distribution": {
       "critical": 0,
-      "high": 1,
+      "high": 0,
       "medium": 0,
       "low": 0,
-      "none": 0
+      "none": 2
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-5012",
-      "publishedDate": "2026-03-28T19:15:11.947Z",
-      "lastModifiedDate": "2026-03-28T19:15:11.947Z",
-      "description": "A flaw has been found in elecV2 elecV2P up to 3.8.3. This issue affects the function pm2run of the file /rpc. Executing a manipulation can lead to os command injection. The attack can be executed remotely. The exploit has been published and may be used. The project was informed of the problem early through an issue report but has not responded yet.",
-      "severity": 7.3,
+      "id": "CVE-2026-3256",
+      "publishedDate": "2026-03-28T18:52:39.917Z",
+      "lastModifiedDate": "2026-03-28T20:06:47.537Z",
+      "description": "HTTP::Session versions through 0.53 for Perl defaults to using insecurely generated session ids.\n\nHTTP::Session defaults to using HTTP::Session::ID::SHA1 to generate session ids using a SHA-1 hash seeded with the built-in rand function, the high resolution epoch time, and the PID. The PID will come from a small set of numbers, and the epoch time may be guessed, if it is not leaked from the HTTP Date header. The built-in rand function is unsuitable for cryptographic usage.\n\nThe distribution includes HTTP::session::ID::MD5 which contains a similar flaw, but uses the MD5 hash instead.",
+      "severity": "N/A",
       "references": [
         {
-          "url": "https://vuldb.com/vuln/353897",
+          "url": "https://metacpan.org/release/KTAT/http-session-0.53/source/lib/HTTP/Session/ID/SHA1.pm",
           "type": "reference"
         },
         {
-          "url": "https://vuldb.com/vuln/353897/cti",
+          "url": "https://metacpan.org/release/KTAT/http-session-0.53/source/lib/HTTP/Session/ID/MD5.pm",
           "type": "reference"
         },
         {
-          "url": "https://vuldb.com/submit/779174",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/elecV2/elecV2P/issues/196",
-          "type": "poc"
-        },
-        {
-          "url": "https://github.com/elecV2/elecV2P/",
+          "url": "https://security.metacpan.org/docs/guides/random-data-for-security.html",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "elecV2",
-          "product": "elecV2P",
+          "collectionURL": "https://cpan.org/modules",
+          "defaultStatus": "unaffected",
+          "packageName": "http-session",
+          "product": "HTTP::Session",
+          "programRoutines": [
+            {
+              "name": "HTTP::Session::ID::SHA1::generate_id"
+            },
+            {
+              "name": "HTTP::Session::ID::MD5::generate_id"
+            }
+          ],
+          "repo": "https://github.com/tokuhirom/http-session",
+          "vendor": "KTAT",
           "versions": [
             {
-              "version": "3.8.0",
-              "status": "affected"
-            },
-            {
-              "version": "3.8.1",
-              "status": "affected"
-            },
-            {
-              "version": "3.8.2",
-              "status": "affected"
-            },
-            {
-              "version": "3.8.3",
-              "status": "affected"
+              "lessThanOrEqual": "0.53",
+              "status": "affected",
+              "version": "0",
+              "versionType": "custom"
             }
           ]
         }
       ],
       "problemType": [
-        "OS Command Injection",
-        "Command Injection"
+        "CWE-340 Generation of Predictable Numbers or Identifiers",
+        "CWE-338 Use of Cryptographically Weak Pseudo-Random Number Generator"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-15604",
+      "publishedDate": "2026-03-28T18:43:56.318Z",
+      "lastModifiedDate": "2026-03-28T20:06:46.387Z",
+      "description": "Amon2 versions before 6.17 for Perl use an insecure random_string implementation for security functions.\n\nIn versions 6.06 through 6.16, the random_string function will attempt to read bytes from the /dev/urandom device, but if that is unavailable then it generates bytes by concatenating a SHA-1 hash seeded with the built-in rand() function, the PID, and the high resolution epoch time.  The PID will come from a small set of numbers, and the epoch time may be guessed, if it is not leaked from the HTTP Date header. The built-in rand function is unsuitable for cryptographic usage.\n\nBefore version 6.06, there was no fallback when /dev/urandom was not available.\n\nBefore version 6.04, the random_string function used the built-in rand() function to generate a mixed-case alphanumeric string.\n\nThis function may be used for generating session ids, generating secrets for signing or encrypting cookie session data and generating tokens used for Cross Site Request Forgery (CSRF) protection.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://metacpan.org/release/TOKUHIROM/Amon2-6.17/diff/TOKUHIROM/Amon2-6.16#lib/Amon2/Util.pm",
+          "type": "reference"
+        },
+        {
+          "url": "https://metacpan.org/release/TOKUHIROM/Amon2-6.17/changes",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/tokuhirom/Amon/pull/135",
+          "type": "reference"
+        },
+        {
+          "url": "https://security.metacpan.org/docs/guides/random-data-for-security.html",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://cpan.org/modules",
+          "defaultStatus": "unaffected",
+          "packageName": "Amon2",
+          "product": "Amon2",
+          "programFiles": [
+            "lib/Amon2/Util.pm"
+          ],
+          "programRoutines": [
+            {
+              "name": "Amon2::Util::random_string"
+            }
+          ],
+          "repo": "https://github.com/tokuhirom/Amon",
+          "vendor": "TOKUHIROM",
+          "versions": [
+            {
+              "lessThan": "6.17",
+              "status": "affected",
+              "version": "0",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-340 Generation of Predictable Numbers or Identifiers",
+        "CWE-338 Use of Cryptographically Weak Pseudo-Random Number Generator"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
