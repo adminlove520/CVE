@@ -2,72 +2,96 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 2,
-    "last_updated": "2026-04-03T17:29:03.345423",
+    "total_count": 4,
+    "last_updated": "2026-04-03T18:04:02.041394",
     "severity_distribution": {
       "critical": 0,
       "high": 0,
-      "medium": 1,
+      "medium": 2,
       "low": 0,
-      "none": 1
+      "none": 2
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-5475",
-      "publishedDate": "2026-04-03T17:15:10.831Z",
-      "lastModifiedDate": "2026-04-03T17:15:10.831Z",
-      "description": "A vulnerability was determined in NASA cFS up to 7.0.0. This impacts the function CFE_SB_TransmitMsg of the file cfe_sb_priv.c of the component CCSDS Header Size Handler. Executing a manipulation can lead to memory corruption. The project was informed of the problem early through an issue report but has not responded yet.",
-      "severity": 5.5,
+      "id": "CVE-2026-34786",
+      "publishedDate": "2026-04-02T16:44:59.694Z",
+      "lastModifiedDate": "2026-04-03T17:38:11.143Z",
+      "description": "Rack is a modular Ruby web server interface. Prior to versions 2.2.23, 3.1.21, and 3.2.6, Rack::Static#applicable_rules evaluates several header_rules types against the raw URL-encoded PATH_INFO, while the underlying file-serving path is decoded before the file is served. As a result, a request for a URL-encoded variant of a static path can serve the same file without the headers that header_rules were intended to apply. In deployments that rely on Rack::Static to attach security-relevant response headers to static content, this can allow an attacker to bypass those headers by requesting an encoded form of the path. This issue has been patched in versions 2.2.23, 3.1.21, and 3.2.6.",
+      "severity": 5.3,
       "references": [
         {
-          "url": "https://vuldb.com/vuln/355079",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/vuln/355079/cti",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/submit/781951",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/nasa/cFS/issues/953",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/nasa/cFS/",
+          "url": "https://github.com/rack/rack/security/advisories/GHSA-q4qf-9j86-f5mh",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "NASA",
-          "product": "cFS",
+          "vendor": "rack",
+          "product": "rack",
           "versions": [
             {
-              "version": "7.0",
+              "version": "< 2.2.23",
+              "status": "affected"
+            },
+            {
+              "version": ">= 3.0.0.beta1, < 3.1.21",
+              "status": "affected"
+            },
+            {
+              "version": ">= 3.2.0, < 3.2.6",
               "status": "affected"
             }
-          ],
-          "cpes": [
-            "cpe:2.3:a:nasa:cfs:*:*:*:*:*:*:*:*"
-          ],
-          "modules": [
-            "CCSDS Header Size Handler"
           ]
         }
       ],
       "problemType": [
-        "Memory Corruption"
+        "CWE-180: Incorrect Behavior Order: Validate Before Canonicalize"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-34831",
+      "publishedDate": "2026-04-02T16:43:08.762Z",
+      "lastModifiedDate": "2026-04-03T17:48:11.330Z",
+      "description": "Rack is a modular Ruby web server interface. Prior to versions 2.2.23, 3.1.21, and 3.2.6, Rack::Files#fail sets the Content-Length response header using String#size instead of String#bytesize. When the response body contains multibyte UTF-8 characters, the declared Content-Length is smaller than the number of bytes actually sent on the wire. Because Rack::Files reflects the requested path in 404 responses, an attacker can trigger this mismatch by requesting a non-existent path containing percent-encoded UTF-8 characters. This results in incorrect HTTP response framing and may cause response desynchronization in deployments that rely on the incorrect Content-Length value. This issue has been patched in versions 2.2.23, 3.1.21, and 3.2.6.",
+      "severity": 4.8,
+      "references": [
+        {
+          "url": "https://github.com/rack/rack/security/advisories/GHSA-q2ww-5357-x388",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "rack",
+          "product": "rack",
+          "versions": [
+            {
+              "version": "< 2.2.23",
+              "status": "affected"
+            },
+            {
+              "version": ">= 3.0.0.beta1, < 3.1.21",
+              "status": "affected"
+            },
+            {
+              "version": ">= 3.2.0, < 3.2.6",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-130: Improper Handling of Length Parameter Inconsistency",
+        "CWE-135: Incorrect Calculation of Multi-Byte String Length"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
       "id": "CVE-2026-0545",
       "publishedDate": "2026-04-03T17:03:12.833Z",
-      "lastModifiedDate": "2026-04-03T17:03:12.833Z",
+      "lastModifiedDate": "2026-04-03T17:49:22.749Z",
       "description": "In mlflow/mlflow, the FastAPI job endpoints under `/ajax-api/3.0/jobs/*` are not protected by authentication or authorization when the `basic-auth` app is enabled. This vulnerability affects the latest version of the repository. If job execution is enabled (`MLFLOW_SERVER_ENABLE_JOB_EXECUTION=true`) and any job function is allowlisted, any network client can submit, read, search, and cancel jobs without credentials, bypassing basic-auth entirely. This can lead to unauthenticated remote code execution if allowed jobs perform privileged actions such as shell execution or filesystem changes. Even if jobs are deemed safe, this still constitutes an authentication bypass, potentially resulting in job spam, denial of service (DoS), or data exposure in job results.",
       "severity": "N/A",
       "references": [
@@ -92,6 +116,43 @@
       ],
       "problemType": [
         "CWE-306 Missing Authentication for Critical Function"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-28373",
+      "publishedDate": "2026-04-03T00:00:00.000Z",
+      "lastModifiedDate": "2026-04-03T17:45:09.221Z",
+      "description": "The Stackfield Desktop App before 1.10.2 for macOS and Windows contains a path traversal vulnerability in certain decryption functionality when processing the filePath property. A malicious export can write arbitrary content to any path on the victim's filesystem.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.stackfield.com/desktop-apps",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.rcesecurity.com/advisories/cve-2026-28373/",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.rcesecurity.com/2026/03/stackfield-desktop-app-rce-via-path-traversal-and-arbitrary-file-write-cve-2026-28373/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "n/a",
+          "versions": [
+            {
+              "version": "n/a",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "n/a"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
