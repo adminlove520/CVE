@@ -2,50 +2,451 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 5,
-    "last_updated": "2026-04-07T12:05:26.418431",
+    "total_count": 37,
+    "last_updated": "2026-04-07T14:00:17.515468",
     "severity_distribution": {
-      "critical": 0,
-      "high": 2,
-      "medium": 3,
+      "critical": 1,
+      "high": 12,
+      "medium": 7,
       "low": 0,
-      "none": 0
+      "none": 17
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-31842",
-      "publishedDate": "2026-04-07T11:17:33.621Z",
-      "lastModifiedDate": "2026-04-07T11:17:33.621Z",
-      "description": "Tinyproxy through 1.11.3 is vulnerable to HTTP request parsing desynchronization due to a case-sensitive comparison of the Transfer-Encoding header in src/reqs.c. The is_chunked_transfer() function uses strcmp() to compare the header value against \"chunked\", even though RFC 7230 specifies that transfer-coding names are case-insensitive. By sending a request with Transfer-Encoding: Chunked, an unauthenticated remote attacker can cause Tinyproxy to misinterpret the request as having no body. In this state, Tinyproxy sets content_length.client to -1, skips pull_client_data_chunked(), forwards request headers upstream, and transitions into relay_connection() raw TCP forwarding while unread body data remains buffered. This leads to inconsistent request state between Tinyproxy and backend servers. RFC-compliant backends (e.g., Node.js, Nginx) will continue waiting for chunked body data, causing connections to hang indefinitely. This behavior enables application-level denial of service through backend worker exhaustion. Additionally, in deployments where Tinyproxy is used for request-body inspection, filtering, or security enforcement, the unread body may be forwarded without proper inspection, resulting in potential security control bypass.",
-      "severity": 7.5,
+      "id": "CVE-2026-22679",
+      "publishedDate": "2026-04-07T12:51:22.789Z",
+      "lastModifiedDate": "2026-04-07T13:31:03.676Z",
+      "description": "Weaver (Fanwei) E-cology 10.0 versions prior to 20260312 contain an unauthenticated remote code execution vulnerability in the /papi/esearch/data/devops/dubboApi/debug/method endpoint that allows attackers to execute arbitrary commands by invoking exposed debug functionality. Attackers can craft POST requests with attacker-controlled interfaceName and methodName parameters to reach command-execution helpers and achieve arbitrary command execution on the system. Exploitation evidence was first observed by the Shadowserver Foundation on 2026-03-31 (UTC).",
+      "severity": 9.8,
       "references": [
         {
-          "url": "https://github.com/tinyproxy/tinyproxy/issues/604",
+          "url": "https://www.weaver.com.cn/cs/securityDownload.html#",
           "type": "reference"
         },
         {
-          "url": "https://github.com/tinyproxy/tinyproxy",
+          "url": "https://h4cker.zip/post/d5d211/",
+          "type": "poc"
+        },
+        {
+          "url": "https://ti.qianxin.com/vulnerability/notice-detail/1760",
           "type": "reference"
         },
         {
-          "url": "https://datatracker.ietf.org/doc/html/rfc7230",
+          "url": "https://www.vulncheck.com/advisories/weaver-e-cology-unauthenticated-rce-via-dubboapi-debug-endpoint",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Tinyproxy Project",
-          "product": "Tinyproxy",
-          "platforms": [
-            "all"
-          ],
-          "collectionURL": "https://github.com/tinyproxy/tinyproxy",
+          "vendor": "Weaver Network Co., Ltd.",
+          "product": "E-cology",
           "versions": [
             {
               "status": "affected",
               "version": "0",
-              "lessThanOrEqual": "1.11.3",
+              "lessThan": "20260312",
+              "versionType": "date"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-306 Missing Authentication for Critical Function"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-23818",
+      "publishedDate": "2026-04-07T12:18:11.753Z",
+      "lastModifiedDate": "2026-04-07T13:17:32.192Z",
+      "description": "A vulnerability has been identified in the graphical user interface (GUI) of HPE Aruba Networking Private 5G Core On-Prem that could allow an attacker to abuse an open redirect vulnerability in the login flow using a crafted URL. Successful exploitation may redirect an authenticated user to an attacker-controlled server hosting a spoofed login page prompting the unsuspecting victim to give away their credentials, which could then be captured by the attacker, before being redirected back to the legitimate login page.",
+      "severity": 8.8,
+      "references": [
+        {
+          "url": "https://support.hpe.com/hpesc/public/docDisplay?docId=hpesbnw05032en_us&docLocale=en_US",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Hewlett Packard Enterprise (HPE)",
+          "product": "Private 5G Core",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "1.0.0.0",
+              "lessThanOrEqual": "1.25.3.0",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "affected"
+        }
+      ],
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-5465",
+      "publishedDate": "2026-04-07T06:43:41.045Z",
+      "lastModifiedDate": "2026-04-07T13:13:24.738Z",
+      "description": "The Booking for Appointments and Events Calendar – Amelia plugin for WordPress is vulnerable to Insecure Direct Object Reference in all versions up to, and including, 2.1.3. This is due to the `UpdateProviderCommandHandler` failing to validate changes to the `externalId` field when a Provider (Employee) user updates their own profile. The `externalId` maps directly to a WordPress user ID and is passed to `wp_set_password()` and `wp_update_user()` without authorization checks. This makes it possible for authenticated attackers, with Provider-level (Employee) access and above, to take over any WordPress account — including Administrator — by injecting an arbitrary `externalId` value when updating their own provider profile.",
+      "severity": 8.8,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/a4204099-1065-4167-8b42-3da25945236c?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/ameliabooking/tags/2.1.3/src/Application/Controller/User/Provider/UpdateProviderController.php#L30",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/ameliabooking/tags/2.1.3/src/Application/Commands/User/Provider/UpdateProviderCommandHandler.php#L146",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/ameliabooking/tags/2.1.3/src/Application/Commands/User/Provider/UpdateProviderCommandHandler.php#L219",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/ameliabooking/tags/2.1.3/src/Application/Commands/User/Provider/UpdateProviderCommandHandler.php#L239",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset/3499608/ameliabooking/trunk/src/Application/Commands/User/Provider/UpdateProviderCommandHandler.php",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "ameliabooking",
+          "product": "Booking for Appointments and Events Calendar – Amelia",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "2.1.3",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-639 Authorization Bypass Through User-Controlled Key"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-65115",
+      "publishedDate": "2026-04-07T05:19:50.413Z",
+      "lastModifiedDate": "2026-04-07T13:26:20.981Z",
+      "description": "Remote Code Execution Vulnerability in JP1/IT Desktop Management 2 - Manager on Windows, JP1/IT Desktop Management 2 - Operations Director on Windows, Job Management Partner 1/IT Desktop Management 2 - Manager on Windows, JP1/IT Desktop Management - Manager on Windows, Job Management Partner 1/IT Desktop Management - Manager on Windows, JP1/NETM/DM Manager on Windows, JP1/NETM/DM Client on Windows, Job Management Partner 1/Software Distribution Manager on Windows, Job Management Partner 1/Software Distribution Client on Windows.This issue affects JP1/IT Desktop Management 2 - Manager: from 13-50 before 13-50-02, from 13-11 before 13-11-04, from 13-10 before 13-10-07, from 13-01 before 13-01-07, from 13-00 before 13-00-05, from 12-60 before 12-60-12, from 10-50 through 12-50-11; JP1/IT Desktop Management 2 - Operations Director: from 13-50 before 13-50-02, from 13-11 before 13-11-04, from 13-10 before 13-10-07, from 13-01 before 13-01-07, from 13-00 before 13-00-05, from 12-60 before 12-60-12, from 10-50 through 12-50-11; Job Management Partner 1/IT Desktop Management 2 - Manager: from 10-50 through 10-50-11; JP1/IT Desktop Management - Manager: from 09-50 through 10-10-16; Job Management Partner 1/IT Desktop Management - Manager: from 09-50 through 10-10-16; JP1/NETM/DM Manager: from 09-00 through 10-20-02; JP1/NETM/DM Client: from 09-00 through 10-20-02; Job Management Partner 1/Software Distribution Manager: from 09-00 through 09-51-13; Job Management Partner 1/Software Distribution Client: from 09-00 through 09-51-13.",
+      "severity": 8.8,
+      "references": [
+        {
+          "url": "https://www.hitachi.com/products/it/software/security/info/vuls/hitachi-sec-2026-118/index.html",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Hitachi",
+          "product": "JP1/IT Desktop Management 2 - Manager",
+          "platforms": [
+            "Windows"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "13-50",
+              "lessThan": "13-50-02",
+              "changes": [
+                {
+                  "at": "13-50-02",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "13-11",
+              "lessThan": "13-11-04",
+              "changes": [
+                {
+                  "at": "13-11-04",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "13-10",
+              "lessThan": "13-10-07",
+              "changes": [
+                {
+                  "at": "13-10-07",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "13-01",
+              "lessThan": "13-01-07",
+              "changes": [
+                {
+                  "at": "13-01-07",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "13-00",
+              "lessThan": "13-00-05",
+              "changes": [
+                {
+                  "at": "13-00-05",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "12-60",
+              "lessThan": "12-60-12",
+              "changes": [
+                {
+                  "at": "12-60-12",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "10-50",
+              "lessThanOrEqual": "12-50-11",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        },
+        {
+          "vendor": "Hitachi",
+          "product": "JP1/IT Desktop Management 2 - Operations Director",
+          "platforms": [
+            "Windows"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "13-50",
+              "lessThan": "13-50-02",
+              "changes": [
+                {
+                  "at": "13-50-02",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "13-11",
+              "lessThan": "13-11-04",
+              "changes": [
+                {
+                  "at": "13-11-04",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "13-10",
+              "lessThan": "13-10-07",
+              "changes": [
+                {
+                  "at": "13-10-07",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "13-01",
+              "lessThan": "13-01-07",
+              "changes": [
+                {
+                  "at": "13-01-07",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "13-00",
+              "lessThan": "13-00-05",
+              "changes": [
+                {
+                  "at": "13-00-05",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "12-60",
+              "lessThan": "12-60-12",
+              "changes": [
+                {
+                  "at": "12-60-12",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "10-50",
+              "lessThanOrEqual": "12-50-11",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        },
+        {
+          "vendor": "Hitachi",
+          "product": "Job Management Partner 1/IT Desktop Management 2 - Manager",
+          "platforms": [
+            "Windows"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "10-50",
+              "lessThanOrEqual": "10-50-11",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        },
+        {
+          "vendor": "Hitachi",
+          "product": "JP1/IT Desktop Management - Manager",
+          "platforms": [
+            "Windows"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "09-50",
+              "lessThanOrEqual": "10-10-16",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        },
+        {
+          "vendor": "Hitachi",
+          "product": "Job Management Partner 1/IT Desktop Management - Manager",
+          "platforms": [
+            "Windows"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "09-50",
+              "lessThanOrEqual": "10-10-16",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        },
+        {
+          "vendor": "Hitachi",
+          "product": "JP1/NETM/DM Manager",
+          "platforms": [
+            "Windows"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "09-00",
+              "lessThanOrEqual": "10-20-02",
+              "changes": [
+                {
+                  "at": "10-30",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        },
+        {
+          "vendor": "Hitachi",
+          "product": "JP1/NETM/DM Client",
+          "platforms": [
+            "Windows"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "09-00",
+              "lessThanOrEqual": "10-20-02",
+              "changes": [
+                {
+                  "at": "10-30",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        },
+        {
+          "vendor": "Hitachi",
+          "product": "Job Management Partner 1/Software Distribution Manager",
+          "platforms": [
+            "Windows"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "09-00",
+              "lessThanOrEqual": "09-51-13",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        },
+        {
+          "vendor": "Hitachi",
+          "product": "Job Management Partner 1/Software Distribution Client",
+          "platforms": [
+            "Windows"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "09-00",
+              "lessThanOrEqual": "09-51-13",
               "versionType": "custom"
             }
           ],
@@ -53,653 +454,2399 @@
         }
       ],
       "problemType": [
-        "CWE-444 Inconsistent Interpretation of HTTP Requests ('HTTP Request/Response Smuggling')"
+        "CWE-73 External control of file name or path"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-4282",
-      "publishedDate": "2026-04-02T12:44:52.941Z",
-      "lastModifiedDate": "2026-04-07T11:27:33.522Z",
-      "description": "A flaw was found in Keycloak. The SingleUseObjectProvider, a global key-value store, lacks proper type and namespace isolation. This vulnerability allows an unauthenticated attacker to forge authorization codes. Successful exploitation can lead to the creation of admin-capable access tokens, resulting in privilege escalation.",
+      "id": "CVE-2026-35442",
+      "publishedDate": "2026-04-06T21:36:57.807Z",
+      "lastModifiedDate": "2026-04-07T13:30:12.880Z",
+      "description": "Directus is a real-time API and App dashboard for managing SQL database content. Prior to 11.17.0, aggregate functions (min, max) applied to fields with the conceal special type incorrectly return raw database values instead of the masked placeholder. When combined with groupBy, any authenticated user with read access to the affected collection can extract concealed field values, including static API tokens and two-factor authentication secrets from directus_users. This vulnerability is fixed in 11.17.0.",
+      "severity": 8.1,
+      "references": [
+        {
+          "url": "https://github.com/directus/directus/security/advisories/GHSA-38hg-ww64-rrwc",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "directus",
+          "product": "directus",
+          "versions": [
+            {
+              "version": "< 11.17.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor",
+        "CWE-863: Incorrect Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-35558",
+      "publishedDate": "2026-04-03T20:15:09.386Z",
+      "lastModifiedDate": "2026-04-07T13:07:22.816Z",
+      "description": "Improper neutralization of special elements in the authentication components in Amazon Athena ODBC driver before 2.1.0.0 might allow a threat actor to execute arbitrary code or redirect authentication flows by using specially crafted connection parameters that are processed by the driver during user-initiated authentication.\n\nTo remediate this issue, users should upgrade to version 2.1.0.0.",
+      "severity": 7.8,
+      "references": [
+        {
+          "url": "https://aws.amazon.com/security/security-bulletins/2026-013-aws/",
+          "type": "reference"
+        },
+        {
+          "url": "https://downloads.athena.us-east-1.amazonaws.com/drivers/ODBC/v2.1.0.0/Windows/AmazonAthenaODBC-2.1.0.0.msi",
+          "type": "reference"
+        },
+        {
+          "url": "https://downloads.athena.us-east-1.amazonaws.com/drivers/ODBC/v2.1.0.0/Linux/AmazonAthenaODBC-2.1.0.0.rpm",
+          "type": "reference"
+        },
+        {
+          "url": "https://downloads.athena.us-east-1.amazonaws.com/drivers/ODBC/v2.1.0.0/Mac/arm/AmazonAthenaODBC-2.1.0.0_arm.pkg",
+          "type": "reference"
+        },
+        {
+          "url": "https://downloads.athena.us-east-1.amazonaws.com/drivers/ODBC/v2.1.0.0/Mac/Intel/AmazonAthenaODBC-2.1.0.0_x86.pkg",
+          "type": "reference"
+        },
+        {
+          "url": "https://docs.aws.amazon.com/athena/latest/ug/odbc-v2-driver-release-notes.html",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Amazon",
+          "product": "Amazon Athena ODBC driver",
+          "versions": [
+            {
+              "status": "unaffected",
+              "version": "2.1.0.0"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-77 Improper Neutralization of Special Elements used in a Command ('Command Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-34904",
+      "publishedDate": "2026-04-07T08:22:26.209Z",
+      "lastModifiedDate": "2026-04-07T13:35:08.146Z",
+      "description": "Cross-Site Request Forgery (CSRF) vulnerability in Analytify Simple Social Media Share Buttons allows Cross Site Request Forgery.This issue affects Simple Social Media Share Buttons: from n/a through 6.2.0.",
+      "severity": 7.5,
+      "references": [
+        {
+          "url": "https://patchstack.com/database/wordpress/plugin/simple-social-buttons/vulnerability/wordpress-simple-social-media-share-buttons-plugin-6-2-0-cross-site-request-forgery-csrf-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Analytify",
+          "product": "Simple Social Media Share Buttons",
+          "collectionURL": "https://wordpress.org/plugins",
+          "packageName": "simple-social-buttons",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "n/a",
+              "lessThanOrEqual": "6.2.0",
+              "changes": [
+                {
+                  "at": "6.2.1",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-352 Cross-Site Request Forgery (CSRF)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-35561",
+      "publishedDate": "2026-04-03T20:10:40.591Z",
+      "lastModifiedDate": "2026-04-07T13:09:01.619Z",
+      "description": "Insufficient authentication security controls in the browser-based authentication components in Amazon Athena ODBC driver before 2.1.0.0 might allow a threat actor to intercept or hijack authentication sessions due to insufficient protections in the browser-based authentication flows.\n\nTo remediate this issue, users should upgrade to version 2.1.0.0.",
       "severity": 7.4,
       "references": [
         {
-          "url": "https://access.redhat.com/errata/RHSA-2026:6475",
+          "url": "https://downloads.athena.us-east-1.amazonaws.com/drivers/ODBC/v2.1.0.0/Windows/AmazonAthenaODBC-2.1.0.0.msi",
           "type": "reference"
         },
         {
-          "url": "https://access.redhat.com/errata/RHSA-2026:6476",
+          "url": "https://downloads.athena.us-east-1.amazonaws.com/drivers/ODBC/v2.1.0.0/Linux/AmazonAthenaODBC-2.1.0.0.rpm",
           "type": "reference"
         },
         {
-          "url": "https://access.redhat.com/errata/RHSA-2026:6477",
+          "url": "https://downloads.athena.us-east-1.amazonaws.com/drivers/ODBC/v2.1.0.0/Mac/arm/AmazonAthenaODBC-2.1.0.0_arm.pkg",
           "type": "reference"
         },
         {
-          "url": "https://access.redhat.com/errata/RHSA-2026:6478",
+          "url": "https://downloads.athena.us-east-1.amazonaws.com/drivers/ODBC/v2.1.0.0/Mac/Intel/AmazonAthenaODBC-2.1.0.0_x86.pkg",
           "type": "reference"
         },
         {
-          "url": "https://access.redhat.com/security/cve/CVE-2026-4282",
+          "url": "https://aws.amazon.com/security/security-bulletins/2026-013-aws/",
           "type": "reference"
         },
         {
-          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2448061",
+          "url": "https://docs.aws.amazon.com/athena/latest/ug/odbc-v2-driver-release-notes.html",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Red Hat",
-          "product": "Red Hat build of Keycloak 26.2",
-          "collectionURL": "https://catalog.redhat.com/software/containers/",
-          "packageName": "rhbk/keycloak-operator-bundle",
-          "defaultStatus": "affected",
+          "vendor": "Amazon",
+          "product": "Amazon Athena ODBC driver",
           "versions": [
             {
-              "version": "26.2.15-1",
-              "lessThan": "*",
-              "versionType": "rpm",
-              "status": "unaffected"
+              "status": "unaffected",
+              "version": "2.1.0.0"
             }
           ],
-          "cpes": [
-            "cpe:/a:redhat:build_keycloak:26.2::el9"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat build of Keycloak 26.2",
-          "collectionURL": "https://catalog.redhat.com/software/containers/",
-          "packageName": "rhbk/keycloak-rhel9",
-          "defaultStatus": "affected",
-          "versions": [
-            {
-              "version": "26.2-18",
-              "lessThan": "*",
-              "versionType": "rpm",
-              "status": "unaffected"
-            }
-          ],
-          "cpes": [
-            "cpe:/a:redhat:build_keycloak:26.2::el9"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat build of Keycloak 26.2",
-          "collectionURL": "https://catalog.redhat.com/software/containers/",
-          "packageName": "rhbk/keycloak-rhel9-operator",
-          "defaultStatus": "affected",
-          "versions": [
-            {
-              "version": "26.2-18",
-              "lessThan": "*",
-              "versionType": "rpm",
-              "status": "unaffected"
-            }
-          ],
-          "cpes": [
-            "cpe:/a:redhat:build_keycloak:26.2::el9"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat build of Keycloak 26.2.15",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "defaultStatus": "unaffected",
-          "packageName": "rhbk/keycloak-rhel9",
-          "cpes": [
-            "cpe:/a:redhat:build_keycloak:26.2::el9"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat build of Keycloak 26.4",
-          "collectionURL": "https://catalog.redhat.com/software/containers/",
-          "packageName": "rhbk/keycloak-operator-bundle",
-          "defaultStatus": "affected",
-          "versions": [
-            {
-              "version": "26.4.11-1",
-              "lessThan": "*",
-              "versionType": "rpm",
-              "status": "unaffected"
-            }
-          ],
-          "cpes": [
-            "cpe:/a:redhat:build_keycloak:26.4::el9"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat build of Keycloak 26.4",
-          "collectionURL": "https://catalog.redhat.com/software/containers/",
-          "packageName": "rhbk/keycloak-rhel9",
-          "defaultStatus": "affected",
-          "versions": [
-            {
-              "version": "26.4-14",
-              "lessThan": "*",
-              "versionType": "rpm",
-              "status": "unaffected"
-            }
-          ],
-          "cpes": [
-            "cpe:/a:redhat:build_keycloak:26.4::el9"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat build of Keycloak 26.4",
-          "collectionURL": "https://catalog.redhat.com/software/containers/",
-          "packageName": "rhbk/keycloak-rhel9-operator",
-          "defaultStatus": "affected",
-          "versions": [
-            {
-              "version": "26.4-14",
-              "lessThan": "*",
-              "versionType": "rpm",
-              "status": "unaffected"
-            }
-          ],
-          "cpes": [
-            "cpe:/a:redhat:build_keycloak:26.4::el9"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat build of Keycloak 26.4.11",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "defaultStatus": "unaffected",
-          "packageName": "rhbk/keycloak-rhel9",
-          "cpes": [
-            "cpe:/a:redhat:build_keycloak:26.4::el9"
-          ]
+          "defaultStatus": "unaffected"
         }
       ],
       "problemType": [
-        "Improper Isolation or Compartmentalization"
+        "CWE-862: Missing Authorization"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-5342",
-      "publishedDate": "2026-04-02T14:30:14.897Z",
-      "lastModifiedDate": "2026-04-07T11:27:04.120Z",
-      "description": "A flaw has been found in LibRaw up to 0.22.0. This affects the function LibRaw::nikon_load_padded_packed_raw of the file src/decoders/decoders_libraw.cpp of the component TIFF/NEF. Executing a manipulation of the argument load_flags/raw_width can lead to out-of-bounds read. It is possible to launch the attack remotely. The exploit has been published and may be used. Upgrading to version 0.22.1 mitigates this issue. This patch is called b8397cd45657b84e88bd1202528d1764265f185c. It is advisable to upgrade the affected component.",
-      "severity": 5.3,
+      "id": "CVE-2026-35560",
+      "publishedDate": "2026-04-03T20:10:38.830Z",
+      "lastModifiedDate": "2026-04-07T13:09:13.079Z",
+      "description": "Improper certificate validation in the identity provider connection components in Amazon Athena ODBC driver before 2.1.0.0 might allow a man-in-the-middle threat actor to intercept authentication credentials due to insufficient default transport security when connecting to identity providers. This only applies to connections with external identity providers and does not apply to connections with Athena.\n\nTo remediate this issue, users should upgrade to version 2.1.0.0.",
+      "severity": 7.4,
       "references": [
         {
-          "url": "https://vuldb.com/vuln/354671",
+          "url": "https://downloads.athena.us-east-1.amazonaws.com/drivers/ODBC/v2.1.0.0/Windows/AmazonAthenaODBC-2.1.0.0.msi",
           "type": "reference"
         },
         {
-          "url": "https://vuldb.com/vuln/354671/cti",
+          "url": "https://downloads.athena.us-east-1.amazonaws.com/drivers/ODBC/v2.1.0.0/Linux/AmazonAthenaODBC-2.1.0.0.rpm",
           "type": "reference"
         },
         {
-          "url": "https://vuldb.com/submit/781223",
+          "url": "https://downloads.athena.us-east-1.amazonaws.com/drivers/ODBC/v2.1.0.0/Mac/arm/AmazonAthenaODBC-2.1.0.0_arm.pkg",
           "type": "reference"
         },
         {
-          "url": "https://github.com/LibRaw/LibRaw/issues/795",
+          "url": "https://downloads.athena.us-east-1.amazonaws.com/drivers/ODBC/v2.1.0.0/Mac/Intel/AmazonAthenaODBC-2.1.0.0_x86.pkg",
           "type": "reference"
         },
         {
-          "url": "https://github.com/LibRaw/LibRaw/issues/795#issuecomment-4073769886",
+          "url": "https://aws.amazon.com/security/security-bulletins/2026-013-aws/",
           "type": "reference"
         },
         {
-          "url": "https://github.com/biniamf/pocs/tree/main/libraw_nikonpadded",
+          "url": "https://docs.aws.amazon.com/athena/latest/ug/odbc-v2-driver-release-notes.html",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Amazon",
+          "product": "Amazon Athena ODBC driver",
+          "versions": [
+            {
+              "status": "unaffected",
+              "version": "2.1.0.0"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-295: Improper Certificate Validation"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-5692",
+      "publishedDate": "2026-04-06T23:15:13.215Z",
+      "lastModifiedDate": "2026-04-07T13:17:45.741Z",
+      "description": "A vulnerability was found in Totolink A7100RU 7.4cu.2313_b20191024. This impacts the function setGameSpeedCfg of the file /cgi-bin/cstecgi.cgi. The manipulation of the argument enable results in os command injection. The attack may be performed from remote. The exploit has been made public and could be used.",
+      "severity": 7.3,
+      "references": [
+        {
+          "url": "https://vuldb.com/vuln/355519",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/vuln/355519/cti",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/submit/792963",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/Litengzheng/vuldb_new/blob/main/A7100RU/vul_190/README.md",
           "type": "poc"
         },
         {
-          "url": "https://github.com/LibRaw/LibRaw/commit/b8397cd45657b84e88bd1202528d1764265f185c",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/LibRaw/LibRaw/releases/tag/0.22.1",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/LibRaw/LibRaw/",
+          "url": "https://www.totolink.net/",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "n/a",
-          "product": "LibRaw",
+          "vendor": "Totolink",
+          "product": "A7100RU",
           "versions": [
             {
-              "version": "0.1",
+              "version": "7.4cu.2313_b20191024",
               "status": "affected"
-            },
-            {
-              "version": "0.2",
-              "status": "affected"
-            },
-            {
-              "version": "0.3",
-              "status": "affected"
-            },
-            {
-              "version": "0.4",
-              "status": "affected"
-            },
-            {
-              "version": "0.5",
-              "status": "affected"
-            },
-            {
-              "version": "0.6",
-              "status": "affected"
-            },
-            {
-              "version": "0.7",
-              "status": "affected"
-            },
-            {
-              "version": "0.8",
-              "status": "affected"
-            },
-            {
-              "version": "0.9",
-              "status": "affected"
-            },
-            {
-              "version": "0.10",
-              "status": "affected"
-            },
-            {
-              "version": "0.11",
-              "status": "affected"
-            },
-            {
-              "version": "0.12",
-              "status": "affected"
-            },
-            {
-              "version": "0.13",
-              "status": "affected"
-            },
-            {
-              "version": "0.14",
-              "status": "affected"
-            },
-            {
-              "version": "0.15",
-              "status": "affected"
-            },
-            {
-              "version": "0.16",
-              "status": "affected"
-            },
-            {
-              "version": "0.17",
-              "status": "affected"
-            },
-            {
-              "version": "0.18",
-              "status": "affected"
-            },
-            {
-              "version": "0.19",
-              "status": "affected"
-            },
-            {
-              "version": "0.20",
-              "status": "affected"
-            },
-            {
-              "version": "0.21",
-              "status": "affected"
-            },
-            {
-              "version": "0.22.0",
-              "status": "affected"
-            },
-            {
-              "version": "0.22.1",
-              "status": "unaffected"
             }
           ],
           "cpes": [
-            "cpe:2.3:a:libraw:libraw:*:*:*:*:*:*:*:*"
-          ],
-          "modules": [
-            "TIFF/NEF"
+            "cpe:2.3:o:totolink:a7100ru_firmware:*:*:*:*:*:*:*:*"
           ]
         }
       ],
       "problemType": [
-        "Out-of-Bounds Read",
-        "Memory Corruption"
+        "OS Command Injection",
+        "Command Injection"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-4325",
-      "publishedDate": "2026-04-02T12:44:52.997Z",
-      "lastModifiedDate": "2026-04-07T11:27:36.605Z",
-      "description": "A flaw was found in Keycloak. The SingleUseObjectProvider, a global key-value store, lacks proper type and namespace isolation. This vulnerability allows an attacker to delete arbitrary single-use entries, which can enable the replay of consumed action tokens, such as password reset links. This could lead to unauthorized access or account compromise.",
-      "severity": 5.3,
+      "id": "CVE-2026-5689",
+      "publishedDate": "2026-04-06T22:30:14.721Z",
+      "lastModifiedDate": "2026-04-07T13:28:13.122Z",
+      "description": "A vulnerability was detected in Totolink A7100RU 7.4cu.2313_b20191024. The affected element is the function setNtpCfg of the file /cgi-bin/cstecgi.cgi. Performing a manipulation of the argument tz results in os command injection. Remote exploitation of the attack is possible. The exploit is now public and may be used.",
+      "severity": 7.3,
       "references": [
         {
-          "url": "https://access.redhat.com/errata/RHSA-2026:6475",
+          "url": "https://vuldb.com/vuln/355516",
           "type": "reference"
         },
         {
-          "url": "https://access.redhat.com/errata/RHSA-2026:6476",
+          "url": "https://vuldb.com/vuln/355516/cti",
           "type": "reference"
         },
         {
-          "url": "https://access.redhat.com/errata/RHSA-2026:6477",
+          "url": "https://vuldb.com/submit/792946",
           "type": "reference"
         },
         {
-          "url": "https://access.redhat.com/errata/RHSA-2026:6478",
-          "type": "reference"
-        },
-        {
-          "url": "https://access.redhat.com/security/cve/CVE-2026-4325",
-          "type": "reference"
-        },
-        {
-          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2448351",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat build of Keycloak 26.2",
-          "collectionURL": "https://catalog.redhat.com/software/containers/",
-          "packageName": "rhbk/keycloak-operator-bundle",
-          "defaultStatus": "affected",
-          "versions": [
-            {
-              "version": "26.2.15-1",
-              "lessThan": "*",
-              "versionType": "rpm",
-              "status": "unaffected"
-            }
-          ],
-          "cpes": [
-            "cpe:/a:redhat:build_keycloak:26.2::el9"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat build of Keycloak 26.2",
-          "collectionURL": "https://catalog.redhat.com/software/containers/",
-          "packageName": "rhbk/keycloak-rhel9",
-          "defaultStatus": "affected",
-          "versions": [
-            {
-              "version": "26.2-18",
-              "lessThan": "*",
-              "versionType": "rpm",
-              "status": "unaffected"
-            }
-          ],
-          "cpes": [
-            "cpe:/a:redhat:build_keycloak:26.2::el9"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat build of Keycloak 26.2",
-          "collectionURL": "https://catalog.redhat.com/software/containers/",
-          "packageName": "rhbk/keycloak-rhel9-operator",
-          "defaultStatus": "affected",
-          "versions": [
-            {
-              "version": "26.2-18",
-              "lessThan": "*",
-              "versionType": "rpm",
-              "status": "unaffected"
-            }
-          ],
-          "cpes": [
-            "cpe:/a:redhat:build_keycloak:26.2::el9"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat build of Keycloak 26.2.15",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "defaultStatus": "unaffected",
-          "packageName": "rhbk/keycloak-rhel9",
-          "cpes": [
-            "cpe:/a:redhat:build_keycloak:26.2::el9"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat build of Keycloak 26.4",
-          "collectionURL": "https://catalog.redhat.com/software/containers/",
-          "packageName": "rhbk/keycloak-operator-bundle",
-          "defaultStatus": "affected",
-          "versions": [
-            {
-              "version": "26.4.11-1",
-              "lessThan": "*",
-              "versionType": "rpm",
-              "status": "unaffected"
-            }
-          ],
-          "cpes": [
-            "cpe:/a:redhat:build_keycloak:26.4::el9"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat build of Keycloak 26.4",
-          "collectionURL": "https://catalog.redhat.com/software/containers/",
-          "packageName": "rhbk/keycloak-rhel9",
-          "defaultStatus": "affected",
-          "versions": [
-            {
-              "version": "26.4-14",
-              "lessThan": "*",
-              "versionType": "rpm",
-              "status": "unaffected"
-            }
-          ],
-          "cpes": [
-            "cpe:/a:redhat:build_keycloak:26.4::el9"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat build of Keycloak 26.4",
-          "collectionURL": "https://catalog.redhat.com/software/containers/",
-          "packageName": "rhbk/keycloak-rhel9-operator",
-          "defaultStatus": "affected",
-          "versions": [
-            {
-              "version": "26.4-14",
-              "lessThan": "*",
-              "versionType": "rpm",
-              "status": "unaffected"
-            }
-          ],
-          "cpes": [
-            "cpe:/a:redhat:build_keycloak:26.4::el9"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat build of Keycloak 26.4.11",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "defaultStatus": "unaffected",
-          "packageName": "rhbk/keycloak-rhel9",
-          "cpes": [
-            "cpe:/a:redhat:build_keycloak:26.4::el9"
-          ]
-        }
-      ],
-      "problemType": [
-        "Improper Isolation or Compartmentalization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-5318",
-      "publishedDate": "2026-04-02T01:45:12.421Z",
-      "lastModifiedDate": "2026-04-07T11:26:57.754Z",
-      "description": "A weakness has been identified in LibRaw up to 0.22.0. This impacts the function HuffTable::initval of the file src/decompressors/losslessjpeg.cpp of the component JPEG DHT Parser. This manipulation of the argument bits[] causes out-of-bounds write. It is possible to initiate the attack remotely. The exploit has been made available to the public and could be used for attacks. Upgrading to version 0.22.1 will fix this issue. Patch name: a6734e867b19d75367c05f872ac26322464e3995. It is advisable to upgrade the affected component.",
-      "severity": 4.3,
-      "references": [
-        {
-          "url": "https://vuldb.com/vuln/354650",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/vuln/354650/cti",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/submit/780538",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/LibRaw/LibRaw/issues/794",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/LibRaw/LibRaw/issues/794#issuecomment-4065342499",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/biniamf/pocs/tree/main/libraw_lljpeg",
+          "url": "https://github.com/Litengzheng/vuldb_new/blob/main/A7100RU/vul_187/README.md",
           "type": "poc"
         },
         {
-          "url": "https://github.com/LibRaw/LibRaw/commit/a6734e867b19d75367c05f872ac26322464e3995",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/LibRaw/LibRaw/releases/tag/0.22.1",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/LibRaw/LibRaw/",
+          "url": "https://www.totolink.net/",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "n/a",
-          "product": "LibRaw",
+          "vendor": "Totolink",
+          "product": "A7100RU",
           "versions": [
             {
-              "version": "0.1",
+              "version": "7.4cu.2313_b20191024",
               "status": "affected"
-            },
-            {
-              "version": "0.2",
-              "status": "affected"
-            },
-            {
-              "version": "0.3",
-              "status": "affected"
-            },
-            {
-              "version": "0.4",
-              "status": "affected"
-            },
-            {
-              "version": "0.5",
-              "status": "affected"
-            },
-            {
-              "version": "0.6",
-              "status": "affected"
-            },
-            {
-              "version": "0.7",
-              "status": "affected"
-            },
-            {
-              "version": "0.8",
-              "status": "affected"
-            },
-            {
-              "version": "0.9",
-              "status": "affected"
-            },
-            {
-              "version": "0.10",
-              "status": "affected"
-            },
-            {
-              "version": "0.11",
-              "status": "affected"
-            },
-            {
-              "version": "0.12",
-              "status": "affected"
-            },
-            {
-              "version": "0.13",
-              "status": "affected"
-            },
-            {
-              "version": "0.14",
-              "status": "affected"
-            },
-            {
-              "version": "0.15",
-              "status": "affected"
-            },
-            {
-              "version": "0.16",
-              "status": "affected"
-            },
-            {
-              "version": "0.17",
-              "status": "affected"
-            },
-            {
-              "version": "0.18",
-              "status": "affected"
-            },
-            {
-              "version": "0.19",
-              "status": "affected"
-            },
-            {
-              "version": "0.20",
-              "status": "affected"
-            },
-            {
-              "version": "0.21",
-              "status": "affected"
-            },
-            {
-              "version": "0.22.0",
-              "status": "affected"
-            },
-            {
-              "version": "0.22.1",
-              "status": "unaffected"
             }
           ],
           "cpes": [
-            "cpe:2.3:a:libraw:libraw:*:*:*:*:*:*:*:*"
-          ],
-          "modules": [
-            "JPEG DHT Parser"
+            "cpe:2.3:o:totolink:a7100ru_firmware:*:*:*:*:*:*:*:*"
           ]
         }
       ],
       "problemType": [
-        "Out-of-bounds Write",
-        "Memory Corruption"
+        "OS Command Injection",
+        "Command Injection"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-29047",
+      "publishedDate": "2026-04-06T14:39:15.996Z",
+      "lastModifiedDate": "2026-04-07T13:06:57.659Z",
+      "description": "GLPI is a free asset and IT management software package. From 10.0.0 to before 10.0.24 and 11.0.6, an authenticated user can perform a SQL injection via the logs export feature. This vulnerability is fixed in 10.0.24 and 11.0.6.",
+      "severity": 7.2,
+      "references": [
+        {
+          "url": "https://github.com/glpi-project/glpi/security/advisories/GHSA-3m49-qf92-vccr",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "glpi-project",
+          "product": "glpi",
+          "versions": [
+            {
+              "version": ">= 10.0.0, 10.0.24",
+              "status": "affected"
+            },
+            {
+              "version": ">= 11.0.0-alpha, < 11.0.6",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-25932",
+      "publishedDate": "2026-04-06T14:31:02.319Z",
+      "lastModifiedDate": "2026-04-07T13:07:09.230Z",
+      "description": "GLPI is a Free Asset and IT Management Software package. From 0.60 to before 10.0.24, an authenticated technician user can store an XSS payload in a supplier fields. This vulnerability is fixed in 10.0.24.",
+      "severity": 7.2,
+      "references": [
+        {
+          "url": "https://github.com/glpi-project/glpi/security/advisories/GHSA-m627-945g-x7xh",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "glpi-project",
+          "product": "glpi",
+          "versions": [
+            {
+              "version": ">= 0.60, < 10.0.24",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-116: Improper Encoding or Escaping of Output",
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-33727",
+      "publishedDate": "2026-04-06T15:02:19.693Z",
+      "lastModifiedDate": "2026-04-07T13:06:34.177Z",
+      "description": "Pi-hole is a Linux network-level advertisement and Internet tracker blocking application. Version 6.4 has a local privilege-escalation vulnerability allows code execution as root from the low-privilege pihole account. Important context: the pihole account uses nologin, so this is not a direct interactive-login issue. However, nologin does not prevent code from running as UID pihole if a Pi-hole component is compromised. In that realistic post-compromise scenario, attacker-controlled content in /etc/pihole/versions is sourced by root-run Pi-hole scripts, leading to root code execution. This vulnerability is fixed in 6.4.1.",
+      "severity": 6.4,
+      "references": [
+        {
+          "url": "https://github.com/pi-hole/pi-hole/security/advisories/GHSA-c935-8g63-qp74",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "pi-hole",
+          "product": "pi-hole",
+          "versions": [
+            {
+              "version": ">= 6.4, < 6.4.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-269: Improper Privilege Management"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-5719",
+      "publishedDate": "2026-04-07T02:00:19.631Z",
+      "lastModifiedDate": "2026-04-07T13:27:03.584Z",
+      "description": "A flaw has been found in itsourcecode Construction Management System 1.0. This affects an unknown function of the file /borrowedtool.php. Executing a manipulation of the argument code can lead to sql injection. It is possible to launch the attack remotely. The exploit has been published and may be used.",
+      "severity": 6.3,
+      "references": [
+        {
+          "url": "https://vuldb.com/vuln/355661",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/vuln/355661/cti",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/submit/792968",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/ltranquility/submit/issues/7",
+          "type": "poc"
+        },
+        {
+          "url": "https://itsourcecode.com/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "itsourcecode",
+          "product": "Construction Management System",
+          "versions": [
+            {
+              "version": "1.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "SQL Injection",
+        "Injection"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-65116",
+      "publishedDate": "2026-04-07T05:43:25.553Z",
+      "lastModifiedDate": "2026-04-07T13:25:56.036Z",
+      "description": "Buffer Overflow Vulnerability in JP1/IT Desktop Management 2 - Manager on Windows, JP1/IT Desktop Management 2 - Operations Director on Windows, Job Management Partner 1/IT Desktop Management 2 - Manager on Windows, JP1/IT Desktop Management - Manager on Windows, Job Management Partner 1/IT Desktop Management - Manager on Windows, JP1/NETM/DM Manager on Windows, JP1/NETM/DM Client on Windows, Job Management Partner 1/Software Distribution Manager on Windows, Job Management Partner 1/Software Distribution Client on Windows.This issue affects JP1/IT Desktop Management 2 - Manager: from 13-50 before 13-50-02, from 13-11 before 13-11-04, from 13-10 before 13-10-07, from 13-01 before 13-01-07, from 13-00 before 13-00-05, from 12-60 before 12-60-12, from 10-50 through 12-50-11; JP1/IT Desktop Management 2 - Operations Director: from 13-50 before 13-50-02, from 13-11 before 13-11-04, from 13-10 before 13-10-07, from 13-01 before 13-01-07, from 13-00 before 13-00-05, from 12-60 before 12-60-12, from 10-50 through 12-50-11; Job Management Partner 1/IT Desktop Management 2 - Manager: from 10-50 through 10-50-11; JP1/IT Desktop Management - Manager: from 09-50 through 10-10-16; Job Management Partner 1/IT Desktop Management - Manager: from 09-50 through 10-10-16; JP1/NETM/DM Manager: from 09-00 through 10-20-02; JP1/NETM/DM Client: from 09-00 through 10-20-02; Job Management Partner 1/Software Distribution Manager: from 09-00 through 09-51-13; Job Management Partner 1/Software Distribution Client: from 09-00 through 09-51-13.",
+      "severity": 5.5,
+      "references": [
+        {
+          "url": "https://www.hitachi.com/products/it/software/security/info/vuls/hitachi-sec-2026-118/index.html",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Hitachi",
+          "product": "JP1/IT Desktop Management 2 - Manager",
+          "platforms": [
+            "Windows"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "13-50",
+              "lessThan": "13-50-02",
+              "changes": [
+                {
+                  "at": "13-50-02",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "13-11",
+              "lessThan": "13-11-04",
+              "changes": [
+                {
+                  "at": "13-11-04",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "13-10",
+              "lessThan": "13-10-07",
+              "changes": [
+                {
+                  "at": "13-10-07",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "13-01",
+              "lessThan": "13-01-07",
+              "changes": [
+                {
+                  "at": "13-01-07",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "13-00",
+              "lessThan": "13-00-05",
+              "changes": [
+                {
+                  "at": "13-00-05",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "12-60",
+              "lessThan": "12-60-12",
+              "changes": [
+                {
+                  "at": "12-60-12",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "10-50",
+              "lessThanOrEqual": "12-50-11",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        },
+        {
+          "vendor": "Hitachi",
+          "product": "JP1/IT Desktop Management 2 - Operations Director",
+          "platforms": [
+            "Windows"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "13-50",
+              "lessThan": "13-50-02",
+              "changes": [
+                {
+                  "at": "13-50-02",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "13-11",
+              "lessThan": "13-11-04",
+              "changes": [
+                {
+                  "at": "13-11-04",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "13-10",
+              "lessThan": "13-10-07",
+              "changes": [
+                {
+                  "at": "13-10-07",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "13-01",
+              "lessThan": "13-01-07",
+              "changes": [
+                {
+                  "at": "13-01-07",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "13-00",
+              "lessThan": "13-00-05",
+              "changes": [
+                {
+                  "at": "13-00-05",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "12-60",
+              "lessThan": "12-60-12",
+              "changes": [
+                {
+                  "at": "12-60-12",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "10-50",
+              "lessThanOrEqual": "12-50-11",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        },
+        {
+          "vendor": "Hitachi",
+          "product": "Job Management Partner 1/IT Desktop Management 2 - Manager",
+          "platforms": [
+            "Windows"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "10-50",
+              "lessThanOrEqual": "10-50-11",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        },
+        {
+          "vendor": "Hitachi",
+          "product": "JP1/IT Desktop Management - Manager",
+          "platforms": [
+            "Windows"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "09-50",
+              "lessThanOrEqual": "10-10-16",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        },
+        {
+          "vendor": "Hitachi",
+          "product": "Job Management Partner 1/IT Desktop Management - Manager",
+          "platforms": [
+            "Windows"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "09-50",
+              "lessThanOrEqual": "10-10-16",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        },
+        {
+          "vendor": "Hitachi",
+          "product": "JP1/NETM/DM Manager",
+          "platforms": [
+            "Windows"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "09-00",
+              "lessThanOrEqual": "10-20-02",
+              "changes": [
+                {
+                  "at": "10-30",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        },
+        {
+          "vendor": "Hitachi",
+          "product": "JP1/NETM/DM Client",
+          "platforms": [
+            "Windows"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "09-00",
+              "lessThanOrEqual": "10-20-02",
+              "changes": [
+                {
+                  "at": "10-30",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        },
+        {
+          "vendor": "Hitachi",
+          "product": "Job Management Partner 1/Software Distribution Manager",
+          "platforms": [
+            "Windows"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "09-00",
+              "lessThanOrEqual": "09-51-13",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        },
+        {
+          "vendor": "Hitachi",
+          "product": "Job Management Partner 1/Software Distribution Client",
+          "platforms": [
+            "Windows"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "09-00",
+              "lessThanOrEqual": "09-51-13",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-763 Release of invalid pointer or reference"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-34903",
+      "publishedDate": "2026-04-07T08:57:51.189Z",
+      "lastModifiedDate": "2026-04-07T12:59:24.495Z",
+      "description": "Missing Authorization vulnerability in OceanWP Ocean Extra allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Ocean Extra: from n/a through 2.5.3.",
+      "severity": 5.4,
+      "references": [
+        {
+          "url": "https://patchstack.com/database/wordpress/plugin/ocean-extra/vulnerability/wordpress-ocean-extra-plugin-2-5-3-broken-access-control-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "OceanWP",
+          "product": "Ocean Extra",
+          "collectionURL": "https://wordpress.org/plugins",
+          "packageName": "ocean-extra",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "n/a",
+              "lessThanOrEqual": "2.5.3",
+              "changes": [
+                {
+                  "at": "2.5.4",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-862 Missing Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-34899",
+      "publishedDate": "2026-04-07T08:31:37.373Z",
+      "lastModifiedDate": "2026-04-07T13:11:05.535Z",
+      "description": "Missing Authorization vulnerability in Eniture technology LTL Freight Quotes – Worldwide Express Edition allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects LTL Freight Quotes – Worldwide Express Edition: from n/a through 5.2.1.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://patchstack.com/database/wordpress/plugin/ltl-freight-quotes-worldwide-express-edition/vulnerability/wordpress-ltl-freight-quotes-worldwide-express-edition-plugin-5-2-1-broken-access-control-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Eniture technology",
+          "product": "LTL Freight Quotes – Worldwide Express Edition",
+          "collectionURL": "https://wordpress.org/plugins",
+          "packageName": "ltl-freight-quotes-worldwide-express-edition",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "n/a",
+              "lessThanOrEqual": "5.2.1",
+              "changes": [
+                {
+                  "at": "5.2.2",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-862 Missing Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3177",
+      "publishedDate": "2026-04-07T07:40:13.519Z",
+      "lastModifiedDate": "2026-04-07T13:19:24.638Z",
+      "description": "The Charitable – Donation Plugin for WordPress – Fundraising with Recurring Donations & More plugin for WordPress is vulnerable to Insufficient Verification of Data Authenticity in versions up to, and including, 1.8.9.7. This is due to missing cryptographic verification of incoming Stripe webhook events. This makes it possible for unauthenticated attackers to forge payment_intent.succeeded webhook payloads and mark pending donations as completed without a real payment.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/bc3b2645-7b57-4884-99c5-e37dbd4a9600?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset/3485023/charitable",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "smub",
+          "product": "Charitable – Donation Plugin for WordPress – Fundraising with Recurring Donations & More",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "1.8.9.7",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-345 Insufficient Verification of Data Authenticity"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-35449",
+      "publishedDate": "2026-04-06T21:46:07.363Z",
+      "lastModifiedDate": "2026-04-07T13:28:55.133Z",
+      "description": "WWBN AVideo is an open source video platform. In versions 26.0 and prior, the install/test.php diagnostic script has its CLI-only access guard disabled by commenting out the die() statement. The script remains accessible via HTTP after installation, exposing video viewer statistics including IP addresses, session IDs, and user agents to unauthenticated visitors.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://github.com/WWBN/AVideo/security/advisories/GHSA-hg8q-8wqr-35xx",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "WWBN",
+          "product": "AVideo",
+          "versions": [
+            {
+              "version": "<= 26.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-35554",
+      "publishedDate": "2026-04-07T13:07:08.679Z",
+      "lastModifiedDate": "2026-04-07T13:07:08.679Z",
+      "description": "A race condition in the Apache Kafka Java producer client’s buffer pool management can cause messages to be silently delivered to incorrect topics.\n\nWhen a produce batch expires due to delivery.timeout.ms while a network request containing that batch is still in flight, the batch’s ByteBuffer is prematurely deallocated and returned to the buffer pool. If a subsequent producer batch—potentially destined for a different topic—reuses this freed buffer before the original network request completes, the buffer contents may become corrupted. This can result in messages being delivered to unintended topics without any error being reported to the producer.\n\n\nData Confidentiality:\nMessages intended for one topic may be delivered to a different topic, potentially exposing sensitive data to consumers who have access to the destination topic but not the intended source topic.\n\nData Integrity:\nConsumers on the receiving topic may encounter unexpected or incompatible messages, leading to deserialization failures, processing errors, and corrupted downstream data.\n\nThis issue affects Apache Kafka versions ≤ 3.9.1, ≤ 4.0.1, and  ≤ 4.1.1.\n\nKafka users are advised to upgrade to 3.9.2, 4.0.2, 4.1.2, 4.2.0, or later to address this vulnerability.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://issues.apache.org/jira/browse/KAFKA-19012",
+          "type": "reference"
+        },
+        {
+          "url": "https://lists.apache.org/thread/f07x7j8ovyqhjd1to25jsnqbm6wj01d6",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://repo.maven.apache.org/maven2",
+          "defaultStatus": "unaffected",
+          "packageName": "org.apache.kafka:kafka-clients",
+          "product": "Apache Kafka Clients",
+          "vendor": "Apache Software Foundation",
+          "versions": [
+            {
+              "lessThanOrEqual": "3.9.1",
+              "status": "affected",
+              "version": "2.8.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThanOrEqual": "4.0.1",
+              "status": "affected",
+              "version": "4.0.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThanOrEqual": "4.1.1",
+              "status": "affected",
+              "version": "4.1.0",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-416 Use After Free",
+        "CWE-362 Concurrent Execution using Shared Resource with Improper Synchronization ('Race Condition')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-5627",
+      "publishedDate": "2026-04-07T13:06:38.503Z",
+      "lastModifiedDate": "2026-04-07T13:06:38.503Z",
+      "description": "A path traversal vulnerability exists in mintplex-labs/anything-llm versions up to and including 1.9.1, within the `AgentFlows` component. The vulnerability arises from improper handling of user input in the `loadFlow` and `deleteFlow` methods in `server/utils/agentFlows/index.js`. Specifically, the combination of `path.join` and `normalizePath` allows attackers to bypass directory restrictions and access or delete arbitrary `.json` files on the server. This can lead to information disclosure, such as leaking sensitive configuration files containing API keys, or denial of service by deleting critical files like `package.json`. The issue is resolved in version 1.12.1.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://huntr.com/bounties/597d41c5-7ea0-4786-80f4-bd536ec66374",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/mintplex-labs/anything-llm/commit/3444b9b0aa6764d72d53670ab4b1aaccdc6b7017",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "mintplex-labs",
+          "product": "mintplex-labs/anything-llm",
+          "versions": [
+            {
+              "version": "unspecified",
+              "lessThan": "1.12.1",
+              "status": "affected",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-29 Path Traversal: '\\..\\filename'"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-33866",
+      "publishedDate": "2026-04-07T12:57:44.380Z",
+      "lastModifiedDate": "2026-04-07T13:05:47.658Z",
+      "description": "MLflow is vulnerable to an authorization bypass affecting the AJAX endpoint used to download saved model artifacts. Due to missing access‑control validation, a user without permissions to a given experiment can directly query this endpoint and retrieve model artifacts they are not authorized to access.\n\n \nThis issue affects MLflow version through 3.10.1",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/mlflow/mlflow/pull/21708",
+          "type": "reference"
+        },
+        {
+          "url": "https://cert.pl/en/posts/2026/04/CVE-2026-33865/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://github.com/",
+          "defaultStatus": "unaffected",
+          "packageName": "mlflow",
+          "product": "Mlflow",
+          "repo": "https://github.com/mlflow/",
+          "vendor": "Mlflow",
+          "versions": [
+            {
+              "lessThanOrEqual": "3.10.1",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-862 Missing Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-33865",
+      "publishedDate": "2026-04-07T12:57:38.525Z",
+      "lastModifiedDate": "2026-04-07T13:10:14.041Z",
+      "description": "MLflow is vulnerable to Stored Cross-Site Scripting (XSS) caused by unsafe parsing of YAML-based MLmodel artifacts in its web interface. An authenticated attacker can upload a malicious MLmodel file containing a payload that executes when another user views the artifact in the UI. This allows actions such as session hijacking or performing operations on behalf of the victim. \n\nThis issue affects MLflow version through 3.10.1",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/mlflow/mlflow/pull/21435",
+          "type": "reference"
+        },
+        {
+          "url": "https://cert.pl/en/posts/2026/04/CVE-2026-33865/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://github.com",
+          "defaultStatus": "unaffected",
+          "packageName": "mlfolw",
+          "product": "Mlflow",
+          "repo": "https://github.com/mlflow/",
+          "vendor": "Mlflow",
+          "versions": [
+            {
+              "lessThanOrEqual": "3.10.1",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-28808",
+      "publishedDate": "2026-04-07T12:28:16.056Z",
+      "lastModifiedDate": "2026-04-07T13:14:16.481Z",
+      "description": "Incorrect Authorization vulnerability in Erlang OTP (inets modules) allows unauthenticated access to CGI scripts protected by directory rules when served via script_alias.\n\nWhen script_alias maps a URL prefix to a directory outside DocumentRoot, mod_auth evaluates directory-based access controls against the DocumentRoot-relative path while mod_cgi executes the script at the ScriptAlias-resolved path. This path mismatch allows unauthenticated access to CGI scripts that directory rules were meant to protect.\n\nThis vulnerability is associated with program files lib/inets/src/http_server/mod_alias.erl, lib/inets/src/http_server/mod_auth.erl, and lib/inets/src/http_server/mod_cgi.erl.\n\nThis issue affects OTP from OTP 17.0 until OTP 28.4.2, 27.3.4.10 and 26.2.5.19 corresponding to inets from 5.10 until 9.6.2, 9.3.2.4 and 9.1.0.6.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/erlang/otp/security/advisories/GHSA-3vhp-h532-mc3f",
+          "type": "reference"
+        },
+        {
+          "url": "https://cna.erlef.org/cves/CVE-2026-28808.html",
+          "type": "reference"
+        },
+        {
+          "url": "https://osv.dev/vulnerability/EEF-CVE-2026-28808",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.erlang.org/doc/system/versions.html#order-of-versions",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/erlang/otp/commit/8fc71ac6af4fbcc54103bec2983ef22e82942688",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/erlang/otp/commit/9dfa0c51eac97866078e808dec2183cb7871ff7c",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "cpes": [
+            "cpe:2.3:a:erlang:erlang\\/otp:*:*:*:*:*:*:*:*"
+          ],
+          "defaultStatus": "affected",
+          "modules": [
+            "inets"
+          ],
+          "packageName": "inets",
+          "packageURL": "pkg:otp/inets?repository_url=https:%2F%2Fgithub.com%2Ferlang%2Fotp&vcs_url=git%20https:%2F%2Fgithub.com%2Ferlang%2Fotp.git",
+          "product": "OTP",
+          "programFiles": [
+            "src/http_server/mod_alias.erl",
+            "src/http_server/mod_auth.erl",
+            "src/http_server/mod_cgi.erl"
+          ],
+          "repo": "https://github.com/erlang/otp",
+          "vendor": "Erlang",
+          "versions": [
+            {
+              "changes": [
+                {
+                  "at": "9.6.2",
+                  "status": "unaffected"
+                },
+                {
+                  "at": "9.3.2.4",
+                  "status": "unaffected"
+                },
+                {
+                  "at": "9.1.0.6",
+                  "status": "unaffected"
+                }
+              ],
+              "lessThan": "*",
+              "status": "affected",
+              "version": "5.10",
+              "versionType": "otp"
+            }
+          ]
+        },
+        {
+          "collectionURL": "https://github.com",
+          "cpes": [
+            "cpe:2.3:a:erlang:erlang\\/otp:*:*:*:*:*:*:*:*"
+          ],
+          "defaultStatus": "affected",
+          "modules": [
+            "inets"
+          ],
+          "packageName": "erlang/otp",
+          "packageURL": "pkg:github/erlang/otp",
+          "product": "OTP",
+          "programFiles": [
+            "lib/inets/src/http_server/mod_alias.erl",
+            "lib/inets/src/http_server/mod_auth.erl",
+            "lib/inets/src/http_server/mod_cgi.erl"
+          ],
+          "repo": "https://github.com/erlang/otp",
+          "vendor": "Erlang",
+          "versions": [
+            {
+              "changes": [
+                {
+                  "at": "28.4.2",
+                  "status": "unaffected"
+                },
+                {
+                  "at": "27.3.4.10",
+                  "status": "unaffected"
+                },
+                {
+                  "at": "26.2.5.19",
+                  "status": "unaffected"
+                }
+              ],
+              "lessThan": "*",
+              "status": "affected",
+              "version": "17.0",
+              "versionType": "otp"
+            },
+            {
+              "changes": [
+                {
+                  "at": "8fc71ac6af4fbcc54103bec2983ef22e82942688",
+                  "status": "unaffected"
+                },
+                {
+                  "at": "9dfa0c51eac97866078e808dec2183cb7871ff7c",
+                  "status": "unaffected"
+                }
+              ],
+              "lessThan": "*",
+              "status": "affected",
+              "version": "07b8f441ca711f9812fad9e9115bab3c3aa92f79",
+              "versionType": "git"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-863 Incorrect Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-32144",
+      "publishedDate": "2026-04-07T12:28:00.767Z",
+      "lastModifiedDate": "2026-04-07T13:15:20.530Z",
+      "description": "Improper Certificate Validation vulnerability in Erlang OTP public_key (pubkey_ocsp module) allows OCSP designated-responder authorization bypass via missing signature verification.\n\nThe OCSP response validation in public_key:pkix_ocsp_validate/5 does not verify that a CA-designated responder certificate was cryptographically signed by the issuing CA. Instead, it only checks that the responder certificate's issuer name matches the CA's subject name and that the certificate has the OCSPSigning extended key usage. An attacker who can intercept or control OCSP responses can create a self-signed certificate with a matching issuer name and the OCSPSigning EKU, and use it to forge OCSP responses that mark revoked certificates as valid.\n\nThis affects SSL/TLS clients using OCSP stapling, which may accept connections to servers with revoked certificates, potentially transmitting sensitive data to compromised servers. Applications using the public_key:pkix_ocsp_validate/5 API directly are also affected, with impact depending on usage context.\n\nThis vulnerability is associated with program files lib/public_key/src/pubkey_ocsp.erl and program routines pubkey_ocsp:is_authorized_responder/3.\n\nThis issue affects OTP from OTP 27.0 until OTP 28.4.2 and 27.3.4.10 corresponding to public_key from 1.16 until 1.20.3 and 1.17.1.2, and ssl from 11.2 until 11.5.4 and 11.2.12.7.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/erlang/otp/security/advisories/GHSA-gxrm-pf64-99xm",
+          "type": "reference"
+        },
+        {
+          "url": "https://cna.erlef.org/cves/CVE-2026-32144.html",
+          "type": "reference"
+        },
+        {
+          "url": "https://osv.dev/vulnerability/EEF-CVE-2026-32144",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.erlang.org/doc/system/versions.html#order-of-versions",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/erlang/otp/commit/ac7ff528be857c5d35eb29c7f24106e3a16d4891",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/erlang/otp/commit/49033a6d93a5be0ee0dce04e1fb8b4ae7de1e0c0",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "cpes": [
+            "cpe:2.3:a:erlang:erlang\\/otp:*:*:*:*:*:*:*:*"
+          ],
+          "defaultStatus": "unknown",
+          "modules": [
+            "pubkey_ocsp"
+          ],
+          "packageName": "public_key",
+          "packageURL": "pkg:otp/public_key?repository_url=https:%2F%2Fgithub.com%2Ferlang%2Fotp&vcs_url=git%20https:%2F%2Fgithub.com%2Ferlang%2Fotp.git",
+          "product": "OTP",
+          "programFiles": [
+            "src/pubkey_ocsp.erl"
+          ],
+          "programRoutines": [
+            {
+              "name": "pubkey_ocsp:is_authorized_responder/3"
+            }
+          ],
+          "repo": "https://github.com/erlang/otp",
+          "vendor": "Erlang",
+          "versions": [
+            {
+              "changes": [
+                {
+                  "at": "1.20.3",
+                  "status": "unaffected"
+                },
+                {
+                  "at": "1.17.1.2",
+                  "status": "unaffected"
+                }
+              ],
+              "lessThan": "*",
+              "status": "affected",
+              "version": "1.16",
+              "versionType": "otp"
+            }
+          ]
+        },
+        {
+          "cpes": [
+            "cpe:2.3:a:erlang:erlang\\/otp:*:*:*:*:*:*:*:*"
+          ],
+          "defaultStatus": "unknown",
+          "modules": [
+            "ssl_stapling"
+          ],
+          "packageName": "ssl",
+          "packageURL": "pkg:otp/ssl?repository_url=https:%2F%2Fgithub.com%2Ferlang%2Fotp&vcs_url=git%20https:%2F%2Fgithub.com%2Ferlang%2Fotp.git",
+          "product": "OTP",
+          "programFiles": [
+            "src/ssl_stapling.erl"
+          ],
+          "repo": "https://github.com/erlang/otp",
+          "vendor": "Erlang",
+          "versions": [
+            {
+              "changes": [
+                {
+                  "at": "11.5.4",
+                  "status": "unaffected"
+                },
+                {
+                  "at": "11.2.12.7",
+                  "status": "unaffected"
+                }
+              ],
+              "lessThan": "*",
+              "status": "affected",
+              "version": "11.2",
+              "versionType": "otp"
+            }
+          ]
+        },
+        {
+          "collectionURL": "https://github.com",
+          "cpes": [
+            "cpe:2.3:a:erlang:erlang\\/otp:*:*:*:*:*:*:*:*"
+          ],
+          "defaultStatus": "unknown",
+          "modules": [
+            "pubkey_ocsp"
+          ],
+          "packageName": "erlang/otp",
+          "packageURL": "pkg:github/erlang/otp",
+          "product": "OTP",
+          "programFiles": [
+            "lib/public_key/src/pubkey_ocsp.erl"
+          ],
+          "programRoutines": [
+            {
+              "name": "pubkey_ocsp:is_authorized_responder/3"
+            }
+          ],
+          "repo": "https://github.com/erlang/otp",
+          "vendor": "Erlang",
+          "versions": [
+            {
+              "changes": [
+                {
+                  "at": "28.4.2",
+                  "status": "unaffected"
+                },
+                {
+                  "at": "27.3.4.10",
+                  "status": "unaffected"
+                }
+              ],
+              "lessThan": "*",
+              "status": "affected",
+              "version": "27.0",
+              "versionType": "otp"
+            },
+            {
+              "changes": [
+                {
+                  "at": "ac7ff528be857c5d35eb29c7f24106e3a16d4891",
+                  "status": "unaffected"
+                },
+                {
+                  "at": "49033a6d93a5be0ee0dce04e1fb8b4ae7de1e0c0",
+                  "status": "unaffected"
+                }
+              ],
+              "lessThan": "*",
+              "status": "affected",
+              "version": "601a012837ea0a5c8095bf24223132824177124d",
+              "versionType": "git"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-295 Improper Certificate Validation"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-39666",
+      "publishedDate": "2026-04-07T12:09:07.609Z",
+      "lastModifiedDate": "2026-04-07T13:18:19.609Z",
+      "description": "Local privilege escalation in Checkmk 2.2.0 (EOL), Checkmk 2.3.0 before 2.3.0p46, Checkmk 2.4.0 before 2.4.0p25, and Checkmk 2.5.0 (beta) before 2.5.0b3 allows a site user to escalate their privileges to root, by manipulating files in the site context that are processed when the `omd` administrative command is run by root.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://checkmk.com/werk/18891",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Checkmk",
+          "vendor": "Checkmk GmbH",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "2.2.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThan": "2.3.0p46",
+              "status": "affected",
+              "version": "2.3.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThan": "2.4.0p25",
+              "status": "affected",
+              "version": "2.4.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThan": "2.5.0b3",
+              "status": "affected",
+              "version": "2.5.0b1",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-426: Untrusted Search Path",
+        "CWE-829: Inclusion of Functionality from Untrusted Control Sphere"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3466",
+      "publishedDate": "2026-04-07T12:08:50.132Z",
+      "lastModifiedDate": "2026-04-07T13:18:48.034Z",
+      "description": "Insufficient sanitization of dashboard dashlet title links in Checkmk 2.2.0 (EOL), Checkmk 2.3.0 before 2.3.0p46, Checkmk 2.4.0 before 2.4.0p25, and Checkmk 2.5.0 (beta) before 2.5.0b3 allows an attacker with dashboard creation privileges to perform stored cross-site scripting (XSS) attacks by tricking a victim into clicking a crafted dashlet title link on a shared dashboard.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://checkmk.com/werk/19033",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Checkmk",
+          "vendor": "Checkmk GmbH",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "2.2.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThan": "2.3.0p46",
+              "status": "affected",
+              "version": "2.3.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThan": "2.4.0p25",
+              "status": "affected",
+              "version": "2.4.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThan": "2.5.0b3",
+              "status": "affected",
+              "version": "2.5.0b1",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-34197",
+      "publishedDate": "2026-04-07T07:50:10.958Z",
+      "lastModifiedDate": "2026-04-07T13:30:11.885Z",
+      "description": "Improper Input Validation, Improper Control of Generation of Code ('Code Injection') vulnerability in Apache ActiveMQ Broker, Apache ActiveMQ.\n\nApache ActiveMQ Classic exposes the Jolokia JMX-HTTP bridge at /api/jolokia/ on the web console. The default Jolokia access policy permits exec operations on all ActiveMQ MBeans (org.apache.activemq:*), including\nBrokerService.addNetworkConnector(String) and BrokerService.addConnector(String). \n\nAn authenticated attacker can invoke these operations with a crafted discovery URI that triggers the VM transport's brokerConfig parameter to load a remote Spring XML application context using ResourceXmlApplicationContext. \nBecause Spring's ResourceXmlApplicationContext instantiates all singleton beans before the BrokerService validates the configuration, arbitrary code execution occurs on the broker's JVM through bean factory methods such as Runtime.exec().\nThis issue affects Apache ActiveMQ Broker: before 5.19.4, from 6.0.0 before 6.2.3; Apache ActiveMQ: .\n\nUsers are recommended to upgrade to version 5.19.5 or 6.2.3, which fixes the issue.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://activemq.apache.org/security-advisories.data/CVE-2026-34197-announcement.txt",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://repo.maven.apache.org/maven2",
+          "defaultStatus": "unaffected",
+          "packageName": "org.apache.activemq:activemq-broker",
+          "product": "Apache ActiveMQ Broker",
+          "vendor": "Apache Software Foundation",
+          "versions": [
+            {
+              "lessThan": "5.19.4",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            },
+            {
+              "lessThan": "6.2.3",
+              "status": "affected",
+              "version": "6.0.0",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "packageName": "org.apache.activemq:activemq-all",
+          "product": "Apache ActiveMQ",
+          "vendor": "Apache Software Foundation",
+          "versions": [
+            {
+              "lessThan": "5.19.4",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            },
+            {
+              "lessThan": "6.2.3",
+              "status": "affected",
+              "version": "6.0.0",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-20 Improper Input Validation",
+        "CWE-94 Improper Control of Generation of Code ('Code Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-1114",
+      "publishedDate": "2026-04-07T06:19:05.270Z",
+      "lastModifiedDate": "2026-04-07T13:20:46.279Z",
+      "description": "In parisneo/lollms version 2.1.0, the application's session management is vulnerable to improper access control due to the use of a weak secret key for signing JSON Web Tokens (JWT). This vulnerability allows an attacker to perform an offline brute-force attack to recover the secret key. Once the secret key is obtained, the attacker can forge administrative tokens by modifying the JWT payload and resigning it with the cracked secret. This enables unauthorized users to escalate privileges, impersonate the administrator, and gain access to restricted endpoints. The issue is resolved in version 2.2.0.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://huntr.com/bounties/608b2a3b-2225-438e-9e61-ffbfdec2ed89",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/parisneo/lollms/commit/a3b2b82b84d537a9da63e63a370a6a8ad55fed34",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "parisneo",
+          "product": "parisneo/lollms",
+          "versions": [
+            {
+              "version": "unspecified",
+              "lessThan": "2.2.0",
+              "status": "affected",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-284 Improper Access Control"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-1839",
+      "publishedDate": "2026-04-07T05:22:00.959Z",
+      "lastModifiedDate": "2026-04-07T13:27:41.789Z",
+      "description": "A vulnerability in the HuggingFace Transformers library, specifically in the `Trainer` class, allows for arbitrary code execution. The `_load_rng_state()` method in `src/transformers/trainer.py` at line 3059 calls `torch.load()` without the `weights_only=True` parameter. This issue affects all versions of the library supporting `torch>=2.2` when used with PyTorch versions below 2.6, as the `safe_globals()` context manager provides no protection in these versions. An attacker can exploit this vulnerability by supplying a malicious checkpoint file, such as `rng_state.pth`, which can execute arbitrary code when loaded. The issue is resolved in version v5.0.0rc3.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://huntr.com/bounties/3c77bb97-e493-493d-9a88-c57f5c536485",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/huggingface/transformers/commit/03c8082ba4594c9b8d6fe190ca9bed0e5f8ca396",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "huggingface",
+          "product": "huggingface/transformers",
+          "versions": [
+            {
+              "version": "unspecified",
+              "lessThan": "v5.0.0rc3",
+              "status": "affected",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-502 Deserialization of Untrusted Data"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-20446",
+      "publishedDate": "2026-04-07T03:25:39.747Z",
+      "lastModifiedDate": "2026-04-07T13:02:15.541Z",
+      "description": "In sec boot, there is a possible out of bounds write due to an integer overflow. This could lead to local denial of service, if an attacker has physical access to the device, with User execution privileges needed. User interaction is not needed for exploitation. Patch ID: ALPS09963054; Issue ID: MSV-3899.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://corp.mediatek.com/product-security-bulletin/April-2026",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "MediaTek, Inc.",
+          "product": "MediaTek chipset",
+          "defaultStatus": "unaffected",
+          "versions": [
+            {
+              "version": "MT6813",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-787 Out-of-bounds Write"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-20433",
+      "publishedDate": "2026-04-07T03:25:32.066Z",
+      "lastModifiedDate": "2026-04-07T13:01:21.103Z",
+      "description": "In Modem, there is a possible out of bounds write due to a missing bounds check. This could lead to remote escalation of privilege, if a UE has connected to a rogue base station controlled by the attacker, with no additional execution privileges needed. User interaction is needed for exploitation. Patch ID: MOLY01088681; Issue ID: MSV-4460.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://corp.mediatek.com/product-security-bulletin/April-2026",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "MediaTek, Inc.",
+          "product": "MediaTek chipset",
+          "defaultStatus": "unaffected",
+          "versions": [
+            {
+              "version": "MT2735",
+              "status": "affected"
+            },
+            {
+              "version": "MT2737",
+              "status": "affected"
+            },
+            {
+              "version": "MT6813",
+              "status": "affected"
+            },
+            {
+              "version": "MT6833",
+              "status": "affected"
+            },
+            {
+              "version": "MT6833P",
+              "status": "affected"
+            },
+            {
+              "version": "MT6835",
+              "status": "affected"
+            },
+            {
+              "version": "MT6835T",
+              "status": "affected"
+            },
+            {
+              "version": "MT6853",
+              "status": "affected"
+            },
+            {
+              "version": "MT6853T",
+              "status": "affected"
+            },
+            {
+              "version": "MT6855",
+              "status": "affected"
+            },
+            {
+              "version": "MT6855T",
+              "status": "affected"
+            },
+            {
+              "version": "MT6873",
+              "status": "affected"
+            },
+            {
+              "version": "MT6875",
+              "status": "affected"
+            },
+            {
+              "version": "MT6875T",
+              "status": "affected"
+            },
+            {
+              "version": "MT6877",
+              "status": "affected"
+            },
+            {
+              "version": "MT6877T",
+              "status": "affected"
+            },
+            {
+              "version": "MT6877TT",
+              "status": "affected"
+            },
+            {
+              "version": "MT6878",
+              "status": "affected"
+            },
+            {
+              "version": "MT6878M",
+              "status": "affected"
+            },
+            {
+              "version": "MT6879",
+              "status": "affected"
+            },
+            {
+              "version": "MT6880",
+              "status": "affected"
+            },
+            {
+              "version": "MT6883",
+              "status": "affected"
+            },
+            {
+              "version": "MT6885",
+              "status": "affected"
+            },
+            {
+              "version": "MT6886",
+              "status": "affected"
+            },
+            {
+              "version": "MT6889",
+              "status": "affected"
+            },
+            {
+              "version": "MT6890",
+              "status": "affected"
+            },
+            {
+              "version": "MT6891",
+              "status": "affected"
+            },
+            {
+              "version": "MT6893",
+              "status": "affected"
+            },
+            {
+              "version": "MT6895",
+              "status": "affected"
+            },
+            {
+              "version": "MT6895TT",
+              "status": "affected"
+            },
+            {
+              "version": "MT6896",
+              "status": "affected"
+            },
+            {
+              "version": "MT6897",
+              "status": "affected"
+            },
+            {
+              "version": "MT6899",
+              "status": "affected"
+            },
+            {
+              "version": "MT6980",
+              "status": "affected"
+            },
+            {
+              "version": "MT6980D",
+              "status": "affected"
+            },
+            {
+              "version": "MT6983",
+              "status": "affected"
+            },
+            {
+              "version": "MT6983T",
+              "status": "affected"
+            },
+            {
+              "version": "MT6985",
+              "status": "affected"
+            },
+            {
+              "version": "MT6985T",
+              "status": "affected"
+            },
+            {
+              "version": "MT6989",
+              "status": "affected"
+            },
+            {
+              "version": "MT6989T",
+              "status": "affected"
+            },
+            {
+              "version": "MT6990",
+              "status": "affected"
+            },
+            {
+              "version": "MT6991",
+              "status": "affected"
+            },
+            {
+              "version": "MT8668",
+              "status": "affected"
+            },
+            {
+              "version": "MT8673",
+              "status": "affected"
+            },
+            {
+              "version": "MT8675",
+              "status": "affected"
+            },
+            {
+              "version": "MT8676",
+              "status": "affected"
+            },
+            {
+              "version": "MT8678",
+              "status": "affected"
+            },
+            {
+              "version": "MT8755",
+              "status": "affected"
+            },
+            {
+              "version": "MT8771",
+              "status": "affected"
+            },
+            {
+              "version": "MT8775",
+              "status": "affected"
+            },
+            {
+              "version": "MT8791",
+              "status": "affected"
+            },
+            {
+              "version": "MT8791T",
+              "status": "affected"
+            },
+            {
+              "version": "MT8792",
+              "status": "affected"
+            },
+            {
+              "version": "MT8793",
+              "status": "affected"
+            },
+            {
+              "version": "MT8795T",
+              "status": "affected"
+            },
+            {
+              "version": "MT8797",
+              "status": "affected"
+            },
+            {
+              "version": "MT8798",
+              "status": "affected"
+            },
+            {
+              "version": "MT8863",
+              "status": "affected"
+            },
+            {
+              "version": "MT8873",
+              "status": "affected"
+            },
+            {
+              "version": "MT8883",
+              "status": "affected"
+            },
+            {
+              "version": "MT8893",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-787 Out-of-bounds Write"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-20432",
+      "publishedDate": "2026-04-07T03:25:30.263Z",
+      "lastModifiedDate": "2026-04-07T12:59:56.698Z",
+      "description": "In Modem, there is a possible out of bounds write due to a missing bounds check. This could lead to remote escalation of privilege, if a UE has connected to a rogue base station controlled by the attacker, with no additional execution privileges needed. User interaction is needed for exploitation. Patch ID: MOLY01406170; Issue ID: MSV-4461.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://corp.mediatek.com/product-security-bulletin/April-2026",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "MediaTek, Inc.",
+          "product": "MediaTek chipset",
+          "defaultStatus": "unaffected",
+          "versions": [
+            {
+              "version": "MT2735",
+              "status": "affected"
+            },
+            {
+              "version": "MT2737",
+              "status": "affected"
+            },
+            {
+              "version": "MT6779",
+              "status": "affected"
+            },
+            {
+              "version": "MT6781",
+              "status": "affected"
+            },
+            {
+              "version": "MT6783",
+              "status": "affected"
+            },
+            {
+              "version": "MT6785",
+              "status": "affected"
+            },
+            {
+              "version": "MT6789",
+              "status": "affected"
+            },
+            {
+              "version": "MT6813",
+              "status": "affected"
+            },
+            {
+              "version": "MT6815",
+              "status": "affected"
+            },
+            {
+              "version": "MT6833",
+              "status": "affected"
+            },
+            {
+              "version": "MT6835",
+              "status": "affected"
+            },
+            {
+              "version": "MT6853",
+              "status": "affected"
+            },
+            {
+              "version": "MT6855",
+              "status": "affected"
+            },
+            {
+              "version": "MT6873",
+              "status": "affected"
+            },
+            {
+              "version": "MT6875",
+              "status": "affected"
+            },
+            {
+              "version": "MT6877",
+              "status": "affected"
+            },
+            {
+              "version": "MT6878",
+              "status": "affected"
+            },
+            {
+              "version": "MT6879",
+              "status": "affected"
+            },
+            {
+              "version": "MT6880",
+              "status": "affected"
+            },
+            {
+              "version": "MT6883",
+              "status": "affected"
+            },
+            {
+              "version": "MT6885",
+              "status": "affected"
+            },
+            {
+              "version": "MT6886",
+              "status": "affected"
+            },
+            {
+              "version": "MT6889",
+              "status": "affected"
+            },
+            {
+              "version": "MT6890",
+              "status": "affected"
+            },
+            {
+              "version": "MT6891",
+              "status": "affected"
+            },
+            {
+              "version": "MT6893",
+              "status": "affected"
+            },
+            {
+              "version": "MT6895",
+              "status": "affected"
+            },
+            {
+              "version": "MT6896",
+              "status": "affected"
+            },
+            {
+              "version": "MT6897",
+              "status": "affected"
+            },
+            {
+              "version": "MT6899",
+              "status": "affected"
+            },
+            {
+              "version": "MT6980",
+              "status": "affected"
+            },
+            {
+              "version": "MT6983",
+              "status": "affected"
+            },
+            {
+              "version": "MT6985",
+              "status": "affected"
+            },
+            {
+              "version": "MT6989",
+              "status": "affected"
+            },
+            {
+              "version": "MT6990",
+              "status": "affected"
+            },
+            {
+              "version": "MT6991",
+              "status": "affected"
+            },
+            {
+              "version": "MT6993",
+              "status": "affected"
+            },
+            {
+              "version": "MT8668",
+              "status": "affected"
+            },
+            {
+              "version": "MT8673",
+              "status": "affected"
+            },
+            {
+              "version": "MT8675",
+              "status": "affected"
+            },
+            {
+              "version": "MT8676",
+              "status": "affected"
+            },
+            {
+              "version": "MT8678",
+              "status": "affected"
+            },
+            {
+              "version": "MT8755",
+              "status": "affected"
+            },
+            {
+              "version": "MT8771",
+              "status": "affected"
+            },
+            {
+              "version": "MT8775",
+              "status": "affected"
+            },
+            {
+              "version": "MT8781",
+              "status": "affected"
+            },
+            {
+              "version": "MT8789",
+              "status": "affected"
+            },
+            {
+              "version": "MT8791",
+              "status": "affected"
+            },
+            {
+              "version": "MT8791T",
+              "status": "affected"
+            },
+            {
+              "version": "MT8792",
+              "status": "affected"
+            },
+            {
+              "version": "MT8793",
+              "status": "affected"
+            },
+            {
+              "version": "MT8795T",
+              "status": "affected"
+            },
+            {
+              "version": "MT8797",
+              "status": "affected"
+            },
+            {
+              "version": "MT8798",
+              "status": "affected"
+            },
+            {
+              "version": "MT8863",
+              "status": "affected"
+            },
+            {
+              "version": "MT8873",
+              "status": "affected"
+            },
+            {
+              "version": "MT8883",
+              "status": "affected"
+            },
+            {
+              "version": "MT8893",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-787 Out-of-bounds Write"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-20431",
+      "publishedDate": "2026-04-07T03:25:28.491Z",
+      "lastModifiedDate": "2026-04-07T12:59:17.543Z",
+      "description": "In Modem, there is a possible system crash due to a logic error. This could lead to remote denial of service, if a UE has connected to a rogue base station controlled by the attacker, with no additional execution privileges needed. User interaction is not needed for exploitation. Patch ID: MOLY01106496; Issue ID: MSV-4467.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://corp.mediatek.com/product-security-bulletin/April-2026",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "MediaTek, Inc.",
+          "product": "MediaTek chipset",
+          "defaultStatus": "unaffected",
+          "versions": [
+            {
+              "version": "MT6813",
+              "status": "affected"
+            },
+            {
+              "version": "MT6815",
+              "status": "affected"
+            },
+            {
+              "version": "MT6835",
+              "status": "affected"
+            },
+            {
+              "version": "MT6878",
+              "status": "affected"
+            },
+            {
+              "version": "MT6897",
+              "status": "affected"
+            },
+            {
+              "version": "MT6899",
+              "status": "affected"
+            },
+            {
+              "version": "MT6986",
+              "status": "affected"
+            },
+            {
+              "version": "MT6991",
+              "status": "affected"
+            },
+            {
+              "version": "MT6993",
+              "status": "affected"
+            },
+            {
+              "version": "MT8668",
+              "status": "affected"
+            },
+            {
+              "version": "MT8676",
+              "status": "affected"
+            },
+            {
+              "version": "MT8678",
+              "status": "affected"
+            },
+            {
+              "version": "MT8755",
+              "status": "affected"
+            },
+            {
+              "version": "MT8775",
+              "status": "affected"
+            },
+            {
+              "version": "MT8792",
+              "status": "affected"
+            },
+            {
+              "version": "MT8793",
+              "status": "affected"
+            },
+            {
+              "version": "MT8863",
+              "status": "affected"
+            },
+            {
+              "version": "MT8873",
+              "status": "affected"
+            },
+            {
+              "version": "MT8883",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-770 Allocation of Resources Without Limits or Throttling"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-34589",
+      "publishedDate": "2026-04-06T15:33:03.276Z",
+      "lastModifiedDate": "2026-04-07T13:05:41.117Z",
+      "description": "OpenEXR provides the specification and reference implementation of the EXR file format, an image storage format for the motion picture industry. From 3.2.0 to before 3.2.7, 3.3.9, and 3.4.9, the DWA lossy decoder constructs temporary per-component block pointers using signed 32-bit arithmetic. For a large enough width, the calculation overflows and later decoder stores operate on a wrapped pointer outside the allocated rowBlock backing store. This vulnerability is fixed in 3.2.7, 3.3.9, and 3.4.9.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/AcademySoftwareFoundation/openexr/security/advisories/GHSA-p8xc-w3q4-h64x",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/AcademySoftwareFoundation/openexr/releases/tag/v3.2.7",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/AcademySoftwareFoundation/openexr/releases/tag/v3.3.9",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/AcademySoftwareFoundation/openexr/releases/tag/v3.4.9",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "AcademySoftwareFoundation",
+          "product": "openexr",
+          "versions": [
+            {
+              "version": ">= 3.2.0, < 3.2.7",
+              "status": "affected"
+            },
+            {
+              "version": ">= 3.3.0, < 3.3.9",
+              "status": "affected"
+            },
+            {
+              "version": ">= 3.4.0, < 3.4.9",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-190: Integer Overflow or Wraparound",
+        "CWE-787: Out-of-bounds Write"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-34588",
+      "publishedDate": "2026-04-06T15:31:57.602Z",
+      "lastModifiedDate": "2026-04-07T13:05:55.762Z",
+      "description": "OpenEXR provides the specification and reference implementation of the EXR file format, an image storage format for the motion picture industry. From 3.1.0 to before 3.2.7, 3.3.9, and 3.4.9, internal_exr_undo_piz() advances the working wavelet pointer with signed 32-bit arithmetic. Because nx, ny, and wcount are int, a crafted EXR file can make this product overflow and wrap. The next channel then decodes from an incorrect address. The wavelet decode path operates in place, so this yields both out-of-bounds reads and out-of-bounds writes. This vulnerability is fixed in 3.2.7, 3.3.9, and 3.4.9.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/AcademySoftwareFoundation/openexr/security/advisories/GHSA-588r-cr5c-w6hf",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/AcademySoftwareFoundation/openexr/releases/tag/v3.2.7",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/AcademySoftwareFoundation/openexr/releases/tag/v3.3.9",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/AcademySoftwareFoundation/openexr/releases/tag/v3.4.9",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "AcademySoftwareFoundation",
+          "product": "openexr",
+          "versions": [
+            {
+              "version": ">= 3.1.0, <= 3.1.13",
+              "status": "affected"
+            },
+            {
+              "version": ">= 3.2.0, < 3.2.7",
+              "status": "affected"
+            },
+            {
+              "version": ">= 3.3.0, < 3.3.9",
+              "status": "affected"
+            },
+            {
+              "version": ">= 3.4.0, < 3.4.9",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-125: Out-of-bounds Read",
+        "CWE-190: Integer Overflow or Wraparound",
+        "CWE-787: Out-of-bounds Write"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
