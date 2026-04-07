@@ -2,57 +2,704 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 1,
-    "last_updated": "2026-04-07T11:15:02.463240",
+    "total_count": 5,
+    "last_updated": "2026-04-07T12:05:26.418431",
     "severity_distribution": {
       "critical": 0,
-      "high": 0,
-      "medium": 0,
+      "high": 2,
+      "medium": 3,
       "low": 0,
-      "none": 1
+      "none": 0
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-4420",
-      "publishedDate": "2026-04-07T10:46:19.052Z",
-      "lastModifiedDate": "2026-04-07T10:46:19.052Z",
-      "description": "Bludit is vulnerable to Stored Cross-Site Scripting (XSS) in its page creating functionality. An authenticated attacker with page creation privileges (such as Author, Editor, or Administrator) can embed a malicious JavaScript payload in the tags field of a newly created article. This payload will be executed when a victim visits the URL of the uploaded resource. The uploaded resource itself is accessible without authentication. Critically, this vulnerability could be used to automatically create a new site administrator if the victim has enough privileges. \n\nThe vendor was notified early about this vulnerability, but didn't respond with the details of vulnerability or vulnerable version range. Only versions 3.17.2 and 3.18.0 were tested and confirmed as vulnerable, other versions were not tested and might also be vulnerable.",
-      "severity": "N/A",
+      "id": "CVE-2026-31842",
+      "publishedDate": "2026-04-07T11:17:33.621Z",
+      "lastModifiedDate": "2026-04-07T11:17:33.621Z",
+      "description": "Tinyproxy through 1.11.3 is vulnerable to HTTP request parsing desynchronization due to a case-sensitive comparison of the Transfer-Encoding header in src/reqs.c. The is_chunked_transfer() function uses strcmp() to compare the header value against \"chunked\", even though RFC 7230 specifies that transfer-coding names are case-insensitive. By sending a request with Transfer-Encoding: Chunked, an unauthenticated remote attacker can cause Tinyproxy to misinterpret the request as having no body. In this state, Tinyproxy sets content_length.client to -1, skips pull_client_data_chunked(), forwards request headers upstream, and transitions into relay_connection() raw TCP forwarding while unread body data remains buffered. This leads to inconsistent request state between Tinyproxy and backend servers. RFC-compliant backends (e.g., Node.js, Nginx) will continue waiting for chunked body data, causing connections to hang indefinitely. This behavior enables application-level denial of service through backend worker exhaustion. Additionally, in deployments where Tinyproxy is used for request-body inspection, filtering, or security enforcement, the unread body may be forwarded without proper inspection, resulting in potential security control bypass.",
+      "severity": 7.5,
       "references": [
         {
-          "url": "https://cert.pl/en/posts/2026/04/CVE-2026-4420",
+          "url": "https://github.com/tinyproxy/tinyproxy/issues/604",
           "type": "reference"
         },
         {
-          "url": "https://github.com/bludit/bludit/",
+          "url": "https://github.com/tinyproxy/tinyproxy",
+          "type": "reference"
+        },
+        {
+          "url": "https://datatracker.ietf.org/doc/html/rfc7230",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "collectionURL": "https://github.com",
-          "defaultStatus": "unknown",
-          "packageName": "bludit",
-          "product": "Bludit",
-          "repo": "https://github.com/bludit/bludit",
-          "vendor": "Bludit",
+          "vendor": "Tinyproxy Project",
+          "product": "Tinyproxy",
+          "platforms": [
+            "all"
+          ],
+          "collectionURL": "https://github.com/tinyproxy/tinyproxy",
           "versions": [
             {
               "status": "affected",
-              "version": "3.17.2",
-              "versionType": "semver"
-            },
-            {
-              "status": "affected",
-              "version": "3.18.0",
-              "versionType": "semver"
+              "version": "0",
+              "lessThanOrEqual": "1.11.3",
+              "versionType": "custom"
             }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-444 Inconsistent Interpretation of HTTP Requests ('HTTP Request/Response Smuggling')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4282",
+      "publishedDate": "2026-04-02T12:44:52.941Z",
+      "lastModifiedDate": "2026-04-07T11:27:33.522Z",
+      "description": "A flaw was found in Keycloak. The SingleUseObjectProvider, a global key-value store, lacks proper type and namespace isolation. This vulnerability allows an unauthenticated attacker to forge authorization codes. Successful exploitation can lead to the creation of admin-capable access tokens, resulting in privilege escalation.",
+      "severity": 7.4,
+      "references": [
+        {
+          "url": "https://access.redhat.com/errata/RHSA-2026:6475",
+          "type": "reference"
+        },
+        {
+          "url": "https://access.redhat.com/errata/RHSA-2026:6476",
+          "type": "reference"
+        },
+        {
+          "url": "https://access.redhat.com/errata/RHSA-2026:6477",
+          "type": "reference"
+        },
+        {
+          "url": "https://access.redhat.com/errata/RHSA-2026:6478",
+          "type": "reference"
+        },
+        {
+          "url": "https://access.redhat.com/security/cve/CVE-2026-4282",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2448061",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.2",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-operator-bundle",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.2.15-1",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.2::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.2",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-rhel9",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.2-18",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.2::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.2",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-rhel9-operator",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.2-18",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.2::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.2.15",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "defaultStatus": "unaffected",
+          "packageName": "rhbk/keycloak-rhel9",
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.2::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.4",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-operator-bundle",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.4.11-1",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.4::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.4",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-rhel9",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.4-14",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.4::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.4",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-rhel9-operator",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.4-14",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.4::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.4.11",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "defaultStatus": "unaffected",
+          "packageName": "rhbk/keycloak-rhel9",
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.4::el9"
           ]
         }
       ],
       "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting')"
+        "Improper Isolation or Compartmentalization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-5342",
+      "publishedDate": "2026-04-02T14:30:14.897Z",
+      "lastModifiedDate": "2026-04-07T11:27:04.120Z",
+      "description": "A flaw has been found in LibRaw up to 0.22.0. This affects the function LibRaw::nikon_load_padded_packed_raw of the file src/decoders/decoders_libraw.cpp of the component TIFF/NEF. Executing a manipulation of the argument load_flags/raw_width can lead to out-of-bounds read. It is possible to launch the attack remotely. The exploit has been published and may be used. Upgrading to version 0.22.1 mitigates this issue. This patch is called b8397cd45657b84e88bd1202528d1764265f185c. It is advisable to upgrade the affected component.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://vuldb.com/vuln/354671",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/vuln/354671/cti",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/submit/781223",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/LibRaw/LibRaw/issues/795",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/LibRaw/LibRaw/issues/795#issuecomment-4073769886",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/biniamf/pocs/tree/main/libraw_nikonpadded",
+          "type": "poc"
+        },
+        {
+          "url": "https://github.com/LibRaw/LibRaw/commit/b8397cd45657b84e88bd1202528d1764265f185c",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/LibRaw/LibRaw/releases/tag/0.22.1",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/LibRaw/LibRaw/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "LibRaw",
+          "versions": [
+            {
+              "version": "0.1",
+              "status": "affected"
+            },
+            {
+              "version": "0.2",
+              "status": "affected"
+            },
+            {
+              "version": "0.3",
+              "status": "affected"
+            },
+            {
+              "version": "0.4",
+              "status": "affected"
+            },
+            {
+              "version": "0.5",
+              "status": "affected"
+            },
+            {
+              "version": "0.6",
+              "status": "affected"
+            },
+            {
+              "version": "0.7",
+              "status": "affected"
+            },
+            {
+              "version": "0.8",
+              "status": "affected"
+            },
+            {
+              "version": "0.9",
+              "status": "affected"
+            },
+            {
+              "version": "0.10",
+              "status": "affected"
+            },
+            {
+              "version": "0.11",
+              "status": "affected"
+            },
+            {
+              "version": "0.12",
+              "status": "affected"
+            },
+            {
+              "version": "0.13",
+              "status": "affected"
+            },
+            {
+              "version": "0.14",
+              "status": "affected"
+            },
+            {
+              "version": "0.15",
+              "status": "affected"
+            },
+            {
+              "version": "0.16",
+              "status": "affected"
+            },
+            {
+              "version": "0.17",
+              "status": "affected"
+            },
+            {
+              "version": "0.18",
+              "status": "affected"
+            },
+            {
+              "version": "0.19",
+              "status": "affected"
+            },
+            {
+              "version": "0.20",
+              "status": "affected"
+            },
+            {
+              "version": "0.21",
+              "status": "affected"
+            },
+            {
+              "version": "0.22.0",
+              "status": "affected"
+            },
+            {
+              "version": "0.22.1",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:2.3:a:libraw:libraw:*:*:*:*:*:*:*:*"
+          ],
+          "modules": [
+            "TIFF/NEF"
+          ]
+        }
+      ],
+      "problemType": [
+        "Out-of-Bounds Read",
+        "Memory Corruption"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4325",
+      "publishedDate": "2026-04-02T12:44:52.997Z",
+      "lastModifiedDate": "2026-04-07T11:27:36.605Z",
+      "description": "A flaw was found in Keycloak. The SingleUseObjectProvider, a global key-value store, lacks proper type and namespace isolation. This vulnerability allows an attacker to delete arbitrary single-use entries, which can enable the replay of consumed action tokens, such as password reset links. This could lead to unauthorized access or account compromise.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://access.redhat.com/errata/RHSA-2026:6475",
+          "type": "reference"
+        },
+        {
+          "url": "https://access.redhat.com/errata/RHSA-2026:6476",
+          "type": "reference"
+        },
+        {
+          "url": "https://access.redhat.com/errata/RHSA-2026:6477",
+          "type": "reference"
+        },
+        {
+          "url": "https://access.redhat.com/errata/RHSA-2026:6478",
+          "type": "reference"
+        },
+        {
+          "url": "https://access.redhat.com/security/cve/CVE-2026-4325",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2448351",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.2",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-operator-bundle",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.2.15-1",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.2::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.2",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-rhel9",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.2-18",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.2::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.2",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-rhel9-operator",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.2-18",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.2::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.2.15",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "defaultStatus": "unaffected",
+          "packageName": "rhbk/keycloak-rhel9",
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.2::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.4",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-operator-bundle",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.4.11-1",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.4::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.4",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-rhel9",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.4-14",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.4::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.4",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-rhel9-operator",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.4-14",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.4::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.4.11",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "defaultStatus": "unaffected",
+          "packageName": "rhbk/keycloak-rhel9",
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.4::el9"
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Isolation or Compartmentalization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-5318",
+      "publishedDate": "2026-04-02T01:45:12.421Z",
+      "lastModifiedDate": "2026-04-07T11:26:57.754Z",
+      "description": "A weakness has been identified in LibRaw up to 0.22.0. This impacts the function HuffTable::initval of the file src/decompressors/losslessjpeg.cpp of the component JPEG DHT Parser. This manipulation of the argument bits[] causes out-of-bounds write. It is possible to initiate the attack remotely. The exploit has been made available to the public and could be used for attacks. Upgrading to version 0.22.1 will fix this issue. Patch name: a6734e867b19d75367c05f872ac26322464e3995. It is advisable to upgrade the affected component.",
+      "severity": 4.3,
+      "references": [
+        {
+          "url": "https://vuldb.com/vuln/354650",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/vuln/354650/cti",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/submit/780538",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/LibRaw/LibRaw/issues/794",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/LibRaw/LibRaw/issues/794#issuecomment-4065342499",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/biniamf/pocs/tree/main/libraw_lljpeg",
+          "type": "poc"
+        },
+        {
+          "url": "https://github.com/LibRaw/LibRaw/commit/a6734e867b19d75367c05f872ac26322464e3995",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/LibRaw/LibRaw/releases/tag/0.22.1",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/LibRaw/LibRaw/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "LibRaw",
+          "versions": [
+            {
+              "version": "0.1",
+              "status": "affected"
+            },
+            {
+              "version": "0.2",
+              "status": "affected"
+            },
+            {
+              "version": "0.3",
+              "status": "affected"
+            },
+            {
+              "version": "0.4",
+              "status": "affected"
+            },
+            {
+              "version": "0.5",
+              "status": "affected"
+            },
+            {
+              "version": "0.6",
+              "status": "affected"
+            },
+            {
+              "version": "0.7",
+              "status": "affected"
+            },
+            {
+              "version": "0.8",
+              "status": "affected"
+            },
+            {
+              "version": "0.9",
+              "status": "affected"
+            },
+            {
+              "version": "0.10",
+              "status": "affected"
+            },
+            {
+              "version": "0.11",
+              "status": "affected"
+            },
+            {
+              "version": "0.12",
+              "status": "affected"
+            },
+            {
+              "version": "0.13",
+              "status": "affected"
+            },
+            {
+              "version": "0.14",
+              "status": "affected"
+            },
+            {
+              "version": "0.15",
+              "status": "affected"
+            },
+            {
+              "version": "0.16",
+              "status": "affected"
+            },
+            {
+              "version": "0.17",
+              "status": "affected"
+            },
+            {
+              "version": "0.18",
+              "status": "affected"
+            },
+            {
+              "version": "0.19",
+              "status": "affected"
+            },
+            {
+              "version": "0.20",
+              "status": "affected"
+            },
+            {
+              "version": "0.21",
+              "status": "affected"
+            },
+            {
+              "version": "0.22.0",
+              "status": "affected"
+            },
+            {
+              "version": "0.22.1",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:2.3:a:libraw:libraw:*:*:*:*:*:*:*:*"
+          ],
+          "modules": [
+            "JPEG DHT Parser"
+          ]
+        }
+      ],
+      "problemType": [
+        "Out-of-bounds Write",
+        "Memory Corruption"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
