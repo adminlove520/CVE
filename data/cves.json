@@ -2,58 +2,183 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 13,
-    "last_updated": "2026-04-08T01:50:30.521784",
+    "total_count": 39,
+    "last_updated": "2026-04-08T04:32:09.755301",
     "severity_distribution": {
-      "critical": 1,
-      "high": 1,
-      "medium": 1,
+      "critical": 6,
+      "high": 15,
+      "medium": 10,
       "low": 0,
-      "none": 10
+      "none": 8
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-3296",
-      "publishedDate": "2026-04-08T01:24:43.946Z",
-      "lastModifiedDate": "2026-04-08T01:24:43.946Z",
-      "description": "The Everest Forms plugin for WordPress is vulnerable to PHP Object Injection in all versions up to, and including, 3.4.3 via deserialization of untrusted input from form entry metadata. This is due to the html-admin-page-entries-view.php file calling PHP's native unserialize() on stored entry meta values without passing the allowed_classes parameter. This makes it possible for unauthenticated attackers to inject a serialized PHP object payload through any public Everest Forms form field. The payload survives sanitize_text_field() sanitization (serialization control characters are not stripped) and is stored in the wp_evf_entrymeta database table. When an administrator views entries or views an individual entry, the unsafe unserialize() call processes the stored data without class restrictions.",
+      "id": "CVE-2026-23696",
+      "publishedDate": "2026-04-07T16:50:53.231Z",
+      "lastModifiedDate": "2026-04-08T03:55:43.162Z",
+      "description": "Windmill CE and EE versions 1.276.0 through 1.603.2 contain an SQL injection vulnerability in the folder ownership management functionality that allows authenticated attackers to inject SQL through the owner parameter. An attacker can use the injection to read sensitive data such as the JWT signing secret and administrative user identifiers, forge an administrative token, and then execute arbitrary code via the workflow execution endpoints.",
+      "severity": 9.9,
+      "references": [
+        {
+          "url": "https://chocapikk.com/posts/2026/windfall-nextcloud-flow-windmill-rce/",
+          "type": "poc"
+        },
+        {
+          "url": "https://github.com/Chocapikk/Windfall",
+          "type": "poc"
+        },
+        {
+          "url": "https://github.com/windmill-labs/windmill/releases/tag/v1.603.3",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/windmill-labs/windmill/commit/942fb629210ebb287f48467d1535ffde3a3eeafe",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.windmill.dev/",
+          "type": "reference"
+        },
+        {
+          "url": "https://apps.nextcloud.com/apps/flow/releases",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/windmill-file-ownership-handling-sqli-rce",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Windmill Labs",
+          "product": "Windmill CE (Community Edition)",
+          "repo": "https://github.com/windmill-labs/windmill",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "1.276.0",
+              "lessThanOrEqual": "1.603.2",
+              "versionType": "semver"
+            },
+            {
+              "status": "unaffected",
+              "version": "1.603.3"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        },
+        {
+          "vendor": "Windmill Labs",
+          "product": "Windmill EE (Enterprise Edition)",
+          "repo": "https://github.com/windmill-labs/windmill",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "1.276.0",
+              "lessThanOrEqual": "1.603.2",
+              "versionType": "semver"
+            },
+            {
+              "status": "unaffected",
+              "version": "1.603.3"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        },
+        {
+          "vendor": "Nextcloud",
+          "product": "Flow",
+          "repo": "https://github.com/nextcloud/flow",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "1.0.0",
+              "lessThanOrEqual": "1.2.2",
+              "versionType": "semver"
+            },
+            {
+              "status": "unaffected",
+              "version": "1.3.0"
+            },
+            {
+              "status": "unaffected",
+              "version": "1.3.1"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4003",
+      "publishedDate": "2026-04-08T03:36:08.200Z",
+      "lastModifiedDate": "2026-04-08T03:36:08.200Z",
+      "description": "The Users manager – PN plugin for WordPress is vulnerable to Privilege Escalation via Arbitrary User Meta Update in all versions up to and including 1.1.15. This is due to a flawed authorization logic check in the userspn_ajax_nopriv_server() function within the 'userspn_form_save' case. The conditional only blocks unauthenticated users when the user_id is empty, but when a non-empty user_id is supplied, execution bypasses this check entirely and proceeds to update arbitrary user meta via update_user_meta() without any authentication or authorization verification. Additionally, the nonce required for this AJAX endpoint ('userspn-nonce') is exposed to all visitors via wp_localize_script on the public wp_enqueue_scripts hook, rendering the nonce check ineffective as a security control. This makes it possible for unauthenticated attackers to update arbitrary user metadata for any user account, including the userspn_secret_token field.",
       "severity": 9.8,
       "references": [
         {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/2693ae37-790d-4b18-a9ec-054c8c27b8bc?source=cve",
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/27bb60c1-43fa-4a18-b9ca-059535b0d5b6?source=cve",
           "type": "reference"
         },
         {
-          "url": "https://plugins.trac.wordpress.org/browser/everest-forms/tags/3.4.3/includes/admin/views/html-admin-page-entries-view.php#L133",
+          "url": "https://plugins.trac.wordpress.org/browser/userspn/trunk/includes/class-userspn-ajax-nopriv.php#L233",
           "type": "reference"
         },
         {
-          "url": "https://plugins.trac.wordpress.org/browser/everest-forms/trunk/includes/admin/views/html-admin-page-entries-view.php#L133",
+          "url": "https://plugins.trac.wordpress.org/browser/userspn/tags/1.0.31/includes/class-userspn-ajax-nopriv.php#L233",
           "type": "reference"
         },
         {
-          "url": "https://plugins.trac.wordpress.org/browser/everest-forms/tags/3.4.3/includes/evf-core-functions.php#L5594",
+          "url": "https://plugins.trac.wordpress.org/browser/userspn/trunk/includes/class-userspn-ajax-nopriv.php#L186",
           "type": "reference"
         },
         {
-          "url": "https://plugins.trac.wordpress.org/changeset/3489938/everest-forms/tags/3.4.4/readme.txt?old=3464753&old_path=everest-forms%2Ftags%2F3.4.3%2Freadme.txt",
+          "url": "https://plugins.trac.wordpress.org/browser/userspn/tags/1.0.31/includes/class-userspn-ajax-nopriv.php#L186",
           "type": "reference"
         },
         {
-          "url": "https://plugins.trac.wordpress.org/changeset?old_path=/everest-forms/tags/3.4.3&new_path=/everest-forms/tags/3.4.4",
+          "url": "https://plugins.trac.wordpress.org/browser/userspn/trunk/includes/class-userspn-ajax-nopriv.php#L190",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/userspn/tags/1.0.31/includes/class-userspn-ajax-nopriv.php#L190",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/userspn/trunk/includes/class-userspn-common.php#L168",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/userspn/tags/1.0.31/includes/class-userspn-common.php#L168",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/userspn/trunk/includes/class-userspn-functions-user.php#L235",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/userspn/tags/1.0.31/includes/class-userspn-functions-user.php#L235",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=3491109%40userspn&new=3491109%40userspn&sfp_email=&sfph_mail=",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "wpeverest",
-          "product": "Everest Forms – Contact Form, Payment Form, Quiz, Survey & Custom Form Builder",
+          "vendor": "felixmartinez",
+          "product": "Users manager – PN",
           "versions": [
             {
               "version": "0",
               "status": "affected",
-              "lessThanOrEqual": "3.4.3",
+              "lessThanOrEqual": "1.1.15",
               "versionType": "semver"
             }
           ],
@@ -61,465 +186,98 @@
         }
       ],
       "problemType": [
-        "CWE-502 Deserialization of Untrusted Data"
+        "CWE-862 Missing Authorization"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-3499",
-      "publishedDate": "2026-04-08T01:24:44.495Z",
-      "lastModifiedDate": "2026-04-08T01:24:44.495Z",
-      "description": "The Product Feed PRO for WooCommerce by AdTribes – Product Feeds for WooCommerce plugin for WordPress is vulnerable to Cross-Site Request Forgery in versions 13.4.6 through 13.5.2.1. This is due to missing or incorrect nonce validation on the ajax_migrate_to_custom_post_type, ajax_adt_clear_custom_attributes_product_meta_keys, ajax_update_file_url_to_lower_case, ajax_use_legacy_filters_and_rules, and ajax_fix_duplicate_feed functions. This makes it possible for unauthenticated attackers to trigger feed migration, clear custom-attribute transient caches, rewrite feed file URLs to lowercase, toggle legacy filter and rule settings, and delete duplicated feed posts via a forged request granted they can trick a site administrator into performing an action such as clicking on a link.",
-      "severity": 8.8,
+      "id": "CVE-2026-20911",
+      "publishedDate": "2026-04-07T13:49:31.223Z",
+      "lastModifiedDate": "2026-04-08T03:55:51.222Z",
+      "description": "A heap-based buffer overflow vulnerability exists in the HuffTable::initval functionality of LibRaw Commit 0b56545 and Commit d20315b. A specially crafted malicious file can lead to a heap buffer overflow. An attacker can provide a malicious file to trigger this vulnerability.",
+      "severity": 9.8,
       "references": [
         {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/5b645b88-85e0-4e89-bd95-444ab1db6df8?source=cve",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/changeset/3476067/woo-product-feed-pro",
+          "url": "https://talosintelligence.com/vulnerability_reports/TALOS-2026-2330",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "jkohlbach",
-          "product": "Product Feed PRO for WooCommerce by AdTribes – Product Feeds for WooCommerce",
+          "vendor": "LibRaw",
+          "product": "LibRaw",
           "versions": [
             {
-              "version": "13.4.6",
-              "status": "affected",
-              "lessThanOrEqual": "13.5.2.1",
-              "versionType": "semver"
+              "version": "Commit 0b56545",
+              "status": "affected"
+            },
+            {
+              "version": "Commit d20315b",
+              "status": "affected"
             }
-          ],
-          "defaultStatus": "unaffected"
+          ]
         }
       ],
       "problemType": [
-        "CWE-352 Cross-Site Request Forgery (CSRF)"
+        "CWE-131: Incorrect Calculation of Buffer Size"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-14732",
-      "publishedDate": "2026-04-08T01:24:43.385Z",
-      "lastModifiedDate": "2026-04-08T01:24:43.385Z",
-      "description": "The Elementor Website Builder – More Than Just a Page Builder plugin for WordPress is vulnerable to Stored Cross-Site Scripting via several widget parameters in all versions up to, and including, 3.35.5 due to insufficient input sanitization and output escaping. This makes it possible for authenticated attackers, with Contributor-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page.",
-      "severity": 6.4,
+      "id": "CVE-2026-21413",
+      "publishedDate": "2026-04-07T13:49:29.784Z",
+      "lastModifiedDate": "2026-04-08T03:55:50.134Z",
+      "description": "A heap-based buffer overflow vulnerability exists in the lossless_jpeg_load_raw functionality of LibRaw Commit 0b56545 and Commit d20315b. A specially crafted malicious file can lead to a heap buffer overflow. An attacker can provide a malicious file to trigger this vulnerability.",
+      "severity": 9.8,
       "references": [
         {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/20232d70-72b2-47b7-ac7e-ad07892864ef?source=cve",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/elementor/trunk/modules/wp-rest/classes/elementor-post-meta.php#L67",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/changeset?old_path=/elementor/tags/3.35.5&new_path=/elementor/tags/3.35.6",
+          "url": "https://talosintelligence.com/vulnerability_reports/TALOS-2026-2331",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "elemntor",
-          "product": "Elementor Website Builder – more than just a page builder",
+          "vendor": "LibRaw",
+          "product": "LibRaw",
           "versions": [
             {
-              "version": "0",
-              "status": "affected",
-              "lessThanOrEqual": "3.35.5",
-              "versionType": "semver"
+              "version": "Commit 0b56545",
+              "status": "affected"
+            },
+            {
+              "version": "Commit d20315b",
+              "status": "affected"
             }
-          ],
-          "defaultStatus": "unaffected"
+          ]
         }
       ],
       "problemType": [
-        "CWE-87 Improper Neutralization of Alternate XSS Syntax"
+        "CWE-129: Improper Validation of Array Index"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-32280",
-      "publishedDate": "2026-04-08T01:06:58.595Z",
-      "lastModifiedDate": "2026-04-08T01:06:58.595Z",
-      "description": "During chain building, the amount of work that is done is not correctly limited when a large number of intermediate certificates are passed in VerifyOptions.Intermediates, which can lead to a denial of service. This affects both direct users of crypto/x509 and users of crypto/tls.",
-      "severity": "N/A",
+      "id": "CVE-2026-20889",
+      "publishedDate": "2026-04-07T13:49:27.912Z",
+      "lastModifiedDate": "2026-04-08T03:55:49.049Z",
+      "description": "A heap-based buffer overflow vulnerability exists in the x3f_thumb_loader functionality of LibRaw Commit d20315b. A specially crafted malicious file can lead to a heap buffer overflow. An attacker can provide a malicious file to trigger this vulnerability.",
+      "severity": 9.8,
       "references": [
         {
-          "url": "https://go.dev/cl/758320",
-          "type": "reference"
-        },
-        {
-          "url": "https://go.dev/issue/78282",
-          "type": "reference"
-        },
-        {
-          "url": "https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU",
-          "type": "reference"
-        },
-        {
-          "url": "https://pkg.go.dev/vuln/GO-2026-4947",
+          "url": "https://talosintelligence.com/vulnerability_reports/TALOS-2026-2358",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Go standard library",
-          "product": "crypto/x509",
-          "collectionURL": "https://pkg.go.dev",
-          "packageName": "crypto/x509",
+          "vendor": "LibRaw",
+          "product": "LibRaw",
           "versions": [
             {
-              "version": "0",
-              "lessThan": "1.25.9",
-              "status": "affected",
-              "versionType": "semver"
-            },
-            {
-              "version": "1.26.0-0",
-              "lessThan": "1.26.2",
-              "status": "affected",
-              "versionType": "semver"
+              "version": "Commit d20315b",
+              "status": "affected"
             }
-          ],
-          "programRoutines": [
-            {
-              "name": "Certificate.buildChains"
-            },
-            {
-              "name": "Certificate.Verify"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-770: Allocation of Resources Without Limits or Throttling"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-32281",
-      "publishedDate": "2026-04-08T01:06:58.354Z",
-      "lastModifiedDate": "2026-04-08T01:06:58.354Z",
-      "description": "Validating certificate chains which use policies is unexpectedly inefficient when certificates in the chain contain a very large number of policy mappings, possibly causing denial of service. This only affects validation of otherwise trusted certificate chains, issued by a root CA in the VerifyOptions.Roots CertPool, or in the system certificate pool.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://go.dev/cl/758061",
-          "type": "reference"
-        },
-        {
-          "url": "https://go.dev/issue/78281",
-          "type": "reference"
-        },
-        {
-          "url": "https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU",
-          "type": "reference"
-        },
-        {
-          "url": "https://pkg.go.dev/vuln/GO-2026-4946",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Go standard library",
-          "product": "crypto/x509",
-          "collectionURL": "https://pkg.go.dev",
-          "packageName": "crypto/x509",
-          "versions": [
-            {
-              "version": "0",
-              "lessThan": "1.25.9",
-              "status": "affected",
-              "versionType": "semver"
-            },
-            {
-              "version": "1.26.0-0",
-              "lessThan": "1.26.2",
-              "status": "affected",
-              "versionType": "semver"
-            }
-          ],
-          "programRoutines": [
-            {
-              "name": "policiesValid"
-            },
-            {
-              "name": "Certificate.Verify"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-407: Inefficient Algorithmic Complexity"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-27140",
-      "publishedDate": "2026-04-08T01:06:57.893Z",
-      "lastModifiedDate": "2026-04-08T01:06:57.893Z",
-      "description": "SWIG file names containing 'cgo' and well-crafted payloads could lead to code smuggling and arbitrary code execution at build time due to trust layer bypass.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://go.dev/cl/763768",
-          "type": "reference"
-        },
-        {
-          "url": "https://go.dev/issue/78335",
-          "type": "reference"
-        },
-        {
-          "url": "https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU",
-          "type": "reference"
-        },
-        {
-          "url": "https://pkg.go.dev/vuln/GO-2026-4871",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Go toolchain",
-          "product": "cmd/go",
-          "collectionURL": "https://pkg.go.dev",
-          "packageName": "cmd/go",
-          "versions": [
-            {
-              "version": "0",
-              "lessThan": "1.25.9",
-              "status": "affected",
-              "versionType": "semver"
-            },
-            {
-              "version": "1.26.0-0",
-              "lessThan": "1.26.2",
-              "status": "affected",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-501: Trust Boundary Violation"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-32283",
-      "publishedDate": "2026-04-08T01:06:57.670Z",
-      "lastModifiedDate": "2026-04-08T01:06:57.670Z",
-      "description": "If one side of the TLS connection sends multiple key update messages post-handshake in a single record, the connection can deadlock, causing uncontrolled consumption of resources. This can lead to a denial of service. This only affects TLS 1.3.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://go.dev/cl/763767",
-          "type": "reference"
-        },
-        {
-          "url": "https://go.dev/issue/78334",
-          "type": "reference"
-        },
-        {
-          "url": "https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU",
-          "type": "reference"
-        },
-        {
-          "url": "https://pkg.go.dev/vuln/GO-2026-4870",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Go standard library",
-          "product": "crypto/tls",
-          "collectionURL": "https://pkg.go.dev",
-          "packageName": "crypto/tls",
-          "versions": [
-            {
-              "version": "0",
-              "lessThan": "1.25.9",
-              "status": "affected",
-              "versionType": "semver"
-            },
-            {
-              "version": "1.26.0-0",
-              "lessThan": "1.26.2",
-              "status": "affected",
-              "versionType": "semver"
-            }
-          ],
-          "programRoutines": [
-            {
-              "name": "Conn.handleKeyUpdate"
-            },
-            {
-              "name": "clientHandshakeStateTLS13.establishHandshakeKeys"
-            },
-            {
-              "name": "clientHandshakeStateTLS13.readServerFinished"
-            },
-            {
-              "name": "serverHandshakeStateTLS13.sendServerParameters"
-            },
-            {
-              "name": "serverHandshakeStateTLS13.readClientFinished"
-            },
-            {
-              "name": "Conn.Handshake"
-            },
-            {
-              "name": "Conn.HandshakeContext"
-            },
-            {
-              "name": "Conn.Read"
-            },
-            {
-              "name": "Conn.Write"
-            },
-            {
-              "name": "Dial"
-            },
-            {
-              "name": "DialWithDialer"
-            },
-            {
-              "name": "Dialer.Dial"
-            },
-            {
-              "name": "Dialer.DialContext"
-            },
-            {
-              "name": "QUICConn.HandleData"
-            },
-            {
-              "name": "QUICConn.Start"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-667: Improper Locking"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-32288",
-      "publishedDate": "2026-04-08T01:06:57.416Z",
-      "lastModifiedDate": "2026-04-08T01:06:57.416Z",
-      "description": "tar.Reader can allocate an unbounded amount of memory when reading a maliciously-crafted archive containing a large number of sparse regions encoded in the \"old GNU sparse map\" format.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://go.dev/cl/763766",
-          "type": "reference"
-        },
-        {
-          "url": "https://go.dev/issue/78301",
-          "type": "reference"
-        },
-        {
-          "url": "https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU",
-          "type": "reference"
-        },
-        {
-          "url": "https://pkg.go.dev/vuln/GO-2026-4869",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Go standard library",
-          "product": "archive/tar",
-          "collectionURL": "https://pkg.go.dev",
-          "packageName": "archive/tar",
-          "versions": [
-            {
-              "version": "0",
-              "lessThan": "1.25.9",
-              "status": "affected",
-              "versionType": "semver"
-            },
-            {
-              "version": "1.26.0-0",
-              "lessThan": "1.26.2",
-              "status": "affected",
-              "versionType": "semver"
-            }
-          ],
-          "programRoutines": [
-            {
-              "name": "Reader.readOldGNUSparseMap"
-            },
-            {
-              "name": "readGNUSparseMap1x0"
-            },
-            {
-              "name": "Reader.Next"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-400: Uncontrolled Resource Consumption"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-27143",
-      "publishedDate": "2026-04-08T01:06:57.168Z",
-      "lastModifiedDate": "2026-04-08T01:06:57.168Z",
-      "description": "Arithmetic over induction variables in loops were not correctly checked for underflow or overflow. As a result, the compiler would allow for invalid indexing to occur at runtime, potentially leading to memory corruption.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://go.dev/cl/763765",
-          "type": "reference"
-        },
-        {
-          "url": "https://go.dev/issue/78333",
-          "type": "reference"
-        },
-        {
-          "url": "https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU",
-          "type": "reference"
-        },
-        {
-          "url": "https://pkg.go.dev/vuln/GO-2026-4868",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Go toolchain",
-          "product": "cmd/compile",
-          "collectionURL": "https://pkg.go.dev",
-          "packageName": "cmd/compile",
-          "versions": [
-            {
-              "version": "0",
-              "lessThan": "1.25.9",
-              "status": "affected",
-              "versionType": "semver"
-            },
-            {
-              "version": "1.26.0-0",
-              "lessThan": "1.26.2",
-              "status": "affected",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
+          ]
         }
       ],
       "problemType": [
@@ -528,291 +286,2308 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-27144",
-      "publishedDate": "2026-04-08T01:06:56.908Z",
-      "lastModifiedDate": "2026-04-08T01:06:56.908Z",
-      "description": "The compiler is meant to unwrap pointers which are the operands of a memory move; a no-op interface conversion prevented the compiler from making the correct determination about non-overlapping moves, potentially leading to memory corruption at runtime.",
-      "severity": "N/A",
+      "id": "CVE-2026-34841",
+      "publishedDate": "2026-04-06T16:08:08.198Z",
+      "lastModifiedDate": "2026-04-08T03:55:33.960Z",
+      "description": "Bruno is an open source IDE for exploring and testing APIs. Prior to 3.2.1, Bruno was affected by a supply chain attack involving compromised versions of the axios npm package, which introduced a hidden dependency deploying a cross-platform Remote Access Trojan (RAT). Users of @usebruno/cli who ran npm install between 00:21 UTC and ~03:30 UTC on March 31, 2026 may have been impacted. Upgrade to 3.2.1",
+      "severity": 9.8,
       "references": [
         {
-          "url": "https://go.dev/cl/763764",
+          "url": "https://github.com/usebruno/bruno/security/advisories/GHSA-658g-p7jg-wx5g",
           "type": "reference"
         },
         {
-          "url": "https://go.dev/issue/78371",
+          "url": "https://github.com/axios/axios/issues/10604",
           "type": "reference"
         },
         {
-          "url": "https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU",
+          "url": "https://github.com/usebruno/bruno/pull/7632",
           "type": "reference"
         },
         {
-          "url": "https://pkg.go.dev/vuln/GO-2026-4867",
+          "url": "https://www.aikido.dev/blog/axios-npm-compromised-maintainer-hijacked-rat",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Go toolchain",
-          "product": "cmd/compile",
-          "collectionURL": "https://pkg.go.dev",
-          "packageName": "cmd/compile",
+          "vendor": "usebruno",
+          "product": "bruno",
           "versions": [
             {
-              "version": "0",
-              "lessThan": "1.25.9",
-              "status": "affected",
-              "versionType": "semver"
-            },
-            {
-              "version": "1.26.0-0",
-              "lessThan": "1.26.2",
-              "status": "affected",
-              "versionType": "semver"
+              "version": "< 3.2.1",
+              "status": "affected"
             }
-          ],
-          "defaultStatus": "unaffected"
+          ]
         }
       ],
       "problemType": [
-        "CWE-440: Expected Behavior Violation"
+        "CWE-494: Download of Code Without Integrity Check",
+        "CWE-506: Embedded Malicious Code"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-33810",
-      "publishedDate": "2026-04-08T01:06:56.546Z",
-      "lastModifiedDate": "2026-04-08T01:06:56.546Z",
-      "description": "When verifying a certificate chain containing excluded DNS constraints, these constraints are not correctly applied to wildcard DNS SANs which use a different case than the constraint. This only affects validation of otherwise trusted certificate chains, issued by a root CA in the VerifyOptions.Roots CertPool, or in the system certificate pool.",
-      "severity": "N/A",
+      "id": "CVE-2026-22683",
+      "publishedDate": "2026-04-07T16:50:30.297Z",
+      "lastModifiedDate": "2026-04-08T03:55:44.291Z",
+      "description": "Windmill versions 1.56.0 through 1.614.0 contain a missing authorization vulnerability that allows users with the Operator role to perform prohibited entity creation and modification actions via the backend API. Although Operators are documented and priced as unable to create or modify entities, the API does not enforce the Operator restriction on workspace endpoints, allowing an Operator to create and update scripts, flows, apps, and raw_apps. Since Operators can also execute scripts via the jobs API, this allows direct privilege escalation to remote code execution within the Windmill deployment. This vulnerability has existed since the introduction of the Operator role in version 1.56.0.",
+      "severity": 8.8,
       "references": [
         {
-          "url": "https://go.dev/cl/763763",
+          "url": "https://chocapikk.com/posts/2026/windfall-nextcloud-flow-windmill-rce/",
+          "type": "poc"
+        },
+        {
+          "url": "https://github.com/Chocapikk/Windfall",
+          "type": "poc"
+        },
+        {
+          "url": "https://github.com/windmill-labs/windmill/releases/tag/v1.615.0",
           "type": "reference"
         },
         {
-          "url": "https://go.dev/issue/78332",
+          "url": "https://github.com/windmill-labs/windmill/commit/c621a74804f4f6e8318819c01e3a23a17698588b",
           "type": "reference"
         },
         {
-          "url": "https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU",
+          "url": "https://www.windmill.dev/",
           "type": "reference"
         },
         {
-          "url": "https://pkg.go.dev/vuln/GO-2026-4866",
+          "url": "https://apps.nextcloud.com/apps/flow/releases",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Go standard library",
-          "product": "crypto/x509",
-          "collectionURL": "https://pkg.go.dev",
-          "packageName": "crypto/x509",
+          "vendor": "Windmill Labs",
+          "product": "Windmill CE (Community Edition)",
           "versions": [
             {
-              "version": "1.26.0-0",
-              "lessThan": "1.26.2",
               "status": "affected",
+              "version": "1.56.0",
+              "lessThanOrEqual": "1.614.0",
               "versionType": "semver"
+            },
+            {
+              "status": "unaffected",
+              "version": "1.615.0"
             }
           ],
-          "programRoutines": [
+          "defaultStatus": "unaffected"
+        },
+        {
+          "vendor": "Windmill Labs",
+          "product": "Windmill EE (Enterprise Edition)",
+          "versions": [
             {
-              "name": "newDNSConstraints"
+              "status": "affected",
+              "version": "1.56.0",
+              "lessThanOrEqual": "1.614.0",
+              "versionType": "semver"
             },
             {
-              "name": "dnsConstraints.query"
-            },
+              "status": "unaffected",
+              "version": "1.615.0"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        },
+        {
+          "vendor": "Nextcloud",
+          "product": "Flow",
+          "repo": "https://github.com/nextcloud/flow",
+          "versions": [
             {
-              "name": "Certificate.Verify"
+              "status": "affected",
+              "version": "1.0.0",
+              "lessThanOrEqual": "1.3.1",
+              "versionType": "semver"
             }
           ],
           "defaultStatus": "unaffected"
         }
       ],
       "problemType": [
-        "CWE-295: Improper Certificate Validation"
+        "CWE-862 Missing Authorization"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-32289",
-      "publishedDate": "2026-04-08T01:06:56.297Z",
-      "lastModifiedDate": "2026-04-08T01:06:56.297Z",
-      "description": "Context was not properly tracked across template branches for JS template literals, leading to possibly incorrect escaping of content when branches were used. Additionally template actions within JS template literals did not properly track the brace depth, leading to incorrect escaping being applied. These issues could cause actions within JS template literals to be incorrectly or improperly escaped, leading to XSS vulnerabilities.",
-      "severity": "N/A",
+      "id": "CVE-2026-34780",
+      "publishedDate": "2026-04-04T00:02:02.224Z",
+      "lastModifiedDate": "2026-04-08T03:55:42.004Z",
+      "description": "Electron is a framework for writing cross-platform desktop applications using JavaScript, HTML and CSS. From versions 39.0.0-alpha.1 to before 39.8.0, 40.0.0-alpha.1 to before 40.7.0, and 41.0.0-alpha.1 to before 41.0.0-beta.8, apps that pass VideoFrame objects (from the WebCodecs API) across the contextBridge are vulnerable to a context isolation bypass. An attacker who can execute JavaScript in the main world (for example, via XSS) can use a bridged VideoFrame to gain access to the isolated world, including any Node.js APIs exposed to the preload script. Apps are only affected if a preload script returns, resolves, or passes a VideoFrame object to the main world via contextBridge.exposeInMainWorld(). Apps that do not bridge VideoFrame objects are not affected. This issue has been patched in versions 39.8.0, 40.7.0, and 41.0.0-beta.8.",
+      "severity": 8.4,
       "references": [
         {
-          "url": "https://go.dev/cl/763762",
-          "type": "reference"
-        },
-        {
-          "url": "https://go.dev/issue/78331",
-          "type": "reference"
-        },
-        {
-          "url": "https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU",
-          "type": "reference"
-        },
-        {
-          "url": "https://pkg.go.dev/vuln/GO-2026-4865",
+          "url": "https://github.com/electron/electron/security/advisories/GHSA-jfqg-hf23-qpw2",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Go standard library",
-          "product": "html/template",
-          "collectionURL": "https://pkg.go.dev",
-          "packageName": "html/template",
+          "vendor": "electron",
+          "product": "electron",
           "versions": [
             {
-              "version": "0",
-              "lessThan": "1.25.9",
-              "status": "affected",
-              "versionType": "semver"
+              "version": ">= 39.0.0-alpha.1, < 39.8.0",
+              "status": "affected"
             },
             {
-              "version": "1.26.0-0",
-              "lessThan": "1.26.2",
-              "status": "affected",
-              "versionType": "semver"
+              "version": ">= 40.0.0-alpha.1, < 40.7.0",
+              "status": "affected"
+            },
+            {
+              "version": ">= 41.0.0-alpha.1, < 41.0.0-beta.8",
+              "status": "affected"
             }
-          ],
-          "programRoutines": [
-            {
-              "name": "context.String"
-            },
-            {
-              "name": "context.mangle"
-            },
-            {
-              "name": "escaper.escapeBranch"
-            },
-            {
-              "name": "Error.Error"
-            },
-            {
-              "name": "HTMLEscaper"
-            },
-            {
-              "name": "JSEscape"
-            },
-            {
-              "name": "JSEscapeString"
-            },
-            {
-              "name": "JSEscaper"
-            },
-            {
-              "name": "ParseFS"
-            },
-            {
-              "name": "ParseFiles"
-            },
-            {
-              "name": "ParseGlob"
-            },
-            {
-              "name": "Template.AddParseTree"
-            },
-            {
-              "name": "Template.Clone"
-            },
-            {
-              "name": "Template.DefinedTemplates"
-            },
-            {
-              "name": "Template.Execute"
-            },
-            {
-              "name": "Template.ExecuteTemplate"
-            },
-            {
-              "name": "Template.Funcs"
-            },
-            {
-              "name": "Template.Parse"
-            },
-            {
-              "name": "Template.ParseFS"
-            },
-            {
-              "name": "Template.ParseFiles"
-            },
-            {
-              "name": "Template.ParseGlob"
-            },
-            {
-              "name": "URLQueryEscaper"
-            }
-          ],
-          "defaultStatus": "unaffected"
+          ]
         }
       ],
       "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+        "CWE-668: Exposure of Resource to Wrong Sphere",
+        "CWE-1188: Insecure Default Initialization of Resource"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-32282",
-      "publishedDate": "2026-04-08T01:06:55.953Z",
-      "lastModifiedDate": "2026-04-08T01:06:55.953Z",
-      "description": "On Linux, if the target of Root.Chmod is replaced with a symlink while the chmod operation is in progress, Chmod can operate on the target of the symlink, even when the target lies outside the root. The Linux fchmodat syscall silently ignores the AT_SYMLINK_NOFOLLOW flag, which Root.Chmod uses to avoid symlink traversal. Root.Chmod checks its target before acting and returns an error if the target is a symlink lying outside the root, so the impact is limited to cases where the target is replaced with a symlink between the check and operation.",
-      "severity": "N/A",
+      "id": "CVE-2026-24660",
+      "publishedDate": "2026-04-07T13:49:25.335Z",
+      "lastModifiedDate": "2026-04-08T03:55:47.844Z",
+      "description": "A heap-based buffer overflow vulnerability exists in the x3f_load_huffman functionality of LibRaw Commit d20315b. A specially crafted malicious file can lead to a heap buffer overflow. An attacker can provide a malicious file to trigger this vulnerability.",
+      "severity": 8.1,
       "references": [
         {
-          "url": "https://go.dev/cl/763761",
-          "type": "reference"
-        },
-        {
-          "url": "https://go.dev/issue/78293",
-          "type": "reference"
-        },
-        {
-          "url": "https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU",
-          "type": "reference"
-        },
-        {
-          "url": "https://pkg.go.dev/vuln/GO-2026-4864",
+          "url": "https://talosintelligence.com/vulnerability_reports/TALOS-2026-2359",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Go standard library",
-          "product": "internal/syscall/unix",
-          "collectionURL": "https://pkg.go.dev",
-          "packageName": "internal/syscall/unix",
+          "vendor": "LibRaw",
+          "product": "LibRaw",
           "versions": [
             {
-              "version": "0",
-              "lessThan": "1.25.9",
+              "version": "Commit d20315b",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-190: Integer Overflow or Wraparound"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-24450",
+      "publishedDate": "2026-04-07T13:49:23.872Z",
+      "lastModifiedDate": "2026-04-08T03:55:46.772Z",
+      "description": "An integer overflow vulnerability exists in the uncompressed_fp_dng_load_raw functionality of LibRaw Commit 8dc68e2. A specially crafted malicious file can lead to a heap buffer overflow. An attacker can provide a malicious file to trigger this vulnerability.",
+      "severity": 8.1,
+      "references": [
+        {
+          "url": "https://talosintelligence.com/vulnerability_reports/TALOS-2026-2363",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "LibRaw",
+          "product": "LibRaw",
+          "versions": [
+            {
+              "version": "Commit 8dc68e2",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-190: Integer Overflow or Wraparound"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-20884",
+      "publishedDate": "2026-04-07T13:49:22.423Z",
+      "lastModifiedDate": "2026-04-08T03:55:45.636Z",
+      "description": "An integer overflow vulnerability exists in the deflate_dng_load_raw functionality of LibRaw Commit 8dc68e2. A specially crafted malicious file can lead to a heap buffer overflow. An attacker can provide a malicious file to trigger this vulnerability.",
+      "severity": 8.1,
+      "references": [
+        {
+          "url": "https://talosintelligence.com/vulnerability_reports/TALOS-2026-2364",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "LibRaw",
+          "product": "LibRaw",
+          "versions": [
+            {
+              "version": "Commit 8dc68e2",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-190: Integer Overflow or Wraparound"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-34774",
+      "publishedDate": "2026-04-03T23:52:38.680Z",
+      "lastModifiedDate": "2026-04-08T03:55:38.650Z",
+      "description": "Electron is a framework for writing cross-platform desktop applications using JavaScript, HTML and CSS. Prior to versions 39.8.1, 40.7.0, and 41.0.0, apps that use offscreen rendering and allow child windows via window.open() may be vulnerable to a use-after-free. If the parent offscreen WebContents is destroyed while a child window remains open, subsequent paint frames on the child dereference freed memory, which may lead to a crash or memory corruption. Apps are only affected if they use offscreen rendering (webPreferences.offscreen: true) and their setWindowOpenHandler permits child windows. Apps that do not use offscreen rendering, or that deny child windows, are not affected. This issue has been patched in versions 39.8.1, 40.7.0, and 41.0.0.",
+      "severity": 8.1,
+      "references": [
+        {
+          "url": "https://github.com/electron/electron/security/advisories/GHSA-532v-xpq5-8h95",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "electron",
+          "product": "electron",
+          "versions": [
+            {
+              "version": "< 39.8.1",
+              "status": "affected"
+            },
+            {
+              "version": ">= 40.0.0-alpha.1, < 40.7.0",
+              "status": "affected"
+            },
+            {
+              "version": ">= 41.0.0-alpha.1, < 41.0.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-416: Use After Free"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-32864",
+      "publishedDate": "2026-04-07T19:56:42.923Z",
+      "lastModifiedDate": "2026-04-08T03:55:56.834Z",
+      "description": "There is a memory corruption vulnerability due to an out-of-bounds read in mgcore_SH_25_3!aligned_free() in NI LabVIEW.  This vulnerability may result in information disclosure or arbitrary code execution. Successful exploitation requires an attacker to get a user to open a specially crafted VI file. This vulnerability affects NI LabVIEW 2026 Q1 (26.1.0) and prior versions.",
+      "severity": 7.8,
+      "references": [
+        {
+          "url": "https://www.ni.com/en/support/security/available-critical-and-security-updates-for-ni-software/2026/memory-corruption-vulnerabilities-in-ni-labview.html",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "NI",
+          "product": "LabVIEW",
+          "versions": [
+            {
               "status": "affected",
+              "version": "0",
+              "lessThan": "23.0.0",
               "versionType": "semver"
             },
             {
-              "version": "1.26.0-0",
-              "lessThan": "1.26.2",
               "status": "affected",
+              "version": "23.1.0",
+              "lessThan": "23.3.9",
               "versionType": "semver"
-            }
-          ],
-          "platforms": [
-            "linux"
-          ],
-          "programRoutines": [
+            },
             {
-              "name": "Fchmodat"
+              "status": "affected",
+              "version": "24.1.0",
+              "lessThan": "24.3.6",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "25.1.0",
+              "lessThan": "25.3.4",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "26.1.0",
+              "lessThan": "26.1.1",
+              "versionType": "semver"
             }
           ],
           "defaultStatus": "unaffected"
         }
       ],
       "problemType": [
-        "CWE-61: UNIX Symbolic Link (Symlink) Following"
+        "CWE-125 Out-of-bounds read"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-32863",
+      "publishedDate": "2026-04-07T19:53:51.666Z",
+      "lastModifiedDate": "2026-04-08T03:55:55.727Z",
+      "description": "There is a memory corruption vulnerability due to an out-of-bounds read in sentry_transaction_context_set_operation() in NI LabVIEW.  This vulnerability may result in information disclosure or arbitrary code execution. Successful exploitation requires an attacker to get a user to open a specially crafted VI file. This vulnerability affects NI LabVIEW 2026 Q1 (26.1.0) and prior versions.",
+      "severity": 7.8,
+      "references": [
+        {
+          "url": "https://www.ni.com/en/support/security/available-critical-and-security-updates-for-ni-software/2026/memory-corruption-vulnerabilities-in-ni-labview.html",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "NI",
+          "product": "LabVIEW",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "23.0.0",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "23.1.0",
+              "lessThan": "23.3.9",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "24.1.0",
+              "lessThan": "24.3.6",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "25.1.0",
+              "lessThan": "25.3.4",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "26.1.0",
+              "lessThan": "26.1.1",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-125 Out-of-bounds read"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-32862",
+      "publishedDate": "2026-04-07T19:50:36.912Z",
+      "lastModifiedDate": "2026-04-08T03:55:54.567Z",
+      "description": "There is a memory corruption vulnerability due to an out-of-bounds write in ResFileFactory::InitResourceMgr() in NI LabVIEW.  This vulnerability may result in information disclosure or arbitrary code execution. Successful exploitation requires an attacker to get a user to open a specially crafted VI file. This vulnerability affects NI LabVIEW 2026 Q1 (26.1.0) and prior versions.",
+      "severity": 7.8,
+      "references": [
+        {
+          "url": "https://www.ni.com/en/support/security/available-critical-and-security-updates-for-ni-software/2026/memory-corruption-vulnerabilities-in-ni-labview.html",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "NI",
+          "product": "LabVIEW",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "23.0.0",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "23.1.0",
+              "lessThan": "23.3.9",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "24.1.0",
+              "lessThan": "24.3.6",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "25.1.0",
+              "lessThan": "25.3.4",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "26.1.0",
+              "lessThan": "26.1.1",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-787 Out-of-bounds write"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-32861",
+      "publishedDate": "2026-04-07T19:46:45.763Z",
+      "lastModifiedDate": "2026-04-08T03:55:58.996Z",
+      "description": "There is a memory corruption vulnerability due to an out-of-bounds write when loading a corrupted LVCLASS file in NI LabVIEW.  This vulnerability may result in information disclosure or arbitrary code execution. Successful exploitation requires an attacker to get a user to open a specially crafted .lvclass file. This vulnerability affects NI LabVIEW 2026 Q1 (26.1.0) and prior versions.",
+      "severity": 7.8,
+      "references": [
+        {
+          "url": "https://www.ni.com/en/support/security/available-critical-and-security-updates-for-ni-software/2026/lv-class-file-parsing-memory-corruption-vulnerability-in-ni-labview.html",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "NI",
+          "product": "LabVIEW",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "23.0.0",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "23.1.0",
+              "lessThan": "23.3.9",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "24.1.0",
+              "lessThan": "24.3.6",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "25.1.0",
+              "lessThan": "25.3.4",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "26.1.0",
+              "lessThan": "26.1.1",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-787 Out-of-bounds write"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-32860",
+      "publishedDate": "2026-04-07T19:42:36.167Z",
+      "lastModifiedDate": "2026-04-08T03:55:57.909Z",
+      "description": "There is a memory corruption vulnerability due to an out-of-bounds write when loading a corrupted LVLIB file in NI LabVIEW.  This vulnerability may result in information disclosure or arbitrary code execution. Successful exploitation requires an attacker to get a user to open a specially crafted .lvlib file. This vulnerability affects NI LabVIEW 2026 Q1 (26.1.0) and prior versions.",
+      "severity": 7.8,
+      "references": [
+        {
+          "url": "https://www.ni.com/en/support/security/available-critical-and-security-updates-for-ni-software/2026/lv-project-library-file-parsing-memory-corruption-vulnerability-in-ni-labview.html",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "NI",
+          "product": "LabVIEW",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "23.0.0",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "23.1.0",
+              "lessThan": "23.3.9",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "24.1.0",
+              "lessThan": "24.3.6",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "25.1.0",
+              "lessThan": "25.3.4",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "26.1.0",
+              "lessThan": "26.1.1",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-787 - Out of Bounds Write"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-14821",
+      "publishedDate": "2026-04-07T16:34:10.718Z",
+      "lastModifiedDate": "2026-04-08T03:55:53.414Z",
+      "description": "A flaw was found in libssh. This vulnerability allows local man-in-the-middle attacks, security downgrades of SSH (Secure Shell) connections, and manipulation of trusted host information, posing a significant risk to the confidentiality, integrity, and availability of SSH communications via an insecure default configuration on Windows systems where the library automatically loads configuration files from the C:\\etc directory, which can be created and modified by unprivileged local users.",
+      "severity": 7.8,
+      "references": [
+        {
+          "url": "https://access.redhat.com/security/cve/CVE-2025-14821",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2423148",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.libssh.org/2026/02/10/libssh-0-12-0-and-0-11-4-security-releases/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 10",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "libssh",
+          "defaultStatus": "unaffected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:10"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 6",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "libssh2",
+          "defaultStatus": "unaffected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:6"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 7",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "libssh2",
+          "defaultStatus": "unaffected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:7"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 8",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "libssh",
+          "defaultStatus": "unaffected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:8"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 9",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "libssh",
+          "defaultStatus": "unaffected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Hardened Images 1",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "libssh",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:hummingbird:1"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat OpenShift Container Platform 4",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhcos",
+          "defaultStatus": "unaffected",
+          "cpes": [
+            "cpe:/a:redhat:openshift:4"
+          ]
+        }
+      ],
+      "problemType": [
+        "Uncontrolled Search Path Element"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-34769",
+      "publishedDate": "2026-04-03T23:33:55.952Z",
+      "lastModifiedDate": "2026-04-08T03:55:35.188Z",
+      "description": "Electron is a framework for writing cross-platform desktop applications using JavaScript, HTML and CSS. Prior to versions 38.8.6, 39.8.0, 40.7.0, and 41.0.0-beta.8, an undocumented commandLineSwitches webPreference allowed arbitrary switches to be appended to the renderer process command line. Apps that construct webPreferences by spreading untrusted configuration objects may inadvertently allow an attacker to inject switches that disable renderer sandboxing or web security controls. Apps are only affected if they construct webPreferences from external or untrusted input without an allowlist. Apps that use a fixed, hardcoded webPreferences object are not affected. This issue has been patched in versions 38.8.6, 39.8.0, 40.7.0, and 41.0.0-beta.8.",
+      "severity": 7.8,
+      "references": [
+        {
+          "url": "https://github.com/electron/electron/security/advisories/GHSA-9wfr-w7mm-pc7f",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "electron",
+          "product": "electron",
+          "versions": [
+            {
+              "version": "< 38.8.6",
+              "status": "affected"
+            },
+            {
+              "version": ">= 39.0.0-alpha.1, < 39.8.0",
+              "status": "affected"
+            },
+            {
+              "version": ">= 40.0.0-alpha.1, < 40.7.0",
+              "status": "affected"
+            },
+            {
+              "version": ">= 41.0.0-alpha.1, < 41.0.0-beta.8",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-88: Improper Neutralization of Argument Delimiters in a Command ('Argument Injection')",
+        "CWE-912: Hidden Functionality"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-34771",
+      "publishedDate": "2026-04-03T23:47:23.171Z",
+      "lastModifiedDate": "2026-04-08T03:55:37.519Z",
+      "description": "Electron is a framework for writing cross-platform desktop applications using JavaScript, HTML and CSS. Prior to versions 38.8.6, 39.8.0, 40.7.0, and 41.0.0-beta.8, apps that register an asynchronous session.setPermissionRequestHandler() may be vulnerable to a use-after-free when handling fullscreen, pointer-lock, or keyboard-lock permission requests. If the requesting frame navigates or the window closes while the permission handler is pending, invoking the stored callback dereferences freed memory, which may lead to a crash or memory corruption. Apps that do not set a permission request handler, or whose handler responds synchronously, are not affected. This issue has been patched in versions 38.8.6, 39.8.0, 40.7.0, and 41.0.0-beta.8.",
+      "severity": 7.5,
+      "references": [
+        {
+          "url": "https://github.com/electron/electron/security/advisories/GHSA-8337-3p73-46f4",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "electron",
+          "product": "electron",
+          "versions": [
+            {
+              "version": "< 38.8.6",
+              "status": "affected"
+            },
+            {
+              "version": ">= 39.0.0-alpha.1, < 39.8.0",
+              "status": "affected"
+            },
+            {
+              "version": ">= 40.0.0-alpha.1, < 40.7.0",
+              "status": "affected"
+            },
+            {
+              "version": ">= 41.0.0-alpha.1, < 41.0.0-beta.8",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-416: Use After Free"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-34770",
+      "publishedDate": "2026-04-03T23:46:11.095Z",
+      "lastModifiedDate": "2026-04-08T03:55:36.380Z",
+      "description": "Electron is a framework for writing cross-platform desktop applications using JavaScript, HTML and CSS. Prior to versions 38.8.6, 39.8.1, 40.8.0, and 41.0.0-beta.8, apps that use the powerMonitor module may be vulnerable to a use-after-free. After the native PowerMonitor object is garbage-collected, the associated OS-level resources (a message window on Windows, a shutdown handler on macOS) retain dangling references. A subsequent session-change event (Windows) or system shutdown (macOS) dereferences freed memory, which may lead to a crash or memory corruption. All apps that access powerMonitor events (suspend, resume, lock-screen, etc.) are potentially affected. The issue is not directly renderer-controllable. This issue has been patched in versions 38.8.6, 39.8.1, 40.8.0, and 41.0.0-beta.8.",
+      "severity": 7,
+      "references": [
+        {
+          "url": "https://github.com/electron/electron/security/advisories/GHSA-jjp3-mq3x-295m",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "electron",
+          "product": "electron",
+          "versions": [
+            {
+              "version": "< 38.8.6",
+              "status": "affected"
+            },
+            {
+              "version": ">= 39.0.0-alpha.1, < 39.8.1",
+              "status": "affected"
+            },
+            {
+              "version": ">= 40.0.0-alpha.1, < 40.8.0",
+              "status": "affected"
+            },
+            {
+              "version": ">= 41.0.0-alpha.1, < 41.0.0-beta.8",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-416: Use After Free"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-34775",
+      "publishedDate": "2026-04-03T23:55:20.950Z",
+      "lastModifiedDate": "2026-04-08T03:55:39.764Z",
+      "description": "Electron is a framework for writing cross-platform desktop applications using JavaScript, HTML and CSS. Prior to versions 38.8.6, 39.8.4, 40.8.4, and 41.0.0, the nodeIntegrationInWorker webPreference was not correctly scoped in all configurations. In certain process-sharing scenarios, workers spawned in frames configured with nodeIntegrationInWorker: false could still receive Node.js integration. Apps are only affected if they enable nodeIntegrationInWorker. Apps that do not use nodeIntegrationInWorker are not affected. This issue has been patched in versions 38.8.6, 39.8.4, 40.8.4, and 41.0.0.",
+      "severity": 6.8,
+      "references": [
+        {
+          "url": "https://github.com/electron/electron/security/advisories/GHSA-xwr5-m59h-vwqr",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "electron",
+          "product": "electron",
+          "versions": [
+            {
+              "version": "< 38.8.6",
+              "status": "affected"
+            },
+            {
+              "version": ">= 39.0.0-alpha.1, < 39.8.4",
+              "status": "affected"
+            },
+            {
+              "version": ">= 40.0.0-alpha.1, < 40.8.4",
+              "status": "affected"
+            },
+            {
+              "version": ">= 41.0.0-alpha.1, < 41.0.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-653: Improper Isolation or Compartmentalization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-34779",
+      "publishedDate": "2026-04-04T00:00:41.873Z",
+      "lastModifiedDate": "2026-04-08T03:55:40.913Z",
+      "description": "Electron is a framework for writing cross-platform desktop applications using JavaScript, HTML and CSS. Prior to versions 38.8.6, 39.8.1, 40.8.0, and 41.0.0-beta.8, on macOS, app.moveToApplicationsFolder() used an AppleScript fallback path that did not properly handle certain characters in the application bundle path. Under specific conditions, a crafted launch path could lead to arbitrary AppleScript execution when the user accepted the move-to-Applications prompt. Apps are only affected if they call app.moveToApplicationsFolder(). Apps that do not use this API are not affected. This issue has been patched in versions 38.8.6, 39.8.1, 40.8.0, and 41.0.0-beta.8.",
+      "severity": 6.5,
+      "references": [
+        {
+          "url": "https://github.com/electron/electron/security/advisories/GHSA-5rqw-r77c-jp79",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "electron",
+          "product": "electron",
+          "versions": [
+            {
+              "version": "< 38.8.6",
+              "status": "affected"
+            },
+            {
+              "version": ">= 39.0.0-alpha.1, < 39.8.1",
+              "status": "affected"
+            },
+            {
+              "version": ">= 40.0.0-alpha.1, < 40.8.0",
+              "status": "affected"
+            },
+            {
+              "version": ">= 41.0.0-alpha.1, < 41.0.0-beta.8",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3239",
+      "publishedDate": "2026-04-08T04:27:16.978Z",
+      "lastModifiedDate": "2026-04-08T04:27:16.978Z",
+      "description": "The Strong Testimonials plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the plugin's testimonial_view shortcode in all versions up to, and including, 3.2.21 due to insufficient input sanitization and output escaping on user supplied attributes. This makes it possible for authenticated attackers, with contributor-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page.",
+      "severity": 6.4,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/88d769cd-bea8-42e4-80a8-a77c0699b50c?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset/3470120/strong-testimonials",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "wpchill",
+          "product": "Strong Testimonials",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "3.2.21",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3600",
+      "publishedDate": "2026-04-08T04:27:16.381Z",
+      "lastModifiedDate": "2026-04-08T04:27:16.381Z",
+      "description": "The Investi plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the 'investi-announcements-accordion' shortcode's 'maximum-num-years' attribute in all versions up to, and including, 1.0.26. This is due to insufficient input sanitization and output escaping on user-supplied shortcode attributes. Specifically, the 'maximum-num-years' attribute value is read directly from shortcode attributes and interpolated into a double-quoted HTML attribute without any escaping (no esc_attr(), htmlspecialchars(), or similar). This makes it possible for authenticated attackers, with Contributor-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page.",
+      "severity": 6.4,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/51aa0d86-e623-46d1-9d37-a36b4825c071?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/investi/trunk/includes/widgets.php#L14",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/investi/tags/1.0.22/includes/widgets.php#L14",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/investi/trunk/includes/widgets.php#L7",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/investi/tags/1.0.22/includes/widgets.php#L7",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset/3486937/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "investi",
+          "product": "Investi",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "1.0.26",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4785",
+      "publishedDate": "2026-04-08T03:36:09.316Z",
+      "lastModifiedDate": "2026-04-08T03:36:09.316Z",
+      "description": "The LatePoint – Calendar Booking Plugin for Appointments and Events plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the 'button_caption' parameter in the [latepoint_resources] shortcode in versions up to and including 5.3.0. This is due to insufficient output escaping when the 'items' parameter is set to 'bundles'. This makes it possible for authenticated attackers, with contributor-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page.",
+      "severity": 6.4,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/55c5c094-69c0-4e2a-be0c-fab6f1039309?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/latepoint/trunk/lib/helpers/shortcodes_helper.php#L272",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/latepoint/tags/5.2.10/lib/helpers/shortcodes_helper.php#L272",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/latepoint/trunk/lib/helpers/shortcodes_helper.php#L40",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/latepoint/tags/5.2.10/lib/helpers/shortcodes_helper.php#L40",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset/3491516/latepoint",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "latepoint",
+          "product": "LatePoint – Calendar Booking Plugin for Appointments and Events",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "5.3.0",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4341",
+      "publishedDate": "2026-04-08T03:36:08.934Z",
+      "lastModifiedDate": "2026-04-08T03:36:08.934Z",
+      "description": "The Prime Slider – Addons for Elementor plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the 'follow_us_text' setting of the Mount widget in all versions up to, and including, 4.1.10. This is due to insufficient input sanitization and output escaping. Specifically, the `render_social_link()` function in `modules/mount/widgets/mount.php` outputs the `follow_us_text` Elementor widget setting using `echo` without any escaping function. The setting value is stored in `_elementor_data` post meta via `update_post_meta`. This makes it possible for authenticated attackers, with Author-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page.",
+      "severity": 6.4,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/4a2ef416-4354-4e09-b9be-e36c1f655110?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/bdthemes-prime-slider-lite/trunk/modules/mount/widgets/mount.php#L1027",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/bdthemes-prime-slider-lite/tags/4.1.9/modules/mount/widgets/mount.php#L1027",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/bdthemes-prime-slider-lite/trunk/modules/mount/widgets/mount.php#L230",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/bdthemes-prime-slider-lite/tags/4.1.9/modules/mount/widgets/mount.php#L230",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=3493676%40bdthemes-prime-slider-lite&new=3493676%40bdthemes-prime-slider-lite&sfp_email=&sfph_mail=",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "bdthemes",
+          "product": "Prime Slider – Addons for Elementor",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "4.1.10",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3513",
+      "publishedDate": "2026-04-08T03:36:08.564Z",
+      "lastModifiedDate": "2026-04-08T03:36:08.564Z",
+      "description": "The TableOn – WordPress Posts Table Filterable plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the 'tableon_button' shortcode in all versions up to and including 1.0.4.4. This is due to insufficient input sanitization and output escaping on user-supplied shortcode attributes such as 'class', 'help_link', 'popup_title', and 'help_title'. The do_shortcode_button() function extracts these attributes without sanitization and passes them to TABLEON_HELPER::draw_html_item(), which concatenates attribute values into HTML using single quotes without escaping (line 29: $item .= \" {$key}='{$value}'\"). This makes it possible for authenticated attackers, with Contributor-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page.",
+      "severity": 6.4,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/33490873-da99-465e-bfb6-44d2ba84f3ee?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/posts-table-filterable/trunk/lib/helper.php#L29",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/posts-table-filterable/trunk/index.php#L489",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/posts-table-filterable/trunk/index.php#L495",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=3492852%40posts-table-filterable&new=3492852%40posts-table-filterable&sfp_email=&sfph_mail=",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=3476421%40posts-table-filterable&new=3476421%40posts-table-filterable&sfp_email=&sfph_mail=",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "realmag777",
+          "product": "TableOn – WordPress Posts Table Filterable",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "1.0.4.4",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4333",
+      "publishedDate": "2026-04-08T03:36:07.559Z",
+      "lastModifiedDate": "2026-04-08T03:36:07.559Z",
+      "description": "The LearnPress – WordPress LMS Plugin plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the 'skin' attribute of the learn_press_courses shortcode in all versions up to and including 4.3.3. This is due to insufficient input sanitization and output escaping on the 'skin' shortcode attribute. The attribute value is used directly in an sprintf() call that generates HTML (class attribute and data-layout attribute) without any esc_attr() escaping. This makes it possible for authenticated attackers, with Contributor-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page.",
+      "severity": 6.4,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/15fb0a26-e415-4ccb-b83d-d8f7b36bce66?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/learnpress/trunk/inc/Shortcodes/Courses/ListCoursesShortcode.php#L76",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/learnpress/tags/4.3.2.8/inc/Shortcodes/Courses/ListCoursesShortcode.php#L76",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/learnpress/trunk/inc/Shortcodes/Courses/ListCoursesShortcode.php#L55",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/learnpress/tags/4.3.2.8/inc/Shortcodes/Courses/ListCoursesShortcode.php#L55",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=3494377%40learnpress&new=3494377%40learnpress&sfp_email=&sfph_mail=",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "thimpress",
+          "product": "LearnPress – WordPress LMS Plugin for Create and Sell Online Courses",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "4.3.3",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3646",
+      "publishedDate": "2026-04-08T03:36:10.023Z",
+      "lastModifiedDate": "2026-04-08T03:36:10.023Z",
+      "description": "The LTL Freight Quotes – R+L Carriers Edition plugin for WordPress is vulnerable to Missing Authorization via the plugin's webhook handler in all versions up to, and including, 3.3.13. This is due to missing authentication, authorization, and nonce verification on a standalone PHP file that directly processes GET parameters and updates WordPress options. This makes it possible for unauthenticated attackers to modify the plugin's subscription plan settings, effectively downgrading the store from a paid plan to the Trial Plan, changing the store type, and manipulating subscription expiration dates, potentially disabling premium features such as Dropship and Hazardous Material handling.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/a144c9ae-dfdb-4ea2-8c27-84d59439c72a?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/ltl-freight-quotes-rl-edition/trunk/en-hit-to-update-plan.php#L33",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/ltl-freight-quotes-rl-edition/tags/3.3.11/en-hit-to-update-plan.php#L33",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/ltl-freight-quotes-rl-edition/trunk/en-hit-to-update-plan.php#L40",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/ltl-freight-quotes-rl-edition/tags/3.3.11/en-hit-to-update-plan.php#L40",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/ltl-freight-quotes-rl-edition/trunk/en-hit-to-update-plan.php#L43",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/ltl-freight-quotes-rl-edition/tags/3.3.11/en-hit-to-update-plan.php#L43",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/ltl-freight-quotes-rl-edition/trunk/en-hit-to-update-plan.php#L46",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/ltl-freight-quotes-rl-edition/tags/3.3.11/en-hit-to-update-plan.php#L46",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/ltl-freight-quotes-rl-edition/trunk/en-hit-to-update-plan.php#L49",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/ltl-freight-quotes-rl-edition/tags/3.3.11/en-hit-to-update-plan.php#L49",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/ltl-freight-quotes-rl-edition/trunk/en-hit-to-update-plan.php#L32",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/ltl-freight-quotes-rl-edition/tags/3.3.11/en-hit-to-update-plan.php#L32",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=3492361%40ltl-freight-quotes-rl-edition&new=3492361%40ltl-freight-quotes-rl-edition&sfp_email=&sfph_mail=",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "enituretechnology",
+          "product": "LTL Freight Quotes – R+L Carriers Edition",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "3.3.13",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-862 Missing Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4299",
+      "publishedDate": "2026-04-08T03:36:09.655Z",
+      "lastModifiedDate": "2026-04-08T03:36:09.655Z",
+      "description": "The MainWP Child Reports plugin for WordPress is vulnerable to Missing Authorization in all versions up to and including 2.2.6. This is due to a missing capability check in the heartbeat_received() function in the Live_Update class. This makes it possible for authenticated attackers, with Subscriber-level access and above, to obtain MainWP Child Reports activity log entries (including action summaries, user information, IP addresses, and contextual data) via the WordPress Heartbeat API by sending a crafted heartbeat request with the 'wp-mainwp-stream-heartbeat' data key.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/7d4141bd-cd3f-44e9-b423-be03377a342d?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/mainwp-child-reports/trunk/classes/class-live-update.php#L182",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/mainwp-child-reports/tags/2.2.6/classes/class-live-update.php#L182",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/mainwp-child-reports/trunk/classes/class-live-update.php#L44",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/mainwp-child-reports/tags/2.2.6/classes/class-live-update.php#L44",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=3490157%40mainwp-child-reports&new=3490157%40mainwp-child-reports&sfp_email=&sfph_mail=",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "mainwp",
+          "product": "MainWP Child Reports",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "2.2.6",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-862 Missing Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-27314",
+      "publishedDate": "2026-04-07T16:33:44.448Z",
+      "lastModifiedDate": "2026-04-08T03:55:52.335Z",
+      "description": "Privilege escalation in Apache Cassandra 5.0 on an mTLS environment using MutualTlsAuthenticator allows a user with only CREATE permission to associate their own certificate identity with an arbitrary role,\nincluding a superuser role, and authenticate as that role via ADD IDENTITY.\n\nUsers are recommended to upgrade to version 5.0.7+, which fixes this issue.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://lists.apache.org/thread/zrng82ddy4rpsmfyk582v6hqxcqrbz7f",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://repo.maven.apache.org/maven2/",
+          "defaultStatus": "unaffected",
+          "packageName": "org.apache.cassandra:cassandra-all",
+          "product": "Apache Cassandra",
+          "vendor": "Apache Software Foundation",
+          "versions": [
+            {
+              "lessThanOrEqual": "5.0.6",
+              "status": "affected",
+              "version": "5.0",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-267 Privilege Defined With Unsafe Actions"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-5735",
+      "publishedDate": "2026-04-07T12:43:15.857Z",
+      "lastModifiedDate": "2026-04-08T03:55:31.327Z",
+      "description": "Memory safety bugs present in Firefox 149.0.1 and Thunderbird 149.0.1. Some of these bugs showed evidence of memory corruption and we presume that with enough effort some of these could have been exploited to run arbitrary code. This vulnerability affects Firefox < 149.0.2 and Thunderbird < 149.0.2.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://bugzilla.mozilla.org/buglist.cgi?bug_id=2025475%2C2025477",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.mozilla.org/security/advisories/mfsa2026-25/",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.mozilla.org/security/advisories/mfsa2026-28/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "product": "Firefox",
+          "vendor": "Mozilla",
+          "versions": [
+            {
+              "lessThan": "149.0.2",
+              "status": "affected",
+              "version": "unspecified",
+              "versionType": "custom"
+            }
+          ]
+        },
+        {
+          "product": "Thunderbird",
+          "vendor": "Mozilla",
+          "versions": [
+            {
+              "lessThan": "149.0.2",
+              "status": "affected",
+              "version": "unspecified",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-5734",
+      "publishedDate": "2026-04-07T12:43:14.833Z",
+      "lastModifiedDate": "2026-04-08T03:55:29.817Z",
+      "description": "Memory safety bugs present in Firefox ESR 140.9.0, Thunderbird ESR 140.9.0, Firefox 149.0.1 and Thunderbird 149.0.1. Some of these bugs showed evidence of memory corruption and we presume that with enough effort some of these could have been exploited to run arbitrary code. This vulnerability affects Firefox < 149.0.2, Firefox ESR < 140.9.1, Thunderbird < 149.0.2, and Thunderbird < 140.9.1.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://bugzilla.mozilla.org/buglist.cgi?bug_id=2022369%2C2023026%2C2023545%2C2023555%2C2023958%2C2025422%2C2025468%2C2025492%2C2025505",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.mozilla.org/security/advisories/mfsa2026-25/",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.mozilla.org/security/advisories/mfsa2026-27/",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.mozilla.org/security/advisories/mfsa2026-28/",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.mozilla.org/security/advisories/mfsa2026-29/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "product": "Firefox",
+          "vendor": "Mozilla",
+          "versions": [
+            {
+              "lessThan": "149.0.2",
+              "status": "affected",
+              "version": "unspecified",
+              "versionType": "custom"
+            }
+          ]
+        },
+        {
+          "product": "Firefox ESR",
+          "vendor": "Mozilla",
+          "versions": [
+            {
+              "lessThan": "140.9.1",
+              "status": "affected",
+              "version": "unspecified",
+              "versionType": "custom"
+            }
+          ]
+        },
+        {
+          "product": "Thunderbird",
+          "vendor": "Mozilla",
+          "versions": [
+            {
+              "lessThan": "149.0.2",
+              "status": "affected",
+              "version": "unspecified",
+              "versionType": "custom"
+            }
+          ]
+        },
+        {
+          "product": "Thunderbird",
+          "vendor": "Mozilla",
+          "versions": [
+            {
+              "lessThan": "140.9.1",
+              "status": "affected",
+              "version": "unspecified",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-5731",
+      "publishedDate": "2026-04-07T12:43:11.895Z",
+      "lastModifiedDate": "2026-04-08T03:55:32.832Z",
+      "description": "Memory safety bugs present in Firefox ESR 115.34.0, Firefox ESR 140.9.0, Thunderbird ESR 140.9.0, Firefox 149.0.1 and Thunderbird 149.0.1. Some of these bugs showed evidence of memory corruption and we presume that with enough effort some of these could have been exploited to run arbitrary code. This vulnerability affects Firefox < 149.0.2, Firefox ESR < 115.34.1, Firefox ESR < 140.9.1, Thunderbird < 149.0.2, and Thunderbird < 140.9.1.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://bugzilla.mozilla.org/buglist.cgi?bug_id=2021894%2C2022225%2C2022252%2C2022294%2C2023007%2C2023130%2C2023191%2C2023364%2C2023829%2C2024074%2C2024417%2C2024433%2C2024436%2C2024437%2C2024453%2C2024461%2C2024462%2C2024472%2C2024474%2C2024477%2C2025364%2C2025401%2C2025402%2C2025472%2C2026287%2C2026299%2C2026305%2C2026426",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.mozilla.org/security/advisories/mfsa2026-25/",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.mozilla.org/security/advisories/mfsa2026-26/",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.mozilla.org/security/advisories/mfsa2026-27/",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.mozilla.org/security/advisories/mfsa2026-28/",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.mozilla.org/security/advisories/mfsa2026-29/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "product": "Firefox",
+          "vendor": "Mozilla",
+          "versions": [
+            {
+              "lessThan": "149.0.2",
+              "status": "affected",
+              "version": "unspecified",
+              "versionType": "custom"
+            }
+          ]
+        },
+        {
+          "product": "Firefox ESR",
+          "vendor": "Mozilla",
+          "versions": [
+            {
+              "lessThan": "115.34.1",
+              "status": "affected",
+              "version": "unspecified",
+              "versionType": "custom"
+            }
+          ]
+        },
+        {
+          "product": "Firefox ESR",
+          "vendor": "Mozilla",
+          "versions": [
+            {
+              "lessThan": "140.9.1",
+              "status": "affected",
+              "version": "unspecified",
+              "versionType": "custom"
+            }
+          ]
+        },
+        {
+          "product": "Thunderbird",
+          "vendor": "Mozilla",
+          "versions": [
+            {
+              "lessThan": "149.0.2",
+              "status": "affected",
+              "version": "unspecified",
+              "versionType": "custom"
+            }
+          ]
+        },
+        {
+          "product": "Thunderbird",
+          "vendor": "Mozilla",
+          "versions": [
+            {
+              "lessThan": "140.9.1",
+              "status": "affected",
+              "version": "unspecified",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-28810",
+      "publishedDate": "2026-04-07T07:50:11.072Z",
+      "lastModifiedDate": "2026-04-08T04:08:49.797Z",
+      "description": "Generation of Predictable Numbers or Identifiers vulnerability in Erlang/OTP kernel (inet_res, inet_db modules) allows DNS Cache Poisoning.\n\nThe built-in DNS resolver (inet_res) uses a sequential, process-global 16-bit transaction ID for UDP queries and does not implement source port randomization. Response validation relies almost entirely on this ID, making DNS cache poisoning practical for an attacker who can observe one query or predict the next ID. This conflicts with RFC 5452 recommendations for mitigating forged DNS answers.\n\ninet_res is intended for use in trusted network environments and with trusted recursive resolvers. Earlier documentation did not clearly state this deployment assumption, which could lead users to deploy the resolver in environments where spoofed DNS responses are possible.\n\nThis vulnerability is associated with program files lib/kernel/src/inet_db.erl and lib/kernel/src/inet_res.erl.\n\nThis issue affects OTP from OTP 17.0 until OTP 28.4.2, 27.3.4.10 and 26.2.5.19 corresponding to kernel from 3.0 until 10.6.2, 10.2.7.4 and 9.2.4.11.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/erlang/otp/security/advisories/GHSA-v884-5jg5-whj8",
+          "type": "reference"
+        },
+        {
+          "url": "https://cna.erlef.org/cves/CVE-2026-28810.html",
+          "type": "reference"
+        },
+        {
+          "url": "https://osv.dev/vulnerability/EEF-CVE-2026-28810",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.erlang.org/doc/system/versions.html#order-of-versions",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/erlang/otp/commit/36f23c9d2cc54afe83671dd7343596d7972839a5",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/erlang/otp/commit/dd15e8eb03548c5e55e9915f0e91389ec6bad9fd",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/erlang/otp/commit/b057a9d995017b1be50d6dc02edd52382f3231b8",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "cpes": [
+            "cpe:2.3:a:erlang:erlang\\/otp:*:*:*:*:*:*:*:*"
+          ],
+          "defaultStatus": "unknown",
+          "modules": [
+            "inet_res",
+            "inet_db"
+          ],
+          "packageName": "kernel",
+          "packageURL": "pkg:otp/kernel?repository_url=https:%2F%2Fgithub.com%2Ferlang%2Fotp&vcs_url=git%20https:%2F%2Fgithub.com%2Ferlang%2Fotp.git",
+          "product": "OTP",
+          "programFiles": [
+            "src/inet_db.erl",
+            "src/inet_res.erl"
+          ],
+          "repo": "https://github.com/erlang/otp",
+          "vendor": "Erlang",
+          "versions": [
+            {
+              "changes": [
+                {
+                  "at": "10.6.2",
+                  "status": "unaffected"
+                },
+                {
+                  "at": "10.2.7.4",
+                  "status": "unaffected"
+                },
+                {
+                  "at": "9.2.4.11",
+                  "status": "unaffected"
+                }
+              ],
+              "lessThan": "*",
+              "status": "affected",
+              "version": "3.0",
+              "versionType": "otp"
+            }
+          ]
+        },
+        {
+          "collectionURL": "https://github.com",
+          "cpes": [
+            "cpe:2.3:a:erlang:erlang\\/otp:*:*:*:*:*:*:*:*"
+          ],
+          "defaultStatus": "unknown",
+          "modules": [
+            "inet_res",
+            "inet_db"
+          ],
+          "packageName": "erlang/otp",
+          "packageURL": "pkg:github/erlang/otp",
+          "product": "OTP",
+          "programFiles": [
+            "lib/kernel/src/inet_db.erl",
+            "lib/kernel/src/inet_res.erl"
+          ],
+          "repo": "https://github.com/erlang/otp",
+          "vendor": "Erlang",
+          "versions": [
+            {
+              "changes": [
+                {
+                  "at": "28.4.2",
+                  "status": "unaffected"
+                },
+                {
+                  "at": "27.3.4.10",
+                  "status": "unaffected"
+                },
+                {
+                  "at": "26.2.5.19",
+                  "status": "unaffected"
+                }
+              ],
+              "lessThan": "*",
+              "status": "affected",
+              "version": "17.0",
+              "versionType": "otp"
+            },
+            {
+              "changes": [
+                {
+                  "at": "36f23c9d2cc54afe83671dd7343596d7972839a5",
+                  "status": "unaffected"
+                },
+                {
+                  "at": "dd15e8eb03548c5e55e9915f0e91389ec6bad9fd",
+                  "status": "unaffected"
+                },
+                {
+                  "at": "b057a9d995017b1be50d6dc02edd52382f3231b8",
+                  "status": "unaffected"
+                }
+              ],
+              "lessThan": "*",
+              "status": "affected",
+              "version": "07b8f441ca711f9812fad9e9115bab3c3aa92f79",
+              "versionType": "git"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-340 Generation of Predictable Numbers or Identifiers"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-34197",
+      "publishedDate": "2026-04-07T07:50:10.958Z",
+      "lastModifiedDate": "2026-04-08T03:55:28.226Z",
+      "description": "Improper Input Validation, Improper Control of Generation of Code ('Code Injection') vulnerability in Apache ActiveMQ Broker, Apache ActiveMQ.\n\nApache ActiveMQ Classic exposes the Jolokia JMX-HTTP bridge at /api/jolokia/ on the web console. The default Jolokia access policy permits exec operations on all ActiveMQ MBeans (org.apache.activemq:*), including\nBrokerService.addNetworkConnector(String) and BrokerService.addConnector(String). \n\nAn authenticated attacker can invoke these operations with a crafted discovery URI that triggers the VM transport's brokerConfig parameter to load a remote Spring XML application context using ResourceXmlApplicationContext. \nBecause Spring's ResourceXmlApplicationContext instantiates all singleton beans before the BrokerService validates the configuration, arbitrary code execution occurs on the broker's JVM through bean factory methods such as Runtime.exec().\nThis issue affects Apache ActiveMQ Broker: before 5.19.4, from 6.0.0 before 6.2.3; Apache ActiveMQ: .\n\nUsers are recommended to upgrade to version 5.19.5 or 6.2.3, which fixes the issue.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://activemq.apache.org/security-advisories.data/CVE-2026-34197-announcement.txt",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://repo.maven.apache.org/maven2",
+          "defaultStatus": "unaffected",
+          "packageName": "org.apache.activemq:activemq-broker",
+          "product": "Apache ActiveMQ Broker",
+          "vendor": "Apache Software Foundation",
+          "versions": [
+            {
+              "lessThan": "5.19.4",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            },
+            {
+              "lessThan": "6.2.3",
+              "status": "affected",
+              "version": "6.0.0",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "packageName": "org.apache.activemq:activemq-all",
+          "product": "Apache ActiveMQ",
+          "vendor": "Apache Software Foundation",
+          "versions": [
+            {
+              "lessThan": "5.19.4",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            },
+            {
+              "lessThan": "6.2.3",
+              "status": "affected",
+              "version": "6.0.0",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-20 Improper Input Validation",
+        "CWE-94 Improper Control of Generation of Code ('Code Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-20433",
+      "publishedDate": "2026-04-07T03:25:32.066Z",
+      "lastModifiedDate": "2026-04-08T03:55:26.543Z",
+      "description": "In Modem, there is a possible out of bounds write due to a missing bounds check. This could lead to remote escalation of privilege, if a UE has connected to a rogue base station controlled by the attacker, with no additional execution privileges needed. User interaction is needed for exploitation. Patch ID: MOLY01088681; Issue ID: MSV-4460.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://corp.mediatek.com/product-security-bulletin/April-2026",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "MediaTek, Inc.",
+          "product": "MediaTek chipset",
+          "defaultStatus": "unaffected",
+          "versions": [
+            {
+              "version": "MT2735",
+              "status": "affected"
+            },
+            {
+              "version": "MT2737",
+              "status": "affected"
+            },
+            {
+              "version": "MT6813",
+              "status": "affected"
+            },
+            {
+              "version": "MT6833",
+              "status": "affected"
+            },
+            {
+              "version": "MT6833P",
+              "status": "affected"
+            },
+            {
+              "version": "MT6835",
+              "status": "affected"
+            },
+            {
+              "version": "MT6835T",
+              "status": "affected"
+            },
+            {
+              "version": "MT6853",
+              "status": "affected"
+            },
+            {
+              "version": "MT6853T",
+              "status": "affected"
+            },
+            {
+              "version": "MT6855",
+              "status": "affected"
+            },
+            {
+              "version": "MT6855T",
+              "status": "affected"
+            },
+            {
+              "version": "MT6873",
+              "status": "affected"
+            },
+            {
+              "version": "MT6875",
+              "status": "affected"
+            },
+            {
+              "version": "MT6875T",
+              "status": "affected"
+            },
+            {
+              "version": "MT6877",
+              "status": "affected"
+            },
+            {
+              "version": "MT6877T",
+              "status": "affected"
+            },
+            {
+              "version": "MT6877TT",
+              "status": "affected"
+            },
+            {
+              "version": "MT6878",
+              "status": "affected"
+            },
+            {
+              "version": "MT6878M",
+              "status": "affected"
+            },
+            {
+              "version": "MT6879",
+              "status": "affected"
+            },
+            {
+              "version": "MT6880",
+              "status": "affected"
+            },
+            {
+              "version": "MT6883",
+              "status": "affected"
+            },
+            {
+              "version": "MT6885",
+              "status": "affected"
+            },
+            {
+              "version": "MT6886",
+              "status": "affected"
+            },
+            {
+              "version": "MT6889",
+              "status": "affected"
+            },
+            {
+              "version": "MT6890",
+              "status": "affected"
+            },
+            {
+              "version": "MT6891",
+              "status": "affected"
+            },
+            {
+              "version": "MT6893",
+              "status": "affected"
+            },
+            {
+              "version": "MT6895",
+              "status": "affected"
+            },
+            {
+              "version": "MT6895TT",
+              "status": "affected"
+            },
+            {
+              "version": "MT6896",
+              "status": "affected"
+            },
+            {
+              "version": "MT6897",
+              "status": "affected"
+            },
+            {
+              "version": "MT6899",
+              "status": "affected"
+            },
+            {
+              "version": "MT6980",
+              "status": "affected"
+            },
+            {
+              "version": "MT6980D",
+              "status": "affected"
+            },
+            {
+              "version": "MT6983",
+              "status": "affected"
+            },
+            {
+              "version": "MT6983T",
+              "status": "affected"
+            },
+            {
+              "version": "MT6985",
+              "status": "affected"
+            },
+            {
+              "version": "MT6985T",
+              "status": "affected"
+            },
+            {
+              "version": "MT6989",
+              "status": "affected"
+            },
+            {
+              "version": "MT6989T",
+              "status": "affected"
+            },
+            {
+              "version": "MT6990",
+              "status": "affected"
+            },
+            {
+              "version": "MT6991",
+              "status": "affected"
+            },
+            {
+              "version": "MT8668",
+              "status": "affected"
+            },
+            {
+              "version": "MT8673",
+              "status": "affected"
+            },
+            {
+              "version": "MT8675",
+              "status": "affected"
+            },
+            {
+              "version": "MT8676",
+              "status": "affected"
+            },
+            {
+              "version": "MT8678",
+              "status": "affected"
+            },
+            {
+              "version": "MT8755",
+              "status": "affected"
+            },
+            {
+              "version": "MT8771",
+              "status": "affected"
+            },
+            {
+              "version": "MT8775",
+              "status": "affected"
+            },
+            {
+              "version": "MT8791",
+              "status": "affected"
+            },
+            {
+              "version": "MT8791T",
+              "status": "affected"
+            },
+            {
+              "version": "MT8792",
+              "status": "affected"
+            },
+            {
+              "version": "MT8793",
+              "status": "affected"
+            },
+            {
+              "version": "MT8795T",
+              "status": "affected"
+            },
+            {
+              "version": "MT8797",
+              "status": "affected"
+            },
+            {
+              "version": "MT8798",
+              "status": "affected"
+            },
+            {
+              "version": "MT8863",
+              "status": "affected"
+            },
+            {
+              "version": "MT8873",
+              "status": "affected"
+            },
+            {
+              "version": "MT8883",
+              "status": "affected"
+            },
+            {
+              "version": "MT8893",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-787 Out-of-bounds Write"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-20432",
+      "publishedDate": "2026-04-07T03:25:30.263Z",
+      "lastModifiedDate": "2026-04-08T03:55:25.369Z",
+      "description": "In Modem, there is a possible out of bounds write due to a missing bounds check. This could lead to remote escalation of privilege, if a UE has connected to a rogue base station controlled by the attacker, with no additional execution privileges needed. User interaction is needed for exploitation. Patch ID: MOLY01406170; Issue ID: MSV-4461.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://corp.mediatek.com/product-security-bulletin/April-2026",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "MediaTek, Inc.",
+          "product": "MediaTek chipset",
+          "defaultStatus": "unaffected",
+          "versions": [
+            {
+              "version": "MT2735",
+              "status": "affected"
+            },
+            {
+              "version": "MT2737",
+              "status": "affected"
+            },
+            {
+              "version": "MT6779",
+              "status": "affected"
+            },
+            {
+              "version": "MT6781",
+              "status": "affected"
+            },
+            {
+              "version": "MT6783",
+              "status": "affected"
+            },
+            {
+              "version": "MT6785",
+              "status": "affected"
+            },
+            {
+              "version": "MT6789",
+              "status": "affected"
+            },
+            {
+              "version": "MT6813",
+              "status": "affected"
+            },
+            {
+              "version": "MT6815",
+              "status": "affected"
+            },
+            {
+              "version": "MT6833",
+              "status": "affected"
+            },
+            {
+              "version": "MT6835",
+              "status": "affected"
+            },
+            {
+              "version": "MT6853",
+              "status": "affected"
+            },
+            {
+              "version": "MT6855",
+              "status": "affected"
+            },
+            {
+              "version": "MT6873",
+              "status": "affected"
+            },
+            {
+              "version": "MT6875",
+              "status": "affected"
+            },
+            {
+              "version": "MT6877",
+              "status": "affected"
+            },
+            {
+              "version": "MT6878",
+              "status": "affected"
+            },
+            {
+              "version": "MT6879",
+              "status": "affected"
+            },
+            {
+              "version": "MT6880",
+              "status": "affected"
+            },
+            {
+              "version": "MT6883",
+              "status": "affected"
+            },
+            {
+              "version": "MT6885",
+              "status": "affected"
+            },
+            {
+              "version": "MT6886",
+              "status": "affected"
+            },
+            {
+              "version": "MT6889",
+              "status": "affected"
+            },
+            {
+              "version": "MT6890",
+              "status": "affected"
+            },
+            {
+              "version": "MT6891",
+              "status": "affected"
+            },
+            {
+              "version": "MT6893",
+              "status": "affected"
+            },
+            {
+              "version": "MT6895",
+              "status": "affected"
+            },
+            {
+              "version": "MT6896",
+              "status": "affected"
+            },
+            {
+              "version": "MT6897",
+              "status": "affected"
+            },
+            {
+              "version": "MT6899",
+              "status": "affected"
+            },
+            {
+              "version": "MT6980",
+              "status": "affected"
+            },
+            {
+              "version": "MT6983",
+              "status": "affected"
+            },
+            {
+              "version": "MT6985",
+              "status": "affected"
+            },
+            {
+              "version": "MT6989",
+              "status": "affected"
+            },
+            {
+              "version": "MT6990",
+              "status": "affected"
+            },
+            {
+              "version": "MT6991",
+              "status": "affected"
+            },
+            {
+              "version": "MT6993",
+              "status": "affected"
+            },
+            {
+              "version": "MT8668",
+              "status": "affected"
+            },
+            {
+              "version": "MT8673",
+              "status": "affected"
+            },
+            {
+              "version": "MT8675",
+              "status": "affected"
+            },
+            {
+              "version": "MT8676",
+              "status": "affected"
+            },
+            {
+              "version": "MT8678",
+              "status": "affected"
+            },
+            {
+              "version": "MT8755",
+              "status": "affected"
+            },
+            {
+              "version": "MT8771",
+              "status": "affected"
+            },
+            {
+              "version": "MT8775",
+              "status": "affected"
+            },
+            {
+              "version": "MT8781",
+              "status": "affected"
+            },
+            {
+              "version": "MT8789",
+              "status": "affected"
+            },
+            {
+              "version": "MT8791",
+              "status": "affected"
+            },
+            {
+              "version": "MT8791T",
+              "status": "affected"
+            },
+            {
+              "version": "MT8792",
+              "status": "affected"
+            },
+            {
+              "version": "MT8793",
+              "status": "affected"
+            },
+            {
+              "version": "MT8795T",
+              "status": "affected"
+            },
+            {
+              "version": "MT8797",
+              "status": "affected"
+            },
+            {
+              "version": "MT8798",
+              "status": "affected"
+            },
+            {
+              "version": "MT8863",
+              "status": "affected"
+            },
+            {
+              "version": "MT8873",
+              "status": "affected"
+            },
+            {
+              "version": "MT8883",
+              "status": "affected"
+            },
+            {
+              "version": "MT8893",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-787 Out-of-bounds Write"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
