@@ -2,274 +2,697 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 7,
-    "last_updated": "2026-04-08T21:01:42.636727",
+    "total_count": 14,
+    "last_updated": "2026-04-08T21:56:25.753642",
     "severity_distribution": {
-      "critical": 3,
-      "high": 3,
-      "medium": 0,
+      "critical": 1,
+      "high": 7,
+      "medium": 6,
       "low": 0,
-      "none": 1
+      "none": 0
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-39888",
-      "publishedDate": "2026-04-08T20:41:56.680Z",
-      "lastModifiedDate": "2026-04-08T20:41:56.680Z",
-      "description": "PraisonAI is a multi-agent teams system. Prior to 1.5.115, execute_code() in praisonaiagents.tools.python_tools defaults to sandbox_mode=\"sandbox\", which runs user code in a subprocess wrapped with a restricted __builtins__ dict and an AST-based blocklist. The AST blocklist embedded inside the subprocess wrapper (blocked_attrs of python_tools.py) contains only 11 attribute names — a strict subset of the 30+ names blocked in the direct-execution path. The four attributes that form a frame-traversal chain out of the sandbox are all absent from the subprocess list (__traceback__, tb_frame, f_back, and f_builtins). Chaining these attributes through a caught exception exposes the real Python builtins dict of the subprocess wrapper frame, from which exec can be retrieved and called under a non-blocked variable name — bypassing every remaining security layer. This vulnerability is fixed in 1.5.115.",
-      "severity": 10,
-      "references": [
-        {
-          "url": "https://github.com/MervinPraison/PraisonAI/security/advisories/GHSA-qf73-2hrx-xprp",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "MervinPraison",
-          "product": "praisonaiagents",
-          "versions": [
-            {
-              "version": "< 1.5.115",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-657: Violation of Secure Design Principles",
-        "CWE-693: Protection Mechanism Failure"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-39890",
-      "publishedDate": "2026-04-08T20:45:30.928Z",
-      "lastModifiedDate": "2026-04-08T20:45:30.928Z",
-      "description": "PraisonAI is a multi-agent teams system. Prior to 4.5.115, the AgentService.loadAgentFromFile method uses the js-yaml library to parse YAML files without disabling dangerous tags (such as !!js/function and !!js/undefined). This allows an attacker to craft a malicious YAML file that, when parsed, executes arbitrary JavaScript code. An attacker can exploit this vulnerability by uploading a malicious agent definition file via the API endpoint, leading to remote code execution (RCE) on the server. This vulnerability is fixed in 4.5.115.",
+      "id": "CVE-2026-40035",
+      "publishedDate": "2026-04-08T21:35:27.703Z",
+      "lastModifiedDate": "2026-04-08T21:35:27.703Z",
+      "description": "dfir-unfurl through 20250810 contains an improper input validation vulnerability in config parsing that enables Flask debug mode by default. The debug configuration value is read as a string and passed directly to app.run(), causing any non-empty string to evaluate truthy, allowing attackers to access the Werkzeug debugger and disclose sensitive information or achieve remote code execution.",
       "severity": 9.8,
       "references": [
         {
-          "url": "https://github.com/MervinPraison/PraisonAI/security/advisories/GHSA-32vr-5gcf-3pw2",
+          "url": "https://github.com/obsidianforensics/unfurl/security/advisories/GHSA-vg9h-jx4v-cwx2",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/dfir-unfurl-werkzeug-debugger-exposure-via-string-config-parsing",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "MervinPraison",
-          "product": "PraisonAI",
+          "vendor": "dfir-unfurl",
+          "product": "dfir-unfurl",
+          "defaultStatus": "unaffected",
           "versions": [
             {
-              "version": "< 4.5.115",
-              "status": "affected"
+              "version": "0",
+              "status": "affected",
+              "versionType": "semver",
+              "lessThanOrEqual": "20250810"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-502: Deserialization of Untrusted Data"
+        "Active Debug Code"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-39860",
-      "publishedDate": "2026-04-08T20:58:22.979Z",
-      "lastModifiedDate": "2026-04-08T20:58:22.979Z",
-      "description": "Nix is a package manager for Linux and other Unix systems. A bug in the fix for CVE-2024-27297 allowed for arbitrary overwrites of files writable by the Nix process orchestrating the builds (typically the Nix daemon running as root in multi-user installations) by following symlinks during fixed-output derivation output registration. This affects sandboxed Linux builds - sandboxed macOS builds are unaffected. The location of the temporary output used for the output copy was located inside the build chroot. A symlink, pointing to an arbitrary location in the filesystem, could be created by the derivation builder at that path. During output registration, the Nix process (running in the host mount namespace) would follow that symlink and overwrite the destination with the derivation's output contents. In multi-user installations, this allows all users able to submit builds to the Nix daemon (allowed-users - defaulting to all users) to gain root privileges by modifying sensitive files. This vulnerability is fixed in 2.34.5, 2.33.4, 2.32.7, 2.31.4, 2.30.4, 2.29.3, and 2.28.6.",
-      "severity": 9,
+      "id": "CVE-2026-40032",
+      "publishedDate": "2026-04-08T21:35:27.020Z",
+      "lastModifiedDate": "2026-04-08T21:35:27.020Z",
+      "description": "UAC (Unix-like Artifacts Collector) before 3.3.0-rc1 contains a command injection vulnerability in the placeholder substitution and command execution pipeline where the _run_command() function passes constructed command strings directly to eval without proper sanitization. Attackers can inject shell metacharacters or command substitutions through attacker-controlled inputs including %line% values from foreach iterators and %user% / %user_home% values derived from system files to achieve arbitrary command execution with the privileges of the UAC process.",
+      "severity": 7.8,
       "references": [
         {
-          "url": "https://github.com/NixOS/nix/security/advisories/GHSA-g3g9-5vj6-r3gj",
+          "url": "https://github.com/tclahr/uac/pull/443",
           "type": "reference"
         },
         {
-          "url": "https://github.com/NixOS/nix/pull/10178",
+          "url": "https://github.com/tclahr/uac/commit/cb95d7166cd47908e1189d9669e43f9a6d3d707f",
           "type": "reference"
         },
         {
-          "url": "https://github.com/NixOS/nix/commit/244f3eee0bbc7f11e9b383a15ed7368e2c4becc9",
+          "url": "https://github.com/tclahr/uac/commit/50ace60e172e38feb78347bdf579311c23eff078",
           "type": "reference"
         },
         {
-          "url": "https://github.com/NixOS/nix/commit/4bc5a3510fa3735798f9ed3a2a30a3ea7b32343a",
+          "url": "https://github.com/tclahr/uac/commit/d0fca5e36d8d6a33a4404f0f6fe92b0424544589",
           "type": "reference"
         },
         {
-          "url": "https://github.com/NixOS/nix/commit/7794354a982449927ee7401cdeb573ddd16c4688",
+          "url": "https://github.com/tclahr/uac/issues/429",
           "type": "reference"
         },
         {
-          "url": "https://github.com/NixOS/nix/commit/a3163b9eabb952b4aa96e376dea95ebcca97b31a",
+          "url": "https://mobasi.ai/sentinel",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/uac-rc1-command-injection-via-placeholder-substitution",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "NixOS",
-          "product": "nix",
+          "vendor": "tclahr",
+          "product": "UAC",
+          "defaultStatus": "unaffected",
           "versions": [
             {
-              "version": ">= 2.21, < 2.28.6",
-              "status": "affected"
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "3.2.0",
+              "versionType": "semver"
             },
             {
-              "version": ">= 2.29.0, < 2.29.3",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.30.0, < 2.30.4",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.31.0, < 2.31.4",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.32.0, < 2.32.7",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.33.0, < 2.33.4",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.34.0, < 2.34.5",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.20.5, <= 2.20.9",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.19.4, <= 2.19.7",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.18.2, <= 2.18.9",
-              "status": "affected"
+              "version": "3.3.0-rc1",
+              "status": "unaffected",
+              "versionType": "semver"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-61: UNIX Symbolic Link (Symlink) Following"
+        "Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') (CWE-78)"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-39891",
-      "publishedDate": "2026-04-08T20:46:59.018Z",
-      "lastModifiedDate": "2026-04-08T20:46:59.018Z",
-      "description": "PraisonAI is a multi-agent teams system. Prior to 4.5.115, the create_agent_centric_tools() function returns tools (like acp_create_file) that process file content using template rendering. When user input from agent.start() is passed directly into these tools without escaping, template expressions in the input are executed rather than treated as literal text. This vulnerability is fixed in 4.5.115.",
-      "severity": 8.8,
+      "id": "CVE-2026-40031",
+      "publishedDate": "2026-04-08T21:35:26.293Z",
+      "lastModifiedDate": "2026-04-08T21:35:26.293Z",
+      "description": "MemProcFS before 5.17 contains multiple unsafe library-loading patterns that enable DLL and shared-library hijacking across six attack surfaces, including bare-name LoadLibraryU and dlopen calls without path qualification for vmmpyc, libMSCompression, and plugin DLLs. An attacker who places a malicious DLL or shared library in the working directory or manipulates LD_LIBRARY_PATH can achieve arbitrary code execution when MemProcFS loads.",
+      "severity": 7.8,
       "references": [
         {
-          "url": "https://github.com/MervinPraison/PraisonAI/security/advisories/GHSA-hwg5-x759-7wjg",
+          "url": "https://github.com/ufrisk/MemProcFS/releases/tag/v5.17",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/ufrisk/MemProcFS/commit/df80e6e83641f5004025ce661e6dd8139028d7b5",
+          "type": "reference"
+        },
+        {
+          "url": "https://mobasi.ai/sentinel",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/memprocfs-dll-shared-library-hijacking",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "MervinPraison",
-          "product": "PraisonAI",
+          "vendor": "ufrisk",
+          "product": "MemProcFS",
+          "defaultStatus": "unaffected",
           "versions": [
             {
-              "version": "< 4.5.115",
-              "status": "affected"
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "5.16.12",
+              "versionType": "semver"
+            },
+            {
+              "version": "5.17",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "status": "unaffected",
+              "version": "df80e6e83641f5004025ce661e6dd8139028d7b5",
+              "versionType": "git"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-94: Improper Control of Generation of Code ('Code Injection')"
+        "CWE-427 Uncontrolled Search Path Element"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-24660",
-      "publishedDate": "2026-04-07T13:49:25.335Z",
-      "lastModifiedDate": "2026-04-08T20:58:58.522Z",
-      "description": "A heap-based buffer overflow vulnerability exists in the x3f_load_huffman functionality of LibRaw Commit d20315b. A specially crafted malicious file can lead to a heap buffer overflow. An attacker can provide a malicious file to trigger this vulnerability.",
-      "severity": 8.1,
+      "id": "CVE-2026-40030",
+      "publishedDate": "2026-04-08T21:35:25.533Z",
+      "lastModifiedDate": "2026-04-08T21:35:25.533Z",
+      "description": "parseusbs before 1.9 contains an OS command injection vulnerability where the volume listing path argument (-v flag) is passed unsanitized into an os.popen() shell command with ls, allowing arbitrary command injection via crafted volume path arguments containing shell metacharacters. An attacker can provide a crafted volume path via the -v flag that injects arbitrary commands during volume content enumeration.",
+      "severity": 7.8,
       "references": [
         {
-          "url": "https://talosintelligence.com/vulnerability_reports/TALOS-2026-2359",
+          "url": "https://github.com/khyrenz/parseusbs/pull/10",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/khyrenz/parseusbs/commit/99f05996494e7e41ea0c7e13145ba20eb793e46b",
+          "type": "reference"
+        },
+        {
+          "url": "https://mobasi.ai/sentinel",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/parseusbs-command-injection-via-volume-path-argument",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "LibRaw",
-          "product": "LibRaw",
+          "vendor": "khyrenz",
+          "product": "parseusbs",
+          "defaultStatus": "unaffected",
           "versions": [
             {
-              "version": "Commit d20315b",
-              "status": "affected"
+              "version": "0",
+              "status": "affected",
+              "lessThan": "1.9",
+              "versionType": "semver"
+            },
+            {
+              "version": "1.9",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "status": "unaffected",
+              "version": "99f05996494e7e41ea0c7e13145ba20eb793e46b",
+              "versionType": "git"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-190: Integer Overflow or Wraparound"
+        "Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') (CWE-78)"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-39889",
-      "publishedDate": "2026-04-08T20:44:24.276Z",
-      "lastModifiedDate": "2026-04-08T20:44:24.276Z",
-      "description": "PraisonAI is a multi-agent teams system. Prior to 4.5.115, the A2U (Agent-to-User) event stream server in PraisonAI exposes all agent activity without authentication. The create_a2u_routes() function registers the following endpoints with NO authentication checks: /a2u/info, /a2u/subscribe, /a2u/events/{stream_name}, /a2u/events/sub/{id}, and /a2u/health. This vulnerability is fixed in 4.5.115.",
+      "id": "CVE-2026-40029",
+      "publishedDate": "2026-04-08T21:35:24.801Z",
+      "lastModifiedDate": "2026-04-08T21:35:24.801Z",
+      "description": "parseusbs before 1.9 contains an OS command injection vulnerability in parseUSBs.py where LNK file paths are passed unsanitized into an os.popen() shell command, allowing arbitrary command execution via crafted .lnk filenames containing shell metacharacters. An attacker can craft a .lnk filename with embedded shell metacharacters that execute arbitrary commands on the forensic examiner's machine during USB artifact parsing.",
+      "severity": 7.8,
+      "references": [
+        {
+          "url": "https://github.com/khyrenz/parseusbs/pull/10",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/khyrenz/parseusbs/commit/99f05996494e7e41ea0c7e13145ba20eb793e46b",
+          "type": "reference"
+        },
+        {
+          "url": "https://mobasi.ai/sentinel",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/parseusbs-command-injection-via-crafted-lnk-filename",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "khyrenz",
+          "product": "parseusbs",
+          "defaultStatus": "unaffected",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThan": "1.9",
+              "versionType": "semver"
+            },
+            {
+              "version": "1.9",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "status": "unaffected",
+              "version": "99f05996494e7e41ea0c7e13145ba20eb793e46b",
+              "versionType": "git"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') (CWE-78)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-40036",
+      "publishedDate": "2026-04-08T21:35:28.460Z",
+      "lastModifiedDate": "2026-04-08T21:35:28.460Z",
+      "description": "dfir-unfurl through 20250810 contains an unbounded zlib decompression vulnerability in parse_compressed.py that allows remote attackers to cause denial of service. Attackers can submit highly compressed payloads via URL parameters to the /json/visjs endpoint that expand to gigabytes, exhausting server memory and crashing the service.",
       "severity": 7.5,
       "references": [
         {
-          "url": "https://github.com/MervinPraison/PraisonAI/security/advisories/GHSA-f292-66h9-fpmf",
+          "url": "https://github.com/obsidianforensics/unfurl/security/advisories/GHSA-h5qv-qjv4-pc5m",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/dfir-unfurl-denial-of-service-via-unbounded-zlib-decompression",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "MervinPraison",
-          "product": "PraisonAI",
+          "vendor": "dfir-unfurl",
+          "product": "dfir-unfurl",
+          "defaultStatus": "unaffected",
           "versions": [
             {
-              "version": "< 4.5.115",
-              "status": "affected"
+              "version": "0",
+              "status": "affected",
+              "versionType": "semver",
+              "lessThanOrEqual": "20250810"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor"
+        "Uncontrolled Resource Consumption"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-39892",
-      "publishedDate": "2026-04-08T20:49:41.967Z",
-      "lastModifiedDate": "2026-04-08T20:49:41.967Z",
-      "description": "cryptography is a package designed to expose cryptographic primitives and recipes to Python developers. From 45.0.0 to before 46.0.7, if a non-contiguous buffer was passed to APIs which accepted Python buffers (e.g. Hash.update()), this could lead to buffer overflows. This vulnerability is fixed in 46.0.7.",
-      "severity": "N/A",
+      "id": "CVE-2026-40027",
+      "publishedDate": "2026-04-08T21:35:23.178Z",
+      "lastModifiedDate": "2026-04-08T21:35:23.178Z",
+      "description": "ALEAPP (Android Logs Events And Protobuf Parser) through 3.4.0 contains a path traversal vulnerability in the NQ_Vault.py artifact parser that uses attacker-controlled file_name_from values from a database directly as the output filename, allowing arbitrary file writes outside the report output directory. An attacker can embed a path traversal payload such as ../../../outside_written.bin in the database to write files to arbitrary locations, potentially achieving code execution by overwriting executable files or configuration.",
+      "severity": 7.3,
       "references": [
         {
-          "url": "https://github.com/pyca/cryptography/security/advisories/GHSA-p423-j2cm-9vmq",
+          "url": "https://github.com/abrignoni/aleapp/pull/669",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/abrignoni/ALEAPP/commit/0cafd8fe0027663420eb3d0fa821b2d1a713880d",
+          "type": "reference"
+        },
+        {
+          "url": "https://mobasi.ai/sentinel",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/aleapp-nq-vault-artifact-parser-path-traversal",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "pyca",
-          "product": "cryptography",
+          "vendor": "abrignoni",
+          "product": "ALEAPP",
+          "defaultStatus": "unaffected",
           "versions": [
             {
-              "version": ">= 45.0.0, < 46.0.7",
-              "status": "affected"
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "3.4.0",
+              "versionType": "custom"
+            },
+            {
+              "status": "unaffected",
+              "version": "0cafd8fe0027663420eb3d0fa821b2d1a713880d",
+              "versionType": "git"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-119: Improper Restriction of Operations within the Bounds of a Memory Buffer"
+        "CWE-22 Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-40024",
+      "publishedDate": "2026-04-08T21:35:20.662Z",
+      "lastModifiedDate": "2026-04-08T21:35:20.662Z",
+      "description": "The Sleuth Kit through 4.14.0 contains a path traversal vulnerability in tsk_recover that allows an attacker to write files to arbitrary locations outside the intended recovery directory via crafted filenames or directory paths with path traversal sequences in a filesystem image. An attacker can craft a malicious filesystem image with embedded /../ sequences in filenames that, when processed by tsk_recover, writes files outside the output directory, potentially achieving code execution by overwriting shell configuration or cron entries.",
+      "severity": 7.1,
+      "references": [
+        {
+          "url": "https://github.com/sleuthkit/sleuthkit/commit/a3f96b3bc36a8bb1a00c297f77110d4a6e7dd31b",
+          "type": "reference"
+        },
+        {
+          "url": "https://mobasi.ai/sentinel",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/sleuth-kit-tsk-recover-path-traversal",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "sleuthkit",
+          "product": "sleuthkit",
+          "defaultStatus": "unaffected",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "4.14.0",
+              "versionType": "custom"
+            },
+            {
+              "status": "unaffected",
+              "version": "a3f96b3bc36a8bb1a00c297f77110d4a6e7dd31b",
+              "versionType": "git"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-22 Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-40037",
+      "publishedDate": "2026-04-08T21:35:29.255Z",
+      "lastModifiedDate": "2026-04-08T21:35:29.255Z",
+      "description": "OpenClaw before 2026.3.31 (patched in 2026.4.8) contains a request body replay vulnerability in fetchWithSsrFGuard that allows unsafe request bodies to be resent across cross-origin redirects. Attackers can exploit this by triggering redirects to exfiltrate sensitive request data or headers to unintended origins.",
+      "severity": 6.5,
+      "references": [
+        {
+          "url": "https://github.com/openclaw/openclaw/security/advisories/GHSA-qx8j-g322-qj6m",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/openclaw/openclaw/commit/d7c3210cd6f5fdfdc1beff4c9541673e814354d5",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/openclaw-unsafe-request-body-replay-via-fetchwithssrfguard-cross-origin-redirects",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "OpenClaw",
+          "product": "OpenClaw",
+          "defaultStatus": "unaffected",
+          "packageURL": "pkg:npm/openclaw",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "versionType": "semver",
+              "lessThan": "2026.3.31"
+            },
+            {
+              "version": "2026.4.8",
+              "status": "unaffected",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-601 URL Redirection to Untrusted Site ('Open Redirect')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-5711",
+      "publishedDate": "2026-04-08T21:25:26.850Z",
+      "lastModifiedDate": "2026-04-08T21:25:26.850Z",
+      "description": "The Post Blocks & Tools plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the 'sliderStyle' block attribute in the Posts Slider block in all versions up to, and including, 1.3.0 due to insufficient input sanitization and output escaping on user supplied attributes. This makes it possible for authenticated attackers, with author-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page.",
+      "severity": 6.4,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/aeada6dc-0851-45e8-ada9-ff0427b7f17a?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/bnm-blocks/tags/1.3.0/src/blocks/posts/slider/view.php#L237",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/bnm-blocks/trunk/src/blocks/posts/slider/view.php#L237",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/bnm-blocks/tags/1.3.1/src/blocks/posts/slider/view.php",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&new=3500959%40bnm-blocks%2Ftrunk&old=3456918%40bnm-blocks%2Ftrunk&sfp_email=&sfph_mail=",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "pubudu-malalasekara",
+          "product": "Post Blocks & Tools",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "1.3.0",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-40028",
+      "publishedDate": "2026-04-08T21:35:24.001Z",
+      "lastModifiedDate": "2026-04-08T21:35:24.001Z",
+      "description": "Hayabusa versions prior to 3.8.0 contain a cross-site scripting (XSS) vulnerability in its HTML report output that allows an attacker to execute arbitrary JavaScript when a user scans JSON-exported logs containing malicious content in the Computer field. An attacker can inject JavaScript into the Computer field of JSON logs that executes in the forensic examiner's browser session when viewing the generated HTML report, leading to information disclosure or code execution.",
+      "severity": 5.4,
+      "references": [
+        {
+          "url": "https://github.com/Yamato-Security/hayabusa/releases/tag/v3.8.0",
+          "type": "reference"
+        },
+        {
+          "url": "https://mobasi.ai/sentinel",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/hayabusa-xss-via-json-log-import",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Yamato-Security",
+          "product": "hayabusa",
+          "defaultStatus": "unaffected",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "3.7.0",
+              "versionType": "semver"
+            },
+            {
+              "version": "3.8.0",
+              "status": "unaffected",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-40026",
+      "publishedDate": "2026-04-08T21:35:22.278Z",
+      "lastModifiedDate": "2026-04-08T21:35:22.278Z",
+      "description": "The Sleuth Kit through 4.14.0 contains an out-of-bounds read vulnerability in the ISO9660 filesystem parser where the parse_susp() function trusts len_id, len_des, and len_src fields from the disk image to memcpy data into a stack buffer without verifying that the source data falls within the parsed SUSP block. An attacker can craft a malicious ISO image that causes reads past the end of the SUSP data buffer, and a zero-length SUSP entry can trigger an infinite parsing loop.",
+      "severity": 4.4,
+      "references": [
+        {
+          "url": "https://github.com/sleuthkit/sleuthkit/pull/3445",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/sleuthkit/sleuthkit/commit/a95b0ac21733b059a517aaefa667a17e1bcbdee1",
+          "type": "reference"
+        },
+        {
+          "url": "https://mobasi.ai/sentinel",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/sleuth-kit-iso9660-susp-extension-reference-out-of-bounds-read",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "sleuthkit",
+          "product": "sleuthkit",
+          "defaultStatus": "unaffected",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "4.14.0",
+              "versionType": "custom"
+            },
+            {
+              "status": "unaffected",
+              "version": "a95b0ac21733b059a517aaefa667a17e1bcbdee1",
+              "versionType": "git"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-125: Out-of-bounds Read"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-40025",
+      "publishedDate": "2026-04-08T21:35:21.537Z",
+      "lastModifiedDate": "2026-04-08T21:35:21.537Z",
+      "description": "The Sleuth Kit through 4.14.0 contains an out-of-bounds read vulnerability in the APFS filesystem keybag parser where the wrapped_key_parser class follows attacker-controlled length fields without bounds checking, causing heap reads past the allocated buffer. An attacker can craft a malicious APFS disk image that triggers information disclosure or crashes when processed by any Sleuth Kit tool that parses APFS volumes.",
+      "severity": 4.4,
+      "references": [
+        {
+          "url": "https://github.com/sleuthkit/sleuthkit/pull/3444",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/sleuthkit/sleuthkit/commit/8b9c9e7d493bd68624f3b1a3963edd45c3ff7611",
+          "type": "reference"
+        },
+        {
+          "url": "https://mobasi.ai/sentinel",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/sleuth-kit-apfs-keybag-parser-out-of-bounds-read",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "sleuthkit",
+          "product": "sleuthkit",
+          "defaultStatus": "unaffected",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "4.14.0",
+              "versionType": "custom"
+            },
+            {
+              "status": "unaffected",
+              "version": "8b9c9e7d493bd68624f3b1a3963edd45c3ff7611",
+              "versionType": "git"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-125: Out-of-bounds Read"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-5808",
+      "publishedDate": "2026-04-08T21:30:16.897Z",
+      "lastModifiedDate": "2026-04-08T21:30:16.897Z",
+      "description": "A vulnerability was detected in openstatusHQ openstatus up to 1b678e71a85961ae319cbb214a8eae634059330c. This impacts an unknown function of the file apps/dashboard/src/app/(dashboard)/onboarding/client.tsx of the component Onboarding Endpoint. The manipulation of the argument callbackURL results in cross site scripting. The attack may be launched remotely. This product operates on a rolling release basis, ensuring continuous delivery. Consequently, there are no version details for either affected or updated releases. The patch is identified as 43d9b2b9ef8ae1a98f9bdc8a9f86d6a3dfaa2dfb. It is advisable to implement a patch to correct this issue. The vendor was contacted early, responded in a very professional manner and quickly released a fixed version of the affected product.",
+      "severity": 4.3,
+      "references": [
+        {
+          "url": "https://vuldb.com/vuln/356245",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/vuln/356245/cti",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/submit/787321",
+          "type": "reference"
+        },
+        {
+          "url": "https://gist.github.com/TrebledJ/ab83abb1ca7ff6c1f39e16a37020f323",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/openstatusHQ/openstatus/pull/1981",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/openstatusHQ/openstatus/commit/43d9b2b9ef8ae1a98f9bdc8a9f86d6a3dfaa2dfb",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/openstatusHQ/openstatus/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "openstatusHQ",
+          "product": "openstatus",
+          "versions": [
+            {
+              "version": "1b678e71a85961ae319cbb214a8eae634059330c",
+              "status": "affected"
+            }
+          ],
+          "modules": [
+            "Onboarding Endpoint"
+          ]
+        }
+      ],
+      "problemType": [
+        "Cross Site Scripting",
+        "Code Injection"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
