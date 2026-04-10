@@ -2,26 +2,93 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 15,
-    "last_updated": "2026-04-10T17:59:55.916093",
+    "total_count": 19,
+    "last_updated": "2026-04-10T19:08:01.813772",
     "severity_distribution": {
       "critical": 0,
-      "high": 5,
+      "high": 7,
       "medium": 1,
       "low": 1,
-      "none": 8
+      "none": 10
     }
   },
   "cves": [
     {
+      "id": "CVE-2026-33618",
+      "publishedDate": "2026-04-10T18:10:16.691Z",
+      "lastModifiedDate": "2026-04-10T18:46:09.585Z",
+      "description": "Chamilo LMS is a learning management system. Prior to .0.0-RC.3, the PlatformConfigurationController::decodeSettingArray() method uses PHP's eval() to parse platform settings from the database. An attacker with admin access (obtainable via Advisory 1) can inject arbitrary PHP code into the settings, which is then executed when any user (including unauthenticated) requests /platform-config/list. This vulnerability is fixed in 2.0.0-RC.3.",
+      "severity": 8.8,
+      "references": [
+        {
+          "url": "https://github.com/chamilo/chamilo-lms/security/advisories/GHSA-hp4w-jmwc-pg7w",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/chamilo/chamilo-lms/commit/f2c382c94a3f153a4d7e5ce5686c5a219fd09b3b",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "chamilo",
+          "product": "chamilo-lms",
+          "versions": [
+            {
+              "version": ">= 2.0.0-alpha.1, < 2.0.0-RC.3",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-40158",
+      "publishedDate": "2026-04-10T16:49:24.753Z",
+      "lastModifiedDate": "2026-04-10T18:31:12.440Z",
+      "description": "PraisonAI is a multi-agent teams system. Prior to 4.5.128, PraisonAI's AST-based Python sandbox can be bypassed using type.__getattribute__ trampoline, allowing arbitrary code execution when running untrusted agent code. The _execute_code_direct function in praisonaiagents/tools/python_tools.py uses AST filtering to block dangerous Python attributes like __subclasses__, __globals__, and __bases__. However, the filter only checks ast.Attribute nodes, allowing a bypass. The sandbox relies on AST-based filtering of attribute access but fails to account for dynamic attribute resolution via built-in methods such as type.getattribute, resulting in incomplete enforcement of security restrictions. The string '__subclasses__' is an ast.Constant, not an ast.Attribute, so it is never checked against the blocked list. This vulnerability is fixed in 4.5.128.",
+      "severity": 8.6,
+      "references": [
+        {
+          "url": "https://github.com/MervinPraison/PraisonAI/security/advisories/GHSA-3c4r-6p77-xwr7",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "MervinPraison",
+          "product": "PraisonAI",
+          "versions": [
+            {
+              "version": "< 4.5.128",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-94: Improper Control of Generation of Code ('Code Injection')",
+        "CWE-693: Protection Mechanism Failure"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
       "id": "CVE-2026-5483",
       "publishedDate": "2026-04-10T17:33:25.055Z",
-      "lastModifiedDate": "2026-04-10T17:34:18.124Z",
+      "lastModifiedDate": "2026-04-10T18:34:06.822Z",
       "description": "A flaw was found in odh-dashboard in Red Hat Openshift AI. This vulnerability in the `odh-dashboard` component of Red Hat OpenShift AI (RHOAI) allows for the disclosure of Kubernetes Service Account tokens through a NodeJS endpoint. This could enable an attacker to gain unauthorized access to Kubernetes resources.",
       "severity": 8.5,
       "references": [
         {
           "url": "https://access.redhat.com/errata/RHSA-2026:7397",
+          "type": "reference"
+        },
+        {
+          "url": "https://access.redhat.com/errata/RHSA-2026:7403",
           "type": "reference"
         },
         {
@@ -54,12 +121,20 @@
         },
         {
           "vendor": "Red Hat",
-          "product": "Red Hat OpenShift AI (RHOAI)",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "product": "Red Hat OpenShift AI 3.3",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
           "packageName": "rhoai/odh-dashboard-rhel9",
           "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "sha256:14ee2bbd445b8a988c487d4b4a7b02ff9afe1c07034b4bba073a5a8263e3293e",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
           "cpes": [
-            "cpe:/a:redhat:openshift_ai"
+            "cpe:/a:redhat:openshift_ai:3.3::el9"
           ]
         },
         {
@@ -99,47 +174,9 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-31939",
-      "publishedDate": "2026-04-10T17:32:29.252Z",
-      "lastModifiedDate": "2026-04-10T17:32:29.252Z",
-      "description": "Chamilo LMS is a learning management system. Prior to 1.11.38, there is a path traversal in main/exercise/savescores.php leading to arbitrary file feletion. User input from $_REQUEST['test'] is concatenated directly into filesystem path without canonicalization or traversal checks. This vulnerability is fixed in 1.11.38.",
-      "severity": 8.3,
-      "references": [
-        {
-          "url": "https://github.com/chamilo/chamilo-lms/security/advisories/GHSA-8q8c-v75x-q2hx",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/chamilo/chamilo-lms/commit/4dddcc19d36119da27b7c49eb84a035800abae78",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/chamilo/chamilo-lms/releases/tag/v1.11.38",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "chamilo",
-          "product": "chamilo-lms",
-          "versions": [
-            {
-              "version": "< 1.11.38",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')",
-        "CWE-73: External Control of File Name or Path"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
       "id": "CVE-2026-31941",
       "publishedDate": "2026-04-10T17:37:50.948Z",
-      "lastModifiedDate": "2026-04-10T17:37:50.948Z",
+      "lastModifiedDate": "2026-04-10T18:33:22.920Z",
       "description": "Chamilo LMS is a learning management system. Prior to 1.11.38 and 2.0.0-RC.3, Chamilo LMS contains a Server-Side Request Forgery (SSRF) vulnerability in the Social Wall feature. The endpoint read_url_with_open_graph accepts a URL from the user via the social_wall_new_msg_main POST parameter and performs two server-side HTTP requests to that URL without validating whether the target is an internal or external resource. This allows an authenticated attacker to force the server to make arbitrary HTTP requests to internal services, scan internal ports, and access cloud instance metadata. This vulnerability is fixed in 1.11.38 and 2.0.0-RC.3.",
       "severity": 7.7,
       "references": [
@@ -178,22 +215,18 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-31940",
-      "publishedDate": "2026-04-10T17:35:10.661Z",
-      "lastModifiedDate": "2026-04-10T17:35:10.661Z",
-      "description": "Chamilo LMS is a learning management system. Prior to 1.11.38 and 2.0.0-RC.3, in main/lp/aicc_hacp.php, user-controlled request parameters are directly used to set the PHP session ID before loading global bootstrap. This leads to session fixation. This vulnerability is fixed in 1.11.38 and 2.0.0-RC.3.",
-      "severity": 7.5,
+      "id": "CVE-2026-33704",
+      "publishedDate": "2026-04-10T18:30:48.478Z",
+      "lastModifiedDate": "2026-04-10T18:30:48.478Z",
+      "description": "Chamilo LMS is a learning management system. Prior to 1.11.38, any authenticated user (including students) can write arbitrary content to files on the server via the BigUpload endpoint. The key parameter controls the filename and the raw POST body becomes the file content. While .php extensions are filtered to .phps, the .pht extension passes through unmodified. On Apache configurations where .pht is handled as PHP, this leads to Remote Code Execution. This vulnerability is fixed in 1.11.38.",
+      "severity": 7.1,
       "references": [
         {
-          "url": "https://github.com/chamilo/chamilo-lms/security/advisories/GHSA-4gp7-cfjh-77gv",
+          "url": "https://github.com/chamilo/chamilo-lms/security/advisories/GHSA-phfx-pwwg-945v",
           "type": "reference"
         },
         {
-          "url": "https://github.com/chamilo/chamilo-lms/commit/ce0192c62e48c9d9474d915c541b3274844afbf9",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/chamilo/chamilo-lms/commit/e337b7cc74a0276a0b4f91f9282204d20cac1869",
+          "url": "https://github.com/chamilo/chamilo-lms/commit/9748f1ffbdb8b6dc84c0e0591c9d3c1d92e21c00",
           "type": "reference"
         }
       ],
@@ -205,36 +238,32 @@
             {
               "version": "< 1.11.38",
               "status": "affected"
-            },
-            {
-              "version": ">= 2.0.0-alpha.1, < 2.0.0-RC.3",
-              "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-384: Session Fixation"
+        "CWE-434: Unrestricted Upload of File with Dangerous Type"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-32894",
-      "publishedDate": "2026-04-10T17:44:24.994Z",
-      "lastModifiedDate": "2026-04-10T17:44:24.994Z",
-      "description": "Chamilo LMS is a learning management system. Prior to 1.11.38 and 2.0.0-RC.3, an Insecure Direct Object Reference (IDOR) vulnerability in the gradebook result view page allows any authenticated teacher to delete any student's grade result across the entire platform by manipulating the delete_mark or resultdelete GET parameters. No ownership or course-scope verification is performed. This vulnerability is fixed in 1.11.38 and 2.0.0-RC.3.",
+      "id": "CVE-2026-32930",
+      "publishedDate": "2026-04-10T17:48:51.774Z",
+      "lastModifiedDate": "2026-04-10T18:32:13.726Z",
+      "description": "Chamilo LMS is a learning management system. Prior to 1.11.38 and 2.0.0-RC.3, an Insecure Direct Object Reference (IDOR) vulnerability in the gradebook evaluation edit page allows any authenticated teacher to view and modify the settings (name, max score, weight) of evaluations belonging to any other course by manipulating the editeval GET parameter. This vulnerability is fixed in 1.11.38 and 2.0.0-RC.3.",
       "severity": 7.1,
       "references": [
         {
-          "url": "https://github.com/chamilo/chamilo-lms/security/advisories/GHSA-rqpg-p95v-fv98",
+          "url": "https://github.com/chamilo/chamilo-lms/security/advisories/GHSA-9h22-wrg7-82q6",
           "type": "reference"
         },
         {
-          "url": "https://github.com/chamilo/chamilo-lms/commit/3b03306d1a0301a81b9284e86893b27f518ab151",
+          "url": "https://github.com/chamilo/chamilo-lms/commit/63e1e6d3d717bd537c7c61719416da35aaa658dd",
           "type": "reference"
         },
         {
-          "url": "https://github.com/chamilo/chamilo-lms/commit/740f5a6e192a52a3adde3c3241c86401b1d2c519",
+          "url": "https://github.com/chamilo/chamilo-lms/commit/f03f681df939db0429edc8414fb3ce4e4b80d79d",
           "type": "reference"
         }
       ],
@@ -255,24 +284,56 @@
         }
       ],
       "problemType": [
-        "CWE-476: NULL Pointer Dereference",
         "CWE-639: Authorization Bypass Through User-Controlled Key"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-32893",
-      "publishedDate": "2026-04-10T17:42:24.220Z",
-      "lastModifiedDate": "2026-04-10T17:42:24.220Z",
-      "description": "Chamilo LMS is a learning management system. Prior to 2.0.0-RC.3, a Reflected Cross-Site Scripting (XSS) vulnerability in the exercise question list admin panel allows an attacker to execute arbitrary JavaScript in an authenticated teacher's browser. The pagination code merges all $_GET parameters via array_merge() and outputs the result via http_build_query() directly into HTML href attributes without htmlspecialchars() encoding. This vulnerability is fixed in 2.0.0-RC.3.",
-      "severity": 5.4,
+      "id": "CVE-2026-40162",
+      "publishedDate": "2026-04-10T17:02:58.985Z",
+      "lastModifiedDate": "2026-04-10T18:30:44.339Z",
+      "description": "Bugsink is a self-hosted error tracking tool. In 2.1.0, an authenticated file write vulnerability was identified in Bugsink 2.1.0 in the artifact bundle assembly flow. A user with a valid authentication token could cause the application to write attacker-controlled content to a filesystem location writable by the Bugsink process. This vulnerability is fixed in 2.1.1.",
+      "severity": 7.1,
       "references": [
         {
-          "url": "https://github.com/chamilo/chamilo-lms/security/advisories/GHSA-37jh-g64j-88mc",
+          "url": "https://github.com/bugsink/bugsink/security/advisories/GHSA-8hw4-fhww-273g",
           "type": "reference"
         },
         {
-          "url": "https://github.com/chamilo/chamilo-lms/commit/72bc403f89b1ebb73a139f8f6cf0478857592276",
+          "url": "https://github.com/bugsink/bugsink/releases/tag/2.1.1",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "bugsink",
+          "product": "bugsink",
+          "versions": [
+            {
+              "version": ">= 2.1.0, < 2.1.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-20: Improper Input Validation"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-33705",
+      "publishedDate": "2026-04-10T18:32:45.193Z",
+      "lastModifiedDate": "2026-04-10T18:33:44.062Z",
+      "description": "Chamilo LMS is a learning management system. Prior to 1.11.38, Twig template files (.tpl) under /main/template/default/ are directly accessible without authentication via HTTP GET requests. These templates expose internal application logic, variable names, AJAX endpoint URLs, and admin panel structure. This vulnerability is fixed in 1.11.38.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://github.com/chamilo/chamilo-lms/security/advisories/GHSA-5wjg-8x28-px57",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/chamilo/chamilo-lms/commit/4efb5ee8ed849ca147ca1fe7472ef7b98db17bff",
           "type": "reference"
         }
       ],
@@ -282,433 +343,439 @@
           "product": "chamilo-lms",
           "versions": [
             {
-              "version": ">= 2.0.0-alpha.1, < 2.0.0-RC.3",
+              "version": "< 1.11.38",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+        "CWE-538: Insertion of Sensitive Information into Externally-Accessible File or Directory"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-40228",
-      "publishedDate": "2026-04-10T15:48:44.215Z",
-      "lastModifiedDate": "2026-04-10T17:27:22.882Z",
-      "description": "In systemd 259, systemd-journald can send ANSI escape sequences to the terminals of arbitrary users when a \"logger -p emerg\" command is executed, if ForwardToWall=yes is set.",
-      "severity": 2.9,
+      "id": "CVE-2026-40097",
+      "publishedDate": "2026-04-10T16:34:53.330Z",
+      "lastModifiedDate": "2026-04-10T18:30:15.176Z",
+      "description": "Step CA is an online certificate authority for secure, automated certificate management for DevOps. From 0.24.0 to before 0.30.0-rc3, an attacker can trigger an index out-of-bounds panic in Step CA by sending a crafted attestation key (AK) certificate with an empty Extended Key Usage (EKU) extension during TPM device attestation. When processing a device-attest-01 ACME challenge using TPM attestation, Step CA validates that the AK certificate contains the tcg-kp-AIKCertificate Extended Key Usage OID. During this validation, the EKU extension value is decoded from its ASN.1 representation and the first element is checked. A crafted certificate could include an EKU extension that decodes to an empty sequence, causing the code to panic when accessing the first element of the empty slice. This vulnerability is only reachable when a device-attest-01 ACME challenge with TPM attestation is configured. Deployments not using TPM device attestation are not affected. This vulnerability is fixed in 0.30.0-rc3.",
+      "severity": 3.7,
       "references": [
         {
-          "url": "https://www.openwall.com/lists/oss-security/2026/04/08/1",
+          "url": "https://github.com/smallstep/certificates/security/advisories/GHSA-9qq8-cgcv-qmc9",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/smallstep/certificates/pull/2569",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/smallstep/certificates/commit/ffd31ac0a87e03b0224cb8363094bfe602242888",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/smallstep/certificates/releases/tag/v0.30.0",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "unknown",
-          "product": "systemd",
-          "vendor": "systemd",
+          "vendor": "smallstep",
+          "product": "certificates",
+          "versions": [
+            {
+              "version": ">= 0.24.0, < 0.30.0-rc3",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-129: Improper Validation of Array Index"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4432",
+      "publishedDate": "2026-04-10T06:00:15.515Z",
+      "lastModifiedDate": "2026-04-10T18:35:19.917Z",
+      "description": "The YITH WooCommerce Wishlist WordPress plugin before 4.13.0 does not properly validate wishlist ownership in the save_title() AJAX handler before allowing wishlist renaming operations. The function only checks for a valid nonce, which is publicly exposed in the page source of the /wishlist/ page, making it possible for unauthenticated attackers to rename any wishlist belonging to any user on the site.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://wpscan.com/vulnerability/2f052086-b691-48df-9b08-2cb1db65e14e/",
+          "type": "poc"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Unknown",
+          "product": "YITH WooCommerce Wishlist",
           "versions": [
             {
               "status": "affected",
-              "version": "259",
+              "versionType": "semver",
+              "version": "0",
+              "lessThan": "4.13.0"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-862 Missing Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-14545",
+      "publishedDate": "2026-04-10T06:00:13.825Z",
+      "lastModifiedDate": "2026-04-10T18:37:24.983Z",
+      "description": "The YML for Yandex Market WordPress plugin before 5.0.26 is vulnerable to Remote Code Execution via the feed generation process.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://wpscan.com/vulnerability/9bb1a4ca-976c-461d-82de-8a3b04a56fbc/",
+          "type": "poc"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Unknown",
+          "product": "YML for Yandex Market",
+          "versions": [
+            {
+              "status": "affected",
+              "versionType": "semver",
+              "version": "0",
+              "lessThan": "5.0.26"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-94 Improper Control of Generation of Code ('Code Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-32990",
+      "publishedDate": "2026-04-09T19:23:49.618Z",
+      "lastModifiedDate": "2026-04-10T18:39:25.498Z",
+      "description": "Improper Input Validation vulnerability in Apache Tomcat due to an incomplete fix of CVE-2025-66614.\n\nThis issue affects Apache Tomcat: from 11.0.15 through 11.0.19, from 10.1.50 through 10.1.52, from 9.0.113 through 9.0.115.\n\nUsers are recommended to upgrade to version 11.0.20, 10.1.53 or 9.0.116, which fix the issue.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://lists.apache.org/thread/1nl9zqft0ksqlhlkd3j4obyjz1ghoyn7",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Apache Tomcat",
+          "vendor": "Apache Software Foundation",
+          "versions": [
+            {
+              "lessThanOrEqual": "11.0.19",
+              "status": "affected",
+              "version": "11.0.15",
+              "versionType": "semver"
+            },
+            {
+              "lessThanOrEqual": "10.1.52",
+              "status": "affected",
+              "version": "10.1.50",
+              "versionType": "semver"
+            },
+            {
+              "lessThanOrEqual": "9.0.115",
+              "status": "affected",
+              "version": "9.0.113",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-20 Improper Input Validation"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-24880",
+      "publishedDate": "2026-04-09T19:12:10.730Z",
+      "lastModifiedDate": "2026-04-10T18:33:49.308Z",
+      "description": "Inconsistent Interpretation of HTTP Requests ('HTTP Request/Response Smuggling') vulnerability in Apache Tomcat via invalid chunk extension.\n\nThis issue affects Apache Tomcat: from 11.0.0-M1 through 11.0.18, from 10.1.0-M1 through 10.1.52, from 9.0.0.M1 through 9.0.115, from 8.5.0 through 8.5.100, from 7.0.0 through 7.0.109.\nOther, unsupported versions may also be affected.\n\nUsers are recommended to upgrade to version 11.0.20, 10.1.52 or 9.0.116, which fix the issue.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://lists.apache.org/thread/2c682qnlg2tv4o5knlggqbl9yc2gb5sn",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Apache Tomcat",
+          "vendor": "Apache Software Foundation",
+          "versions": [
+            {
+              "lessThanOrEqual": "11.0.18",
+              "status": "affected",
+              "version": "11.0.0-M1",
+              "versionType": "semver"
+            },
+            {
+              "lessThanOrEqual": "10.1.52",
+              "status": "affected",
+              "version": "10.1.0-M1",
+              "versionType": "semver"
+            },
+            {
+              "lessThanOrEqual": "9.0.115",
+              "status": "affected",
+              "version": "9.0.0.M1",
+              "versionType": "semver"
+            },
+            {
+              "lessThanOrEqual": "8.5.100",
+              "status": "affected",
+              "version": "8.5.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThanOrEqual": "7.0.109",
+              "status": "affected",
+              "version": "7.0.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThan": "7.0.0",
+              "status": "unknown",
+              "version": "0",
+              "versionType": "semver"
+            },
+            {
+              "lessThanOrEqual": "8.0.53",
+              "status": "unknown",
+              "version": "8.0.0-RC1",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-444 Inconsistent Interpretation of HTTP Requests ('HTTP Request/Response Smuggling')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-33005",
+      "publishedDate": "2026-04-09T15:52:50.770Z",
+      "lastModifiedDate": "2026-04-10T18:44:45.976Z",
+      "description": "Improper Handling of Insufficient Privileges vulnerability in Apache OpenMeetings.\n\nAny registered user can query web service with their credentials and get files/sub-folders of any folder by ID (metadata only NOT contents). Metadata includes id, type, name and some other field. Full list of fields get be checked at FileItemDTO object.\n\nThis issue affects Apache OpenMeetings: from 3.10 before 9.0.0.\n\nUsers are recommended to upgrade to version 9.0.0, which fixes the issue.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://openmeetings.apache.org/openmeetings-db/apidocs/org.apache.openmeetings.db/org/apache/openmeetings/db/dto/file/FileItemDTO.html",
+          "type": "reference"
+        },
+        {
+          "url": "https://lists.apache.org/thread/pttoprd628g3xr6lpp3bm1z8m3z8t4p7",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Apache OpenMeetings",
+          "vendor": "Apache Software Foundation",
+          "versions": [
+            {
+              "lessThan": "9.0.0",
+              "status": "affected",
+              "version": "3.1.0",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-274 Improper Handling of Insufficient Privileges"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-33266",
+      "publishedDate": "2026-04-09T15:52:36.105Z",
+      "lastModifiedDate": "2026-04-10T18:49:13.351Z",
+      "description": "Use of Hard-coded Cryptographic Key vulnerability in Apache OpenMeetings.\n\nThe remember-me cookie encryption key is set to default value in openmeetings.properties and not being auto-rotated. In case OM admin hasn't changed the default encryption key, an attacker who has stolen a cookie from a logged-in user can get full user credentials.\n\n\nThis issue affects Apache OpenMeetings: from 6.1.0 before 9.0.0.\n\nUsers are recommended to upgrade to version 9.0.0, which fixes the issue.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://lists.apache.org/thread/b05jnp9563v49zq494lox9kjbhhf2w66",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Apache OpenMeetings",
+          "vendor": "Apache Software Foundation",
+          "versions": [
+            {
+              "lessThan": "9.0.0",
+              "status": "affected",
+              "version": "6.1.0",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-321 Use of Hard-coded Cryptographic Key"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-5886",
+      "publishedDate": "2026-04-08T21:20:51.484Z",
+      "lastModifiedDate": "2026-04-10T18:38:56.084Z",
+      "description": "Out of bounds read in WebAudio in Google Chrome on Mac prior to 147.0.7727.55 allowed a remote attacker to obtain potentially sensitive information from process memory via a crafted HTML page. (Chromium security severity: Medium)",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://chromereleases.googleblog.com/2026/04/stable-channel-update-for-desktop.html",
+          "type": "reference"
+        },
+        {
+          "url": "https://issues.chromium.org/issues/485397283",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Google",
+          "product": "Chrome",
+          "versions": [
+            {
+              "version": "147.0.7727.55",
+              "status": "affected",
+              "lessThan": "147.0.7727.55",
               "versionType": "custom"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-669 Incorrect Resource Transfer Between Spheres"
+        "Out of bounds read"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-40023",
-      "publishedDate": "2026-04-10T15:45:52.895Z",
-      "lastModifiedDate": "2026-04-10T17:29:20.009Z",
-      "description": "Apache Log4cxx's  XMLLayout https://logging.apache.org/log4cxx/1.7.0/classlog4cxx_1_1xml_1_1XMLLayout.html , in versions before 1.7.0, fails to sanitize characters forbidden by the  XML 1.0 specification https://www.w3.org/TR/xml/#charsets  in log messages, NDC, and MDC property keys and values, producing invalid XML output. Conforming XML parsers must reject such documents with a fatal error, which may cause downstream log processing systems to drop or fail to index affected records.\n\nAn attacker who can influence logged data can exploit this to suppress individual log records, impairing audit trails and detection of malicious activity.\n\nUsers are advised to upgrade to Apache Log4cxx 1.7.0, which fixes this issue.",
+      "id": "CVE-2026-5869",
+      "publishedDate": "2026-04-08T21:20:43.915Z",
+      "lastModifiedDate": "2026-04-10T18:40:08.229Z",
+      "description": "Heap buffer overflow in WebML in Google Chrome prior to 147.0.7727.55 allowed a remote attacker to obtain potentially sensitive information from process memory via a crafted HTML page. (Chromium security severity: High)",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/apache/logging-log4cxx/pull/609",
+          "url": "https://chromereleases.googleblog.com/2026/04/stable-channel-update-for-desktop.html",
           "type": "reference"
         },
         {
-          "url": "https://logging.apache.org/security.html#CVE-2026-40023",
-          "type": "reference"
-        },
-        {
-          "url": "https://logging.apache.org/cyclonedx/vdr.xml",
-          "type": "reference"
-        },
-        {
-          "url": "https://logging.apache.org/log4cxx/1.7.0/classlog4cxx_1_1xml_1_1XMLLayout.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://lists.apache.org/thread/y15cv3zblg3dfwr5vy6ddbnl4zyrzr8b",
+          "url": "https://issues.chromium.org/issues/493708165",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "cpes": [
-            "cpe:2.3:a:apache:log4cxx:*:*:*:*:*:*:*:*"
-          ],
-          "defaultStatus": "unaffected",
-          "product": "Apache Log4cxx",
-          "vendor": "Apache Software Foundation",
+          "vendor": "Google",
+          "product": "Chrome",
           "versions": [
             {
-              "lessThan": "1.7.0",
+              "version": "147.0.7727.55",
               "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        },
-        {
-          "collectionURL": "https://conan.io/center",
-          "defaultStatus": "unaffected",
-          "packageName": "log4cxx",
-          "packageURL": "pkg:conan/log4cxx",
-          "product": "Apache Log4cxx (Conan)",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThan": "1.7.0",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        },
-        {
-          "collectionURL": "https://brew.sh/",
-          "defaultStatus": "unaffected",
-          "packageName": "log4cxx",
-          "product": "Apache Log4cxx (Brew)",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThan": "1.7.0",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
+              "lessThan": "147.0.7727.55",
+              "versionType": "custom"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-116 Improper Encoding or Escaping of Output"
+        "Heap buffer overflow"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-40021",
-      "publishedDate": "2026-04-10T15:44:17.451Z",
-      "lastModifiedDate": "2026-04-10T17:35:01.228Z",
-      "description": "Apache Log4net's  XmlLayout https://logging.apache.org/log4net/manual/configuration/layouts.html#layout-list  and  XmlLayoutSchemaLog4J https://logging.apache.org/log4net/manual/configuration/layouts.html#layout-list , in versions before 3.3.0, fail to sanitize characters forbidden by the  XML 1.0 specification https://www.w3.org/TR/xml/#charsets  in MDC property keys and values, as well as the identity field that may carry attacker-influenced data. This causes an exception during serialization and the silent loss of the affected log event.\n\nAn attacker who can influence any of these fields can exploit this to suppress individual log records, impairing audit trails and detection of malicious activity.\n\nUsers are advised to upgrade to Apache Log4net 3.3.0, which fixes this issue.",
+      "id": "CVE-2026-5867",
+      "publishedDate": "2026-04-08T21:20:43.173Z",
+      "lastModifiedDate": "2026-04-10T18:45:24.503Z",
+      "description": "Heap buffer overflow in WebML in Google Chrome prior to 147.0.7727.55 allowed a remote attacker to obtain potentially sensitive information from process memory via a crafted HTML page. (Chromium security severity: High)",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/apache/logging-log4net/pull/280",
+          "url": "https://chromereleases.googleblog.com/2026/04/stable-channel-update-for-desktop.html",
           "type": "reference"
         },
         {
-          "url": "https://logging.apache.org/security.html#CVE-2026-40021",
-          "type": "reference"
-        },
-        {
-          "url": "https://logging.apache.org/cyclonedx/vdr.xml",
-          "type": "reference"
-        },
-        {
-          "url": "https://logging.apache.org/log4net/manual/configuration/layouts.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://lists.apache.org/thread/q8otftjswhk69n3kxslqg7cobr0x4st7",
+          "url": "https://issues.chromium.org/issues/492668885",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "collectionURL": "https://www.nuget.org/packages",
-          "cpes": [
-            "cpe:2.3:a:apache:log4net:*:*:*:*:*:*:*:*"
-          ],
-          "defaultStatus": "unaffected",
-          "packageName": "log4net",
-          "packageURL": "pkg:nuget/log4net",
-          "product": "Apache Log4net",
-          "vendor": "Apache Software Foundation",
+          "vendor": "Google",
+          "product": "Chrome",
           "versions": [
             {
-              "lessThan": "3.3.0",
+              "version": "147.0.7727.55",
               "status": "affected",
-              "version": "0",
-              "versionType": "nuget"
+              "lessThan": "147.0.7727.55",
+              "versionType": "custom"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-116 Improper Encoding or Escaping of Output"
+        "Heap buffer overflow"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-34481",
-      "publishedDate": "2026-04-10T15:43:00.100Z",
-      "lastModifiedDate": "2026-04-10T17:41:38.229Z",
-      "description": "Apache Log4j's  JsonTemplateLayout https://logging.apache.org/log4j/2.x/manual/json-template-layout.html , in versions up to and including 2.25.3, produces invalid JSON output when log events contain non-finite floating-point values (NaN, Infinity, or -Infinity), which are prohibited by RFC 8259. This may cause downstream log processing systems to reject or fail to index affected records.\n\nAn attacker can exploit this issue only if both of the following conditions are met:\n\n  *  The application uses JsonTemplateLayout.\n  *  The application logs a MapMessage containing an attacker-controlled floating-point value.\n\n\nUsers are advised to upgrade to Apache Log4j JSON Template Layout 2.25.4, which corrects this issue.",
+      "id": "CVE-2026-5864",
+      "publishedDate": "2026-04-08T21:20:41.982Z",
+      "lastModifiedDate": "2026-04-10T18:44:16.825Z",
+      "description": "Heap buffer overflow in WebAudio in Google Chrome prior to 147.0.7727.55 allowed a remote attacker to obtain potentially sensitive information from process memory via a crafted HTML page. (Chromium security severity: High)",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/apache/logging-log4j2/pull/4080",
+          "url": "https://chromereleases.googleblog.com/2026/04/stable-channel-update-for-desktop.html",
           "type": "reference"
         },
         {
-          "url": "https://logging.apache.org/security.html#CVE-2026-34481",
-          "type": "reference"
-        },
-        {
-          "url": "https://logging.apache.org/cyclonedx/vdr.xml",
-          "type": "reference"
-        },
-        {
-          "url": "https://logging.apache.org/log4j/2.x/manual/json-template-layout.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://lists.apache.org/thread/n34zdv00gbkdbzt2rx9rf5mqz6lhopcv",
+          "url": "https://issues.chromium.org/issues/490642831",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "collectionURL": "https://repo.maven.apache.org/maven2",
-          "cpes": [
-            "cpe:2.3:a:apache:log4j_layout_template_json:*:*:*:*:*:*:*:*"
-          ],
-          "defaultStatus": "unaffected",
-          "packageName": "org.apache.logging.log4j:log4j-layout-template-json",
-          "packageURL": "pkg:maven/org.apache.logging.log4j/log4j-layout-template-json",
-          "product": "Apache Log4j JSON Template Layout",
-          "vendor": "Apache Software Foundation",
+          "vendor": "Google",
+          "product": "Chrome",
           "versions": [
             {
-              "lessThan": "2.25.4",
+              "version": "147.0.7727.55",
               "status": "affected",
-              "version": "2.14.0",
-              "versionType": "maven"
-            },
-            {
-              "lessThanOrEqual": "3.0.0-beta3",
-              "status": "affected",
-              "version": "3.0.0-alpha1",
-              "versionType": "maven"
+              "lessThan": "147.0.7727.55",
+              "versionType": "custom"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-116 Improper Encoding or Escaping of Output"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-34477",
-      "publishedDate": "2026-04-10T15:36:19.740Z",
-      "lastModifiedDate": "2026-04-10T17:38:57.154Z",
-      "description": "The fix for  CVE-2025-68161 https://logging.apache.org/security.html#CVE-2025-68161  was incomplete: it addressed hostname verification only when enabled via the  log4j2.sslVerifyHostName https://logging.apache.org/log4j/2.x/manual/systemproperties.html#log4j2.sslVerifyHostName  system property, but not when configured through the  verifyHostName https://logging.apache.org/log4j/2.x/manual/appenders/network.html#SslConfiguration-attr-verifyHostName  attribute of the <Ssl> element.\n\nAlthough the verifyHostName configuration attribute was introduced in Log4j Core 2.12.0, it was silently ignored in all versions through 2.25.3, leaving TLS connections vulnerable to interception regardless of the configured value.\n\nA network-based attacker may be able to perform a man-in-the-middle attack when all of the following conditions are met:\n\n  *  An SMTP, Socket, or Syslog appender is in use.\n  *  TLS is configured via a nested <Ssl> element.\n  *  The attacker can present a certificate issued by a CA trusted by the appender's configured trust store, or by the default Java trust store if none is configured.\nThis issue does not affect users of the HTTP appender, which uses a separate  verifyHostname https://logging.apache.org/log4j/2.x/manual/appenders/network.html#HttpAppender-attr-verifyHostName  attribute that was not subject to this bug and verifies host names by default.\n\nUsers are advised to upgrade to Apache Log4j Core 2.25.4, which corrects this issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/apache/logging-log4j2/pull/4075",
-          "type": "reference"
-        },
-        {
-          "url": "https://logging.apache.org/security.html#CVE-2026-34477",
-          "type": "reference"
-        },
-        {
-          "url": "https://logging.apache.org/cyclonedx/vdr.xml",
-          "type": "reference"
-        },
-        {
-          "url": "https://logging.apache.org/log4j/2.x/manual/appenders/network.html#SslConfiguration-attr-verifyHostName",
-          "type": "reference"
-        },
-        {
-          "url": "https://lists.apache.org/thread/lkx8cl46t2bvkcwfcb2pd43ygc097lq4",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://repo.maven.apache.org/maven2",
-          "cpes": [
-            "cpe:2.3:a:apache:log4j:*:*:*:*:*:*:*:*"
-          ],
-          "defaultStatus": "unaffected",
-          "packageName": "org.apache.logging.log4j:log4j-core",
-          "packageURL": "pkg:maven/org.apache.logging.log4j/log4j-core",
-          "product": "Apache Log4j Core",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThan": "2.25.4",
-              "status": "affected",
-              "version": "2.12.0",
-              "versionType": "maven"
-            },
-            {
-              "lessThanOrEqual": "3.0.0-beta3",
-              "status": "affected",
-              "version": "3.0.0-alpha1",
-              "versionType": "maven"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-297 Improper Validation of Certificate with Host Mismatch"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-50660",
-      "publishedDate": "2026-04-08T00:00:00.000Z",
-      "lastModifiedDate": "2026-04-10T17:43:58.901Z",
-      "description": "A buffer overflow vulnerability exists in D-Link DI-8003 16.07.26A1 due to improper handling of the name parameter in the /url_member.asp endpoint.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://www.dlink.com/en/security-bulletin/",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/xiaotea/iot-vulnerability-collection/blob/main/README.md",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n/a",
-          "product": "n/a",
-          "versions": [
-            {
-              "version": "n/a",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "n/a"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-50657",
-      "publishedDate": "2026-04-08T00:00:00.000Z",
-      "lastModifiedDate": "2026-04-10T17:42:12.056Z",
-      "description": "A buffer overflow vulnerability exists in D-Link DI-8003 16.07.26A1 due to improper handling of the pid parameter in the /trace.asp endpoint.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://www.dlink.com/en/security-bulletin/",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/xiaotea/iot-vulnerability-collection/blob/main/README.md",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n/a",
-          "product": "n/a",
-          "versions": [
-            {
-              "version": "n/a",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "n/a"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-50655",
-      "publishedDate": "2026-04-08T00:00:00.000Z",
-      "lastModifiedDate": "2026-04-10T17:41:12.166Z",
-      "description": "A buffer overflow vulnerability exists in D-Link DI-8003 16.07.26A1 due to improper handling of the name parameter in the /thd_group.asp endpoint.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://www.dlink.com/en/security-bulletin/",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/xiaotea/iot-vulnerability-collection/blob/main/README.md",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n/a",
-          "product": "n/a",
-          "versions": [
-            {
-              "version": "n/a",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "n/a"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-50659",
-      "publishedDate": "2026-04-08T00:00:00.000Z",
-      "lastModifiedDate": "2026-04-10T17:42:58.903Z",
-      "description": "A buffer overflow vulnerability exists in D-Link DI-8003 16.07.26A1 due to improper handling of the custom_error parameter in the /user.asp endpoint.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://www.dlink.com/en/security-bulletin/",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/xiaotea/iot-vulnerability-collection/blob/main/README.md",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n/a",
-          "product": "n/a",
-          "versions": [
-            {
-              "version": "n/a",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "n/a"
+        "Heap buffer overflow"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
