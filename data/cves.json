@@ -2,114 +2,79 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 3,
-    "last_updated": "2026-04-12T19:50:05.698827",
+    "total_count": 1,
+    "last_updated": "2026-04-12T20:27:10.897747",
     "severity_distribution": {
       "critical": 0,
-      "high": 0,
-      "medium": 3,
+      "high": 1,
+      "medium": 0,
       "low": 0,
       "none": 0
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-40396",
-      "publishedDate": "2026-04-12T19:23:03.408Z",
-      "lastModifiedDate": "2026-04-12T19:34:04.613Z",
-      "description": "Varnish Cache 9 before 9.0.1 allows a \"workspace overflow\" denial of service (daemon panic) after timeout_linger. A malicious client could send an HTTP/1 request, wait long enough until the session releases its worker thread (timeout_linger) and resume traffic before the session is closed (timeout_idle) sending more than one request at once to trigger a pipelining operation between requests. This vulnerability affecting Varnish Cache 9.0.0 emerged from a port of the Varnish Enterprise non-blocking architecture for HTTP/2. New code was needed to adapt to a more recent workspace API that formalizes the pipelining operation. In addition to the workspace change on the Varnish Cache side, other differences created merge conflicts, like partial support for trailers in Varnish Enterprise. The conflict resolution missed one code path configuring pipelining to perform a complete workspace rollback, losing the guarantee that prefetched data would fit inside workspace_client during the transition from one request to the next. This can result in a workspace overflow, triggering a panic and crashing the Varnish server.",
-      "severity": 4,
+      "id": "CVE-2026-6129",
+      "publishedDate": "2026-04-12T19:45:12.190Z",
+      "lastModifiedDate": "2026-04-12T19:45:12.190Z",
+      "description": "A vulnerability was detected in zhayujie chatgpt-on-wechat CowAgent up to 2.0.4. This affects an unknown function of the component Agent Mode Service. Performing a manipulation results in missing authentication. The attack can be initiated remotely. The exploit is now public and may be used. The project was informed of the problem early through an issue report but has not responded yet.",
+      "severity": 7.3,
       "references": [
         {
-          "url": "https://github.com/varnish/varnish/releases/tag/varnish-9.0.1",
+          "url": "https://vuldb.com/vuln/356992",
           "type": "reference"
         },
         {
-          "url": "https://github.com/varnish/varnish/issues/15",
+          "url": "https://vuldb.com/vuln/356992/cti",
           "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/submit/795272",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/zhayujie/chatgpt-on-wechat/issues/2741",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/zhayujie/chatgpt-on-wechat/issues/2741#issue-4191903266",
+          "type": "poc"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "unaffected",
-          "product": "Varnish Cache",
-          "vendor": "varnish-software",
+          "vendor": "zhayujie",
+          "product": "chatgpt-on-wechat CowAgent",
           "versions": [
             {
-              "lessThan": "9.0.1",
-              "status": "affected",
-              "version": "9.0.0",
-              "versionType": "semver"
+              "version": "2.0.0",
+              "status": "affected"
+            },
+            {
+              "version": "2.0.1",
+              "status": "affected"
+            },
+            {
+              "version": "2.0.2",
+              "status": "affected"
+            },
+            {
+              "version": "2.0.3",
+              "status": "affected"
+            },
+            {
+              "version": "2.0.4",
+              "status": "affected"
             }
+          ],
+          "modules": [
+            "Agent Mode Service"
           ]
         }
       ],
       "problemType": [
-        "CWE-670 Always-Incorrect Control Flow Implementation"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-40395",
-      "publishedDate": "2026-04-12T19:21:09.265Z",
-      "lastModifiedDate": "2026-04-12T19:33:44.790Z",
-      "description": "Varnish Enterprise before 6.0.16r12 allows a \"workspace overflow\" denial of service (daemon panic) for shared VCL. The headerplus.write_req0() function from vmod_headerplus updates the underlying req0, which is normally the original read-only request from which req is derived (readable and writable from VCL). This is useful in the active VCL, after amending req, to prepare a refined req0 before switching to a different VCL with the return (vcl(<label>)) action. This is for example how the Varnish Controller operates shared VCL deployments. If the amended req contained too many header fields for req0, this would have resulted in a workspace overflow that would in turn trigger a panic and crash the Varnish Enterprise server. This could be used as a Denial of Service attack vector by malicious clients.",
-      "severity": 4,
-      "references": [
-        {
-          "url": "https://docs.varnish-software.com/security/VEV00003/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Varnish Enterprise",
-          "vendor": "varnish-software",
-          "versions": [
-            {
-              "lessThan": "6.0.16r12",
-              "status": "affected",
-              "version": "6.0.9r5",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-770 Allocation of Resources Without Limits or Throttling"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-40394",
-      "publishedDate": "2026-04-12T19:17:34.334Z",
-      "lastModifiedDate": "2026-04-12T19:32:07.658Z",
-      "description": "Varnish Cache 9 before 9.0.1 and Varnish Enterprise before 6.0.16r11 allows a \"workspace overflow\" denial of service (daemon panic) for certain amounts of prefetched data. The setup of an HTTP/2 session starts with a speculative HTTP/1 transport, and upon upgrading to h2 the HTTP/1 request is repurposed as stream zero. During the upgrade, a buffer allocation is made to reserve space to send frames to the client. This allocation would split the original workspace, and depending on the amount of prefetched data, the next fetch could perform a pipelining operation that would run out of workspace.",
-      "severity": 4,
-      "references": [
-        {
-          "url": "https://docs.varnish-software.com/security/VEV00002/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Varnish Cache",
-          "vendor": "varnish-software",
-          "versions": [
-            {
-              "lessThan": "9.0.1",
-              "status": "affected",
-              "version": "9.0.0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-670 Always-Incorrect Control Flow Implementation"
+        "Missing Authentication",
+        "Improper Authentication"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
