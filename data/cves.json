@@ -2,671 +2,320 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 63,
-    "last_updated": "2026-04-13T19:05:37.618041",
+    "total_count": 37,
+    "last_updated": "2026-04-13T20:12:15.825650",
     "severity_distribution": {
       "critical": 0,
-      "high": 2,
-      "medium": 2,
-      "low": 0,
-      "none": 59
+      "high": 0,
+      "medium": 4,
+      "low": 1,
+      "none": 32
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-6200",
-      "publishedDate": "2026-04-13T18:45:12.958Z",
-      "lastModifiedDate": "2026-04-13T18:45:12.958Z",
-      "description": "A vulnerability was determined in Tenda F456 1.0.0.5. The affected element is the function formwebtypelibrary of the file /goform/webtypelibrary. This manipulation of the argument menufacturer/Go causes stack-based buffer overflow. The attack can be initiated remotely. The exploit has been publicly disclosed and may be utilized.",
-      "severity": 8.8,
+      "id": "CVE-2026-6215",
+      "publishedDate": "2026-04-13T19:30:12.683Z",
+      "lastModifiedDate": "2026-04-13T19:30:12.683Z",
+      "description": "A weakness has been identified in DbGate up to 7.1.4. The impacted element is the function apiServerUrl1 of the file packages/rest/src/openApiDriver.ts of the component REST/GraphQL. This manipulation causes server-side request forgery. The attack may be initiated remotely. The exploit has been made available to the public and could be used for attacks. The vendor was contacted early about this disclosure but did not respond in any way.",
+      "severity": 6.3,
       "references": [
         {
-          "url": "https://vuldb.com/vuln/357122",
+          "url": "https://vuldb.com/vuln/357134",
           "type": "reference"
         },
         {
-          "url": "https://vuldb.com/vuln/357122/cti",
+          "url": "https://vuldb.com/vuln/357134/cti",
           "type": "reference"
         },
         {
-          "url": "https://vuldb.com/submit/797472",
+          "url": "https://vuldb.com/submit/785836",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "DbGate",
+          "versions": [
+            {
+              "version": "7.1.0",
+              "status": "affected"
+            },
+            {
+              "version": "7.1.1",
+              "status": "affected"
+            },
+            {
+              "version": "7.1.2",
+              "status": "affected"
+            },
+            {
+              "version": "7.1.3",
+              "status": "affected"
+            },
+            {
+              "version": "7.1.4",
+              "status": "affected"
+            }
+          ],
+          "modules": [
+            "REST/GraphQL"
+          ]
+        }
+      ],
+      "problemType": [
+        "Server-Side Request Forgery"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-33657",
+      "publishedDate": "2026-04-13T19:41:47.131Z",
+      "lastModifiedDate": "2026-04-13T19:41:47.131Z",
+      "description": "EspoCRM is an open source customer relationship management application. Versions 9.3.3 and below have a stored HTML injection vulnerability that allows any authenticated user with standard (non-administrative) privileges to inject arbitrary HTML into system-generated email notifications by crafting malicious content in the post field of stream activity notes. The vulnerability exists because server-side Handlebars templates render the post field using unescaped triple-brace syntax, the Markdown processor preserves inline HTML by default, and the rendering pipeline explicitly skips sanitization for fields present in additionalData, creating a path where attacker-controlled HTML is accepted, stored, and rendered directly into emails without any escaping. Since the emails are sent using the system's configured SMTP identity (such as an administrative sender address), the injected content appears fully trusted to recipients, enabling phishing attacks, user tracking via embedded resources like image beacons, and UI manipulation within email content. The @mention feature further increases the impact by allowing targeted delivery of malicious emails to specific users. This issue has been fixed in version 9.3.4.",
+      "severity": 4.6,
+      "references": [
+        {
+          "url": "https://github.com/espocrm/espocrm/security/advisories/GHSA-8prm-r5j9-j574",
           "type": "reference"
         },
         {
-          "url": "https://github.com/Litengzheng/vuldb_new/blob/main/F456/vul_117/README.md",
+          "url": "https://github.com/espocrm/espocrm/releases/tag/9.3.4",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "espocrm",
+          "product": "espocrm",
+          "versions": [
+            {
+              "version": "< 9.3.4",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-80: Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)",
+        "CWE-116: Improper Encoding or Escaping of Output"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-33534",
+      "publishedDate": "2026-04-13T19:20:04.414Z",
+      "lastModifiedDate": "2026-04-13T19:20:04.414Z",
+      "description": "EspoCRM is an open source customer relationship management application. Versions 9.3.3 and below have an authenticated Server-Side Request Forgery (SSRF) vulnerability that allows bypassing the internal-host validation logic by using alternative IPv4 representations such as octal notation (e.g., 0177.0.0.1 instead of 127.0.0.1). This is caused by HostCheck::isNotInternalHost() function relying on PHP's filter_var(..., FILTER_VALIDATE_IP), which does not recognize alternative IP formats, causing the validation to fall through to a DNS lookup that returns no records and incorrectly treats the host as safe, however the cURL subsequently normalizes the address and connects to the loopback destination. Through the confirmed /api/v1/Attachment/fromImageUrl endpoint, an authenticated user can force the server to make requests to loopback-only services and store the fetched response as an attachment. This vulnerability is distinct from CVE-2023-46736 (which involved redirect-based SSRF) and may allow access to internal resources reachable from the application runtime. This issue has been fixed in version 9.3.4.",
+      "severity": 4.3,
+      "references": [
+        {
+          "url": "https://github.com/espocrm/espocrm/security/advisories/GHSA-h7gx-8gwv-7g73",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/espocrm/espocrm/releases/tag/9.3.4",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "espocrm",
+          "product": "espocrm",
+          "versions": [
+            {
+              "version": "< 9.3.4",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-918: Server-Side Request Forgery (SSRF)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-6231",
+      "publishedDate": "2026-04-13T15:31:55.735Z",
+      "lastModifiedDate": "2026-04-13T19:23:42.752Z",
+      "description": "The bson_validate function may return early on specific inputs and incorrectly report success. This behavior could result in skipping validation for BSON data, allowing malformed or invalid UTF-8 sequences to bypass validation and be processed incorrectly. The issue may affect applications that rely on these functions to validate untrusted BSON data before further processing. This issue affects MongoDB C Driver versions prior to 1.30.5, MongoDB C Driver version 2.0.0 and MongoDB C Driver version 2.0.1",
+      "severity": 4.3,
+      "references": [
+        {
+          "url": "https://jira.mongodb.org/browse/CDRIVER-6017",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "MongoDB Inc.",
+          "product": "C Driver",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "1.0",
+              "lessThan": "1.30.5",
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "2.0",
+              "lessThan": "2.0.2",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-20 Improper input validation"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-5810",
+      "publishedDate": "2026-04-08T22:00:17.660Z",
+      "lastModifiedDate": "2026-04-13T19:45:56.736Z",
+      "description": "A flaw has been found in SourceCodester Sales and Inventory System 1.0. Affected is an unknown function of the file /delete.php of the component GET Parameter Handler. This manipulation of the argument ID causes cross site scripting. Remote exploitation of the attack is possible. The exploit has been published and may be used.",
+      "severity": 3.5,
+      "references": [
+        {
+          "url": "https://vuldb.com/vuln/356246",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/vuln/356246/cti",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/submit/787670",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/meifukun/Web-Security-PoCs/blob/main/Inventory-System/XSS-Delete-id.md",
           "type": "poc"
         },
         {
-          "url": "https://www.tenda.com.cn/",
+          "url": "https://www.sourcecodester.com/",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Tenda",
-          "product": "F456",
+          "vendor": "SourceCodester",
+          "product": "Sales and Inventory System",
           "versions": [
             {
-              "version": "1.0.0.5",
+              "version": "1.0",
               "status": "affected"
             }
+          ],
+          "modules": [
+            "GET Parameter Handler"
           ]
         }
       ],
       "problemType": [
-        "Stack-based Buffer Overflow",
-        "Memory Corruption"
+        "Cross Site Scripting",
+        "Code Injection"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-6199",
-      "publishedDate": "2026-04-13T18:30:16.187Z",
-      "lastModifiedDate": "2026-04-13T18:30:16.187Z",
-      "description": "A vulnerability was found in Tenda F456 1.0.0.5. Impacted is the function fromqossetting of the file /goform/qossetting. The manipulation of the argument page results in stack-based buffer overflow. It is possible to launch the attack remotely. The exploit has been made public and could be used.",
-      "severity": 8.8,
+      "id": "CVE-2026-6100",
+      "publishedDate": "2026-04-13T17:15:47.606Z",
+      "lastModifiedDate": "2026-04-13T19:29:27.322Z",
+      "description": "Use-after-free (UAF) was possible in the `lzma.LZMADecompressor`, `bz2.BZ2Decompressor`, and `gzip.GzipFile` when a memory allocation fails with a `MemoryError` and the decompression instance is re-used. This scenario can be triggered if the process is under memory pressure. The fix cleans up the dangling pointer in this specific error condition.\n\nThe vulnerability is only present if the program re-uses decompressor instances across multiple decompression calls even after a `MemoryError` is raised during decompression. Using the helper functions to one-shot decompress data such as `lzma.decompress()`, `bz2.decompress()`, `gzip.decompress()`, and `zlib.decompress()` are not affected as a new decompressor instance is used per call. If the decompressor instance is not re-used after an error condition, this usage is similarly not vulnerable.",
+      "severity": "N/A",
       "references": [
         {
-          "url": "https://vuldb.com/vuln/357121",
+          "url": "https://github.com/python/cpython/pull/148396",
           "type": "reference"
         },
         {
-          "url": "https://vuldb.com/vuln/357121/cti",
+          "url": "https://mail.python.org/archives/list/security-announce@python.org/thread/HTWB2Z6KT5QQX4RYEZAFININDHNOSIF3/",
           "type": "reference"
         },
         {
-          "url": "https://vuldb.com/submit/797471",
+          "url": "https://github.com/python/cpython/issues/148395",
           "type": "reference"
         },
         {
-          "url": "https://github.com/Litengzheng/vuldb_new/blob/main/F456/vul_116/README.md",
-          "type": "poc"
+          "url": "https://github.com/python/cpython/commit/6a5f79c8d7bbf22b083b240910c7a8781a59437d",
+          "type": "reference"
         },
         {
-          "url": "https://www.tenda.com.cn/",
+          "url": "https://github.com/python/cpython/commit/8fc66aef6d7b3ae58f43f5c66f9366cc8cbbfcd2",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/python/cpython/commit/c3cf71c3366fe49acb776a639405c0eea6169c20",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Tenda",
-          "product": "F456",
-          "versions": [
-            {
-              "version": "1.0.0.5",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Stack-based Buffer Overflow",
-        "Memory Corruption"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-35622",
-      "publishedDate": "2026-04-09T21:26:52.214Z",
-      "lastModifiedDate": "2026-04-13T18:21:13.275Z",
-      "description": "OpenClaw before 2026.3.22 contains an improper authentication verification vulnerability in Google Chat app-url webhook handling that accepts add-on principals outside intended deployment bindings. Attackers can bypass webhook authentication by providing non-deployment add-on principals to execute unauthorized actions through the Google Chat integration.",
-      "severity": 5.9,
-      "references": [
-        {
-          "url": "https://github.com/openclaw/openclaw/security/advisories/GHSA-mp66-rf4f-mhh8",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openclaw/openclaw/commit/630f1479c44f78484dfa21bb407cbe6f171dac87",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openclaw/openclaw/commit/a47722de7e3c9cbda8d5512747ca7e3bb8f6ee66",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/openclaw-improper-authentication-verification-in-google-chat-webhook",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "OpenClaw",
-          "product": "OpenClaw",
           "defaultStatus": "unaffected",
-          "packageURL": "pkg:npm/openclaw",
+          "product": "CPython",
+          "repo": "https://github.com/python/cpython",
+          "vendor": "Python Software Foundation",
           "versions": [
             {
-              "version": "0",
+              "lessThan": "3.15.0",
               "status": "affected",
-              "versionType": "semver",
-              "lessThan": "2026.3.22"
-            },
-            {
-              "version": "2026.3.22",
-              "status": "unaffected",
-              "versionType": "semver"
+              "version": "0",
+              "versionType": "python"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-290: Authentication Bypass by Spoofing"
+        "CWE-416 Use after free",
+        "CWE-787 Out-of-bounds write"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-39865",
-      "publishedDate": "2026-04-08T14:25:27.865Z",
-      "lastModifiedDate": "2026-04-13T18:37:34.862Z",
-      "description": "Axios is a promise based HTTP client for the browser and Node.js. Starting in version 1.13.0 and prior to 1.13.2, Axios HTTP/2 session cleanup logic contains a state corruption bug that allows a malicious server to crash the client process through concurrent session closures. The vulnerability exists in the Http2Sessions.getSession() method in lib/adapters/http.js. The session cleanup logic contains a control flow error when removing sessions from the sessions array. This vulnerability is fixed in 1.13.2.",
-      "severity": 5.9,
-      "references": [
-        {
-          "url": "https://github.com/axios/axios/security/advisories/GHSA-qj83-cq47-w5f8",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "axios",
-          "product": "axios",
-          "versions": [
-            {
-              "version": ">= 1.13.0, < 1.13.2",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-400: Uncontrolled Resource Consumption",
-        "CWE-662: Improper Synchronization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-4154",
-      "publishedDate": "2026-04-11T00:16:10.657Z",
-      "lastModifiedDate": "2026-04-13T18:24:14.125Z",
-      "description": "GIMP XPM File Parsing Integer Overflow Remote Code Execution Vulnerability. This vulnerability allows remote attackers to execute arbitrary code on affected installations of GIMP. User interaction is required to exploit this vulnerability in that the target must visit a malicious page or open a malicious file.\n\nThe specific flaw exists within the parsing of XPM files. The issue results from the lack of proper validation of user-supplied data, which can result in an integer overflow before allocating a buffer. An attacker can leverage this vulnerability to execute code in the context of the current process. Was ZDI-CAN-28901.",
+      "id": "CVE-2026-30804",
+      "publishedDate": "2026-04-13T15:44:46.120Z",
+      "lastModifiedDate": "2026-04-13T19:23:05.754Z",
+      "description": "Unrestricted Upload of File with Dangerous Type vulnerability allows Remote Code Execution via file upload. This issue affects Pandora FMS: from 777 through 800",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://www.zerodayinitiative.com/advisories/ZDI-26-221/",
-          "type": "reference"
-        },
-        {
-          "url": "https://gitlab.gnome.org/GNOME/gimp/-/commit/2e7ed91793792d9e980b2df4c829e9aa60459253",
+          "url": "https://pandorafms.com/en/security/common-vulnerabilities-and-exposures/",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "GIMP",
-          "product": "GIMP",
-          "versions": [
-            {
-              "version": "3.0.8",
-              "status": "affected"
-            }
-          ],
-          "defaultStatus": "unknown"
-        }
-      ],
-      "problemType": [
-        "CWE-190: Integer Overflow or Wraparound"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-4153",
-      "publishedDate": "2026-04-11T00:16:01.848Z",
-      "lastModifiedDate": "2026-04-13T18:24:33.883Z",
-      "description": "GIMP PSP File Parsing Heap-based Buffer Overflow Remote Code Execution Vulnerability. This vulnerability allows remote attackers to execute arbitrary code on affected installations of GIMP. User interaction is required to exploit this vulnerability in that the target must visit a malicious page or open a malicious file.\n\nThe specific flaw exists within the parsing of PSP files. The issue results from the lack of proper validation of the length of user-supplied data prior to copying it to a heap-based buffer. An attacker can leverage this vulnerability to execute code in the context of the current process. Was ZDI-CAN-28874.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://www.zerodayinitiative.com/advisories/ZDI-26-220/",
-          "type": "reference"
-        },
-        {
-          "url": "https://gitlab.gnome.org/GNOME/gimp/-/commit/98cb1371fd4e22cca75017ea3252dc32fc218712",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "GIMP",
-          "product": "GIMP",
-          "versions": [
-            {
-              "version": "3.0.8",
-              "status": "affected"
-            }
-          ],
-          "defaultStatus": "unknown"
-        }
-      ],
-      "problemType": [
-        "CWE-122: Heap-based Buffer Overflow"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-5493",
-      "publishedDate": "2026-04-11T00:13:18.336Z",
-      "lastModifiedDate": "2026-04-13T18:24:57.963Z",
-      "description": "Labcenter Electronics Proteus PDSPRJ File Parsing Out-Of-Bounds Write Remote Code Execution Vulnerability. This vulnerability allows remote attackers to execute arbitrary code on affected installations of Labcenter Electronics Proteus. User interaction is required to exploit this vulnerability in that the target must visit a malicious page or open a malicious file.\n\nThe specific flaw exists within the parsing of PDSPRJ files. The issue results from the lack of proper validation of user-supplied data, which can result in a write past the end of an allocated buffer. An attacker can leverage this vulnerability to execute code in the context of the current process. Was ZDI-CAN-25718.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://www.zerodayinitiative.com/advisories/ZDI-26-255/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Labcenter Electronics",
-          "product": "Proteus",
-          "versions": [
-            {
-              "version": "8.17 SP5",
-              "status": "affected"
-            }
-          ],
-          "defaultStatus": "unknown"
-        }
-      ],
-      "problemType": [
-        "CWE-787: Out-of-bounds Write"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-5496",
-      "publishedDate": "2026-04-11T00:13:14.901Z",
-      "lastModifiedDate": "2026-04-13T18:25:22.216Z",
-      "description": "Labcenter Electronics Proteus PDSPRJ File Parsing Type Confusion Remote Code Execution Vulnerability. This vulnerability allows remote attackers to execute arbitrary code on affected installations of Labcenter Electronics Proteus. User interaction is required to exploit this vulnerability in that the target must visit a malicious page or open a malicious file.\n\nThe specific flaw exists within the parsing of PDSPRJ files. The issue results from the lack of proper validation of user-supplied data, which can result in a type confusion condition. An attacker can leverage this vulnerability to execute code in the context of the current process. Was ZDI-CAN-25717.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://www.zerodayinitiative.com/advisories/ZDI-26-254/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Labcenter Electronics",
-          "product": "Proteus",
-          "versions": [
-            {
-              "version": "8.17 SP5",
-              "status": "affected"
-            }
-          ],
-          "defaultStatus": "unknown"
-        }
-      ],
-      "problemType": [
-        "CWE-843: Access of Resource Using Incompatible Type ('Type Confusion')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-4116",
-      "publishedDate": "2026-04-09T14:27:29.341Z",
-      "lastModifiedDate": "2026-04-13T18:26:18.229Z",
-      "description": "Improper handling of Unicode encoding in SonicWall SMA1000 series appliances allows a remote authenticated SSLVPN user to bypass Workplace/Connect Tunnel TOTP authentication.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://psirt.global.sonicwall.com/vuln-detail/SNWLID-2026-0003",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "SonicWall",
-          "product": "SMA1000",
+          "vendor": "Pandora FMS",
+          "product": "Pandora FMS",
           "platforms": [
-            "Linux"
+            "all"
           ],
           "versions": [
             {
               "status": "affected",
-              "version": "12.4.3-03245 (platform-hotfix) and earlier versions."
-            },
-            {
-              "status": "affected",
-              "version": "12.5.0-02283 (platform-hotfix) and earlier versions."
+              "version": "777",
+              "lessThanOrEqual": "800",
+              "versionType": "custom"
             }
           ],
-          "defaultStatus": "unknown"
+          "defaultStatus": "unaffected"
         }
       ],
       "problemType": [
-        "CWE-176 Improper handling of unicode encoding"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-4113",
-      "publishedDate": "2026-04-09T14:23:53.270Z",
-      "lastModifiedDate": "2026-04-13T18:27:04.538Z",
-      "description": "An observable response discrepancy vulnerability in the SonicWall SMA1000 series appliances allows a remote attacker to enumerate SSL VPN user credentials.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://psirt.global.sonicwall.com/vuln-detail/SNWLID-2026-0003",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "SonicWall",
-          "product": "SMA1000",
-          "platforms": [
-            "Linux"
-          ],
-          "versions": [
-            {
-              "status": "affected",
-              "version": "12.4.3-03245 (platform-hotfix) and earlier versions."
-            },
-            {
-              "status": "affected",
-              "version": "12.5.0-02283 (platform-hotfix) and earlier versions."
-            }
-          ],
-          "defaultStatus": "unknown"
-        }
-      ],
-      "problemType": [
-        "CWE-204 Observable response discrepancy"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-5881",
-      "publishedDate": "2026-04-08T21:20:49.608Z",
-      "lastModifiedDate": "2026-04-13T18:19:00.316Z",
-      "description": "Policy bypass in LocalNetworkAccess in Google Chrome prior to 147.0.7727.55 allowed a remote attacker to bypass navigation restrictions via a crafted HTML page. (Chromium security severity: Medium)",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://chromereleases.googleblog.com/2026/04/stable-channel-update-for-desktop.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://issues.chromium.org/issues/454162508",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Google",
-          "product": "Chrome",
-          "versions": [
-            {
-              "version": "147.0.7727.55",
-              "status": "affected",
-              "lessThan": "147.0.7727.55",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Policy bypass"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-5880",
-      "publishedDate": "2026-04-08T21:20:49.126Z",
-      "lastModifiedDate": "2026-04-13T18:19:11.231Z",
-      "description": "Insufficient policy enforcement in browser UI in Google Chrome prior to 147.0.7727.55 allowed a remote attacker who had compromised the renderer process to spoof the contents of the Omnibox (URL bar) via a crafted HTML page. (Chromium security severity: Medium)",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://chromereleases.googleblog.com/2026/04/stable-channel-update-for-desktop.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://issues.chromium.org/issues/424995036",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Google",
-          "product": "Chrome",
-          "versions": [
-            {
-              "version": "147.0.7727.55",
-              "status": "affected",
-              "lessThan": "147.0.7727.55",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Incorrect security UI"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-5878",
-      "publishedDate": "2026-04-08T21:20:48.141Z",
-      "lastModifiedDate": "2026-04-13T18:19:21.834Z",
-      "description": "Incorrect security UI in Blink in Google Chrome prior to 147.0.7727.55 allowed a remote attacker to perform UI spoofing via a crafted HTML page. (Chromium security severity: Medium)",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://chromereleases.googleblog.com/2026/04/stable-channel-update-for-desktop.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://issues.chromium.org/issues/365089001",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Google",
-          "product": "Chrome",
-          "versions": [
-            {
-              "version": "147.0.7727.55",
-              "status": "affected",
-              "lessThan": "147.0.7727.55",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Incorrect security UI"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-5877",
-      "publishedDate": "2026-04-08T21:20:47.756Z",
-      "lastModifiedDate": "2026-04-13T18:19:32.569Z",
-      "description": "Use after free in Navigation in Google Chrome prior to 147.0.7727.55 allowed a remote attacker to execute arbitrary code inside a sandbox via a crafted HTML page. (Chromium security severity: Medium)",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://chromereleases.googleblog.com/2026/04/stable-channel-update-for-desktop.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://issues.chromium.org/issues/333024273",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Google",
-          "product": "Chrome",
-          "versions": [
-            {
-              "version": "147.0.7727.55",
-              "status": "affected",
-              "lessThan": "147.0.7727.55",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Use after free"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-39715",
-      "publishedDate": "2026-04-08T08:30:49.638Z",
-      "lastModifiedDate": "2026-04-13T18:46:47.067Z",
-      "description": "Missing Authorization vulnerability in AnyTrack AnyTrack Affiliate Link Manager anytrack-affiliate-link-manager allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects AnyTrack Affiliate Link Manager: from n/a through <= 1.5.5.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://patchstack.com/database/Wordpress/Plugin/anytrack-affiliate-link-manager/vulnerability/wordpress-anytrack-affiliate-link-manager-plugin-1-5-5-broken-access-control-vulnerability?_s_id=cve",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://wordpress.org/plugins",
-          "defaultStatus": "unaffected",
-          "packageName": "anytrack-affiliate-link-manager",
-          "product": "AnyTrack Affiliate Link Manager",
-          "vendor": "AnyTrack",
-          "versions": [
-            {
-              "lessThanOrEqual": "1.5.5",
-              "status": "affected",
-              "version": "0",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-39713",
-      "publishedDate": "2026-04-08T08:30:49.120Z",
-      "lastModifiedDate": "2026-04-13T18:46:47.525Z",
-      "description": "Missing Authorization vulnerability in mailercloud Mailercloud &#8211; Integrate webforms and synchronize website contacts mailercloud-integrate-webforms-synchronize-contacts allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Mailercloud &#8211; Integrate webforms and synchronize website contacts: from n/a through <= 1.0.7.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://patchstack.com/database/Wordpress/Plugin/mailercloud-integrate-webforms-synchronize-contacts/vulnerability/wordpress-mailercloud-integrate-webforms-and-synchronize-website-contacts-plugin-1-0-7-broken-access-control-vulnerability?_s_id=cve",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://wordpress.org/plugins",
-          "defaultStatus": "unaffected",
-          "packageName": "mailercloud-integrate-webforms-synchronize-contacts",
-          "product": "Mailercloud &#8211; Integrate webforms and synchronize website contacts",
-          "vendor": "mailercloud",
-          "versions": [
-            {
-              "lessThanOrEqual": "1.0.7",
-              "status": "affected",
-              "version": "0",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-39711",
-      "publishedDate": "2026-04-08T08:30:48.755Z",
-      "lastModifiedDate": "2026-04-13T18:40:26.104Z",
-      "description": "Insertion of Sensitive Information Into Sent Data vulnerability in stmcan RT-Theme 18 | Extensions rt18-extensions allows Retrieve Embedded Sensitive Data.This issue affects RT-Theme 18 | Extensions: from n/a through <= 2.5.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://patchstack.com/database/Wordpress/Plugin/rt18-extensions/vulnerability/wordpress-rt-theme-18-extensions-plugin-2-5-sensitive-data-exposure-vulnerability?_s_id=cve",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://wordpress.org/plugins",
-          "defaultStatus": "unaffected",
-          "packageName": "rt18-extensions",
-          "product": "RT-Theme 18 | Extensions",
-          "vendor": "stmcan",
-          "versions": [
-            {
-              "lessThanOrEqual": "2.5",
-              "status": "affected",
-              "version": "0",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Insertion of Sensitive Information Into Sent Data"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-39709",
-      "publishedDate": "2026-04-08T08:30:48.380Z",
-      "lastModifiedDate": "2026-04-13T18:46:17.963Z",
-      "description": "Insertion of Sensitive Information Into Sent Data vulnerability in thetechtribe The Tribal the-tech-tribe allows Retrieve Embedded Sensitive Data.This issue affects The Tribal: from n/a through <= 1.3.4.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://patchstack.com/database/Wordpress/Plugin/the-tech-tribe/vulnerability/wordpress-the-tribal-plugin-1-3-4-sensitive-data-exposure-vulnerability?_s_id=cve",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://wordpress.org/plugins",
-          "defaultStatus": "unaffected",
-          "packageName": "the-tech-tribe",
-          "product": "The Tribal",
-          "vendor": "thetechtribe",
-          "versions": [
-            {
-              "lessThanOrEqual": "1.3.4",
-              "status": "affected",
-              "version": "0",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Insertion of Sensitive Information Into Sent Data"
+        "CWE-434 Unrestricted upload of file with dangerous type"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
       "id": "CVE-2026-39707",
       "publishedDate": "2026-04-08T08:30:47.904Z",
-      "lastModifiedDate": "2026-04-13T18:46:47.676Z",
+      "lastModifiedDate": "2026-04-13T19:17:33.579Z",
       "description": "Missing Authorization vulnerability in ZealousWeb Accept PayPal Payments using Contact Form 7 contact-form-7-paypal-extension allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Accept PayPal Payments using Contact Form 7: from n/a through <= 4.0.4.",
       "severity": "N/A",
       "references": [
@@ -700,7 +349,7 @@
     {
       "id": "CVE-2026-39705",
       "publishedDate": "2026-04-08T08:30:47.550Z",
-      "lastModifiedDate": "2026-04-13T18:46:47.812Z",
+      "lastModifiedDate": "2026-04-13T19:18:21.340Z",
       "description": "Missing Authorization vulnerability in Mulika Team MIPL WC Multisite Sync mipl-wc-multisite-sync allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects MIPL WC Multisite Sync: from n/a through <= 1.4.4.",
       "severity": "N/A",
       "references": [
@@ -734,7 +383,7 @@
     {
       "id": "CVE-2026-39701",
       "publishedDate": "2026-04-08T08:30:46.861Z",
-      "lastModifiedDate": "2026-04-13T18:46:47.945Z",
+      "lastModifiedDate": "2026-04-13T19:20:39.356Z",
       "description": "Missing Authorization vulnerability in Andrew ShopWP wpshopify allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects ShopWP: from n/a through <= 5.2.4.",
       "severity": "N/A",
       "references": [
@@ -768,7 +417,7 @@
     {
       "id": "CVE-2026-39699",
       "publishedDate": "2026-04-08T08:30:46.515Z",
-      "lastModifiedDate": "2026-04-13T18:46:48.093Z",
+      "lastModifiedDate": "2026-04-13T19:21:21.855Z",
       "description": "Missing Authorization vulnerability in massiveshift AI Workflow Automation ai-workflow-automation-lite allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects AI Workflow Automation: from n/a through <= 1.4.2.",
       "severity": "N/A",
       "references": [
@@ -802,7 +451,7 @@
     {
       "id": "CVE-2026-39697",
       "publishedDate": "2026-04-08T08:30:46.167Z",
-      "lastModifiedDate": "2026-04-13T18:46:48.289Z",
+      "lastModifiedDate": "2026-04-13T19:22:07.467Z",
       "description": "Missing Authorization vulnerability in HBSS Technologies MAIO &#8211; The new AI GEO / SEO tool maio-the-new-ai-geo-seo-tool allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects MAIO &#8211; The new AI GEO / SEO tool: from n/a through <= 6.2.8.",
       "severity": "N/A",
       "references": [
@@ -836,7 +485,7 @@
     {
       "id": "CVE-2026-39691",
       "publishedDate": "2026-04-08T08:30:44.797Z",
-      "lastModifiedDate": "2026-04-13T18:46:48.515Z",
+      "lastModifiedDate": "2026-04-13T19:23:11.971Z",
       "description": "Missing Authorization vulnerability in AdAstraCrypto Cryptocurrency Donation Box – Bitcoin & Crypto Donations cryptocurrency-donation-box allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Cryptocurrency Donation Box – Bitcoin & Crypto Donations: from n/a through <= 2.2.13.",
       "severity": "N/A",
       "references": [
@@ -870,7 +519,7 @@
     {
       "id": "CVE-2026-39689",
       "publishedDate": "2026-04-08T08:30:44.317Z",
-      "lastModifiedDate": "2026-04-13T18:46:48.695Z",
+      "lastModifiedDate": "2026-04-13T19:23:53.027Z",
       "description": "Missing Authorization vulnerability in eshipper eShipper Commerce eshipper-commerce allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects eShipper Commerce: from n/a through <= 2.16.12.",
       "severity": "N/A",
       "references": [
@@ -904,7 +553,7 @@
     {
       "id": "CVE-2026-39687",
       "publishedDate": "2026-04-08T08:30:43.760Z",
-      "lastModifiedDate": "2026-04-13T18:46:48.833Z",
+      "lastModifiedDate": "2026-04-13T19:24:35.223Z",
       "description": "Missing Authorization vulnerability in Rapid Car Check Rapid Car Check Vehicle Data free-vehicle-data-uk allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Rapid Car Check Vehicle Data: from n/a through <= 2.0.",
       "severity": "N/A",
       "references": [
@@ -938,7 +587,7 @@
     {
       "id": "CVE-2026-39685",
       "publishedDate": "2026-04-08T08:30:42.864Z",
-      "lastModifiedDate": "2026-04-13T18:46:48.960Z",
+      "lastModifiedDate": "2026-04-13T19:25:08.567Z",
       "description": "Missing Authorization vulnerability in lvaudore The Moneytizer the-moneytizer allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects The Moneytizer: from n/a through <= 10.0.10.",
       "severity": "N/A",
       "references": [
@@ -972,7 +621,7 @@
     {
       "id": "CVE-2026-39675",
       "publishedDate": "2026-04-08T08:30:39.993Z",
-      "lastModifiedDate": "2026-04-13T18:46:49.088Z",
+      "lastModifiedDate": "2026-04-13T19:25:59.751Z",
       "description": "Missing Authorization vulnerability in webmuehle Court Reservation court-reservation allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Court Reservation: from n/a through <= 1.10.11.",
       "severity": "N/A",
       "references": [
@@ -1006,7 +655,7 @@
     {
       "id": "CVE-2026-39673",
       "publishedDate": "2026-04-08T08:30:39.650Z",
-      "lastModifiedDate": "2026-04-13T18:46:49.213Z",
+      "lastModifiedDate": "2026-04-13T19:26:35.454Z",
       "description": "Missing Authorization vulnerability in shrikantkale iZooto izooto-web-push allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects iZooto: from n/a through <= 3.7.20.",
       "severity": "N/A",
       "references": [
@@ -1040,7 +689,7 @@
     {
       "id": "CVE-2026-39669",
       "publishedDate": "2026-04-08T08:30:38.737Z",
-      "lastModifiedDate": "2026-04-13T18:46:49.334Z",
+      "lastModifiedDate": "2026-04-13T19:27:18.269Z",
       "description": "Missing Authorization vulnerability in NitroPack NitroPack nitropack allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects NitroPack: from n/a through <= 1.19.3.",
       "severity": "N/A",
       "references": [
@@ -1074,7 +723,7 @@
     {
       "id": "CVE-2026-39663",
       "publishedDate": "2026-04-08T08:30:37.575Z",
-      "lastModifiedDate": "2026-04-13T18:46:49.481Z",
+      "lastModifiedDate": "2026-04-13T19:28:10.049Z",
       "description": "Missing Authorization vulnerability in themetechmount TrueBooker truebooker-appointment-booking allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects TrueBooker: from n/a through <= 1.1.5.",
       "severity": "N/A",
       "references": [
@@ -1106,43 +755,9 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-39660",
-      "publishedDate": "2026-04-08T08:30:37.120Z",
-      "lastModifiedDate": "2026-04-13T18:46:49.597Z",
-      "description": "Missing Authorization vulnerability in Automattic WP Job Manager wp-job-manager allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects WP Job Manager: from n/a through <= 2.4.1.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://patchstack.com/database/Wordpress/Plugin/wp-job-manager/vulnerability/wordpress-wp-job-manager-plugin-2-4-1-broken-access-control-vulnerability?_s_id=cve",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://wordpress.org/plugins",
-          "defaultStatus": "unaffected",
-          "packageName": "wp-job-manager",
-          "product": "WP Job Manager",
-          "vendor": "Automattic",
-          "versions": [
-            {
-              "lessThanOrEqual": "2.4.1",
-              "status": "affected",
-              "version": "0",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
       "id": "CVE-2026-39658",
       "publishedDate": "2026-04-08T08:30:36.675Z",
-      "lastModifiedDate": "2026-04-13T18:46:49.716Z",
+      "lastModifiedDate": "2026-04-13T19:28:57.046Z",
       "description": "Missing Authorization vulnerability in Coding Panda Panda Pods Repeater Field panda-pods-repeater-field allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Panda Pods Repeater Field: from n/a through <= 1.5.12.",
       "severity": "N/A",
       "references": [
@@ -1176,7 +791,7 @@
     {
       "id": "CVE-2026-39656",
       "publishedDate": "2026-04-08T08:30:36.077Z",
-      "lastModifiedDate": "2026-04-13T18:46:49.844Z",
+      "lastModifiedDate": "2026-04-13T19:29:46.131Z",
       "description": "Missing Authorization vulnerability in Razorpay Razorpay for WooCommerce woo-razorpay allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Razorpay for WooCommerce: from n/a through <= 4.8.2.",
       "severity": "N/A",
       "references": [
@@ -1208,77 +823,9 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-39653",
-      "publishedDate": "2026-04-08T08:30:35.685Z",
-      "lastModifiedDate": "2026-04-13T18:42:58.707Z",
-      "description": "Missing Authorization vulnerability in Deepen Bajracharya Video Conferencing with Zoom video-conferencing-with-zoom-api allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Video Conferencing with Zoom: from n/a through <= 4.6.6.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://patchstack.com/database/Wordpress/Plugin/video-conferencing-with-zoom-api/vulnerability/wordpress-video-conferencing-with-zoom-plugin-4-6-6-broken-access-control-vulnerability?_s_id=cve",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://wordpress.org/plugins",
-          "defaultStatus": "unaffected",
-          "packageName": "video-conferencing-with-zoom-api",
-          "product": "Video Conferencing with Zoom",
-          "vendor": "Deepen Bajracharya",
-          "versions": [
-            {
-              "lessThanOrEqual": "4.6.6",
-              "status": "affected",
-              "version": "0",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-39651",
-      "publishedDate": "2026-04-08T08:30:35.156Z",
-      "lastModifiedDate": "2026-04-13T18:45:32.734Z",
-      "description": "Missing Authorization vulnerability in TotalSuite Total Poll Lite totalpoll-lite allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Total Poll Lite: from n/a through <= 4.12.0.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://patchstack.com/database/Wordpress/Plugin/totalpoll-lite/vulnerability/wordpress-total-poll-lite-plugin-4-12-0-broken-access-control-vulnerability?_s_id=cve",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://wordpress.org/plugins",
-          "defaultStatus": "unaffected",
-          "packageName": "totalpoll-lite",
-          "product": "Total Poll Lite",
-          "vendor": "TotalSuite",
-          "versions": [
-            {
-              "lessThanOrEqual": "4.12.0",
-              "status": "affected",
-              "version": "0",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
       "id": "CVE-2026-39649",
       "publishedDate": "2026-04-08T08:30:34.012Z",
-      "lastModifiedDate": "2026-04-13T18:46:49.961Z",
+      "lastModifiedDate": "2026-04-13T19:30:29.514Z",
       "description": "Missing Authorization vulnerability in themebeez Royale News royale-news allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Royale News: from n/a through <= 2.2.4.",
       "severity": "N/A",
       "references": [
@@ -1312,7 +859,7 @@
     {
       "id": "CVE-2026-39643",
       "publishedDate": "2026-04-08T08:30:32.373Z",
-      "lastModifiedDate": "2026-04-13T18:46:50.077Z",
+      "lastModifiedDate": "2026-04-13T19:31:05.074Z",
       "description": "Missing Authorization vulnerability in Payment Plugins Payment Plugins for PayPal WooCommerce pymntpl-paypal-woocommerce allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Payment Plugins for PayPal WooCommerce: from n/a through <= 2.0.13.",
       "severity": "N/A",
       "references": [
@@ -1346,7 +893,7 @@
     {
       "id": "CVE-2026-39624",
       "publishedDate": "2026-04-08T08:30:27.029Z",
-      "lastModifiedDate": "2026-04-13T18:46:50.200Z",
+      "lastModifiedDate": "2026-04-13T19:31:43.815Z",
       "description": "Missing Authorization vulnerability in kutethemes Biolife biolife allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Biolife: from n/a through <= 3.2.3.",
       "severity": "N/A",
       "references": [
@@ -1380,7 +927,7 @@
     {
       "id": "CVE-2026-39622",
       "publishedDate": "2026-04-08T08:30:26.564Z",
-      "lastModifiedDate": "2026-04-13T18:46:50.319Z",
+      "lastModifiedDate": "2026-04-13T19:32:40.487Z",
       "description": "Missing Authorization vulnerability in acmethemes Education Base education-base allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Education Base: from n/a through <= 3.0.8.",
       "severity": "N/A",
       "references": [
@@ -1412,43 +959,9 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-39614",
-      "publishedDate": "2026-04-08T08:30:24.340Z",
-      "lastModifiedDate": "2026-04-13T18:44:38.779Z",
-      "description": "Missing Authorization vulnerability in ilGhera JW Player for WordPress jw-player-7-for-wp allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects JW Player for WordPress: from n/a through <= 2.3.6.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://patchstack.com/database/Wordpress/Plugin/jw-player-7-for-wp/vulnerability/wordpress-jw-player-for-wordpress-plugin-2-3-6-broken-access-control-vulnerability?_s_id=cve",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://wordpress.org/plugins",
-          "defaultStatus": "unaffected",
-          "packageName": "jw-player-7-for-wp",
-          "product": "JW Player for WordPress",
-          "vendor": "ilGhera",
-          "versions": [
-            {
-              "lessThanOrEqual": "2.3.6",
-              "status": "affected",
-              "version": "0",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
       "id": "CVE-2026-39612",
       "publishedDate": "2026-04-08T08:30:23.931Z",
-      "lastModifiedDate": "2026-04-13T18:46:50.507Z",
+      "lastModifiedDate": "2026-04-13T19:33:17.039Z",
       "description": "Missing Authorization vulnerability in kutethemes KuteShop kuteshop allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects KuteShop: from n/a through <= 4.2.9.",
       "severity": "N/A",
       "references": [
@@ -1482,7 +995,7 @@
     {
       "id": "CVE-2026-39610",
       "publishedDate": "2026-04-08T08:30:23.579Z",
-      "lastModifiedDate": "2026-04-13T18:46:51.668Z",
+      "lastModifiedDate": "2026-04-13T19:33:56.695Z",
       "description": "Missing Authorization vulnerability in Pankaj Kumar WpXmas-Snow wpxmas-snow allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects WpXmas-Snow: from n/a through <= 1.1.",
       "severity": "N/A",
       "references": [
@@ -1516,7 +1029,7 @@
     {
       "id": "CVE-2026-39608",
       "publishedDate": "2026-04-08T08:30:23.084Z",
-      "lastModifiedDate": "2026-04-13T18:46:51.790Z",
+      "lastModifiedDate": "2026-04-13T19:34:33.833Z",
       "description": "Missing Authorization vulnerability in iPOSPays iPOSpays Gateways WC ipospays-gateways-wc allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects iPOSpays Gateways WC: from n/a through <= 1.3.7.",
       "severity": "N/A",
       "references": [
@@ -1550,7 +1063,7 @@
     {
       "id": "CVE-2026-39606",
       "publishedDate": "2026-04-08T08:30:22.616Z",
-      "lastModifiedDate": "2026-04-13T18:46:51.922Z",
+      "lastModifiedDate": "2026-04-13T19:35:08.212Z",
       "description": "Missing Authorization vulnerability in Foysal Imran BizReview bizreview allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects BizReview: from n/a through <= 1.5.13.",
       "severity": "N/A",
       "references": [
@@ -1584,7 +1097,7 @@
     {
       "id": "CVE-2026-39602",
       "publishedDate": "2026-04-08T08:30:21.845Z",
-      "lastModifiedDate": "2026-04-13T18:46:52.043Z",
+      "lastModifiedDate": "2026-04-13T19:35:37.088Z",
       "description": "Missing Authorization vulnerability in Rustaurius Order Tracking order-tracking allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Order Tracking: from n/a through <= 3.4.3.",
       "severity": "N/A",
       "references": [
@@ -1618,7 +1131,7 @@
     {
       "id": "CVE-2026-39588",
       "publishedDate": "2026-04-08T08:30:21.468Z",
-      "lastModifiedDate": "2026-04-13T18:46:52.174Z",
+      "lastModifiedDate": "2026-04-13T19:36:12.989Z",
       "description": "Missing Authorization vulnerability in nmerii NM Gift Registry and Wishlist Lite nm-gift-registry-and-wishlist-lite allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects NM Gift Registry and Wishlist Lite: from n/a through <= 5.13.",
       "severity": "N/A",
       "references": [
@@ -1658,7 +1171,7 @@
     {
       "id": "CVE-2026-39585",
       "publishedDate": "2026-04-08T08:30:21.023Z",
-      "lastModifiedDate": "2026-04-13T18:46:52.306Z",
+      "lastModifiedDate": "2026-04-13T19:36:47.319Z",
       "description": "Missing Authorization vulnerability in Arraytics Booktics booktics allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Booktics: from n/a through <= 1.0.16.",
       "severity": "N/A",
       "references": [
@@ -1698,7 +1211,7 @@
     {
       "id": "CVE-2026-39562",
       "publishedDate": "2026-04-08T08:30:18.463Z",
-      "lastModifiedDate": "2026-04-13T18:46:52.459Z",
+      "lastModifiedDate": "2026-04-13T19:37:24.697Z",
       "description": "Missing Authorization vulnerability in BoldGrid Client Invoicing by Sprout Invoices sprout-invoices allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Client Invoicing by Sprout Invoices: from n/a through <= 20.8.10.",
       "severity": "N/A",
       "references": [
@@ -1738,7 +1251,7 @@
     {
       "id": "CVE-2026-39535",
       "publishedDate": "2026-04-08T08:30:16.732Z",
-      "lastModifiedDate": "2026-04-13T18:46:52.596Z",
+      "lastModifiedDate": "2026-04-13T19:38:02.108Z",
       "description": "Missing Authorization vulnerability in fullworks Display Eventbrite Events widget-for-eventbrite-api allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects Display Eventbrite Events: from n/a through <= 6.5.6.",
       "severity": "N/A",
       "references": [
@@ -1778,7 +1291,7 @@
     {
       "id": "CVE-2026-39520",
       "publishedDate": "2026-04-08T08:30:15.736Z",
-      "lastModifiedDate": "2026-04-13T18:26:34.332Z",
+      "lastModifiedDate": "2026-04-13T19:38:51.903Z",
       "description": "Missing Authorization vulnerability in weDevs weDocs wedocs allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects weDocs: from n/a through <= 2.1.18.",
       "severity": "N/A",
       "references": [
@@ -1816,14 +1329,14 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-39506",
-      "publishedDate": "2026-04-08T08:30:13.840Z",
-      "lastModifiedDate": "2026-04-13T18:43:22.406Z",
-      "description": "Missing Authorization vulnerability in Jordy Meow AI Engine (Pro) ai-engine-pro allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects AI Engine (Pro): from n/a through < 3.4.2.",
+      "id": "CVE-2026-39496",
+      "publishedDate": "2026-04-08T08:30:12.339Z",
+      "lastModifiedDate": "2026-04-13T19:44:54.762Z",
+      "description": "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') vulnerability in YayCommerce YayMail yaymail allows Blind SQL Injection.This issue affects YayMail: from n/a through <= 4.3.3.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://patchstack.com/database/Wordpress/Plugin/ai-engine-pro/vulnerability/wordpress-ai-engine-pro-plugin-3-4-2-broken-access-control-vulnerability?_s_id=cve",
+          "url": "https://patchstack.com/database/Wordpress/Plugin/yaymail/vulnerability/wordpress-yaymail-plugin-4-3-3-sql-injection-vulnerability?_s_id=cve",
           "type": "reference"
         }
       ],
@@ -1831,18 +1344,18 @@
         {
           "collectionURL": "https://wordpress.org/plugins",
           "defaultStatus": "unaffected",
-          "packageName": "ai-engine-pro",
-          "product": "AI Engine (Pro)",
-          "vendor": "Jordy Meow",
+          "packageName": "yaymail",
+          "product": "YayMail",
+          "vendor": "YayCommerce",
           "versions": [
             {
               "changes": [
                 {
-                  "at": "3.4.2",
+                  "at": "4.3.4",
                   "status": "unaffected"
                 }
               ],
-              "lessThanOrEqual": "3.4.2",
+              "lessThanOrEqual": "4.3.3",
               "status": "affected",
               "version": "0",
               "versionType": "custom"
@@ -1851,690 +1364,7 @@
         }
       ],
       "problemType": [
-        "Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-39504",
-      "publishedDate": "2026-04-08T08:30:13.405Z",
-      "lastModifiedDate": "2026-04-13T18:45:55.484Z",
-      "description": "Missing Authorization vulnerability in InstaWP InstaWP Connect instawp-connect allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects InstaWP Connect: from n/a through <= 0.1.2.5.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://patchstack.com/database/Wordpress/Plugin/instawp-connect/vulnerability/wordpress-instawp-connect-plugin-0-1-2-5-broken-access-control-vulnerability?_s_id=cve",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://wordpress.org/plugins",
-          "defaultStatus": "unaffected",
-          "packageName": "instawp-connect",
-          "product": "InstaWP Connect",
-          "vendor": "InstaWP",
-          "versions": [
-            {
-              "changes": [
-                {
-                  "at": "0.1.2.7",
-                  "status": "unaffected"
-                }
-              ],
-              "lessThanOrEqual": "0.1.2.5",
-              "status": "affected",
-              "version": "0",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-39488",
-      "publishedDate": "2026-04-08T08:30:11.861Z",
-      "lastModifiedDate": "2026-04-13T18:46:28.985Z",
-      "description": "Missing Authorization vulnerability in SureCart SureCart surecart allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects SureCart: from n/a through <= 4.0.2.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://patchstack.com/database/Wordpress/Plugin/surecart/vulnerability/wordpress-surecart-plugin-4-0-2-broken-access-control-vulnerability?_s_id=cve",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://wordpress.org/plugins",
-          "defaultStatus": "unaffected",
-          "packageName": "surecart",
-          "product": "SureCart",
-          "vendor": "SureCart",
-          "versions": [
-            {
-              "changes": [
-                {
-                  "at": "4.0.3",
-                  "status": "unaffected"
-                }
-              ],
-              "lessThanOrEqual": "4.0.2",
-              "status": "affected",
-              "version": "0",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-39477",
-      "publishedDate": "2026-04-08T08:30:09.658Z",
-      "lastModifiedDate": "2026-04-13T18:44:02.731Z",
-      "description": "Missing Authorization vulnerability in Brainstorm Force CartFlows cartflows allows Exploiting Incorrectly Configured Access Control Security Levels.This issue affects CartFlows: from n/a through <= 2.2.3.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://patchstack.com/database/Wordpress/Plugin/cartflows/vulnerability/wordpress-cartflows-plugin-2-2-3-broken-access-control-vulnerability?_s_id=cve",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://wordpress.org/plugins",
-          "defaultStatus": "unaffected",
-          "packageName": "cartflows",
-          "product": "CartFlows",
-          "vendor": "Brainstorm Force",
-          "versions": [
-            {
-              "changes": [
-                {
-                  "at": "2.2.4",
-                  "status": "unaffected"
-                }
-              ],
-              "lessThanOrEqual": "2.2.3",
-              "status": "affected",
-              "version": "0",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-32281",
-      "publishedDate": "2026-04-08T01:06:58.354Z",
-      "lastModifiedDate": "2026-04-13T18:19:44.779Z",
-      "description": "Validating certificate chains which use policies is unexpectedly inefficient when certificates in the chain contain a very large number of policy mappings, possibly causing denial of service. This only affects validation of otherwise trusted certificate chains, issued by a root CA in the VerifyOptions.Roots CertPool, or in the system certificate pool.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://go.dev/cl/758061",
-          "type": "reference"
-        },
-        {
-          "url": "https://go.dev/issue/78281",
-          "type": "reference"
-        },
-        {
-          "url": "https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU",
-          "type": "reference"
-        },
-        {
-          "url": "https://pkg.go.dev/vuln/GO-2026-4946",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Go standard library",
-          "product": "crypto/x509",
-          "collectionURL": "https://pkg.go.dev",
-          "packageName": "crypto/x509",
-          "versions": [
-            {
-              "version": "0",
-              "lessThan": "1.25.9",
-              "status": "affected",
-              "versionType": "semver"
-            },
-            {
-              "version": "1.26.0-0",
-              "lessThan": "1.26.2",
-              "status": "affected",
-              "versionType": "semver"
-            }
-          ],
-          "programRoutines": [
-            {
-              "name": "policiesValid"
-            },
-            {
-              "name": "Certificate.Verify"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-407: Inefficient Algorithmic Complexity"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-32283",
-      "publishedDate": "2026-04-08T01:06:57.670Z",
-      "lastModifiedDate": "2026-04-13T18:19:55.848Z",
-      "description": "If one side of the TLS connection sends multiple key update messages post-handshake in a single record, the connection can deadlock, causing uncontrolled consumption of resources. This can lead to a denial of service. This only affects TLS 1.3.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://go.dev/cl/763767",
-          "type": "reference"
-        },
-        {
-          "url": "https://go.dev/issue/78334",
-          "type": "reference"
-        },
-        {
-          "url": "https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU",
-          "type": "reference"
-        },
-        {
-          "url": "https://pkg.go.dev/vuln/GO-2026-4870",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Go standard library",
-          "product": "crypto/tls",
-          "collectionURL": "https://pkg.go.dev",
-          "packageName": "crypto/tls",
-          "versions": [
-            {
-              "version": "0",
-              "lessThan": "1.25.9",
-              "status": "affected",
-              "versionType": "semver"
-            },
-            {
-              "version": "1.26.0-0",
-              "lessThan": "1.26.2",
-              "status": "affected",
-              "versionType": "semver"
-            }
-          ],
-          "programRoutines": [
-            {
-              "name": "Conn.handleKeyUpdate"
-            },
-            {
-              "name": "clientHandshakeStateTLS13.establishHandshakeKeys"
-            },
-            {
-              "name": "clientHandshakeStateTLS13.readServerFinished"
-            },
-            {
-              "name": "serverHandshakeStateTLS13.sendServerParameters"
-            },
-            {
-              "name": "serverHandshakeStateTLS13.readClientFinished"
-            },
-            {
-              "name": "Conn.Handshake"
-            },
-            {
-              "name": "Conn.HandshakeContext"
-            },
-            {
-              "name": "Conn.Read"
-            },
-            {
-              "name": "Conn.Write"
-            },
-            {
-              "name": "Dial"
-            },
-            {
-              "name": "DialWithDialer"
-            },
-            {
-              "name": "Dialer.Dial"
-            },
-            {
-              "name": "Dialer.DialContext"
-            },
-            {
-              "name": "QUICConn.HandleData"
-            },
-            {
-              "name": "QUICConn.Start"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-667: Improper Locking"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-32288",
-      "publishedDate": "2026-04-08T01:06:57.416Z",
-      "lastModifiedDate": "2026-04-13T18:20:08.191Z",
-      "description": "tar.Reader can allocate an unbounded amount of memory when reading a maliciously-crafted archive containing a large number of sparse regions encoded in the \"old GNU sparse map\" format.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://go.dev/cl/763766",
-          "type": "reference"
-        },
-        {
-          "url": "https://go.dev/issue/78301",
-          "type": "reference"
-        },
-        {
-          "url": "https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU",
-          "type": "reference"
-        },
-        {
-          "url": "https://pkg.go.dev/vuln/GO-2026-4869",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Go standard library",
-          "product": "archive/tar",
-          "collectionURL": "https://pkg.go.dev",
-          "packageName": "archive/tar",
-          "versions": [
-            {
-              "version": "0",
-              "lessThan": "1.25.9",
-              "status": "affected",
-              "versionType": "semver"
-            },
-            {
-              "version": "1.26.0-0",
-              "lessThan": "1.26.2",
-              "status": "affected",
-              "versionType": "semver"
-            }
-          ],
-          "programRoutines": [
-            {
-              "name": "Reader.readOldGNUSparseMap"
-            },
-            {
-              "name": "readGNUSparseMap1x0"
-            },
-            {
-              "name": "Reader.Next"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-400: Uncontrolled Resource Consumption"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-27143",
-      "publishedDate": "2026-04-08T01:06:57.168Z",
-      "lastModifiedDate": "2026-04-13T18:20:17.933Z",
-      "description": "Arithmetic over induction variables in loops were not correctly checked for underflow or overflow. As a result, the compiler would allow for invalid indexing to occur at runtime, potentially leading to memory corruption.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://go.dev/cl/763765",
-          "type": "reference"
-        },
-        {
-          "url": "https://go.dev/issue/78333",
-          "type": "reference"
-        },
-        {
-          "url": "https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU",
-          "type": "reference"
-        },
-        {
-          "url": "https://pkg.go.dev/vuln/GO-2026-4868",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Go toolchain",
-          "product": "cmd/compile",
-          "collectionURL": "https://pkg.go.dev",
-          "packageName": "cmd/compile",
-          "versions": [
-            {
-              "version": "0",
-              "lessThan": "1.25.9",
-              "status": "affected",
-              "versionType": "semver"
-            },
-            {
-              "version": "1.26.0-0",
-              "lessThan": "1.26.2",
-              "status": "affected",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-190: Integer Overflow or Wraparound"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-27144",
-      "publishedDate": "2026-04-08T01:06:56.908Z",
-      "lastModifiedDate": "2026-04-13T18:20:28.098Z",
-      "description": "The compiler is meant to unwrap pointers which are the operands of a memory move; a no-op interface conversion prevented the compiler from making the correct determination about non-overlapping moves, potentially leading to memory corruption at runtime.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://go.dev/cl/763764",
-          "type": "reference"
-        },
-        {
-          "url": "https://go.dev/issue/78371",
-          "type": "reference"
-        },
-        {
-          "url": "https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU",
-          "type": "reference"
-        },
-        {
-          "url": "https://pkg.go.dev/vuln/GO-2026-4867",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Go toolchain",
-          "product": "cmd/compile",
-          "collectionURL": "https://pkg.go.dev",
-          "packageName": "cmd/compile",
-          "versions": [
-            {
-              "version": "0",
-              "lessThan": "1.25.9",
-              "status": "affected",
-              "versionType": "semver"
-            },
-            {
-              "version": "1.26.0-0",
-              "lessThan": "1.26.2",
-              "status": "affected",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-440: Expected Behavior Violation"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-33810",
-      "publishedDate": "2026-04-08T01:06:56.546Z",
-      "lastModifiedDate": "2026-04-13T18:20:37.411Z",
-      "description": "When verifying a certificate chain containing excluded DNS constraints, these constraints are not correctly applied to wildcard DNS SANs which use a different case than the constraint. This only affects validation of otherwise trusted certificate chains, issued by a root CA in the VerifyOptions.Roots CertPool, or in the system certificate pool.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://go.dev/cl/763763",
-          "type": "reference"
-        },
-        {
-          "url": "https://go.dev/issue/78332",
-          "type": "reference"
-        },
-        {
-          "url": "https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU",
-          "type": "reference"
-        },
-        {
-          "url": "https://pkg.go.dev/vuln/GO-2026-4866",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Go standard library",
-          "product": "crypto/x509",
-          "collectionURL": "https://pkg.go.dev",
-          "packageName": "crypto/x509",
-          "versions": [
-            {
-              "version": "1.26.0-0",
-              "lessThan": "1.26.2",
-              "status": "affected",
-              "versionType": "semver"
-            }
-          ],
-          "programRoutines": [
-            {
-              "name": "newDNSConstraints"
-            },
-            {
-              "name": "dnsConstraints.query"
-            },
-            {
-              "name": "Certificate.Verify"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-295: Improper Certificate Validation"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-32289",
-      "publishedDate": "2026-04-08T01:06:56.297Z",
-      "lastModifiedDate": "2026-04-13T18:20:46.377Z",
-      "description": "Context was not properly tracked across template branches for JS template literals, leading to possibly incorrect escaping of content when branches were used. Additionally template actions within JS template literals did not properly track the brace depth, leading to incorrect escaping being applied. These issues could cause actions within JS template literals to be incorrectly or improperly escaped, leading to XSS vulnerabilities.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://go.dev/cl/763762",
-          "type": "reference"
-        },
-        {
-          "url": "https://go.dev/issue/78331",
-          "type": "reference"
-        },
-        {
-          "url": "https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU",
-          "type": "reference"
-        },
-        {
-          "url": "https://pkg.go.dev/vuln/GO-2026-4865",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Go standard library",
-          "product": "html/template",
-          "collectionURL": "https://pkg.go.dev",
-          "packageName": "html/template",
-          "versions": [
-            {
-              "version": "0",
-              "lessThan": "1.25.9",
-              "status": "affected",
-              "versionType": "semver"
-            },
-            {
-              "version": "1.26.0-0",
-              "lessThan": "1.26.2",
-              "status": "affected",
-              "versionType": "semver"
-            }
-          ],
-          "programRoutines": [
-            {
-              "name": "context.String"
-            },
-            {
-              "name": "context.mangle"
-            },
-            {
-              "name": "escaper.escapeBranch"
-            },
-            {
-              "name": "Error.Error"
-            },
-            {
-              "name": "HTMLEscaper"
-            },
-            {
-              "name": "JSEscape"
-            },
-            {
-              "name": "JSEscapeString"
-            },
-            {
-              "name": "JSEscaper"
-            },
-            {
-              "name": "ParseFS"
-            },
-            {
-              "name": "ParseFiles"
-            },
-            {
-              "name": "ParseGlob"
-            },
-            {
-              "name": "Template.AddParseTree"
-            },
-            {
-              "name": "Template.Clone"
-            },
-            {
-              "name": "Template.DefinedTemplates"
-            },
-            {
-              "name": "Template.Execute"
-            },
-            {
-              "name": "Template.ExecuteTemplate"
-            },
-            {
-              "name": "Template.Funcs"
-            },
-            {
-              "name": "Template.Parse"
-            },
-            {
-              "name": "Template.ParseFS"
-            },
-            {
-              "name": "Template.ParseFiles"
-            },
-            {
-              "name": "Template.ParseGlob"
-            },
-            {
-              "name": "URLQueryEscaper"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-32282",
-      "publishedDate": "2026-04-08T01:06:55.953Z",
-      "lastModifiedDate": "2026-04-13T18:20:56.456Z",
-      "description": "On Linux, if the target of Root.Chmod is replaced with a symlink while the chmod operation is in progress, Chmod can operate on the target of the symlink, even when the target lies outside the root. The Linux fchmodat syscall silently ignores the AT_SYMLINK_NOFOLLOW flag, which Root.Chmod uses to avoid symlink traversal. Root.Chmod checks its target before acting and returns an error if the target is a symlink lying outside the root, so the impact is limited to cases where the target is replaced with a symlink between the check and operation.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://go.dev/cl/763761",
-          "type": "reference"
-        },
-        {
-          "url": "https://go.dev/issue/78293",
-          "type": "reference"
-        },
-        {
-          "url": "https://groups.google.com/g/golang-announce/c/0uYbvbPZRWU",
-          "type": "reference"
-        },
-        {
-          "url": "https://pkg.go.dev/vuln/GO-2026-4864",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Go standard library",
-          "product": "internal/syscall/unix",
-          "collectionURL": "https://pkg.go.dev",
-          "packageName": "internal/syscall/unix",
-          "versions": [
-            {
-              "version": "0",
-              "lessThan": "1.25.9",
-              "status": "affected",
-              "versionType": "semver"
-            },
-            {
-              "version": "1.26.0-0",
-              "lessThan": "1.26.2",
-              "status": "affected",
-              "versionType": "semver"
-            }
-          ],
-          "platforms": [
-            "linux"
-          ],
-          "programRoutines": [
-            {
-              "name": "Fchmodat"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-61: UNIX Symbolic Link (Symlink) Following"
+        "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
