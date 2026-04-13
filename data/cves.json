@@ -2,11 +2,11 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 1,
-    "last_updated": "2026-04-13T23:00:51.385865",
+    "total_count": 2,
+    "last_updated": "2026-04-13T23:55:20.179663",
     "severity_distribution": {
       "critical": 0,
-      "high": 0,
+      "high": 1,
       "medium": 0,
       "low": 0,
       "none": 1
@@ -14,45 +14,70 @@
   },
   "cves": [
     {
-      "id": "CVE-2026-5086",
-      "publishedDate": "2026-04-13T22:54:53.724Z",
-      "lastModifiedDate": "2026-04-13T22:54:53.724Z",
-      "description": "Crypt::SecretBuffer versions before 0.019 for Perl is suseceptible to timing attacks.\n\nFor example, if Crypt::SecretBuffer was used to store and compare plaintext passwords, then discrepencies in timing could be used to guess the secret password.",
-      "severity": "N/A",
+      "id": "CVE-2026-40164",
+      "publishedDate": "2026-04-13T23:40:12.693Z",
+      "lastModifiedDate": "2026-04-13T23:40:12.693Z",
+      "description": "jq is a command-line JSON processor. Before commit 0c7d133c3c7e37c00b6d46b658a02244fdd3c784, jq used MurmurHash3 with a hardcoded, publicly visible seed (0x432A9843) for all JSON object hash table operations, which allowed an attacker to precompute key collisions offline. By supplying a crafted JSON object (~100 KB) where all keys hashed to the same bucket, hash table lookups degraded from O(1) to O(n), turning any jq expression into an O(n²) operation and causing significant CPU exhaustion. This affected common jq use cases such as CI/CD pipelines, web services, and data processing scripts, and was far more practical to exploit than existing heap overflow issues since it required only a small payload. This issue has been patched in commit 0c7d133c3c7e37c00b6d46b658a02244fdd3c784.",
+      "severity": 7.5,
       "references": [
         {
-          "url": "https://metacpan.org/release/NERDVANA/Crypt-SecretBuffer-0.019/source/Changes",
+          "url": "https://github.com/jqlang/jq/security/advisories/GHSA-wwj8-gxm6-jc29",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/jqlang/jq/commit/0c7d133c3c7e37c00b6d46b658a02244fdd3c784",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "collectionURL": "https://cpan.org/modules",
-          "defaultStatus": "unaffected",
-          "packageName": "Crypt-SecretBuffer",
-          "product": "Crypt::SecretBuffer",
-          "programFiles": [
-            "SecretBuffer.xs"
-          ],
-          "programRoutines": [
-            {
-              "name": "Crypt::SecretBuffer::memcmp"
-            }
-          ],
-          "repo": "https://github.com/nrdvana/perl-Crypt-SecretBuffer",
-          "vendor": "NERDVANA",
+          "vendor": "jqlang",
+          "product": "jq",
           "versions": [
             {
-              "lessThan": "0.019",
-              "status": "affected",
-              "version": "0",
-              "versionType": "custom"
+              "version": "< 0c7d133c3c7e37c00b6d46b658a02244fdd3c784",
+              "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-208 Observable Timing Discrepancy"
+        "CWE-328: Use of Weak Hash",
+        "CWE-407: Inefficient Algorithmic Complexity"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-33948",
+      "publishedDate": "2026-04-13T23:51:04.144Z",
+      "lastModifiedDate": "2026-04-13T23:51:04.144Z",
+      "description": "jq is a command-line JSON processor. Commits before 6374ae0bcdfe33a18eb0ae6db28493b1f34a0a5b contain a vulnerability where CLI input parsing allows validation bypass via embedded NUL bytes. When reading JSON from files or stdin, jq uses strlen() to determine buffer length instead of the actual byte count from fgets(), causing it to truncate input at the first NUL byte and parse only the preceding prefix. This enables an attacker to craft input with a benign JSON prefix before a NUL byte followed by malicious trailing data, where jq validates only the prefix as valid JSON while silently discarding the suffix. Workflows relying on jq to validate untrusted JSON before forwarding it to downstream consumers are susceptible to parser differential attacks, as those consumers may process the full input including the malicious trailing bytes. This issue has been patched by commit 6374ae0bcdfe33a18eb0ae6db28493b1f34a0a5b.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/jqlang/jq/security/advisories/GHSA-32cx-cvvh-2wj9",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/jqlang/jq/commit/6374ae0bcdfe33a18eb0ae6db28493b1f34a0a5b",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "jqlang",
+          "product": "jq",
+          "versions": [
+            {
+              "version": "< 6374ae0bcdfe33a18eb0ae6db28493b1f34a0a5b",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-170: Improper Null Termination",
+        "CWE-20: Improper Input Validation"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
