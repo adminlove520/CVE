@@ -2,211 +2,77 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 2,
-    "last_updated": "2026-04-14T10:21:46.151106",
+    "total_count": 1,
+    "last_updated": "2026-04-14T11:36:12.460744",
     "severity_distribution": {
       "critical": 0,
-      "high": 0,
+      "high": 1,
       "medium": 0,
       "low": 0,
-      "none": 2
+      "none": 0
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-31923",
-      "publishedDate": "2026-04-14T08:38:59.039Z",
-      "lastModifiedDate": "2026-04-14T09:36:04.697Z",
-      "description": "Cleartext Transmission of Sensitive Information vulnerability in Apache APISIX.\n\nThis can occur due to `ssl_verify` in openid-connect plugin configuration being set to false by default.\nThis issue affects Apache APISIX: from 0.7 through 3.15.0.\n\nUsers are recommended to upgrade to version 3.16.0, which fixes the issue.",
-      "severity": "N/A",
+      "id": "CVE-2026-2332",
+      "publishedDate": "2026-04-14T10:59:10.193Z",
+      "lastModifiedDate": "2026-04-14T10:59:10.193Z",
+      "description": "In Eclipse Jetty, the HTTP/1.1 parser is vulnerable to request smuggling when chunk extensions are used, similar to the \"funky chunks\" techniques outlined here:\n  *  https://w4ke.info/2025/06/18/funky-chunks.html\n\n  *  https://w4ke.info/2025/10/29/funky-chunks-2.html\n\n\nJetty terminates chunk extension parsing at \\r\\n inside quoted strings instead of treating this as an error.\n\n\nPOST / HTTP/1.1\nHost: localhost\nTransfer-Encoding: chunked\n\n1;ext=\"val\nX\n0\n\nGET /smuggled HTTP/1.1\n...\n\n\n\n\n\nNote how the chunk extension does not close the double quotes, and it is able to inject a smuggled request.",
+      "severity": 7.4,
       "references": [
         {
-          "url": "https://lists.apache.org/thread/0pjs72l7qj83j3srw1l1toyj24bsgkds",
+          "url": "https://github.com/jetty/jetty.project/security/advisories/GHSA-355h-qmc2-wpwf",
+          "type": "reference"
+        },
+        {
+          "url": "https://gitlab.eclipse.org/security/cve-assignment/-/issues/89",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "unaffected",
-          "product": "Apache APISIX",
-          "vendor": "Apache Software Foundation",
+          "vendor": "Eclipse Foundation",
+          "product": "Eclipse Jetty",
+          "collectionURL": "https://repo.maven.apache.org/maven2",
+          "packageName": "pkg://maven/org.eclipse.jetty/jetty-http",
+          "repo": "https://github.com/jetty/jetty.project",
           "versions": [
             {
-              "lessThanOrEqual": "3.15.0",
               "status": "affected",
-              "version": "0.7",
+              "version": "12.1.0",
+              "lessThanOrEqual": "12.1.6",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "12.0.0",
+              "lessThanOrEqual": "12.0.32",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "11.0.0",
+              "lessThanOrEqual": "11.0.27",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "10.0.0",
+              "lessThanOrEqual": "10.0.27",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "9.4.0",
+              "lessThanOrEqual": "9.4.59",
               "versionType": "semver"
             }
-          ]
+          ],
+          "defaultStatus": "unaffected"
         }
       ],
       "problemType": [
-        "CWE-319 Cleartext Transmission of Sensitive Information"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-32146",
-      "publishedDate": "2026-04-11T12:59:22.911Z",
-      "lastModifiedDate": "2026-04-14T09:24:53.083Z",
-      "description": "Improper path validation vulnerability in the Gleam compiler's handling of git dependencies allows arbitrary file system modification during dependency download.\n\nDependency names from gleam.toml and manifest.toml are incorporated into filesystem paths without sufficient validation or confinement to the intended dependency directory, allowing attacker-controlled paths (via relative traversal such as ../ or absolute paths) to target filesystem locations outside that directory. When resolving git dependencies (e.g. via gleam deps download), the computed path is used for filesystem operations including directory deletion and creation.\n\nThis vulnerability occurs during the dependency resolution and download phase, which is generally expected to be limited to fetching and preparing dependencies within a confined directory. A malicious direct or transitive git dependency can exploit this issue to delete and overwrite arbitrary directories outside the intended dependency directory, including attacker-chosen absolute paths, potentially causing data loss. In some environments, this may be further leveraged to achieve code execution, for example by overwriting git hooks or shell configuration files.\n\nThis issue affects Gleam from 1.9.0-rc1 until 1.15.4.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/gleam-lang/gleam/security/advisories/GHSA-vq5j-55vx-wq8j",
-          "type": "reference"
-        },
-        {
-          "url": "https://cna.erlef.org/cves/CVE-2026-32146.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://osv.dev/vulnerability/EEF-CVE-2026-32146",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/gleam-lang/gleam/commit/1aa5d8e594b0aa240bb213fce6ee19c65e6d5bcf",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/gleam-lang/gleam/commit/2dc0467f822c75de94697a912755d172928ee40a",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "packageName": "gleam",
-          "packageURL": "pkg:sid/gleam.run/gleam",
-          "product": "Gleam",
-          "vendor": "Gleam",
-          "versions": [
-            {
-              "changes": [
-                {
-                  "at": "1.15.4",
-                  "status": "unaffected"
-                }
-              ],
-              "lessThan": "*",
-              "status": "affected",
-              "version": "1.9.0-rc1",
-              "versionType": "semver"
-            }
-          ]
-        },
-        {
-          "collectionURL": "https://github.com",
-          "defaultStatus": "unaffected",
-          "packageName": "gleam-lang/gleam",
-          "packageURL": "pkg:github/gleam-lang/gleam",
-          "product": "Gleam",
-          "repo": "https://github.com/gleam-lang/gleam",
-          "vendor": "Gleam",
-          "versions": [
-            {
-              "changes": [
-                {
-                  "at": "1.15.4",
-                  "status": "unaffected"
-                }
-              ],
-              "lessThan": "*",
-              "status": "affected",
-              "version": "1.9.0-rc1",
-              "versionType": "semver"
-            },
-            {
-              "changes": [
-                {
-                  "at": "92aae3913570e8d8962f6399404777d313045bfa",
-                  "status": "unaffected"
-                },
-                {
-                  "at": "2dc0467f822c75de94697a912755d172928ee40a",
-                  "status": "unaffected"
-                }
-              ],
-              "lessThan": "*",
-              "status": "affected",
-              "version": "a4fde22445ab8e5cc79c2ff48971616cb570702c",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "collectionURL": "https://ghcr.io",
-          "defaultStatus": "unaffected",
-          "packageName": "gleam-lang/gleam",
-          "packageURL": "pkg:oci/gleam?repository_url=ghcr.io/gleam-lang",
-          "product": "Gleam",
-          "vendor": "Gleam",
-          "versions": [
-            {
-              "lessThan": "v1.15.4-elixir",
-              "status": "affected",
-              "version": "v1.9.0-rc1-elixir",
-              "versionType": "other"
-            },
-            {
-              "lessThan": "v1.15.4-erlang",
-              "status": "affected",
-              "version": "v1.9.0-rc1-erlang",
-              "versionType": "other"
-            },
-            {
-              "lessThan": "v1.15.4-node",
-              "status": "affected",
-              "version": "v1.9.0-rc1-node",
-              "versionType": "other"
-            },
-            {
-              "lessThan": "v1.15.4-node-slim",
-              "status": "affected",
-              "version": "v1.9.0-rc1-node-slim",
-              "versionType": "other"
-            },
-            {
-              "lessThan": "v1.15.4-elixir-slim",
-              "status": "affected",
-              "version": "v1.9.0-rc1-elixir-slim",
-              "versionType": "other"
-            },
-            {
-              "lessThan": "v1.15.4-erlang-slim",
-              "status": "affected",
-              "version": "v1.9.0-rc1-erlang-slim",
-              "versionType": "other"
-            },
-            {
-              "lessThan": "v1.15.4-erlang-alpine",
-              "status": "affected",
-              "version": "v1.9.0-rc1-erlang-alpine",
-              "versionType": "other"
-            },
-            {
-              "lessThan": "v1.15.4-elixir-alpine",
-              "status": "affected",
-              "version": "v1.9.0-rc1-elixir-alpine",
-              "versionType": "other"
-            },
-            {
-              "lessThan": "v1.15.4-node-alpine",
-              "status": "affected",
-              "version": "v1.9.0-rc1-node-alpine",
-              "versionType": "other"
-            },
-            {
-              "lessThan": "v1.15.4-scratch",
-              "status": "affected",
-              "version": "v1.9.0-rc1-scratch",
-              "versionType": "other"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-22 Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+        "CWE-444 Inconsistent interpretation of HTTP requests ('HTTP Request/Response smuggling')"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
