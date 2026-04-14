@@ -2,160 +2,114 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 4,
-    "last_updated": "2026-04-14T21:34:48.048784",
+    "total_count": 3,
+    "last_updated": "2026-04-14T22:28:33.832117",
     "severity_distribution": {
       "critical": 0,
       "high": 2,
       "medium": 0,
-      "low": 0,
-      "none": 2
+      "low": 1,
+      "none": 0
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-34160",
-      "publishedDate": "2026-04-14T21:09:36.832Z",
-      "lastModifiedDate": "2026-04-14T21:09:36.832Z",
-      "description": "Chamilo LMS is an open-source learning management system. In versions prior to 2.0.0-RC.3, the PENS (Package Exchange Notification Services) plugin endpoint at public/plugin/Pens/pens.php is accessible without authentication and accepts a user-controlled package-url parameter that the server fetches using curl without filtering private or internal IP addresses, enabling unauthenticated Server-Side Request Forgery (SSRF). An attacker can exploit this to probe internal network services, access cloud metadata endpoints (such as 169.254.169.254) to steal IAM credentials and sensitive instance metadata, or trigger state-changing operations on internal services via the receipt and alerts callback parameters. No authentication is required to exploit either SSRF vector, significantly increasing the attack surface. This issue has been fixed in version 2.0.0-RC.3.",
-      "severity": 8.6,
+      "id": "CVE-2026-33023",
+      "publishedDate": "2026-04-14T22:05:31.493Z",
+      "lastModifiedDate": "2026-04-14T22:05:31.493Z",
+      "description": "libsixel is a SIXEL encoder/decoder implementation derived from kmiya's sixel. In versions 1.8.7 and prior, when built with the --with-gdk-pixbuf2 option, a use-after-free vulnerability exists in load_with_gdkpixbuf() in loader.c. The cleanup path manually frees the sixel_frame_t object and its internal buffers without consulting the reference count, even though the object was created via the refcounted constructor sixel_frame_new() and exposed to the public callback. A callback that calls sixel_frame_ref(frame) to retain a logically valid reference will hold a dangling pointer after sixel_helper_load_image_file() returns, and any subsequent access to the frame or its fields triggers a use-after-free confirmed by AddressSanitizer. The root cause is a consistency failure between two cleanup strategies in the same codebase: sixel_frame_unref() is used in load_with_builtin() but raw free() is used in load_with_gdkpixbuf(). An attacker supplying a crafted image to any application built against libsixel with gdk-pixbuf2 support can trigger this reliably, potentially leading to information disclosure, memory corruption, or code execution. This issue has been fixed in version 1.8.7-r1.",
+      "severity": 7.8,
       "references": [
         {
-          "url": "https://github.com/chamilo/chamilo-lms/security/advisories/GHSA-g2xj-4cch-j276",
+          "url": "https://github.com/saitoha/libsixel/security/advisories/GHSA-hr25-g2j6-qjw6",
           "type": "reference"
         },
         {
-          "url": "https://github.com/chamilo/chamilo-lms/commit/de4058d76fac2413afd023b1ec942e8e79579011",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/chamilo/chamilo-lms/releases/tag/v2.0.0-RC.3",
+          "url": "https://github.com/saitoha/libsixel/releases/tag/v1.8.7-r1",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "chamilo",
-          "product": "chamilo-lms",
+          "vendor": "saitoha",
+          "product": "libsixel",
           "versions": [
             {
-              "version": "< 2.0-RC.3",
+              "version": "< 1.8.7-r1",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-306: Missing Authentication for Critical Function",
-        "CWE-918: Server-Side Request Forgery (SSRF)"
+        "CWE-416: Use After Free"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-33715",
-      "publishedDate": "2026-04-14T21:05:35.043Z",
-      "lastModifiedDate": "2026-04-14T21:05:35.043Z",
-      "description": "Chamilo LMS is an open-source learning management system. In version 2.0-RC.2, the file public/main/inc/ajax/install.ajax.php is accessible without authentication on fully installed instances because, unlike other AJAX endpoints, it does not include the global.inc.php file that performs authentication and installation-completed checks. Its test_mailer action accepts an arbitrary Symfony Mailer DSN string from POST data and uses it to connect to an attacker-specified SMTP server, enabling Server-Side Request Forgery (SSRF) into internal networks via the SMTP protocol. An unauthenticated attacker can also abuse this to weaponize the Chamilo server as an open email relay for phishing and spam campaigns, with emails appearing to originate from the server's IP address. Additionally, error responses from failed SMTP connections may disclose information about internal network topology and running services. This issue has been fixed in version 2.0.0-RC.3.",
-      "severity": 7.2,
+      "id": "CVE-2026-33021",
+      "publishedDate": "2026-04-14T21:57:22.817Z",
+      "lastModifiedDate": "2026-04-14T21:57:22.817Z",
+      "description": "libsixel is a SIXEL encoder/decoder implementation derived from kmiya's sixel. Versions 1.8.7 and prior contain a use-after-free vulnerability in sixel_encoder_encode_bytes() because sixel_frame_init() stores the caller-owned pixel buffer pointer directly in frame->pixels without making a defensive copy. When a resize operation is triggered, sixel_frame_convert_to_rgb888() unconditionally frees this caller-owned buffer and replaces it with a new internal allocation, leaving the caller with a dangling pointer. Any subsequent access to the original buffer by the caller constitutes a use-after-free, confirmed by AddressSanitizer. An attacker who controls incoming frames can trigger this bug repeatedly and predictably, resulting in a reliable crash with potential for code execution. This issue has been fixed in version 1.8.7-r1.",
+      "severity": 7.3,
       "references": [
         {
-          "url": "https://github.com/chamilo/chamilo-lms/security/advisories/GHSA-mxc9-9335-45mc",
+          "url": "https://github.com/saitoha/libsixel/security/advisories/GHSA-j6m5-2cc7-3whc",
           "type": "reference"
         },
         {
-          "url": "https://github.com/chamilo/chamilo-lms/releases/tag/v2.0.0-RC.3",
+          "url": "https://github.com/saitoha/libsixel/releases/tag/v1.8.7-r1",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "chamilo",
-          "product": "chamilo-lms",
+          "vendor": "saitoha",
+          "product": "libsixel",
           "versions": [
             {
-              "version": ">= 2.0-RC.2, < 2.0-RC.3",
+              "version": "< 1.8.7-r1",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-306: Missing Authentication for Critical Function",
-        "CWE-918: Server-Side Request Forgery (SSRF)"
+        "CWE-416: Use After Free"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-34161",
-      "publishedDate": "2026-04-14T21:12:48.128Z",
-      "lastModifiedDate": "2026-04-14T21:12:48.128Z",
-      "description": "Chamilo LMS is an open-source learning management system. In versions prior to 2.0.0-RC.3, a Stored Cross-Site Scripting (XSS) vulnerability exists in the social post attachment upload functionality, where an authenticated user can upload a malicious HTML file containing JavaScript via the /api/social_post_attachments endpoint. The uploaded file is served back from the application at the generated contentUrl without sanitization, content type restrictions, or a Content-Disposition: attachment header, causing the JavaScript to execute in the browser within the application's origin. Because the payload is stored server-side and runs in the trusted origin, an attacker can perform session hijacking, account takeover, privilege escalation (if an admin views the link), and arbitrary actions on behalf of the victim. This issue has been fixed in version 2.0.0-RC.3.",
-      "severity": "N/A",
+      "id": "CVE-2026-34454",
+      "publishedDate": "2026-04-14T22:10:37.901Z",
+      "lastModifiedDate": "2026-04-14T22:14:00.972Z",
+      "description": "OAuth2 Proxy is a reverse proxy that provides authentication using OAuth2 providers. A regression introduced in 7.11.0 prevents OAuth2 Proxy from clearing the session cookie when rendering the sign-in page. In deployments that rely on the sign-in page as part of their logout flow, a user may be shown the sign-in page while the existing session cookie remains valid, meaning the browser session is not actually logged out. On shared workstations or devices, a subsequent user could continue to use the previous user's authenticated session. Deployments that use a dedicated logout/sign-out endpoint to terminate sessions are not affected. This issue is fixed in 7.15.2",
+      "severity": 3.5,
       "references": [
         {
-          "url": "https://github.com/chamilo/chamilo-lms/security/advisories/GHSA-273p-jw9w-3g22",
+          "url": "https://github.com/oauth2-proxy/oauth2-proxy/security/advisories/GHSA-f24x-5g9q-753f",
           "type": "reference"
         },
         {
-          "url": "https://github.com/chamilo/chamilo-lms/commit/7c4965e48769d1d06413836429e386816a465c7f",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/chamilo/chamilo-lms/commit/da671d66a146887be3a16eabc5dcf0a92c55f7da",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/chamilo/chamilo-lms/releases/tag/v2.0.0-RC.3",
+          "url": "https://github.com/oauth2-proxy/oauth2-proxy/releases/tag/v7.15.2",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "chamilo",
-          "product": "chamilo-lms",
+          "vendor": "oauth2-proxy",
+          "product": "oauth2-proxy",
           "versions": [
             {
-              "version": "< 2.0.0-RC.3",
+              "version": ">= 7.11.0, < 7.15.2",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-33714",
-      "publishedDate": "2026-04-14T21:00:19.259Z",
-      "lastModifiedDate": "2026-04-14T21:00:19.259Z",
-      "description": "Chamilo is an open-source learning management system (LMS). Version 2.0.0-RC.2 contains a SQL Injection vulnerability in the statistics AJAX endpoint, which is an incomplete fix for CVE-2026-30881. While CVE-2026-30881 was patched by applying Security::remove_XSS() to the date_start and date_end parameters in the get_user_registration_by_month action, the same parameters remain unsanitized in the users_active action within the same file (public/main/inc/ajax/statistics.ajax.php), where they are directly interpolated into a SQL query. An authenticated admin can exploit this to perform time-based blind SQL injection, enabling extraction of arbitrary data from the database. This issue has been fixed in version 2.0.0.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/chamilo/chamilo-lms/security/advisories/GHSA-w8c4-c7r8-qgw2",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/chamilo/chamilo-lms/releases/tag/v2.0.0",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "chamilo",
-          "product": "chamilo-lms",
-          "versions": [
-            {
-              "version": ">= 2.0.0-RC.2, < 2.0.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+        "CWE-613: Insufficient Session Expiration",
+        "CWE-384: Session Fixation"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
