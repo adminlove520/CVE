@@ -2,54 +2,80 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 1,
-    "last_updated": "2026-04-16T20:28:29.695471",
+    "total_count": 2,
+    "last_updated": "2026-04-16T21:24:02.113077",
     "severity_distribution": {
       "critical": 0,
-      "high": 1,
+      "high": 0,
       "medium": 0,
       "low": 0,
-      "none": 0
+      "none": 2
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-41035",
-      "publishedDate": "2026-04-16T06:53:05.237Z",
-      "lastModifiedDate": "2026-04-16T20:16:00.985Z",
-      "description": "In rsync 3.0.1 through 3.4.1, receive_xattr relies on an untrusted length value during a qsort call, leading to a receiver use-after-free. The victim must run rsync with -X (aka --xattrs). On Linux, many (but not all) common configurations are vulnerable. Non-Linux platforms are more widely vulnerable.",
-      "severity": 7.4,
+      "id": "CVE-2026-40901",
+      "publishedDate": "2026-04-16T20:57:45.978Z",
+      "lastModifiedDate": "2026-04-16T20:57:45.978Z",
+      "description": "DataEase is an open-source data visualization and analytics platform. Versions 2.10.20 and below ship the legacy velocity-1.7.jar, which pulls in commons-collections-3.2.1.jar containing the InvokerTransformer deserialization gadget chain. Quartz 2.3.2, also bundled in the application, deserializes job data BLOBs from the qrtz_job_details table using ObjectInputStream with no deserialization filter or class allowlist. An authenticated attacker who can write to the Quartz job table, such as through the previously described SQL injection in previewSql, can replace a scheduled job's JOB_DATA with a malicious CommonsCollections6 gadget chain payload. When the Quartz cron trigger fires, the payload is deserialized and executes arbitrary commands as root inside the container, achieving full remote code execution. This issue has been fixed in version 2.10.21.",
+      "severity": "N/A",
       "references": [
         {
-          "url": "https://www.openwall.com/lists/oss-security/2026/04/16/2",
+          "url": "https://github.com/dataease/dataease/security/advisories/GHSA-gm5q-g72w-c466",
           "type": "reference"
         },
         {
-          "url": "https://github.com/RsyncProject/rsync/releases",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/RsyncProject/rsync/issues/871",
+          "url": "https://github.com/dataease/dataease/releases/tag/v2.10.21",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "unknown",
-          "product": "rsync",
-          "vendor": "Samba",
+          "vendor": "dataease",
+          "product": "dataease",
           "versions": [
             {
-              "lessThanOrEqual": "3.4.1",
-              "status": "affected",
-              "version": "3.0.1",
-              "versionType": "semver"
+              "version": "< 2.10.21",
+              "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-130 Improper Handling of Length Parameter Inconsistency"
+        "CWE-502: Deserialization of Untrusted Data"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-40900",
+      "publishedDate": "2026-04-16T20:53:27.788Z",
+      "lastModifiedDate": "2026-04-16T20:53:27.788Z",
+      "description": "DataEase is an open-source data visualization and analytics platform. Versions 2.10.20 and below contain a SQL injection vulnerability in the /de2api/datasetData/previewSql endpoint. The user-supplied SQL is wrapped in a subquery without validation that the input is a single SELECT statement. Combined with the JDBC blocklist bypass that allows enabling allowMultiQueries=true, an attacker can break out of the subquery and execute arbitrary stacked SQL statements, including UPDATE and other write operations, against the connected database. An authenticated attacker with access to valid datasource credentials can achieve full read and write access to the underlying database. This issue has been fixed in version 2.10.21.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/dataease/dataease/security/advisories/GHSA-vqxf-84ph-j3vx",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/dataease/dataease/releases/tag/v2.10.21",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "dataease",
+          "product": "dataease",
+          "versions": [
+            {
+              "version": "< 2.10.21",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
