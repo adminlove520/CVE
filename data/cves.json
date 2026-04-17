@@ -2,94 +2,136 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 2,
-    "last_updated": "2026-04-17T21:58:55.092878",
+    "total_count": 4,
+    "last_updated": "2026-04-17T22:56:07.010938",
     "severity_distribution": {
       "critical": 0,
-      "high": 1,
-      "medium": 0,
+      "high": 0,
+      "medium": 3,
       "low": 0,
       "none": 1
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-40474",
-      "publishedDate": "2026-04-17T21:39:03.677Z",
-      "lastModifiedDate": "2026-04-17T21:39:03.677Z",
-      "description": "wger is a free, open-source workout and fitness manager. In versions 2.5 and below, the GymConfigUpdateView declares permission_required = 'config.change_gymconfig' but inherits WgerFormMixin instead of WgerPermissionMixin, so the permission is never enforced at runtime. Since GymConfig is an ownerless singleton, any authenticated user can modify the global gym configuration, triggering save() side effects that bulk-update user profile gym assignments — a vertical privilege escalation to installation-wide configuration control. This issue is fixed in version 2.5.",
-      "severity": 7.6,
+      "id": "CVE-2026-2434",
+      "publishedDate": "2026-04-17T22:27:13.525Z",
+      "lastModifiedDate": "2026-04-17T22:27:13.525Z",
+      "description": "The Pz-LinkCard plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the 'blogcard' shortcode attributes in all versions up to, and including, 2.5.8.1 due to insufficient input sanitization and output escaping. This makes it possible for authenticated attackers, with Contributor-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page.",
+      "severity": 6.4,
       "references": [
         {
-          "url": "https://github.com/wger-project/wger/security/advisories/GHSA-xppv-4jrx-qf8m",
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/687ffac2-1f07-4adb-ba12-5f2ea357ea7e?source=cve",
           "type": "reference"
         },
         {
-          "url": "https://github.com/wger-project/wger/commit/47ee5af93b3ced24b9f94b0a8b9296b50bc9523f",
+          "url": "https://plugins.trac.wordpress.org/browser/pz-linkcard/tags/2.5.8/pz-linkcard.php#L442",
           "type": "reference"
         },
         {
-          "url": "https://github.com/wger-project/wger/releases/tag/2.5",
+          "url": "https://plugins.trac.wordpress.org/browser/pz-linkcard/tags/2.5.8/pz-linkcard.php#L636",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/pz-linkcard/trunk/pz-linkcard.php#L636",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "wger-project",
-          "product": "wger",
+          "vendor": "poporon",
+          "product": "Pz-LinkCard",
           "versions": [
             {
-              "version": "< 2.5",
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "2.5.8.1",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-40479",
+      "publishedDate": "2026-04-17T22:31:29.930Z",
+      "lastModifiedDate": "2026-04-17T22:31:29.930Z",
+      "description": "Kimai is an open-source time tracking application. In versions 1.16.3 through 2.52.0, the escapeForHtml() function in KimaiEscape.js does not escape double quote or single quote characters. When a user's profile alias is inserted into an HTML attribute context via the team member form prototype and rendered through innerHTML, this incomplete escaping allows HTML attribute injection. An authenticated user with ROLE_USER privileges can store a malicious alias that executes JavaScript in the browser of any administrator viewing the team form, resulting in stored XSS with privilege escalation. This issue has been fixed in version 2.53.0.",
+      "severity": 5.4,
+      "references": [
+        {
+          "url": "https://github.com/kimai/kimai/security/advisories/GHSA-g82g-m9vx-vhjg",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/kimai/kimai/releases/tag/2.53.0",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "kimai",
+          "product": "kimai",
+          "versions": [
+            {
+              "version": ">= 1.16.3, < 2.53.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-284: Improper Access Control",
-        "CWE-862: Missing Authorization"
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-5720",
-      "publishedDate": "2026-04-17T21:39:54.818Z",
-      "lastModifiedDate": "2026-04-17T21:39:54.818Z",
-      "description": "miniupnpd contains an integer underflow vulnerability in SOAPAction header parsing that allows remote attackers to cause a denial of service or information disclosure by sending a malformed SOAPAction header with a single quote. Attackers can trigger an out-of-bounds memory read by exploiting improper length validation in ParseHttpHeaders(), where the parsed length underflows to a large unsigned value when passed to memchr(), causing the process to scan memory far beyond the allocated HTTP request buffer.",
-      "severity": "N/A",
+      "id": "CVE-2026-40486",
+      "publishedDate": "2026-04-17T22:35:53.543Z",
+      "lastModifiedDate": "2026-04-17T22:35:53.543Z",
+      "description": "Kimai is an open-source time tracking application. In versions 2.52.0 and below, the User Preferences API endpoint (PATCH /api/users/{id}/preferences) applies submitted preference values without checking the isEnabled() flag on preference objects. Although the hourly_rate and internal_rate fields are correctly marked as disabled for users lacking the hourly-rate role permission, the API ignores this restriction and saves the values directly. Any authenticated user can modify their own billing rates through this endpoint, resulting in unauthorized financial tampering affecting invoices and timesheet calculations. This issue has been fixed in version 2.53.0.",
+      "severity": 4.3,
       "references": [
         {
-          "url": "https://github.com/miniupnp/miniupnp/",
+          "url": "https://github.com/kimai/kimai/security/advisories/GHSA-qh43-xrjm-4ggp",
           "type": "reference"
         },
         {
-          "url": "https://github.com/miniupnp/miniupnp/commit/a0ee71e9fa66b60052bb3d2cf84380b79db3f8c8",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/miniupnpd-integer-underflow-soapaction-header-parsing",
+          "url": "https://github.com/kimai/kimai/releases/tag/2.53.0",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "miniupnp project",
-          "product": "miniupnpd",
+          "vendor": "kimai",
+          "product": "kimai",
           "versions": [
             {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "2.3.10",
-              "versionType": "semver"
+              "version": "< 2.53.0",
+              "status": "affected"
             }
-          ],
-          "defaultStatus": "unknown"
+          ]
         }
       ],
       "problemType": [
-        "CWE-191: Integer Underflow (Wrap or Wraparound)",
-        "CWE-125: Out-of-bounds Read"
+        "CWE-915: Improperly Controlled Modification of Dynamically-Determined Object Attributes"
       ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-5250",
+      "publishedDate": "2026-04-17T22:56:05.277862+00:00",
+      "lastModifiedDate": "2026-04-17T22:21:51.917Z",
+      "description": "",
+      "severity": "N/A",
+      "references": [],
+      "affected": [],
+      "problemType": [],
       "fix_suggestion": "无法生成修复建议"
     }
   ]
