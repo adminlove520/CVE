@@ -2,50 +2,97 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 4,
-    "last_updated": "2026-04-17T22:56:07.010938",
+    "total_count": 6,
+    "last_updated": "2026-04-17T23:50:17.686022",
     "severity_distribution": {
-      "critical": 0,
-      "high": 0,
+      "critical": 1,
+      "high": 1,
       "medium": 3,
-      "low": 0,
-      "none": 1
+      "low": 1,
+      "none": 0
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-2434",
-      "publishedDate": "2026-04-17T22:27:13.525Z",
-      "lastModifiedDate": "2026-04-17T22:27:13.525Z",
-      "description": "The Pz-LinkCard plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the 'blogcard' shortcode attributes in all versions up to, and including, 2.5.8.1 due to insufficient input sanitization and output escaping. This makes it possible for authenticated attackers, with Contributor-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page.",
-      "severity": 6.4,
+      "id": "CVE-2026-40484",
+      "publishedDate": "2026-04-17T23:25:06.319Z",
+      "lastModifiedDate": "2026-04-17T23:25:06.319Z",
+      "description": "ChurchCRM is an open-source church management system. In versions prior to 7.2.0, the database backup restore functionality extracts uploaded archive contents and copies files from the Images/ directory into the web-accessible document root using recursiveCopyDirectory(), which performs no file extension filtering. An authenticated administrator can upload a crafted backup archive containing a PHP webshell inside the Images/ directory, which is then written to a publicly accessible path and executable via HTTP requests, resulting in remote code execution as the web server user. The restore endpoint also lacks CSRF token validation, enabling exploitation through cross-site request forgery targeting an authenticated administrator. This issue has been fixed in version 7.2.0.",
+      "severity": 9.1,
       "references": [
         {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/687ffac2-1f07-4adb-ba12-5f2ea357ea7e?source=cve",
+          "url": "https://github.com/ChurchCRM/CRM/security/advisories/GHSA-2932-77f9-62fx",
           "type": "reference"
         },
         {
-          "url": "https://plugins.trac.wordpress.org/browser/pz-linkcard/tags/2.5.8/pz-linkcard.php#L442",
+          "url": "https://github.com/ChurchCRM/CRM/pull/8610",
           "type": "reference"
         },
         {
-          "url": "https://plugins.trac.wordpress.org/browser/pz-linkcard/tags/2.5.8/pz-linkcard.php#L636",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/pz-linkcard/trunk/pz-linkcard.php#L636",
+          "url": "https://github.com/ChurchCRM/CRM/commit/68be1d12bc4cc1429575ae797ef05efe47030d39",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "poporon",
-          "product": "Pz-LinkCard",
+          "vendor": "ChurchCRM",
+          "product": "CRM",
+          "versions": [
+            {
+              "version": "< 7.2.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-269: Improper Privilege Management",
+        "CWE-434: Unrestricted Upload of File with Dangerous Type",
+        "CWE-552: Files or Directories Accessible to External Parties"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-2262",
+      "publishedDate": "2026-04-17T23:26:48.863Z",
+      "lastModifiedDate": "2026-04-17T23:26:48.863Z",
+      "description": "The Easy Appointments plugin for WordPress is vulnerable to Sensitive Information Exposure in all versions up to, and including, 3.12.21 via the `/wp-json/wp/v2/eablocks/ea_appointments/` REST API endpoint. This is due to the endpoint being registered with `'permission_callback' => '__return_true'`, which allows access without any authentication or authorization checks. This makes it possible for unauthenticated attackers to extract sensitive customer appointment data including full names, email addresses, phone numbers, IP addresses, appointment descriptions, and pricing information.",
+      "severity": 7.5,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/e681aa8e-522e-4092-aa1f-8ada3097c8d6?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/easy-appointments/tags/3.12.19/ea-blocks/ea-blocks.php#L190",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/easy-appointments/trunk/ea-blocks/ea-blocks.php#L190",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/easy-appointments/tags/3.12.19/ea-blocks/ea-blocks.php#L141",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset/3485692/easy-appointments/trunk/ea-blocks/ea-blocks.php",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset?old_path=%2Feasy-appointments/tags/3.12.21&new_path=%2Feasy-appointments/tags/3.12.22",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "easyappointments",
+          "product": "Easy Appointments",
           "versions": [
             {
               "version": "0",
               "status": "affected",
-              "lessThanOrEqual": "2.5.8.1",
+              "lessThanOrEqual": "3.12.21",
               "versionType": "semver"
             }
           ],
@@ -53,85 +100,150 @@
         }
       ],
       "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+        "CWE-200 Exposure of Sensitive Information to an Unauthorized Actor"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-40479",
-      "publishedDate": "2026-04-17T22:31:29.930Z",
-      "lastModifiedDate": "2026-04-17T22:31:29.930Z",
-      "description": "Kimai is an open-source time tracking application. In versions 1.16.3 through 2.52.0, the escapeForHtml() function in KimaiEscape.js does not escape double quote or single quote characters. When a user's profile alias is inserted into an HTML attribute context via the team member form prototype and rendered through innerHTML, this incomplete escaping allows HTML attribute injection. An authenticated user with ROLE_USER privileges can store a malicious alias that executes JavaScript in the browser of any administrator viewing the team form, resulting in stored XSS with privilege escalation. This issue has been fixed in version 2.53.0.",
+      "id": "CVE-2026-40483",
+      "publishedDate": "2026-04-17T23:20:44.900Z",
+      "lastModifiedDate": "2026-04-17T23:20:44.900Z",
+      "description": "ChurchCRM is an open-source church management system. In versions prior to 7.2.0, the Pledge Editor renders donation comment values directly into HTML input value attributes without escaping via htmlspecialchars(). An authenticated user with Finance permissions can inject HTML attribute-breaking characters and event handlers into the comment field, which are stored in the database and execute in the browser of any user who subsequently opens the pledge record for editing, resulting in stored XSS. This issue has been fixed in version 7.2.0.",
       "severity": 5.4,
       "references": [
         {
-          "url": "https://github.com/kimai/kimai/security/advisories/GHSA-g82g-m9vx-vhjg",
+          "url": "https://github.com/ChurchCRM/CRM/security/advisories/GHSA-wjmf-w8gj-rx7g",
           "type": "reference"
         },
         {
-          "url": "https://github.com/kimai/kimai/releases/tag/2.53.0",
+          "url": "https://github.com/ChurchCRM/CRM/pull/8609",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/ChurchCRM/CRM/commit/b3da72a2b35f9c600e340a9dfd35e7792ff4f899",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "kimai",
-          "product": "kimai",
+          "vendor": "ChurchCRM",
+          "product": "CRM",
           "versions": [
             {
-              "version": ">= 1.16.3, < 2.53.0",
+              "version": "< 7.2.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
+        "CWE-116: Improper Encoding or Escaping of Output"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-40486",
-      "publishedDate": "2026-04-17T22:35:53.543Z",
-      "lastModifiedDate": "2026-04-17T22:35:53.543Z",
-      "description": "Kimai is an open-source time tracking application. In versions 2.52.0 and below, the User Preferences API endpoint (PATCH /api/users/{id}/preferences) applies submitted preference values without checking the isEnabled() flag on preference objects. Although the hourly_rate and internal_rate fields are correctly marked as disabled for users lacking the hourly-rate role permission, the API ignores this restriction and saves the values directly. Any authenticated user can modify their own billing rates through this endpoint, resulting in unauthorized financial tampering affecting invoices and timesheet calculations. This issue has been fixed in version 2.53.0.",
-      "severity": 4.3,
+      "id": "CVE-2026-40485",
+      "publishedDate": "2026-04-17T23:29:35.884Z",
+      "lastModifiedDate": "2026-04-17T23:29:35.884Z",
+      "description": "ChurchCRM is an open-source church management system. In versions prior to 7.2.0, the public API login endpoint (/api/public/user/login) returns distinguishable HTTP response codes based on whether a username exists: 404 for non-existent users and 401 for valid users with incorrect passwords. An unauthenticated attacker can exploit this difference to enumerate valid usernames, with no rate limiting or account lockout to impede the process. This issue has been fixed in version 7.2.0.",
+      "severity": 5.3,
       "references": [
         {
-          "url": "https://github.com/kimai/kimai/security/advisories/GHSA-qh43-xrjm-4ggp",
+          "url": "https://github.com/ChurchCRM/CRM/security/advisories/GHSA-x2qh-xmhq-4jpx",
           "type": "reference"
         },
         {
-          "url": "https://github.com/kimai/kimai/releases/tag/2.53.0",
+          "url": "https://github.com/ChurchCRM/CRM/pull/8607",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/ChurchCRM/CRM/commit/214694eb83778e1f5e52b3dfa2a99d0e965c1850",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "kimai",
-          "product": "kimai",
+          "vendor": "ChurchCRM",
+          "product": "CRM",
           "versions": [
             {
-              "version": "< 2.53.0",
+              "version": "< 7.2.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-915: Improperly Controlled Modification of Dynamically-Determined Object Attributes"
+        "CWE-307: Improper Restriction of Excessive Authentication Attempts",
+        "CWE-204: Observable Response Discrepancy"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-5250",
-      "publishedDate": "2026-04-17T22:56:05.277862+00:00",
-      "lastModifiedDate": "2026-04-17T22:21:51.917Z",
-      "description": "",
-      "severity": "N/A",
-      "references": [],
-      "affected": [],
-      "problemType": [],
+      "id": "CVE-2026-40335",
+      "publishedDate": "2026-04-17T23:19:16.935Z",
+      "lastModifiedDate": "2026-04-17T23:19:16.935Z",
+      "description": "libgphoto2 is a camera access and control library. Versions up to and including 2.5.33 have an out-of-bounds read in `ptp_unpack_DPV()` in `camlibs/ptp2/ptp-pack.c` (lines 622–629). The UINT128 and INT128 cases advance `*offset += 16` without verifying that 16 bytes remain in the buffer. The entry check at line 609 only guarantees `*offset < total` (at least 1 byte available), leaving up to 15 bytes unvalidated. Commit 433bde9888d70aa726e32744cd751d7dbe94379a patches the issue.",
+      "severity": 5.2,
+      "references": [
+        {
+          "url": "https://github.com/gphoto/libgphoto2/security/advisories/GHSA-g4g5-c2x9-cqfj",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/gphoto/libgphoto2/commit/433bde9888d70aa726e32744cd751d7dbe94379a",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "gphoto",
+          "product": "libgphoto2",
+          "versions": [
+            {
+              "version": "<= 2.5.33",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-125: Out-of-bounds Read"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-40336",
+      "publishedDate": "2026-04-17T23:27:42.868Z",
+      "lastModifiedDate": "2026-04-17T23:27:42.868Z",
+      "description": "libgphoto2 is a camera access and control library. Versions up to and including 2.5.33 have a memory leak in `ptp_unpack_Sony_DPD()` in `camlibs/ptp2/ptp-pack.c` (lines 884–885). When processing a secondary enumeration list (introduced in 2024+ Sony cameras), the function overwrites dpd->FORM.Enum.SupportedValue with a new calloc() without freeing the previous allocation from line 857. The original array and any string values it contains are leaked on every property descriptor parse. Commit 404ff02c75f3cb280196fc260a63c4d26cf1a8f6 fixes the issue.",
+      "severity": 2.4,
+      "references": [
+        {
+          "url": "https://github.com/gphoto/libgphoto2/security/advisories/GHSA-g8xw-p5wj-mrxv",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/gphoto/libgphoto2/commit/404ff02c75f3cb280196fc260a63c4d26cf1a8f6",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "gphoto",
+          "product": "libgphoto2",
+          "versions": [
+            {
+              "version": "<= 2.5.33",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-401: Missing Release of Memory after Effective Lifetime"
+      ],
       "fix_suggestion": "无法生成修复建议"
     }
   ]
