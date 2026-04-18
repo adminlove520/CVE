@@ -2,40 +2,44 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 6,
-    "last_updated": "2026-04-18T01:46:47.407783",
+    "total_count": 23,
+    "last_updated": "2026-04-18T04:18:39.772833",
     "severity_distribution": {
       "critical": 0,
-      "high": 2,
-      "medium": 3,
-      "low": 0,
-      "none": 1
+      "high": 3,
+      "medium": 9,
+      "low": 2,
+      "none": 9
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-40487",
-      "publishedDate": "2026-04-18T01:19:06.588Z",
-      "lastModifiedDate": "2026-04-18T01:19:06.588Z",
-      "description": "Postiz is an AI social media scheduling tool. Prior to version 2.21.6, a file upload validation bypass allows any authenticated user to upload arbitrary HTML, SVG, or other executable file types to the server by spoofing the `Content-Type` header. The uploaded files are then served by nginx with a Content-Type derived from their original extension (`text/html`, `image/svg+xml`), enabling Stored Cross-Site Scripting (XSS) in the context of the application's origin. This can lead to session riding, account takeover, and full compromise of other users' accounts. Version 2.21.6 contains a fix.",
-      "severity": 8.9,
+      "id": "CVE-2026-40262",
+      "publishedDate": "2026-04-16T23:51:38.679Z",
+      "lastModifiedDate": "2026-04-18T02:51:02.474Z",
+      "description": "Note Mark is an open-source note-taking application. In versions 0.19.1 and prior, the asset delivery handler serves uploaded files inline and relies on magic-byte detection for content type, which does not identify text-based formats such as HTML, SVG, or XHTML. These files are served with an empty Content-Type, no X-Content-Type-Options: nosniff header, and inline disposition, allowing browsers to sniff and render active content. An authenticated user can upload an HTML or SVG file containing JavaScript as a note asset, and when a victim navigates to the asset URL, the script executes under the application's origin with access to the victim's authenticated session and API actions. This issue has been fixed in version 0.19.2.",
+      "severity": 8.7,
       "references": [
         {
-          "url": "https://github.com/gitroomhq/postiz-app/security/advisories/GHSA-44wg-r34q-hvfx",
+          "url": "https://github.com/enchant97/note-mark/security/advisories/GHSA-9pr4-rf97-79qh",
           "type": "reference"
         },
         {
-          "url": "https://github.com/gitroomhq/postiz-app/releases/tag/v2.21.6",
+          "url": "https://github.com/enchant97/note-mark/commit/6bb62842ccb956870b9bf183629eba95e326e5e3",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/enchant97/note-mark/releases/tag/v0.19.2",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "gitroomhq",
-          "product": "postiz-app",
+          "vendor": "enchant97",
+          "product": "note-mark",
           "versions": [
             {
-              "version": "< 2.21.6",
+              "version": "< 0.19.2",
               "status": "affected"
             }
           ]
@@ -43,139 +47,482 @@
       ],
       "problemType": [
         "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
-        "CWE-345: Insufficient Verification of Data Authenticity",
         "CWE-434: Unrestricted Upload of File with Dangerous Type"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-35582",
-      "publishedDate": "2026-04-18T01:16:27.661Z",
-      "lastModifiedDate": "2026-04-18T01:16:27.661Z",
-      "description": "Emissary is a P2P based data-driven workflow engine. In versions 8.42.0 and below, Executrix.getCommand() is vulnerable to OS command injection  because it interpolates temporary file paths into a /bin/sh -c shell command string without any escaping or input validation. The IN_FILE_ENDING and OUT_FILE_ENDING configuration keys flow directly into these paths, allowing a place author who can write or modify a .cfg file to inject arbitrary shell metacharacters that execute OS commands in the JVM process's security context. The framework already sanitizes placeName via an allowlist before embedding it in the same shell string, but applies no equivalent sanitization to file ending values. No runtime privileges beyond place configuration authorship, and no API or network access, are required to exploit this vulnerability. This is a framework-level defect with no safe mitigation available to downstream implementors, as Executrix provides neither escaping nor documented preconditions against metacharacters in file ending inputs. This issue has been fixed in version 8.43.0.",
-      "severity": 8.8,
+      "id": "CVE-2026-40318",
+      "publishedDate": "2026-04-16T22:54:47.881Z",
+      "lastModifiedDate": "2026-04-18T02:48:57.193Z",
+      "description": "SiYuan is an open-source personal knowledge management system. In versions 3.6.3 and prior, the /api/av/removeUnusedAttributeView endpoint constructs a filesystem path using the user-controlled id parameter without validation or path boundary enforcement. An attacker can inject path traversal sequences such as ../ into the id value to escape the intended directory and delete arbitrary .json files on the server, including global configuration files and workspace metadata. This issue has been fixed in version 3.6.4.",
+      "severity": 8.5,
       "references": [
         {
-          "url": "https://github.com/NationalSecurityAgency/emissary/security/advisories/GHSA-3p24-9x7v-7789",
+          "url": "https://github.com/siyuan-note/siyuan/security/advisories/GHSA-vw86-c94w-v3x4",
           "type": "reference"
         },
         {
-          "url": "https://github.com/NationalSecurityAgency/emissary/commit/1faf33f2494c0128f250d7d2e8f2da99bbd32ae8",
+          "url": "https://github.com/siyuan-note/siyuan/releases/tag/v3.6.4",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "NationalSecurityAgency",
-          "product": "emissary",
+          "vendor": "siyuan-note",
+          "product": "siyuan",
           "versions": [
             {
-              "version": "< 8.43.0",
+              "version": "< 3.6.4",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')",
+        "CWE-24: Path Traversal: '../filedir'"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-23778",
+      "publishedDate": "2026-04-17T08:33:21.569Z",
+      "lastModifiedDate": "2026-04-18T02:55:15.477Z",
+      "description": "Dell PowerProtect Data Domain with Data Domain Operating System (DD OS) of Feature Release versions 7.7.1.0 through 8.5, LTS2025 release version 8.3.1.0 through 8.3.1.20, LTS2024 release versions 7.13.1.0 through 7.13.1.50, contain a command injection vulnerability. A high privileged attacker with remote access could potentially exploit this vulnerability to gain root-level access.",
+      "severity": 7.2,
+      "references": [
+        {
+          "url": "https://www.dell.com/support/kbdoc/en-us/000450699/dsa-2026-060-security-update-for-dell-powerprotect-data-domain-multiple-vulnerabilities",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Dell",
+          "product": "PowerProtect Data Domain",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "8.6.0.0 or later",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "8.3.1.20 or later",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "7.13.1.50 or later",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "2.7.9 with DD OS 8.3.1.30",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-77: Improper Neutralization of Special Elements used in a Command ('Command Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-35074",
+      "publishedDate": "2026-04-17T10:57:20.150Z",
+      "lastModifiedDate": "2026-04-18T02:56:19.564Z",
+      "description": "Dell PowerProtect Data Domain, versions 7.7.1.0 through 8.7.0.0, LTS2025 release versions 8.3.1.0 through 8.3.1.20, LTS2024 release versions 7.13.1.0 through 7.13.1.60 contain an improper neutralization of special elements used in an OS Command Injection vulnerability. A high privileged attacker with local access could potentially exploit this vulnerability, leading to arbitrary command execution with root privileges.",
+      "severity": 6.7,
+      "references": [
+        {
+          "url": "https://www.dell.com/support/kbdoc/en-us/000450699/dsa-2026-060-security-update-for-dell-powerprotect-data-domain-multiple-vulnerabilities",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Dell",
+          "product": "PowerProtect Data Domain",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "8.6.1.10, 8.7.0.1 or later",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "8.3.1.30 or later",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "7.13.1.70 or later",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "2.7.9 with DD OS 8.3.1.30",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-33145",
+      "publishedDate": "2026-04-17T20:14:14.048Z",
+      "lastModifiedDate": "2026-04-18T03:03:51.800Z",
+      "description": "xrdp is an open source RDP server. Versions through 0.10.5 allow an authenticated remote user to execute arbitrary commands on the server due to unsafe handling of the AlternateShell parameter in xrdp-sesman. When the AllowAlternateShell setting is enabled (which is the default when not explicitly configured), xrdp accepts a client-supplied AlternateShell value and executes it via /bin/sh -c during session initialization. This results in shell-interpreted execution of unsanitized, user-controlled input. This behavior effectively provides a scriptable remote command execution primitive over RDP within the security context of the authenticated user, occurring prior to normal window manager startup. This can bypass expected session initialization flows and operational assumptions that restrict execution to interactive desktop environments. This issue has been fixed in version 0.10.6.",
+      "severity": 6.3,
+      "references": [
+        {
+          "url": "https://github.com/neutrinolabs/xrdp/security/advisories/GHSA-rmvv-7633-fg7h",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/neutrinolabs/xrdp/releases/tag/v0.10.6",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "neutrinolabs",
+          "product": "xrdp",
+          "versions": [
+            {
+              "version": "< 0.10.6",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-40302",
+      "publishedDate": "2026-04-17T20:56:08.368Z",
+      "lastModifiedDate": "2026-04-18T03:07:10.092Z",
+      "description": "zrok is software for sharing web services, files, and network resources. Prior to version 2.0.1, the proxyUi template engine uses Go's text/template (which performs no HTML escaping) instead of html/template. The GitHub OAuth callback handlers in both publicProxy and dynamicProxy embed the attacker-controlled refreshInterval query parameter verbatim into an error message when time.ParseDuration fails, and render that error unescaped into HTML. An attacker can deliver a crafted login URL to a victim; after the victim completes the GitHub OAuth flow, the callback page executes arbitrary JavaScript in the OAuth server's origin. Version 2.0.1 patches the issue.",
+      "severity": 6.1,
+      "references": [
+        {
+          "url": "https://github.com/openziti/zrok/security/advisories/GHSA-4fxq-2x3x-6xqx",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/openziti/zrok/releases/tag/v2.0.1",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "openziti",
+          "product": "zrok",
+          "versions": [
+            {
+              "version": "< 2.0.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
         "CWE-116: Improper Encoding or Escaping of Output"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-40490",
-      "publishedDate": "2026-04-18T01:31:13.860Z",
-      "lastModifiedDate": "2026-04-18T01:31:13.860Z",
-      "description": "The AsyncHttpClient (AHC) library allows Java applications to easily execute HTTP requests and asynchronously process HTTP responses. When redirect following is enabled (followRedirect(true)), versions of AsyncHttpClient prior to 3.0.9 and 2.14.5 forward Authorization and Proxy-Authorization headers along with Realm credentials to arbitrary redirect targets regardless of domain, scheme, or port changes. This leaks credentials on cross-domain redirects and HTTPS-to-HTTP downgrades. Additionally, even when stripAuthorizationOnRedirect is set to true, the Realm object containing plaintext credentials is still propagated to the redirect request, causing credential re-generation for Basic and Digest authentication schemes via NettyRequestFactory. An attacker who controls a redirect target (via open redirect, DNS rebinding, or MITM on HTTP) can capture Bearer tokens, Basic auth credentials, or any other Authorization header value. The fix in versions 3.0.9 and 2.14.5 automatically strips Authorization and Proxy-Authorization headers and clears Realm credentials whenever a redirect crosses origin boundaries (different scheme, host, or port) or downgrades from HTTPS to HTTP. For users unable to upgrade, set `(stripAuthorizationOnRedirect(true))` in the client config and avoid using Realm-based authentication with redirect following enabled. Note that `(stripAuthorizationOnRedirect(true))` alone is insufficient on versions prior to 3.0.9 and 2.14.5 because the Realm bypass still re-generates credentials. Alternatively, disable redirect following (`followRedirect(false)`) and handle redirects manually with origin validation.",
-      "severity": 6.8,
+      "id": "CVE-2026-28263",
+      "publishedDate": "2026-04-17T11:44:12.943Z",
+      "lastModifiedDate": "2026-04-18T02:57:02.616Z",
+      "description": "Dell PowerProtect Data Domain with Data Domain Operating System (DD OS) of Feature Release versions 7.7.1.0 through 8.5, LTS2025 release version 8.3.1.0 through 8.3.1.20, LTS2024 release versions 7.13.1.0 through 7.13.1.50, contain a cross-site Scripting vulnerability. A high privileged attacker with remote access could potentially exploit this vulnerability, leading to Script injection.",
+      "severity": 5.9,
       "references": [
         {
-          "url": "https://github.com/AsyncHttpClient/async-http-client/security/advisories/GHSA-cmxv-58fp-fm3g",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/AsyncHttpClient/async-http-client/commit/6b2fbb7f8",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/AsyncHttpClient/async-http-client/commit/ae557ad35246721c09dafb2976609cd0004e78ae",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/AsyncHttpClient/async-http-client/releases/tag/async-http-client-project-2.14.5",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/AsyncHttpClient/async-http-client/releases/tag/async-http-client-project-3.0.9",
+          "url": "https://www.dell.com/support/kbdoc/en-us/000450699/dsa-2026-060-security-update-for-dell-powerprotect-data-domain-multiple-vulnerabilities",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "AsyncHttpClient",
-          "product": "async-http-client",
+          "vendor": "Dell",
+          "product": "PowerProtect Data Domain",
           "versions": [
             {
-              "version": ">= 3.0.0.Beta1, < 3.0.9",
+              "status": "affected",
+              "version": "0",
+              "lessThan": "8.6.0.0 or later",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "8.3.1.20 or later",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "7.13.1.50 or later",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "2.7.9 with DD OS 8.3.1.30",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-6491",
+      "publishedDate": "2026-04-17T13:45:11.506Z",
+      "lastModifiedDate": "2026-04-18T02:59:14.319Z",
+      "description": "A security vulnerability has been detected in libvips up to 8.18.2. The affected element is the function im_minpos_vec of the file libvips/deprecated/vips7compat.c of the component nip2 Handler. Such manipulation of the argument n leads to heap-based buffer overflow. An attack has to be approached locally. The exploit has been disclosed publicly and may be used. The vendor confirms that they will \"be removing the deprecated area in libvips 8.19\".",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://vuldb.com/vuln/358035",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/vuln/358035/cti",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/submit/786994",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/libvips/libvips/issues/4965",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/libvips/libvips/issues/4965#issuecomment-4135003499",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/biniamf/pocs/tree/main/libvips_im_minpos_vec_oob",
+          "type": "poc"
+        },
+        {
+          "url": "https://github.com/libvips/libvips/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "libvips",
+          "versions": [
+            {
+              "version": "8.18.0",
               "status": "affected"
             },
             {
-              "version": "< 2.14.5",
+              "version": "8.18.1",
+              "status": "affected"
+            },
+            {
+              "version": "8.18.2",
+              "status": "affected"
+            }
+          ],
+          "cpes": [
+            "cpe:2.3:a:libvips:libvips:*:*:*:*:*:*:*:*"
+          ],
+          "modules": [
+            "nip2 Handler"
+          ]
+        }
+      ],
+      "problemType": [
+        "Heap-based Buffer Overflow",
+        "Memory Corruption"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-6494",
+      "publishedDate": "2026-04-17T08:18:50.757Z",
+      "lastModifiedDate": "2026-04-18T02:53:52.696Z",
+      "description": "A flaw was found in the AAP MCP server. An unauthenticated remote attacker can exploit a log injection vulnerability by sending specially crafted input to the `toolsetroute` parameter. This parameter is not properly sanitized before being written to logs, allowing the attacker to inject control characters such as newlines and ANSI escape sequences. This enables the attacker to obscure legitimate log entries and insert forged ones, which could facilitate social engineering attacks, potentially leading to an operator executing dangerous commands or visiting malicious URLs.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://access.redhat.com/security/cve/CVE-2026-6494",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2459131",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Ansible Automation Platform 2",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "ansible-automation-platform-tech-preview/mcp-server-rhel9",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:ansible_automation_platform:2"
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Output Neutralization for Logs"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-24749",
+      "publishedDate": "2026-04-16T17:08:59.133Z",
+      "lastModifiedDate": "2026-04-18T02:36:26.887Z",
+      "description": "The Silverstripe Assets Module is a required component of Silverstripe Framework. In versions prior to 2.4.5 and 3.0.0-rc1 through 3.1.2, images rendered in templates or otherwise accessed via DBFile::getURL() or DBFile::getSourceURL() incorrectly add an access grant to the current session, which bypasses file permissions. This usually happens when creating an image variant, for example using a manipulation method like ScaleWidth() or Convert(). Note that if developers use DBFile directly in the $db configuration for a DataObject class that doesn't subclass File, and if they were setting the visibility of those files to \"protected\", those files will now need an explicit access grant to be accessed. If developers do not want to explicitly provide access grants for these files in their apps (i.e. they want these files to be accessible by default), they should use the \"public\" visibility. This issue has been fixed in versions 2.4.5 and 3.1.3.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://github.com/silverstripe/silverstripe-assets/security/advisories/GHSA-jgcf-rf45-2f8v",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.silverstripe.org/download/security-releases/cve-2026-24749",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "silverstripe",
+          "product": "silverstripe-assets",
+          "versions": [
+            {
+              "version": "< 2.4.5",
+              "status": "affected"
+            },
+            {
+              "version": ">= 3.0.0-rc1, < 3.1.3",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor"
+        "CWE-863: Incorrect Authorization"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-1559",
-      "publishedDate": "2026-04-18T01:26:05.210Z",
-      "lastModifiedDate": "2026-04-18T01:26:05.210Z",
-      "description": "The Youzify plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the 'checkin_place_id' parameter in all versions up to, and including, 1.3.6 due to insufficient input sanitization and output escaping. This makes it possible for authenticated attackers, with Subscriber-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page.",
-      "severity": 6.4,
+      "id": "CVE-2026-34164",
+      "publishedDate": "2026-04-16T21:17:35.472Z",
+      "lastModifiedDate": "2026-04-18T02:44:44.369Z",
+      "description": "Valtimo is an open-source business process automation platform. In versions 13.0.0 through 13.21.0, the InboxHandlingService logs the full content of every incoming inbox message at INFO level. Inbox messages can contain highly sensitive information including personal data (PII), citizen identifiers (BSN), and case details. This data is exposed to anyone with access to application logs or any Valtimo user with the admin role through the Admin UI logging module. This issue has been fixed in version 13.22.0. If developers are unable to upgrade immediately, they can restrict access to application logs and adjust the log level for com.ritense.inbox to WARN or higher in their application configuration as a workaround.",
+      "severity": 4.9,
       "references": [
         {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/6bd69711-8303-4086-87c3-eb2935a89aff?source=cve",
+          "url": "https://github.com/valtimo-platform/valtimo/security/advisories/GHSA-hfrg-mcvw-8mch",
           "type": "reference"
         },
         {
-          "url": "https://plugins.trac.wordpress.org/browser/youzify/trunk/includes/public/core/wall/class-youzify-form.php#L506",
+          "url": "https://github.com/generiekzaakafhandelcomponent/gzac-issues/issues/653",
           "type": "reference"
         },
         {
-          "url": "https://plugins.trac.wordpress.org/browser/youzify/tags/1.3.6/includes/public/core/wall/class-youzify-form.php#L506",
+          "url": "https://github.com/valtimo-platform/valtimo/pull/497",
           "type": "reference"
         },
         {
-          "url": "https://plugins.trac.wordpress.org/browser/youzify/trunk/includes/public/core/class-youzify-wall.php#L109",
+          "url": "https://github.com/valtimo-platform/valtimo/commit/f16a1940ba7b34627c0b966f98ca78655ace9335",
           "type": "reference"
         },
         {
-          "url": "https://plugins.trac.wordpress.org/browser/youzify/tags/1.3.6/includes/public/core/class-youzify-wall.php#L109",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/changeset/3483281/youzify/trunk/includes/public/core/wall/class-youzify-form.php",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/changeset?old_path=%2Fyouzify/tags/1.3.6&new_path=%2Fyouzify/tags/1.3.7",
+          "url": "https://github.com/valtimo-platform/valtimo/releases/tag/13.22.0",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "youzify",
-          "product": "Youzify – BuddyPress Community, User Profile, Social Network & Membership Plugin for WordPress",
+          "vendor": "valtimo-platform",
+          "product": "valtimo",
           "versions": [
             {
-              "version": "0",
+              "version": ">= 13.0.0.RELEASE, < 13.22.0.RELEASE",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-532: Insertion of Sensitive Information into Log File"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-43883",
+      "publishedDate": "2026-04-16T17:54:09.831Z",
+      "lastModifiedDate": "2026-04-18T02:39:20.246Z",
+      "description": "Dell PowerScale OneFS, versions prior to 9.12.0.0, contains an improper check for unusual or exceptional conditions vulnerability. A high privileged attacker with local access could potentially exploit this vulnerability, leading to denial of service.",
+      "severity": 4.1,
+      "references": [
+        {
+          "url": "https://www.dell.com/support/kbdoc/en-us/000376214/dsa-2025-347-security-update-for-dell-powerscale-onefs-multiple-vulnerabilities",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Dell",
+          "product": "PowerScale OneFS",
+          "versions": [
+            {
               "status": "affected",
-              "lessThanOrEqual": "1.3.6",
+              "version": "9.5.0.0",
+              "lessThan": "9.10.1.2",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "9.12.0.0",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "9.7.0.0",
+              "lessThan": "9.7.1.10",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "9.5.0.0",
+              "lessThan": "9.5.1.4",
               "versionType": "semver"
             }
           ],
@@ -183,109 +530,482 @@
         }
       ],
       "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+        "CWE-754: Improper Check for Unusual or Exceptional Conditions"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-1838",
-      "publishedDate": "2026-04-18T01:26:04.643Z",
-      "lastModifiedDate": "2026-04-18T01:26:04.643Z",
-      "description": "The Hostel plugin for WordPress is vulnerable to Reflected Cross-Site Scripting via the 'shortcode_id' parameter in all versions up to, and including, 1.1.6 due to insufficient input sanitization and output escaping. This makes it possible for unauthenticated attackers to inject arbitrary web scripts in pages that execute if they can successfully trick a user into performing an action such as clicking on a link.",
-      "severity": 6.1,
+      "id": "CVE-2026-6486",
+      "publishedDate": "2026-04-17T12:15:14.036Z",
+      "lastModifiedDate": "2026-04-18T02:58:17.041Z",
+      "description": "A vulnerability was detected in classroombookings up to 2.17.0. This impacts the function read of the file crbs-core/application/views/layout.php of the component User Display Name Handler. The manipulation of the argument displayname results in cross site scripting. The attack can be executed remotely. The exploit is now public and may be used. Upgrading to version 2.17.1 will fix this issue. The patch is identified as 69c3c9bb8a17f1ea572d8f4502bf238f0214c98a. It is suggested to upgrade the affected component. The vendor was contacted early, responded in a very professional manner and quickly released a fixed version of the affected product.",
+      "severity": 3.5,
       "references": [
         {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/2b9da491-771a-4100-b41a-7411981dd34b?source=cve",
+          "url": "https://vuldb.com/vuln/358027",
           "type": "reference"
         },
         {
-          "url": "https://plugins.trac.wordpress.org/browser/hostel/trunk/hostel.php#L44",
+          "url": "https://vuldb.com/vuln/358027/cti",
           "type": "reference"
         },
         {
-          "url": "https://plugins.trac.wordpress.org/browser/hostel/tags/1.1.6/hostel.php#L44",
+          "url": "https://vuldb.com/submit/786154",
           "type": "reference"
         },
         {
-          "url": "https://plugins.trac.wordpress.org/browser/hostel/trunk/controllers/ajax.php#L28",
+          "url": "https://github.com/sudo-secure/security-research/blob/main/classroombookings/stored-xss/PoC.md",
+          "type": "poc"
+        },
+        {
+          "url": "https://github.com/classroombookings/classroombookings/pull/83",
           "type": "reference"
         },
         {
-          "url": "https://plugins.trac.wordpress.org/browser/hostel/tags/1.1.6/controllers/ajax.php#L28",
+          "url": "https://github.com/classroombookings/classroombookings/commit/69c3c9bb8a17f1ea572d8f4502bf238f0214c98a",
           "type": "reference"
         },
         {
-          "url": "https://plugins.trac.wordpress.org/browser/hostel/trunk/views/partial/rooms-table.html.php#L29",
+          "url": "https://github.com/classroombookings/classroombookings/releases/tag/v2.17.1",
           "type": "reference"
         },
         {
-          "url": "https://plugins.trac.wordpress.org/browser/hostel/tags/1.1.6/views/partial/rooms-table.html.php#L29",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/changeset/3478265/hostel/trunk/hostel.php",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/changeset?old_path=%2Fhostel/tags/1.1.6&new_path=%2Fhostel/tags/1.1.7",
+          "url": "https://github.com/classroombookings/classroombookings/",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "prasunsen",
-          "product": "Hostel",
+          "vendor": "n/a",
+          "product": "classroombookings",
           "versions": [
             {
-              "version": "0",
-              "status": "affected",
-              "lessThanOrEqual": "1.1.6",
-              "versionType": "semver"
+              "version": "2.0",
+              "status": "affected"
+            },
+            {
+              "version": "2.1",
+              "status": "affected"
+            },
+            {
+              "version": "2.2",
+              "status": "affected"
+            },
+            {
+              "version": "2.3",
+              "status": "affected"
+            },
+            {
+              "version": "2.4",
+              "status": "affected"
+            },
+            {
+              "version": "2.5",
+              "status": "affected"
+            },
+            {
+              "version": "2.6",
+              "status": "affected"
+            },
+            {
+              "version": "2.7",
+              "status": "affected"
+            },
+            {
+              "version": "2.8",
+              "status": "affected"
+            },
+            {
+              "version": "2.9",
+              "status": "affected"
+            },
+            {
+              "version": "2.10",
+              "status": "affected"
+            },
+            {
+              "version": "2.11",
+              "status": "affected"
+            },
+            {
+              "version": "2.12",
+              "status": "affected"
+            },
+            {
+              "version": "2.13",
+              "status": "affected"
+            },
+            {
+              "version": "2.14",
+              "status": "affected"
+            },
+            {
+              "version": "2.15",
+              "status": "affected"
+            },
+            {
+              "version": "2.16",
+              "status": "affected"
+            },
+            {
+              "version": "2.17.0",
+              "status": "affected"
+            },
+            {
+              "version": "2.17.1",
+              "status": "unaffected"
             }
           ],
-          "defaultStatus": "unaffected"
+          "cpes": [
+            "cpe:2.3:a:classroombookings:classroombookings:*:*:*:*:*:*:*:*"
+          ],
+          "modules": [
+            "User Display Name Handler"
+          ]
         }
       ],
       "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+        "Cross Site Scripting",
+        "Code Injection"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-40489",
-      "publishedDate": "2026-04-18T01:24:57.278Z",
-      "lastModifiedDate": "2026-04-18T01:24:57.278Z",
-      "description": "editorconfig-core-c  is an EditorConfig core library for use by plugins supporting EditorConfig parsing. Versions up to and including 0.12.10 have a stack-based buffer overflow in ec_glob() that allows an attacker to crash any application using libeditorconfig by providing a specially crafted directory structure and .editorconfig file. This is an incomplete fix for CVE-2023-0341. The pcre_str buffer was protected in 0.12.6 but the adjacent l_pattern[8194] stack buffer received no equivalent protection. On Ubuntu 24.04, FORTIFY_SOURCE converts the overflow to SIGABRT (DoS). Version 0.12.11 contains an updated fix.",
+      "id": "CVE-2026-41080",
+      "publishedDate": "2026-04-16T16:52:01.177Z",
+      "lastModifiedDate": "2026-04-18T02:33:52.350Z",
+      "description": "libexpat before 2.7.6 uses insufficient entropy, and thus hash flooding can occur via a crafted XML document.",
+      "severity": 2.9,
+      "references": [
+        {
+          "url": "https://github.com/libexpat/libexpat/pull/1183",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/libexpat/libexpat/issues/47",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "libexpat",
+          "vendor": "libexpat project",
+          "versions": [
+            {
+              "lessThan": "2.7.6",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-331 Insufficient Entropy"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-23500",
+      "publishedDate": "2026-04-17T20:25:49.843Z",
+      "lastModifiedDate": "2026-04-18T03:06:20.406Z",
+      "description": "Dolibarr is an enterprise resource planning (ERP) and customer relationship management (CRM) software package. In versions prior to 23.0.0 , the ODT to PDF conversion process in odf.php concatenates the MAIN_ODT_AS_PDF configuration constant directly into a shell command passed to exec() without sanitization. An authenticated administrator can inject arbitrary OS commands via this constant using command separators, achieving remote code execution as the web server user when any ODT template is generated. This issue has been fixed in version 23.0.0.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/editorconfig/editorconfig-core-c/security/advisories/GHSA-97xg-vrcq-254h",
+          "url": "https://github.com/Dolibarr/dolibarr/security/advisories/GHSA-w5j3-8fcr-h87w",
           "type": "reference"
         },
         {
-          "url": "https://github.com/editorconfig/editorconfig-core-c/commit/5159be88ad50641d9843289adda791ba300421ff",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/editorconfig/editorconfig-core-c/releases/tag/v0.12.11",
+          "url": "https://github.com/Dolibarr/dolibarr/releases/tag/23.0.0",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "editorconfig",
-          "product": "editorconfig-core-c",
+          "vendor": "Dolibarr",
+          "product": "dolibarr",
           "versions": [
             {
-              "version": "< 0.12.11",
+              "version": "< 23.0.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-121: Stack-based Buffer Overflow",
-        "CWE-787: Out-of-bounds Write"
+        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-32623",
+      "publishedDate": "2026-04-17T19:43:58.682Z",
+      "lastModifiedDate": "2026-04-18T03:00:44.250Z",
+      "description": "xrdp is an open source RDP server. Versions through 0.10.5 contain a heap-based buffer overflow vulnerability in the NeutrinoRDP module. When proxying RDP sessions from xrdp to another server, the module fails to properly validate the size of reassembled fragmented virtual channel data against its allocated memory buffer. A malicious downstream RDP server (or an attacker capable of performing a Man-in-the-Middle attack) could exploit this flaw to cause memory corruption, potentially leading to a Denial of Service (DoS) or Remote Code Execution (RCE). The NeutrinoRDP module is not built by default. This vulnerability only affects environments where the module has been explicitly compiled and enabled. Users can verify if the module is built by checking for --enable-neutrinordp in the output of the xrdp -v command. This issue has been fixed in version 0.10.6.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/neutrinolabs/xrdp/security/advisories/GHSA-phw3-qp59-x2v4",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/neutrinolabs/xrdp/releases/tag/v0.10.6",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "neutrinolabs",
+          "product": "xrdp",
+          "versions": [
+            {
+              "version": "< 0.10.6",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-122: Heap-based Buffer Overflow"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-40249",
+      "publishedDate": "2026-04-16T21:59:36.282Z",
+      "lastModifiedDate": "2026-04-18T02:47:28.094Z",
+      "description": "free5GC is an open-source implementation of the 5G core network. In versions 4.2.1 and below of the UDR service, the PUT handler for updating Policy Data notification subscriptions at /nudr-dr/v2/policy-data/subs-to-notify/{subsId} does not return after request body retrieval or deserialization errors. Although HTTP 500 or 400 error responses are sent, execution continues and the processor is invoked with a potentially uninitialized or partially initialized PolicyDataSubscription object. This fail-open behavior may allow unintended modification of existing Policy Data notification subscriptions with invalid or empty input, depending on downstream processor and storage behavior. A patched version was not available at the time of publication.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/free5gc/free5gc/security/advisories/GHSA-gx38-8h33-pmxr",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "free5gc",
+          "product": "free5gc",
+          "versions": [
+            {
+              "version": "<= 4.2.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-754: Improper Check for Unusual or Exceptional Conditions",
+        "CWE-636: Not Failing Securely ('Failing Open')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-40246",
+      "publishedDate": "2026-04-16T21:40:03.598Z",
+      "lastModifiedDate": "2026-04-18T02:46:14.355Z",
+      "description": "free5GC is an open-source implementation of the 5G core network. In versions 1.4.2 and below of the UDR service, the handler for deleting Traffic Influence Subscriptions checks whether the influenceId path segment equals subs-to-notify, but does not return after sending the HTTP 404 response when validation fails. Execution continues and the subscription is deleted regardless. An unauthenticated attacker with access to the 5G Service Based Interface can delete arbitrary Traffic Influence Subscriptions by supplying any value for the influenceId path segment, while the API misleadingly returns a 404 Not Found response. A patched version was not available at the time of publication.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/free5gc/free5gc/security/advisories/GHSA-g9cw-qwhf-24jp",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "free5gc",
+          "product": "free5gc",
+          "versions": [
+            {
+              "version": "<= 1.4.2",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-285: Improper Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-40899",
+      "publishedDate": "2026-04-16T19:48:44.201Z",
+      "lastModifiedDate": "2026-04-18T02:43:14.720Z",
+      "description": "DataEase is an open-source data visualization and analytics platform. Versions 2.10.20 and below contain a JDBC parameter blocklist bypass vulnerability in the MySQL datasource configuration. The Mysql class uses Lombok's @Data annotation, which auto-generates a public setter for the illegalParameters field that contains the JDBC security blocklist. When a datasource configuration is submitted as JSON, Jackson deserialization calls setIllegalParameters with an attacker-supplied empty list, replacing the blocklist before getJdbc() validation runs. This allows an authenticated attacker to include dangerous JDBC parameters such as allowLoadLocalInfile=true, and by pointing the datasource at a rogue MySQL server, exploit the LOAD DATA LOCAL INFILE protocol feature to read arbitrary files from the DataEase server filesystem, including sensitive environment variables and database credentials. This issue has been fixed in version 2.10.21.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/dataease/dataease/security/advisories/GHSA-944x-93jf-h3rx",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/dataease/dataease/releases/tag/v2.10.21",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "dataease",
+          "product": "dataease",
+          "versions": [
+            {
+              "version": "< 2.10.21",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-183: Permissive List of Allowed Inputs"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-33084",
+      "publishedDate": "2026-04-16T18:14:07.316Z",
+      "lastModifiedDate": "2026-04-18T02:40:47.771Z",
+      "description": "DataEase is an open-source data visualization and analytics platform. Versions 2.10.20 and below contain a SQL injection vulnerability in the sort parameter of the /de2api/datasetData/enumValueObj endpoint. The DatasetDataManage service layer directly transfers the user-supplied sort value to the sorting metadata DTO, which is passed to Order2SQLObj where it is incorporated into the SQL ORDER BY clause without any whitelist validation, and then executed via CalciteProvider. An authenticated attacker can inject arbitrary SQL commands through the sort parameter, enabling time-based blind SQL injection. This issue has been fixed in version 2.10.21.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/dataease/dataease/security/advisories/GHSA-r897-r9q8-3p2x",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/dataease/dataease/releases/tag/v2.10.21",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "dataease",
+          "product": "dataease",
+          "versions": [
+            {
+              "version": "< 2.10.21",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-5426",
+      "publishedDate": "2026-04-16T15:18:46.224Z",
+      "lastModifiedDate": "2026-04-18T02:31:32.234Z",
+      "description": "Hard-coded ASP.NET/IIS machineKey value in Digital Knowledge KnowledgeDeliver deployments prior to February 24, 2026 allows adversaries to circumvent ViewState validation mechanisms and achieve remote code execution via malicious ViewState deserialization attacks",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/mandiant/Vulnerability-Disclosures/blob/master/2026/MNDT-2026-0009.md",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.digital-knowledge.co.jp/product/kd/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Digital Knowledge",
+          "product": "KnowledgeDeliver",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "20260224",
+              "versionType": "date"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-321 Use of hard-coded cryptographic key",
+        "CWE-502 Deserialization of untrusted data"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-31987",
+      "publishedDate": "2026-04-16T13:31:52.336Z",
+      "lastModifiedDate": "2026-04-18T02:28:44.770Z",
+      "description": "JWT Tokens used by tasks were exposed in logs. This could allow UI users to act as Dag Authors. \nUsers are advised to upgrade to Airflow version that contains fix.\n\nUsers are recommended to upgrade to version 3.2.0, which fixes this issue.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/apache/airflow/pull/62964",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/apache/airflow/issues/62428",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/apache/airflow/issues/62773",
+          "type": "reference"
+        },
+        {
+          "url": "https://lists.apache.org/thread/pvsrtxzwo9xy6xgknmwslv4zrw70kt6g",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://pypi.python.org",
+          "defaultStatus": "unaffected",
+          "packageName": "apache-airflow",
+          "product": "Apache Airflow",
+          "vendor": "Apache Software Foundation",
+          "versions": [
+            {
+              "lessThan": "3.2.0",
+              "status": "affected",
+              "version": "3.0.0",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-532 Insertion of Sensitive Information into Log File"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-37100",
+      "publishedDate": "2026-04-16T00:00:00.000Z",
+      "lastModifiedDate": "2026-04-18T02:26:33.302Z",
+      "description": "An issue in the Bluetooth Low Energy (BLE) control interface of the Yamaha SR-B30A sound bar firmware 2.40 (Mobile App: Sound Bar Remote / version: 2.40) allows remote attackers within BLE radio range to connect without authentication via the Sound Bar Remote protocol",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://gist.github.com/sohsatoh/02699fbbdff90e6c2078b508f830022b",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "n/a",
+          "versions": [
+            {
+              "version": "n/a",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "n/a"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
