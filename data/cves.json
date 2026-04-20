@@ -2,1230 +2,556 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 28,
-    "last_updated": "2026-04-20T16:18:16.735590",
+    "total_count": 12,
+    "last_updated": "2026-04-20T17:32:49.011776",
     "severity_distribution": {
-      "critical": 2,
-      "high": 10,
-      "medium": 6,
-      "low": 2,
-      "none": 8
+      "critical": 0,
+      "high": 0,
+      "medium": 5,
+      "low": 0,
+      "none": 7
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-24467",
-      "publishedDate": "2026-04-20T15:40:56.203Z",
-      "lastModifiedDate": "2026-04-20T15:40:56.203Z",
-      "description": "OpenAEV is an open source platform allowing organizations to plan, schedule and conduct cyber adversary simulation campaign and tests. Starting in version 1.0.0 and prior to version 2.0.13, OpenAEV's password reset implementation contains multiple security weaknesses that together allow reliable account takeover. The primary issue is that password reset tokens do not expire. Once a token is generated, it remains valid indefinitely, even if significant time has passed or if newer tokens are issued for the same account. This allows an attacker to accumulate valid password reset tokens over time and reuse them at any point in the future to reset a victim’s password. A secondary weakness is that password reset tokens are only 8 digits long. While an 8-digit numeric token provides 100,000,000 possible combinations (which is secure enough), the ability to generate large numbers of valid tokens drastically reduces the required number of attempts to guess a valid password reset token. For example, if an attacker generates 2,000 valid tokens, the brute-force effort is reduced to approximately 50,000 attempts, which is a trivially achievable number of requests for an automated attack. (100 requests per second can mathematically find a valid password reset token in 500 seconds.) By combining these flaws, an attacker can mass-generate valid password reset tokens and then brute-force them efficiently until a match is found, allowing the attacker to reset the victim’s password to a value of their choosing. The original password is not required, and the attack can be performed entirely without authentication. This vulnerability enables full account takeover that leads to platform compromise. An unauthenticated remote attacker can reset the password of any registered user account and gain complete access without authentication. Because user email addresses are exposed to other users by design, a single guessed or observed email address is sufficient to compromise even administrator accounts with non-guessable email addresses. This design flaw results in a reliable and scalable account takeover vulnerability that affects any registered user account in the system. Note: The vulnerability does not require OpenAEV to have the email service configured.  The exploit does not depend on the target email address to be a real email address. It just needs to be registered to OpenAEV. Successful exploitation allows an unauthenticated remote attacker to access sensitive data (such as the Findings section of a simulation), modify payloads executed by deployed agents to compromise all hosts where agents are installed (therefore the Scope is changed). Users should upgrade to version 2.0.13 to receive a fix.",
-      "severity": 9.1,
+      "id": "CVE-2026-40918",
+      "publishedDate": "2026-04-15T18:59:14.823Z",
+      "lastModifiedDate": "2026-04-20T17:10:52.907Z",
+      "description": "A flaw was found in GIMP. Processing a specially crafted PVR image file with large dimensions can lead to a denial of service (DoS). This occurs due to a stack-based buffer overflow and an out-of-bounds read in the PVR image loader, causing the application to crash. Systems that process untrusted PVR image files are affected.",
+      "severity": 5.5,
       "references": [
         {
-          "url": "https://github.com/OpenAEV-Platform/openaev/security/advisories/GHSA-vcjx-vw28-25p2",
+          "url": "https://access.redhat.com/security/cve/CVE-2026-40918",
           "type": "reference"
         },
         {
-          "url": "https://github.com/OpenAEV-Platform/openaev/commit/c09a4e71ea76d26fc28c9b51c76bca89a902df4f",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/OpenAEV-Platform/openaev/blob/82fa7d0009017110c9b509d0dc1b3a78164259dd/openaev-api/src/main/java/io/openaev/rest/user/UserApi.java#L120",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/OpenAEV-Platform/openaev/releases/tag/2.0.13",
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2458747",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "OpenAEV-Platform",
-          "product": "openaev",
-          "versions": [
-            {
-              "version": ">= 1.0.0, < 2.0.13",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-640: Weak Password Recovery Mechanism for Forgotten Password"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-40258",
-      "publishedDate": "2026-04-17T21:12:54.226Z",
-      "lastModifiedDate": "2026-04-20T15:48:41.690Z",
-      "description": "The Gramps Web API is a Python REST API for the genealogical research software Gramps. Versions 1.6.0 through 3.11.0 have a path traversal vulnerability (Zip Slip) in the media archive import feature. An authenticated user with owner-level privileges can craft a malicious ZIP file with directory-traversal filenames to write arbitrary files outside the intended temporary extraction directory on the server's local filesystem. Startig in version 3.11.1, ZIP entry names are now validated against the resolved real path of the temporary directory before extraction. Any entry whose resolved path falls outside the temporary directory raises an error and aborts the import.",
-      "severity": 9.1,
-      "references": [
-        {
-          "url": "https://github.com/gramps-project/gramps-web-api/security/advisories/GHSA-m5gr-86j6-99jp",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/gramps-project/gramps-web-api/commit/3ed4342711e3ec849552df09b1fe2fbf2ca5c29a",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/gramps-project/gramps-web-api/releases/tag/v3.11.1",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "gramps-project",
-          "product": "gramps-web-api",
-          "versions": [
-            {
-              "version": ">= 1.6.0, < 3.11.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-26944",
-      "publishedDate": "2026-04-20T15:51:30.118Z",
-      "lastModifiedDate": "2026-04-20T15:51:30.118Z",
-      "description": "Dell PowerProtect Data Domain, versions 7.7.1.0 through 8.6, LTS2025 release version 8.3.1.0 through 8.3.1.20, LTS2024 release versions 7.13.1.0 through 7.13.1.60 contain a missing authentication for critical function vulnerability. An unauthenticated attacker with remote access could potentially exploit this vulnerability, leading to arbitrary command execution with root privileges. Exploitation requires an authenticated user to perform a specific action.",
-      "severity": 8.8,
-      "references": [
-        {
-          "url": "https://www.dell.com/support/kbdoc/en-us/000450699/dsa-2026-060-security-update-for-dell-powerprotect-data-domain-multiple-vulnerabilities",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Dell",
-          "product": "PowerProtect Data Domain",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "8.6.1.10, 8.7.0.0 or later",
-              "versionType": "semver"
-            },
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "8.3.1.30 or later",
-              "versionType": "semver"
-            },
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "7.13.1.70 or later",
-              "versionType": "semver"
-            },
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "2.7.9 with DD OS 8.3.1.30",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-306: Missing Authentication for Critical Function"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-35582",
-      "publishedDate": "2026-04-18T01:16:27.661Z",
-      "lastModifiedDate": "2026-04-20T15:48:51.543Z",
-      "description": "Emissary is a P2P based data-driven workflow engine. In versions 8.42.0 and below, Executrix.getCommand() is vulnerable to OS command injection  because it interpolates temporary file paths into a /bin/sh -c shell command string without any escaping or input validation. The IN_FILE_ENDING and OUT_FILE_ENDING configuration keys flow directly into these paths, allowing a place author who can write or modify a .cfg file to inject arbitrary shell metacharacters that execute OS commands in the JVM process's security context. The framework already sanitizes placeName via an allowlist before embedding it in the same shell string, but applies no equivalent sanitization to file ending values. No runtime privileges beyond place configuration authorship, and no API or network access, are required to exploit this vulnerability. This is a framework-level defect with no safe mitigation available to downstream implementors, as Executrix provides neither escaping nor documented preconditions against metacharacters in file ending inputs. This issue has been fixed in version 8.43.0.",
-      "severity": 8.8,
-      "references": [
-        {
-          "url": "https://github.com/NationalSecurityAgency/emissary/security/advisories/GHSA-3p24-9x7v-7789",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/NationalSecurityAgency/emissary/commit/1faf33f2494c0128f250d7d2e8f2da99bbd32ae8",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "NationalSecurityAgency",
-          "product": "emissary",
-          "versions": [
-            {
-              "version": "< 8.43.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')",
-        "CWE-116: Improper Encoding or Escaping of Output"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-32107",
-      "publishedDate": "2026-04-17T19:25:20.274Z",
-      "lastModifiedDate": "2026-04-20T15:41:41.729Z",
-      "description": "xrdp is an open source RDP server. In versions through 0.10.5, the session execution component did not properly handle an error during the privilege drop process. This improper privilege management could allow an authenticated local attacker to escalate privileges to root and execute arbitrary code on the system. An additional exploit would be needed to facilitate this. This issue has been fixed in version 0.10.6.",
-      "severity": 8.8,
-      "references": [
-        {
-          "url": "https://github.com/neutrinolabs/xrdp/security/advisories/GHSA-p5m6-7m43-pjv9",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/neutrinolabs/xrdp/releases/tag/v0.10.6",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "neutrinolabs",
-          "product": "xrdp",
-          "versions": [
-            {
-              "version": "< 0.10.6",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-273: Improper Check for Dropped Privileges"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-40321",
-      "publishedDate": "2026-04-17T21:10:33.192Z",
-      "lastModifiedDate": "2026-04-20T16:01:05.005Z",
-      "description": "DNN (formerly DotNetNuke) is an open-source web content management platform (CMS) in the Microsoft ecosystem. Prior to version 10.2.2, a user could upload a specially crafted SVG file that could include scripts that can target both authenticated and unauthenticated DNN users. The impact is increased if the scripts are run by a power user. Version 10.2.2 patches the issue.",
-      "severity": 8.1,
-      "references": [
-        {
-          "url": "https://github.com/dnnsoftware/Dnn.Platform/security/advisories/GHSA-ffq7-898w-9jc4",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/dnnsoftware/Dnn.Platform/releases/tag/v10.2.2",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "dnnsoftware",
-          "product": "Dnn.Platform",
-          "versions": [
-            {
-              "version": "< 10.2.2",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-87: Improper Neutralization of Alternate XSS Syntax"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-25058",
-      "publishedDate": "2026-04-20T16:03:06.639Z",
-      "lastModifiedDate": "2026-04-20T16:03:06.639Z",
-      "description": "Vexa is an open-source, self-hostable meeting bot API and meeting transcription API. Prior to 0.10.0-260419-1910, the Vexa transcription-collector service exposes an internal endpoint `GET /internal/transcripts/{meeting_id}` that returns transcript data for any meeting without any authentication or authorization checks. An unauthenticated attacker can enumerate all meeting IDs, access any user's meeting transcripts without credentials, and steal confidential business conversations, passwords, and/or PII. Version 0.10.0-260419-1910 patches the issue.",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://github.com/Vexa-ai/vexa/security/advisories/GHSA-w73r-2449-qwgh",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Vexa-ai",
-          "product": "vexa",
-          "versions": [
-            {
-              "version": "< 0.10.0-260419-1910",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-306: Missing Authentication for Critical Function",
-        "CWE-862: Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-35465",
-      "publishedDate": "2026-04-18T00:41:16.594Z",
-      "lastModifiedDate": "2026-04-20T15:47:43.822Z",
-      "description": "SecureDrop Client is a desktop app for journalists to securely communicate with sources and handle submissions on the SecureDrop Workstation. In versions 0.17.4 and below, a compromised SecureDrop Server can achieve code execution on the Client's virtual machine (sd-app) by exploiting improper filename validation in gzip archive extraction, which permits absolute paths and enables overwriting critical files like the SQLite database. Exploitation requires prior compromise of the dedicated SecureDrop Server, which itself is hardened and only accessible via Tor hidden services. Despite the high attack complexity, the vulnerability is rated High severity due to its significant impact on confidentiality, integrity, and availability of decrypted source submissions. This issue is similar to CVE-2025-24888 but occurs through a different code path, and a more robust fix has been implemented in the replacement SecureDrop Inbox codebase. The issue has been fixed in version 0.17.5.",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://github.com/freedomofpress/securedrop-client/security/advisories/GHSA-2jrc-x8fq-prvc",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/freedomofpress/securedrop-client/commit/e518adaf897e7838467ccf9e1f28152ae6fe3655",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/freedomofpress/securedrop-client/blob/8dc8bb6e307b13876d67f72d8a071202e2f39ab5/changelog.md?plain=1#L8",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "freedomofpress",
-          "product": "securedrop-client",
-          "versions": [
-            {
-              "version": "< 0.17.5",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-73: External Control of File Name or Path",
-        "CWE-36: Absolute Path Traversal"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-40286",
-      "publishedDate": "2026-04-17T20:27:59.131Z",
-      "lastModifiedDate": "2026-04-20T15:49:44.569Z",
-      "description": "WeGIA is a web manager for charitable institutions. In versions prior to 3.6.10, a Stored Cross-Site Scripting (XSS) vulnerability was identified in the 'Member Registration' (Cadastrar Sócio) function. By injecting a payload into the 'Member Name' (Nome Sócio) field, the script is persistently stored in the database. Consequently, the payload is executed whenever a user navigates to certain URL. Version 3.6.10 fixes the issue.",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://github.com/LabRedesCefetRJ/WeGIA/security/advisories/GHSA-42rc-rvrx-cmmw",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "LabRedesCefetRJ",
-          "product": "WeGIA",
-          "versions": [
-            {
-              "version": "< 3.6.10",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-35215",
-      "publishedDate": "2026-04-17T18:59:23.663Z",
-      "lastModifiedDate": "2026-04-20T15:40:39.510Z",
-      "description": "Firebird is an open-source relational database management system. In versions prior to 5.0.4, 4.0.7 and 3.0.14, the sdl_desc() function does not validate the length of a decoded SDL descriptor from a slice packet. A zero-length descriptor is later used to calculate the number of slice items, causing a division by zero. An unauthenticated attacker can exploit this by sending a crafted slice packet to crash the server. This issue has been fixed in versions 5.0.4, 4.0.7 and 3.0.14.",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://github.com/FirebirdSQL/firebird/security/advisories/GHSA-g99w-prq5-29c6",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FirebirdSQL/firebird/releases/tag/v3.0.14",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FirebirdSQL/firebird/releases/tag/v4.0.7",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FirebirdSQL/firebird/releases/tag/v5.0.4",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "FirebirdSQL",
-          "product": "firebird",
-          "versions": [
-            {
-              "version": ">= 3.0.0, < 3.0.14",
-              "status": "affected"
-            },
-            {
-              "version": ">= 4.0.0, < 4.0.7",
-              "status": "affected"
-            },
-            {
-              "version": ">= 5.0.0, < 5.0.4",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-369: Divide By Zero"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-6615",
-      "publishedDate": "2026-04-20T07:00:16.486Z",
-      "lastModifiedDate": "2026-04-20T15:56:36.960Z",
-      "description": "A weakness has been identified in TransformerOptimus SuperAGI up to 0.0.14. Affected by this issue is the function Upload of the file superagi/controllers/resources.py of the component Multipart Upload Handler. This manipulation of the argument Name causes path traversal. It is possible to initiate the attack remotely. The exploit has been made available to the public and could be used for attacks. The vendor was contacted early about this disclosure but did not respond in any way.",
-      "severity": 7.3,
-      "references": [
-        {
-          "url": "https://vuldb.com/vuln/358250",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/vuln/358250/cti",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/submit/791083",
-          "type": "reference"
-        },
-        {
-          "url": "https://gist.github.com/YLChen-007/300843c707435540ce0e23bff3e6173a",
-          "type": "poc"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "TransformerOptimus",
-          "product": "SuperAGI",
-          "versions": [
-            {
-              "version": "0.0.1",
-              "status": "affected"
-            },
-            {
-              "version": "0.0.2",
-              "status": "affected"
-            },
-            {
-              "version": "0.0.3",
-              "status": "affected"
-            },
-            {
-              "version": "0.0.4",
-              "status": "affected"
-            },
-            {
-              "version": "0.0.5",
-              "status": "affected"
-            },
-            {
-              "version": "0.0.6",
-              "status": "affected"
-            },
-            {
-              "version": "0.0.7",
-              "status": "affected"
-            },
-            {
-              "version": "0.0.8",
-              "status": "affected"
-            },
-            {
-              "version": "0.0.9",
-              "status": "affected"
-            },
-            {
-              "version": "0.0.10",
-              "status": "affected"
-            },
-            {
-              "version": "0.0.11",
-              "status": "affected"
-            },
-            {
-              "version": "0.0.12",
-              "status": "affected"
-            },
-            {
-              "version": "0.0.13",
-              "status": "affected"
-            },
-            {
-              "version": "0.0.14",
-              "status": "affected"
-            }
-          ],
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 6",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "gimp",
+          "defaultStatus": "affected",
           "cpes": [
-            "cpe:2.3:a:superagi:superagi:*:*:*:*:*:*:*:*"
-          ],
-          "modules": [
-            "Multipart Upload Handler"
+            "cpe:/o:redhat:enterprise_linux:6"
           ]
-        }
-      ],
-      "problemType": [
-        "Path Traversal"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-23774",
-      "publishedDate": "2026-04-20T15:58:46.965Z",
-      "lastModifiedDate": "2026-04-20T15:58:46.965Z",
-      "description": "Dell PowerProtect Data Domain with Data Domain Operating System (DD OS) of Feature Release versions 7.7.1.0 through 8.5, LTS2025 release version 8.3.1.0 through 8.3.1.10, LTS2024 release versions 7.13.1.0 through 7.13.1.40, contain an OS command injection vulnerability. A high privileged attacker with remote access could potentially exploit this vulnerability, leading to arbitrary command execution.",
-      "severity": 7.2,
-      "references": [
-        {
-          "url": "https://www.dell.com/support/kbdoc/en-us/000450699/dsa-2026-060-security-update-for-dell-powerprotect-data-domain-multiple-vulnerabilities",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Dell",
-          "product": "PowerProtect Data Domain",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "8.6.0.0 or later",
-              "versionType": "semver"
-            },
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "8.3.1.20 or later",
-              "versionType": "semver"
-            },
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "7.13.1.50 or later",
-              "versionType": "semver"
-            },
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "2.7.9 with DD OS 8.3.1.30",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41253",
-      "publishedDate": "2026-04-18T05:27:08.202Z",
-      "lastModifiedDate": "2026-04-20T15:52:10.357Z",
-      "description": "In iTerm2 through 3.6.9, displaying a .txt file can cause code execution via DCS 2000p and OSC 135 data, if the working directory contains a malicious file whose name is valid output from the conductor encoding path, such as a pathname with an initial ace/c+ substring, aka \"hypothetical in-band signaling abuse.\" This occurs because iTerm2 accepts the SSH conductor protocol from terminal output that does not originate from a legitimate conductor session.",
-      "severity": 6.9,
-      "references": [
-        {
-          "url": "https://iterm2.com/downloads.html",
-          "type": "reference"
         },
         {
-          "url": "https://blog.calif.io/p/mad-bugs-even-cat-readmetxt-is-not",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/gnachman/iTerm2/commit/a9e745993c2e2cbb30b884a16617cd5495899f86",
-          "type": "reference"
-        },
-        {
-          "url": "https://news.ycombinator.com/item?id=47809190",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unknown",
-          "product": "iTerm2",
-          "vendor": "iTerm2",
-          "versions": [
-            {
-              "lessThanOrEqual": "3.6.9",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-829 Inclusion of Functionality from Untrusted Control Sphere"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-40491",
-      "publishedDate": "2026-04-18T01:36:47.659Z",
-      "lastModifiedDate": "2026-04-20T15:50:02.983Z",
-      "description": "gdown is a Google Drive public file/folder downloader. Versions prior to 5.2.2 are vulnerable to a Path Traversal attack within the extractall functionality. When extracting a maliciously crafted ZIP or TAR archive, the library fails to sanitize or validate the filenames of the archive members. This allow files to be written outside the intended destination directory, potentially leading to arbitrary file overwrite and Remote Code Execution (RCE). Version 5.2.2 contains a fix.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://github.com/wkentaro/gdown/security/advisories/GHSA-76hw-p97h-883f",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/wkentaro/gdown/commit/af569fc6ed300b7974dee66dc51e9f01b57b4dff",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/wkentaro/gdown/releases/tag/v5.2.2",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "wkentaro",
-          "product": "gdown",
-          "versions": [
-            {
-              "version": "< 5.2.2",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-6616",
-      "publishedDate": "2026-04-20T07:15:12.269Z",
-      "lastModifiedDate": "2026-04-20T15:54:33.904Z",
-      "description": "A security vulnerability has been detected in TransformerOptimus SuperAGI up to 0.0.14. This affects the function extract_with_bs4/extract_with_3k/extract_with_lxml of the file superagi/helper/webpage_extractor.py of the component WebScraperTool. Such manipulation leads to server-side request forgery. It is possible to launch the attack remotely. The exploit has been disclosed publicly and may be used. The vendor was contacted early about this disclosure but did not respond in any way.",
-      "severity": 6.3,
-      "references": [
-        {
-          "url": "https://vuldb.com/vuln/358251",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/vuln/358251/cti",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/submit/791084",
-          "type": "reference"
-        },
-        {
-          "url": "https://gist.github.com/YLChen-007/4bb1d709cbb58cee46d839c651d3221f",
-          "type": "poc"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "TransformerOptimus",
-          "product": "SuperAGI",
-          "versions": [
-            {
-              "version": "0.0.1",
-              "status": "affected"
-            },
-            {
-              "version": "0.0.2",
-              "status": "affected"
-            },
-            {
-              "version": "0.0.3",
-              "status": "affected"
-            },
-            {
-              "version": "0.0.4",
-              "status": "affected"
-            },
-            {
-              "version": "0.0.5",
-              "status": "affected"
-            },
-            {
-              "version": "0.0.6",
-              "status": "affected"
-            },
-            {
-              "version": "0.0.7",
-              "status": "affected"
-            },
-            {
-              "version": "0.0.8",
-              "status": "affected"
-            },
-            {
-              "version": "0.0.9",
-              "status": "affected"
-            },
-            {
-              "version": "0.0.10",
-              "status": "affected"
-            },
-            {
-              "version": "0.0.11",
-              "status": "affected"
-            },
-            {
-              "version": "0.0.12",
-              "status": "affected"
-            },
-            {
-              "version": "0.0.13",
-              "status": "affected"
-            },
-            {
-              "version": "0.0.14",
-              "status": "affected"
-            }
-          ],
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 7",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "gimp",
+          "defaultStatus": "affected",
           "cpes": [
-            "cpe:2.3:a:superagi:superagi:*:*:*:*:*:*:*:*"
-          ],
-          "modules": [
-            "WebScraperTool"
+            "cpe:/o:redhat:enterprise_linux:7"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 8",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "gimp:2.8/gimp",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:8"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 9",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "gimp",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:9"
           ]
         }
       ],
       "problemType": [
-        "Server-Side Request Forgery"
+        "Incorrect Calculation of Buffer Size"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-25883",
-      "publishedDate": "2026-04-20T16:04:36.584Z",
-      "lastModifiedDate": "2026-04-20T16:04:36.584Z",
-      "description": "Vexa is an open-source, self-hostable meeting bot API and meeting transcription API. Prior to 0.10.0-260419-1910, the Vexa webhook feature allows authenticated users to configure an arbitrary URL that receives HTTP POST requests when meetings complete. The application performs no validation on the webhook URL, enabling Server-Side Request Forgery (SSRF). An authenticated attacker can set their webhook URL to target internal services (Redis, databases, admin panels), cloud metadata endpoints (AWS/GCP credential theft), and/or localhost services. Version 0.10.0-260419-1910 patches the issue.",
-      "severity": 5.8,
+      "id": "CVE-2026-40915",
+      "publishedDate": "2026-04-15T18:58:52.059Z",
+      "lastModifiedDate": "2026-04-20T17:10:46.262Z",
+      "description": "A flaw was found in GIMP. A remote attacker could exploit an integer overflow vulnerability in the FITS image loader by providing a specially crafted FITS file. This integer overflow leads to a zero-byte memory allocation, which is then subjected to a heap buffer overflow when processing pixel data. Successful exploitation could result in a denial of service (DoS) or potentially arbitrary code execution.",
+      "severity": 5.5,
       "references": [
         {
-          "url": "https://github.com/Vexa-ai/vexa/security/advisories/GHSA-fhr6-8hff-cvg4",
+          "url": "https://access.redhat.com/security/cve/CVE-2026-40915",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2458744",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Vexa-ai",
-          "product": "vexa",
-          "versions": [
-            {
-              "version": "< 0.10.0-260419-1910",
-              "status": "affected"
-            }
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 6",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "gimp",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:6"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 7",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "gimp",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:7"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 8",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "gimp:2.8/gimp",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:8"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 9",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "gimp",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:9"
           ]
         }
       ],
       "problemType": [
-        "CWE-918: Server-Side Request Forgery (SSRF)"
+        "Integer Overflow or Wraparound"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-24468",
-      "publishedDate": "2026-04-20T15:45:48.572Z",
-      "lastModifiedDate": "2026-04-20T15:45:48.572Z",
-      "description": "OpenAEV is an open source platform allowing organizations to plan, schedule and conduct cyber adversary simulation campaign and tests. Starting in version 1.11.0 and prior to version 2.0.13, the /api/reset endpoint behaves differently depending on whether the supplied username exists in the system. When a non-existent email is provided in the login parameter, the endpoint returns an HTTP 400 response (Bad Request). When a valid email is supplied, the endpoint responds with HTTP 200. This difference in server responses creates an observable discrepancy that allows an attacker to reliably determine which emails are registered in the application. By automating requests with a list of possible email addresses, an attacker can quickly build a list of valid accounts without any authentication. The endpoint should return a consistent response regardless of whether the username exists in order to prevent account enumeration. Version 2.0.13 fixes this issue.",
-      "severity": 5.3,
+      "id": "CVE-2026-23756",
+      "publishedDate": "2026-04-20T17:30:51.162Z",
+      "lastModifiedDate": "2026-04-20T17:31:04.076Z",
+      "description": "GFI HelpDesk before 4.99.9 contains a stored cross-site scripting vulnerability in the Troubleshooter module where the subject POST parameter is not sanitized in Controller_Step.InsertSubmit() and EditSubmit() before being rendered by View_Step.RenderViewSteps(). An authenticated staff member can inject arbitrary JavaScript into the step subject field, and the payload executes when any user navigates to Troubleshooter > View Troubleshooter and clicks the affected step link.",
+      "severity": 5.4,
       "references": [
         {
-          "url": "https://github.com/OpenAEV-Platform/openaev/security/advisories/GHSA-v6rg-hf9w-f8ph",
+          "url": "https://gfi.ai/products-and-solutions/email-and-messaging-solutions/helpdesk/resources/product-releases",
           "type": "reference"
         },
         {
-          "url": "https://github.com/OpenAEV-Platform/openaev/commit/3430fe23a9244030d06fdf8e6771592e1f12ad52",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/OpenAEV-Platform/openaev/blob/82fa7d0009017110c9b509d0dc1b3a78164259dd/openaev-api/src/main/java/io/openaev/rest/user/UserApi.java#L120",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/OpenAEV-Platform/openaev/releases/tag/2.0.13",
+          "url": "https://www.vulncheck.com/advisories/gfi-helpdesk-stored-xss-via-troubleshooter-step-subject",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "OpenAEV-Platform",
-          "product": "openaev",
-          "versions": [
-            {
-              "version": ">= 1.11.0, < 2.0.13",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-204: Observable Response Discrepancy"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-40347",
-      "publishedDate": "2026-04-17T23:56:50.777Z",
-      "lastModifiedDate": "2026-04-20T15:46:40.011Z",
-      "description": "Python-Multipart is a streaming multipart parser for Python. Versions prior to 0.0.26 have a denial of service vulnerability when parsing crafted `multipart/form-data` requests with large preamble or epilogue sections. Upgrade to version 0.0.26 or later, which skips ahead to the next boundary candidate when processing leading CR/LF data and immediately discards epilogue data after the closing boundary.",
-      "severity": 5.3,
-      "references": [
-        {
-          "url": "https://github.com/Kludex/python-multipart/security/advisories/GHSA-mj87-hwqh-73pj",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/Kludex/python-multipart/releases/tag/0.0.26",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Kludex",
-          "product": "python-multipart",
-          "versions": [
-            {
-              "version": "< 0.0.26",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-400: Uncontrolled Resource Consumption",
-        "CWE-834: Excessive Iteration"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-6610",
-      "publishedDate": "2026-04-20T05:45:18.671Z",
-      "lastModifiedDate": "2026-04-20T16:03:06.598Z",
-      "description": "A vulnerability has been found in liangliangyy DjangoBlog up to 2.1.0.0. The impacted element is an unknown function of the file djangoblog/settings.py of the component Setting Handler. Such manipulation of the argument USER/PASSWORD leads to hard-coded credentials. The attack may be launched remotely. The attack requires a high level of complexity. The exploitability is regarded as difficult. The exploit has been disclosed to the public and may be used. The vendor was contacted early about this disclosure but did not respond in any way.",
-      "severity": 3.7,
-      "references": [
-        {
-          "url": "https://vuldb.com/vuln/358245",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/vuln/358245/cti",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/submit/790289",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/3em0/cve_repo/blob/main/DjangoBlog/Vuln-12-DEBUG-Enabled-Hardcoded-DB-Creds.md",
-          "type": "poc"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "liangliangyy",
-          "product": "DjangoBlog",
-          "versions": [
-            {
-              "version": "2.1.0",
-              "status": "affected"
-            }
-          ],
-          "modules": [
-            "Setting Handler"
-          ]
-        }
-      ],
-      "problemType": [
-        "Hard-coded Credentials",
-        "Use of Hard-coded Password"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-6611",
-      "publishedDate": "2026-04-20T06:00:18.066Z",
-      "lastModifiedDate": "2026-04-20T16:00:23.582Z",
-      "description": "A vulnerability was found in liangliangyy DjangoBlog up to 2.1.0.0. This affects an unknown function of the file djangoblog/settings.py of the component File Upload Endpoint. Performing a manipulation of the argument SECRET_KEY results in use of hard-coded cryptographic key\r . Remote exploitation of the attack is possible. The attack's complexity is rated as high. The exploitability is reported as difficult. The exploit has been made public and could be used. The vendor was contacted early about this disclosure but did not respond in any way.",
-      "severity": 3.1,
-      "references": [
-        {
-          "url": "https://vuldb.com/vuln/358246",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/vuln/358246/cti",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/submit/790313",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/3em0/cve_repo/blob/main/DjangoBlog/Vuln-11-Weak-File-Upload-Auth.md",
-          "type": "poc"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "liangliangyy",
-          "product": "DjangoBlog",
-          "versions": [
-            {
-              "version": "2.1.0",
-              "status": "affected"
-            }
-          ],
-          "modules": [
-            "File Upload Endpoint"
-          ]
-        }
-      ],
-      "problemType": [
-        "Use of Hard-coded Cryptographic Key",
-        "Key Management Error"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41242",
-      "publishedDate": "2026-04-18T16:18:10.652Z",
-      "lastModifiedDate": "2026-04-20T16:03:57.689Z",
-      "description": "protobufjs compiles protobuf definitions into JavaScript (JS) functions. In versions prior to 8.0.1 and 7.5.5, attackers can inject arbitrary code in the \"type\" fields of protobuf definitions, which will then execute during object decoding using that definition. Versions 8.0.1 and 7.5.5 patch the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/protobufjs/protobuf.js/security/advisories/GHSA-xq3m-2v4x-88gg",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/protobufjs/protobuf.js/commit/535df444ac060243722ac5d672db205e5c531d75",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/protobufjs/protobuf.js/commit/ff7b2afef8754837cc6dc64c864cd111ab477956",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/protobufjs/protobuf.js/releases/tag/protobufjs-v7.5.5",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/protobufjs/protobuf.js/releases/tag/protobufjs-v8.0.1",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "protobufjs",
-          "product": "protobuf.js",
-          "versions": [
-            {
-              "version": "< 7.5.5",
-              "status": "affected"
-            },
-            {
-              "version": ">= 8.0.0-experimental, < 8.0.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-94: Improper Control of Generation of Code ('Code Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-30898",
-      "publishedDate": "2026-04-18T06:20:48.647Z",
-      "lastModifiedDate": "2026-04-20T16:00:36.423Z",
-      "description": "An example of BashOperator in Airflow documentation suggested a way of passing dag_run.conf in the way that could cause unsanitized user input to be used to escalate privileges of UI user to allow execute code on worker. Users should review if any of their own DAGs have adopted this incorrect advice.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/apache/airflow/pull/64129",
-          "type": "reference"
-        },
-        {
-          "url": "https://lists.apache.org/thread/26zmhfj1t95c1hld2r14ho81nzh1bdc8",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://pypi.python.org",
-          "defaultStatus": "unaffected",
-          "packageName": "apache-airflow",
-          "product": "Apache Airflow",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThan": "3.2.0",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-77: Improper Neutralization of Special Elements used in a Command ('Command Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-25917",
-      "publishedDate": "2026-04-18T06:20:11.187Z",
-      "lastModifiedDate": "2026-04-20T15:55:27.837Z",
-      "description": "Dag Authors, who normally should not be able to execute code in the webserver context could craft XCom payload causing the webserver to execute arbitrary code. Since Dag Authors are already highly trusted, severity of this issue is Low.\n\nUsers are recommended to upgrade to Apache Airflow 3.2.0, which fixes the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/apache/airflow/pull/61641",
-          "type": "reference"
-        },
-        {
-          "url": "https://lists.apache.org/thread/6whgpkqbh12rvpfmvcg8b0vwlv4hq3po",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://pypi.python.org",
-          "defaultStatus": "unaffected",
-          "packageName": "apache-airflow",
-          "product": "Apache Airflow",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThan": "3.2.0",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-502: Deserialization of Untrusted Data"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-32228",
-      "publishedDate": "2026-04-18T06:19:47.512Z",
-      "lastModifiedDate": "2026-04-20T15:54:05.072Z",
-      "description": "UI / API User with asset materialize permission could trigger dags they had no access to.\nUsers are advised to migrate to Airflow version 3.2.0 that fixes the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/apache/airflow/pull/63338",
-          "type": "reference"
-        },
-        {
-          "url": "https://lists.apache.org/thread/s7c75txgt4qf2rofcn43szfwgcrzy0nj",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://pypi.python.org",
-          "defaultStatus": "unaffected",
-          "packageName": "apache-airflow",
-          "product": "Apache Airflow",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThan": "3.2.0",
-              "status": "affected",
-              "version": "3.0.0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-863: Incorrect Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-40299",
-      "publishedDate": "2026-04-17T20:49:05.642Z",
-      "lastModifiedDate": "2026-04-20T15:58:51.149Z",
-      "description": "next-intl provides internationalization for Next.js. Applications using the `next-intl` middleware prior to version 4.9.1with `localePrefix: 'as-needed'` could construct URLs where path handling and the WHATWG URL parser resolved a relative redirect target to another host (e.g. scheme-relative `//` or control characters stripped by the URL parser), so the middleware could redirect the browser off-site while the user still started from a trusted app URL. The problem has been patchedin `next-intl@4.9.1`.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/amannn/next-intl/security/advisories/GHSA-8f24-v5vv-gm5j",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/amannn/next-intl/pull/2304",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/amannn/next-intl/commit/1c80b668aa6d853f470319eec10a3f61e78a70e6",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/amannn/next-intl/releases/tag/v4.9.1",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "amannn",
-          "product": "next-intl",
-          "versions": [
-            {
-              "version": "< 4.9.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-601: URL Redirection to Untrusted Site ('Open Redirect')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-35402",
-      "publishedDate": "2026-04-17T20:34:06.510Z",
-      "lastModifiedDate": "2026-04-20T15:51:06.164Z",
-      "description": "mcp-neo4j-cypher is an MCP server for executing Cypher queries against Neo4j databases. In versions prior to 0.6.0, the read_only mode enforcement can be bypassed using APOC CALL procedures, potentially allowing unauthorized write operations or server-side request forgery. This issue is fixed in version 0.6.0.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/neo4j-contrib/mcp-neo4j/security/advisories/GHSA-x3cv-r3g3-fpg9",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/neo4j-contrib/mcp-neo4j/releases/tag/mcp-neo4j-cypher-v0.6.0",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "neo4j-contrib",
-          "product": "mcp-neo4j",
-          "versions": [
-            {
-              "version": "< 0.6.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-284: Improper Access Control"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-33516",
-      "publishedDate": "2026-04-17T19:56:11.990Z",
-      "lastModifiedDate": "2026-04-20T15:43:53.801Z",
-      "description": "xrdp is an open source RDP server. Versions through 0.10.5 contain an out-of-bounds read vulnerability during the RDP capability exchange phase. The issue occurs when memory is accessed before validating the remaining buffer length. A remote, unauthenticated attacker can trigger this vulnerability by sending a specially crafted Confirm Active PDU. Successful exploitation could lead to a denial of service (process crash) or potential disclosure of sensitive information from the process memory. This issue has been fixed in version 0.10.6.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/neutrinolabs/xrdp/security/advisories/GHSA-rvh9-9wm3-28c7",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/neutrinolabs/xrdp/releases/tag/v0.10.6",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "neutrinolabs",
-          "product": "xrdp",
-          "versions": [
-            {
-              "version": "< 0.10.6",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-125: Out-of-bounds Read"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-40499",
-      "publishedDate": "2026-04-15T02:05:20.899Z",
-      "lastModifiedDate": "2026-04-20T15:51:22.636Z",
-      "description": "radare2 prior to version 6.1.4 contains a command injection vulnerability in the PDB parser's print_gvars() function that allows attackers to execute arbitrary commands by embedding a newline byte in the PE section header name field. Attackers can craft a malicious PDB file with specially crafted section names to inject r2 commands that are executed when the idp command processes the file.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/radareorg/radare2/issues/25752",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/radareorg/radare2/commit/5590c87deeb7eb2a106fd7aab9ca88bfeebb7397",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/radareorg/radare2/releases/tag/6.1.4",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/radare2-command-injection-via-pdb-parser-print-gvars",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "radareorg",
-          "product": "radare2",
+          "vendor": "GFI Software",
+          "product": "HelpDesk",
           "versions": [
             {
               "status": "affected",
               "version": "0",
-              "lessThan": "6.1.4",
+              "lessThan": "4.99.9",
               "versionType": "semver"
-            },
-            {
-              "status": "unaffected",
-              "version": "5590c87deeb7eb2a106fd7aab9ca88bfeebb7397",
-              "versionType": "git"
             }
           ],
           "defaultStatus": "unaffected"
         }
       ],
       "problemType": [
-        "CWE-78 Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-40917",
+      "publishedDate": "2026-04-15T18:59:09.003Z",
+      "lastModifiedDate": "2026-04-20T17:10:53.279Z",
+      "description": "A flaw was found in GIMP. This vulnerability, a heap buffer over-read in the `icns_slurp()` function, occurs when processing specially crafted ICNS image files. An attacker could provide a malicious ICNS file, potentially leading to application crashes or information disclosure on systems that process such files.",
+      "severity": 5,
+      "references": [
+        {
+          "url": "https://access.redhat.com/security/cve/CVE-2026-40917",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2458746",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 6",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "gimp",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:6"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 7",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "gimp",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:7"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 8",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "gimp:2.8/gimp",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:8"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 9",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "gimp",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:9"
+          ]
+        }
+      ],
+      "problemType": [
+        "Out-of-bounds Read"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-40916",
+      "publishedDate": "2026-04-15T18:58:57.615Z",
+      "lastModifiedDate": "2026-04-20T17:10:48.850Z",
+      "description": "A flaw was found in GIMP. A stack buffer overflow vulnerability in the TIM image loader's 4BPP decoding path allows a local user to cause a Denial of Service (DoS). By opening a specially crafted TIM image file, the application crashes due to an unconditional overflow when writing to a variable-length array.",
+      "severity": 5,
+      "references": [
+        {
+          "url": "https://access.redhat.com/security/cve/CVE-2026-40916",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2458745",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 6",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "gimp",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:6"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 7",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "gimp",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:7"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 8",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "gimp:2.8/gimp",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:8"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 9",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "gimp",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:9"
+          ]
+        }
+      ],
+      "problemType": [
+        "Out-of-bounds Write"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-23758",
+      "publishedDate": "2026-04-20T17:30:06.853Z",
+      "lastModifiedDate": "2026-04-20T17:30:06.853Z",
+      "description": "GFI HelpDesk before 4.99.9 contains a stored cross-site scripting vulnerability in the ticket subject field that allows authenticated staff members to inject malicious JavaScript by manipulating the editsubject POST parameter. Attackers can inject XSS payloads through inadequate sanitization in Controller_Ticket.EditSubmit() that bypass the incomplete SanitizeForXSS() method to execute arbitrary JavaScript when other staff members or administrators view the affected ticket.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://gfi.ai/products-and-solutions/email-and-messaging-solutions/helpdesk/resources/product-releases",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/gfi-helpdesk-stored-xss-via-editsubject-parameter",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "GFI Software",
+          "product": "HelpDesk",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "4.99.9",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-39111",
+      "publishedDate": "2026-04-20T00:00:00.000Z",
+      "lastModifiedDate": "2026-04-20T17:20:13.092Z",
+      "description": "SQL Injection vulnerability in Apartment Visitors Management System Apartment Visitors Management System V1.1 in the email parameter of the forgot password page (forgot-password.php). This allows an unauthenticated attacker to manipulate backend SQL queries and retrieve sensitive user data.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://phpgurukul.com/apartment-visitors-management-system-using-php-and-mysql/",
+          "type": "reference"
+        },
+        {
+          "url": "https://phpgurukul.com/?sdm_process_download=1&download_id=21524",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/efekaanakkar/Apartment-Visitors-Management-System-CVEs/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "n/a",
+          "versions": [
+            {
+              "version": "n/a",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "n/a"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-39110",
+      "publishedDate": "2026-04-20T00:00:00.000Z",
+      "lastModifiedDate": "2026-04-20T17:19:30.708Z",
+      "description": "SQL Injection vulnerability in Apartment Visitors Management System Apartment Visitors Management System V1.1 in the contactno parameter of the forgot password page (forgot-password.php). This allows an unauthenticated attacker to manipulate backend SQL queries during authentication and retrieve sensitive database contents.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://phpgurukul.com/apartment-visitors-management-system-using-php-and-mysql/",
+          "type": "reference"
+        },
+        {
+          "url": "https://phpgurukul.com/?sdm_process_download=1&download_id=21524",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/efekaanakkar/Apartment-Visitors-Management-System-CVEs/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "n/a",
+          "versions": [
+            {
+              "version": "n/a",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "n/a"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-26399",
+      "publishedDate": "2026-04-20T00:00:00.000Z",
+      "lastModifiedDate": "2026-04-20T17:04:17.309Z",
+      "description": "A stack-use-after-return issue exists in the Arduino_Core_STM32 library prior to version 1.7.0. The pwm_start() function allocates a TIM_HandleTypeDef structure on the stack and passes its address to HAL initialization routines, where it is stored in a global timer handle registry. After the function returns, interrupt service routines may dereference this dangling pointer, resulting in memory corruption.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/stm32duino/Arduino_Core_STM32/releases/tag/1.6.1",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/Acen28/CVE-2026-26399-Disclosure",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "n/a",
+          "versions": [
+            {
+              "version": "n/a",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "n/a"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-39109",
+      "publishedDate": "2026-04-20T00:00:00.000Z",
+      "lastModifiedDate": "2026-04-20T17:18:31.523Z",
+      "description": "SQL Injection vulnerability in Apartment Visitors Management System Apartment Visitors Management System V1.1 within the username parameter of the login page (index.php). This allows an unauthenticated attacker to manipulate backend SQL queries during authentication and retrieve sensitive database contents.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://phpgurukul.com/apartment-visitors-management-system-using-php-and-mysql/",
+          "type": "reference"
+        },
+        {
+          "url": "https://phpgurukul.com/?sdm_process_download=1&download_id=21524",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/efekaanakkar/Apartment-Visitors-Management-System-CVEs/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "n/a",
+          "versions": [
+            {
+              "version": "n/a",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "n/a"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-30266",
+      "publishedDate": "2026-04-20T00:00:00.000Z",
+      "lastModifiedDate": "2026-04-20T17:25:38.552Z",
+      "description": "Insecure Permissions vulnerability in DeepCool DeepCreative v.1.2.7 and before allows a local attacker to execute arbitrary code via a crafted file",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "http://deepcool.com",
+          "type": "reference"
+        },
+        {
+          "url": "http://deepcreative.com",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/uncle-hash/vulnerability-research/tree/main/CVE-2026-30266",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "n/a",
+          "versions": [
+            {
+              "version": "n/a",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "n/a"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-39112",
+      "publishedDate": "2026-04-20T00:00:00.000Z",
+      "lastModifiedDate": "2026-04-20T17:20:45.619Z",
+      "description": "Cross Site Scripting vulnerability in Apartment Visitors Management System Apartment Visitors Management System V1.1 in the visname parameter of visitors-form.php. An authenticated attacker can inject arbitrary JavaScript that is later executed when the malicious input is viewed in manage-newvisitors.php or visitor-detail.php.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://phpgurukul.com/apartment-visitors-management-system-using-php-and-mysql/",
+          "type": "reference"
+        },
+        {
+          "url": "https://phpgurukul.com/?sdm_process_download=1&download_id=21524",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/efekaanakkar/Apartment-Visitors-Management-System-CVEs/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "n/a",
+          "versions": [
+            {
+              "version": "n/a",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "n/a"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
