@@ -3,53 +3,88 @@
   "dataVersion": "5.1",
   "cveMetadata": {
     "total_count": 5,
-    "last_updated": "2026-04-20T18:39:20.149291",
+    "last_updated": "2026-04-20T19:46:11.849100",
     "severity_distribution": {
-      "critical": 0,
+      "critical": 1,
       "high": 1,
       "medium": 1,
       "low": 0,
-      "none": 3
+      "none": 2
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-6248",
-      "publishedDate": "2026-04-20T18:31:33.290Z",
-      "lastModifiedDate": "2026-04-20T18:31:33.290Z",
-      "description": "The wpForo Forum plugin for WordPress is vulnerable to Arbitrary File Deletion in versions up to and including 3.0.5. This is due to two compounding flaws: the Members::update() method does not validate or restrict the value of file-type custom profile fields, allowing authenticated users to store an arbitrary path instead of a legitimate upload path; and the wpforo_fix_upload_dir() sanitization function in ucf_file_delete() only remaps paths that match the expected pattern, and it is passed directly to the unlink() function. This makes it possible for authenticated attackers, with subscriber-level access and above, to delete arbitrary files on the server, which can easily lead to remote code execution when the right file is deleted (such as wp-config.php). Note: The vulnerability requires a file custom field, which requires the wpForo - User Custom Fields addon plugin.",
-      "severity": 8.1,
+      "id": "CVE-2026-6257",
+      "publishedDate": "2026-04-20T19:09:45.927Z",
+      "lastModifiedDate": "2026-04-20T19:09:45.927Z",
+      "description": "Vvveb CMS v1.0.8 contains a remote code execution vulnerability in its media management functionality where a missing return statement in the file rename handler allows authenticated attackers to rename files to blocked extensions .php or .htaccess. Attackers can exploit this logic flaw by first uploading a text file and renaming it to .htaccess to inject Apache directives that register PHP-executable MIME types, then uploading another file and renaming it to .php to execute arbitrary operating system commands as the www-data user.",
+      "severity": 9.1,
       "references": [
         {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/79cc102a-6777-41be-a395-8c2eeb6deb73?source=cve",
+          "url": "https://github.com/givanz/Vvveb/commit/6fb8eaa998265e33e8802cbc220d8859dbc144f2",
           "type": "reference"
         },
         {
-          "url": "https://plugins.trac.wordpress.org/browser/wpforo/tags/2.4.16/wpforo/classes/Actions.php#L1418",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/wpforo/tags/2.4.16/wpforo/includes/functions.php#L3187",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/wpforo/tags/2.4.16/wpforo/classes/Members.php#L891",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/changeset/3509997/wpforo",
+          "url": "https://www.vulncheck.com/advisories/vvveb-cms-remote-code-execution-via-media-management",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "tomdever",
-          "product": "wpForo Forum",
+          "vendor": "Vvveb",
+          "product": "Vvveb CMS",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "1.0.8",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-434 Unrestricted Upload of File with Dangerous Type"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-5478",
+      "publishedDate": "2026-04-20T19:27:08.159Z",
+      "lastModifiedDate": "2026-04-20T19:27:08.159Z",
+      "description": "The Everest Forms plugin for WordPress is vulnerable to Arbitrary File Read and Deletion in all versions up to, and including, 3.4.4. This is due to the plugin trusting attacker-controlled old_files data from public form submissions as legitimate server-side upload state, and converting attacker-supplied URLs into local filesystem paths using regex-based string replacement without canonicalization or directory boundary enforcement. This makes it possible for unauthenticated attackers to read arbitrary local files (e.g., wp-config.php) by injecting path-traversal payloads into the old_files upload field parameter, which are then attached to notification emails. The same path resolution is also used in the post-email cleanup routine, which calls unlink() on the resolved path, resulting in the targeted file being deleted after being attached. This can lead to full site compromise through disclosure of database credentials and authentication salts from wp-config.php, and denial of service through deletion of critical files. Prerequisite: The form must contain a file-upload or image-upload field, and disable storing entry information.",
+      "severity": 8.1,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/8641eb53-6a9a-4549-b8ef-e37acbcc7f03?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/everest-forms/tags/3.4.4/includes/abstracts/class-evf-form-fields-upload.php#L1306",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/everest-forms/tags/3.4.4/includes/abstracts/class-evf-form-fields-upload.php#L1665",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/everest-forms/tags/3.4.4/includes/abstracts/class-evf-form-fields-upload.php#L1581",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset/3507814/everest-forms",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "wpeverest",
+          "product": "Everest Forms – Contact Form, Payment Form, Quiz, Survey & Custom Form Builder",
           "versions": [
             {
               "version": "0",
               "status": "affected",
-              "lessThanOrEqual": "3.0.5",
+              "lessThanOrEqual": "3.4.4",
               "versionType": "semver"
             }
           ],
@@ -62,148 +97,119 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-6060",
-      "publishedDate": "2026-04-20T18:20:01.664Z",
-      "lastModifiedDate": "2026-04-20T18:20:01.664Z",
-      "description": "A vulnerability in the SQL Box in the admin interface of OTRS leads to an uncontrolled resource consumption leading to a DoS against the webserver. will be killed by the systemThis issue affects OTRS: \n\n  *  7.0.X\n  *  8.0.X\n  *  2023.X\n  *  2024.X\n  *  2025.X\n  *  2026.X before 2026.3.X",
-      "severity": 4.5,
+      "id": "CVE-2026-6550",
+      "publishedDate": "2026-04-20T19:20:23.383Z",
+      "lastModifiedDate": "2026-04-20T19:24:09.971Z",
+      "description": "Cryptographic algorithm downgrade in the caching layer of Amazon AWS Encryption SDK for Python before version 3.3.1 and before version  4.0.5 might allow an authenticated local threat actor to bypass key commitment policy enforcement via a shared key cache, resulting in ciphertext that can be decrypted to multiple different plaintexts.\n\nTo remediate this issue, users should upgrade to version 3.3.1, 4.0.5 or above.",
+      "severity": 4.7,
       "references": [
         {
-          "url": "https://otrs.com/release-notes/otrs-security-advisory-2026-01/",
+          "url": "https://aws.amazon.com/security/security-bulletins/2026-017-aws/",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/aws/aws-encryption-sdk-python/releases/tag/v4.0.5",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/aws/aws-encryption-sdk-python/releases/tag/v3.3.1",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/aws/aws-encryption-sdk-python/security/advisories/GHSA-v638-38fc-rhfv",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "unknown",
-          "modules": [
-            "SQL Box"
+          "vendor": "AWS",
+          "product": "AWS Encryption SDK for Python",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "2",
+              "lessThanOrEqual": "2.5.1",
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "3",
+              "lessThanOrEqual": "3.3.0",
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "4",
+              "lessThanOrEqual": "4.0.4",
+              "versionType": "custom"
+            }
           ],
-          "product": "OTRS",
-          "vendor": "OTRS AG",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "7.0.x"
-            },
-            {
-              "status": "affected",
-              "version": "8.0.x"
-            },
-            {
-              "status": "affected",
-              "version": "2023.x"
-            },
-            {
-              "status": "affected",
-              "version": "2024.x"
-            },
-            {
-              "status": "affected",
-              "version": "2025.x"
-            },
-            {
-              "lessThanOrEqual": "2026.2.x",
-              "status": "affected",
-              "version": "2026.x",
-              "versionType": "patch"
-            }
-          ]
+          "defaultStatus": "unaffected"
         }
       ],
       "problemType": [
-        "CWE-400 Uncontrolled Resource Consumption",
-        "CWE-770 Allocation of Resources Without Limits or Throttling"
+        "CWE-757 Selection of Less-Secure algorithm during negotiation ('algorithm downgrade')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-39109",
-      "publishedDate": "2026-04-20T00:00:00.000Z",
-      "lastModifiedDate": "2026-04-20T18:31:04.461Z",
-      "description": "SQL Injection vulnerability in Apartment Visitors Management System Apartment Visitors Management System V1.1 within the username parameter of the login page (index.php). This allows an unauthenticated attacker to manipulate backend SQL queries during authentication and retrieve sensitive database contents.",
+      "id": "CVE-2026-32135",
+      "publishedDate": "2026-04-20T19:23:09.704Z",
+      "lastModifiedDate": "2026-04-20T19:23:09.704Z",
+      "description": "NanoMQ MQTT Broker (NanoMQ) is an all-around Edge Messaging Platform. Versions prior to 0.24.11 have a remotely triggerable heap buffer overflow in the `uri_param_parse` function of NanoMQ's REST API. The vulnerability occurs due to an off-by-one error when allocating memory for query parameter keys and values, allowing an attacker to write a null byte beyond the allocated buffer. This can be triggered via a crafted HTTP request. Version 0.24.11 patches the issue.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://phpgurukul.com/apartment-visitors-management-system-using-php-and-mysql/",
+          "url": "https://github.com/nanomq/nanomq/security/advisories/GHSA-6w96-9qw7-m599",
           "type": "reference"
         },
         {
-          "url": "https://phpgurukul.com/?sdm_process_download=1&download_id=21524",
+          "url": "https://github.com/nanomq/nanomq/issues/2247",
           "type": "reference"
         },
         {
-          "url": "https://github.com/efekaanakkar/Apartment-Visitors-Management-System-CVEs/",
+          "url": "https://github.com/nanomq/nanomq/commit/69a97b3b39cc218f044f1c8896f4d3d8757bb394",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "n/a",
-          "product": "n/a",
+          "vendor": "nanomq",
+          "product": "nanomq",
           "versions": [
             {
-              "version": "n/a",
+              "version": "< 0.24.11",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "n/a"
+        "CWE-122: Heap-based Buffer Overflow"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-30269",
+      "id": "CVE-2026-29645",
       "publishedDate": "2026-04-20T00:00:00.000Z",
-      "lastModifiedDate": "2026-04-20T18:23:39.346Z",
-      "description": "Improper access control in Doorman v0.1.0 and v1.0.2 allows any authenticated user to update their own account role to a non-admin privileged role via /platform/user/{username}. The `role` field is accepted by the update model without a manage_users permission check for self-updates, enabling privilege escalation to high-privileged roles.",
+      "lastModifiedDate": "2026-04-20T19:24:42.410Z",
+      "description": "NEMU (OpenXiangShan/NEMU) before v2025.12.r2 contains an improper instruction-validation flaw in its RISC-V Vector (RVV) decoder. The decoder does not correctly validate the funct3 field when decoding vsetvli/vsetivli/vsetvl, allowing certain invalid OP-V instruction encodings to be misinterpreted and executed as vset* configuration instructions rather than raising an illegal-instruction exception. This can be exploited by providing crafted RISC-V binaries to cause incorrect trap behavior, architectural state corruption/divergence, and potential denial of service in systems that rely on NEMU for correct execution or sandboxing.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/apidoorman/doorman",
+          "url": "https://github.com/OpenXiangShan/NEMU/issues/952",
           "type": "reference"
         },
         {
-          "url": "https://blog.orxiain.life/archives/cve-2026-30269---improper-access-control-in-doorman-allows-privilege-escalation",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n/a",
-          "product": "n/a",
-          "versions": [
-            {
-              "version": "n/a",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "n/a"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-39110",
-      "publishedDate": "2026-04-20T00:00:00.000Z",
-      "lastModifiedDate": "2026-04-20T18:34:55.729Z",
-      "description": "SQL Injection vulnerability in Apartment Visitors Management System Apartment Visitors Management System V1.1 in the contactno parameter of the forgot password page (forgot-password.php). This allows an unauthenticated attacker to manipulate backend SQL queries during authentication and retrieve sensitive database contents.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://phpgurukul.com/apartment-visitors-management-system-using-php-and-mysql/",
+          "url": "https://github.com/OpenXiangShan/NEMU/pull/958",
           "type": "reference"
         },
         {
-          "url": "https://phpgurukul.com/?sdm_process_download=1&download_id=21524",
+          "url": "https://github.com/OpenXiangShan/NEMU/commit/481de637d5fc5838356caee80a79e56a33754039",
           "type": "reference"
         },
         {
-          "url": "https://github.com/efekaanakkar/Apartment-Visitors-Management-System-CVEs/",
+          "url": "https://docs.riscv.org/reference/isa/unpriv/v-st-ext.html",
           "type": "reference"
         }
       ],
