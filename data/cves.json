@@ -2,54 +2,185 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 1,
-    "last_updated": "2026-04-21T00:00:51.157287",
+    "total_count": 4,
+    "last_updated": "2026-04-21T03:41:28.372325",
     "severity_distribution": {
       "critical": 0,
-      "high": 0,
-      "medium": 1,
+      "high": 1,
+      "medium": 3,
       "low": 0,
       "none": 0
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-41285",
-      "publishedDate": "2026-04-20T00:00:00.000Z",
-      "lastModifiedDate": "2026-04-20T23:27:57.468Z",
-      "description": "In OpenBSD through 7.8, the slaacd and rad daemons have an infinite loop when they receive a crafted ICMPv6 Neighbor Discovery (ND) option (over a local network) with length zero, because of an \"nd_opt_len * 8 - 2\" expression with no preceding check for whether nd_opt_len is zero.",
-      "severity": 4.3,
+      "id": "CVE-2026-40497",
+      "publishedDate": "2026-04-21T01:45:55.492Z",
+      "lastModifiedDate": "2026-04-21T01:45:55.492Z",
+      "description": "FreeScout is a free self-hosted help desk and shared mailbox. Prior to version 1.8.213, FreeScout's `Helper::stripDangerousTags()` removes `<script>`, `<form>`, `<iframe>`, `<object>` but does NOT strip `<style>` tags. The mailbox signature field is saved via POST /mailbox/settings/{id} and later rendered unescaped via `{!! $conversation->getSignatureProcessed([], true) !!}` in conversation views. CSP allows `style-src * 'self' 'unsafe-inline'`, so injected inline styles execute freely. An attacker with access to mailbox settings (admin or agent with mailbox permission) can inject CSS attribute selectors to exfiltrate the CSRF token of any agent/admin who views a conversation in that mailbox. With the CSRF token, the attacker can perform any state-changing action as the victim (create admin accounts, change email/password, etc.) — privilege escalation from agent to admin. This is the result of an incomplete fix of GHSA-jqjf-f566-485j. That advisory reported XSS via mailbox signature. The fix applied `Helper::stripDangerousTags()` to the signature before saving. However, `stripDangerousTags()` only removes `script`, `form`, `iframe`, and `object` tags — it does NOT strip `<style>` tags, leaving CSS injection possible. Version 1.8.213 contains an updated fix.",
+      "severity": 8.1,
       "references": [
         {
-          "url": "https://www.rfc-editor.org/rfc/rfc4861#section-4.6",
+          "url": "https://github.com/freescout-help-desk/freescout/security/advisories/GHSA-fh99-wr77-pxq3",
           "type": "reference"
         },
         {
-          "url": "https://github.com/openbsd/src/commit/086c5738bcd3c203bcc08d024fcf983cb409115f",
+          "url": "https://github.com/freescout-help-desk/freescout/commit/5aa8d633216f65995e80a7d4a921b784acc94df4",
           "type": "reference"
         },
         {
-          "url": "https://www.openbsd.org/errata78.html",
+          "url": "https://github.com/freescout-help-desk/freescout/releases/tag/1.8.213",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "unaffected",
-          "product": "OpenBSD",
-          "vendor": "OpenBSD",
+          "vendor": "freescout-help-desk",
+          "product": "freescout",
           "versions": [
             {
-              "lessThanOrEqual": "7.8",
-              "status": "affected",
-              "version": "0",
-              "versionType": "custom"
+              "version": "< 1.8.213",
+              "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-1284 Improper Validation of Specified Quantity in Input"
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-6674",
+      "publishedDate": "2026-04-21T02:25:40.676Z",
+      "lastModifiedDate": "2026-04-21T02:25:40.676Z",
+      "description": "The Plugin: CMS für Motorrad Werkstätten plugin for WordPress is vulnerable to SQL Injection via the 'arttype' parameter in all versions up to, and including, 1.0.0 due to insufficient escaping on the user supplied parameter and lack of sufficient preparation on the existing SQL query. This makes it possible for authenticated attackers, with subscriber-level access and above, to append additional SQL queries into already existing queries that can be used to extract sensitive information from the database.",
+      "severity": 6.5,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/af4bd5f6-4f0e-4035-8544-48154a05cef1?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/cms-fuer-motorrad-werkstaetten/trunk/includes/cfmw-positions.php#L207",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/cms-fuer-motorrad-werkstaetten/tags/1.0.0/includes/cfmw-positions.php#L207",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/cms-fuer-motorrad-werkstaetten/trunk/includes/cfmw-positions.php#L202",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/cms-fuer-motorrad-werkstaetten/tags/1.0.0/includes/cfmw-positions.php#L202",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "tholstkabelbwde",
+          "product": "Plugin: CMS für Motorrad Werkstätten",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "1.0.0",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-6675",
+      "publishedDate": "2026-04-21T02:25:39.847Z",
+      "lastModifiedDate": "2026-04-21T02:25:39.847Z",
+      "description": "The Responsive Blocks – Page Builder for Blocks & Patterns plugin for WordPress is vulnerable to Unauthenticated Open Email Relay in all versions up to, and including, 2.2.0. This is due to insufficient authorization checks and missing server-side validation of the recipient email address supplied via a public REST API route. This makes it possible for unauthenticated attackers to send arbitrary emails to any recipient of their choosing through the affected WordPress site's mail server, effectively turning the site into an open mail relay.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/17452a29-bcef-451a-9893-a436ac5d3b80?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/responsive-block-editor-addons/trunk/includes/class-responsive-block-editor-addons.php#L2403",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/responsive-block-editor-addons/tags/2.1.9/includes/class-responsive-block-editor-addons.php#L2403",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/responsive-block-editor-addons/trunk/includes/class-responsive-block-editor-addons.php#L2212",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/responsive-block-editor-addons/tags/2.1.9/includes/class-responsive-block-editor-addons.php#L2212",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/responsive-block-editor-addons/trunk/includes/class-responsive-block-editor-addons.php#L2324",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/responsive-block-editor-addons/tags/2.1.9/includes/class-responsive-block-editor-addons.php#L2324",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "cyberchimps",
+          "product": "Responsive Blocks – Page Builder for Blocks & Patterns",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "2.2.0",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-20 Improper Input Validation"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-6058",
+      "publishedDate": "2026-04-21T01:42:07.433Z",
+      "lastModifiedDate": "2026-04-21T01:48:13.740Z",
+      "description": "** UNSUPPORTED WHEN ASSIGNED ** An improper encoding or escaping vulnerability in the CGI program of Zyxel WRE6505 v2 firmware version V1.00(ABDV.3)C0 could allow an adjacent attacker on the WLAN to cause a denial-of-service (DoS) condition in the web management interface by convincing an authenticated administrator to visit the “AP Select” page while a malformed SSID is present.",
+      "severity": 4.5,
+      "references": [
+        {
+          "url": "https://www.zyxel.com/global/en/support/end-of-life",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Zyxel",
+          "product": "WRE6505 v2 firmware",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "V1.00(ABDV.3)C0"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-116 Improper Encoding or Escaping of Output"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
