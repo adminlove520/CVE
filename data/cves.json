@@ -2,58 +2,321 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 3,
-    "last_updated": "2026-04-21T21:55:54.043310",
+    "total_count": 6,
+    "last_updated": "2026-04-21T22:49:02.156583",
     "severity_distribution": {
       "critical": 0,
-      "high": 1,
-      "medium": 1,
-      "low": 1,
-      "none": 0
+      "high": 5,
+      "medium": 0,
+      "low": 0,
+      "none": 1
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-6832",
-      "publishedDate": "2026-04-21T21:44:55.301Z",
-      "lastModifiedDate": "2026-04-21T21:44:55.301Z",
-      "description": "Hermes WebUI contains an arbitrary file deletion vulnerability in the /api/session/delete endpoint that allows authenticated attackers to delete files outside the session directory by supplying an absolute path or path traversal payload in the session_id parameter. Attackers can exploit unvalidated session identifiers to construct paths that bypass the SESSION_DIR boundary and delete writable JSON files on the host system.",
-      "severity": 8.1,
+      "id": "CVE-2026-41055",
+      "publishedDate": "2026-04-21T22:25:45.488Z",
+      "lastModifiedDate": "2026-04-21T22:35:27.054Z",
+      "description": "WWBN AVideo is an open source video platform. In versions 29.0 and below, an incomplete SSRF fix in AVideo's LiveLinks proxy adds `isSSRFSafeURL()` validation but leaves DNS TOCTOU vulnerabilities where DNS rebinding between validation and the actual HTTP request redirects traffic to internal endpoints. Commit 8d8fc0cadb425835b4861036d589abcea4d78ee8 contains an updated fix.",
+      "severity": 8.6,
       "references": [
         {
-          "url": "https://github.com/nesquena/hermes-webui/pull/409",
+          "url": "https://github.com/WWBN/AVideo/security/advisories/GHSA-793q-xgj6-7frp",
           "type": "reference"
         },
         {
-          "url": "https://github.com/nesquena/hermes-webui/pull/412",
+          "url": "https://github.com/WWBN/AVideo/security/advisories/GHSA-9x67-f2v7-63rw",
           "type": "reference"
         },
         {
-          "url": "https://github.com/nesquena/hermes-webui/commit/3cc5839bf303fa6758bfdac538507407a2929655",
+          "url": "https://github.com/WWBN/AVideo/commit/0e56382921fc71e64829cd1ec35f04e338c70917",
           "type": "reference"
         },
         {
-          "url": "https://github.com/nesquena/hermes-webui/releases/tag/v0.50.132",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/nesquena/hermes-webui/releases/tag/v0.50.32",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/nesquena-hermes-webui-arbitrary-file-deletion-via-unvalidated-session-id",
+          "url": "https://github.com/WWBN/AVideo/commit/8d8fc0cadb425835b4861036d589abcea4d78ee8",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "nesquena",
-          "product": "hermes-webui",
+          "vendor": "WWBN",
+          "product": "AVideo",
+          "versions": [
+            {
+              "version": "< 26.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-918: Server-Side Request Forgery (SSRF)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-41058",
+      "publishedDate": "2026-04-21T22:43:17.095Z",
+      "lastModifiedDate": "2026-04-21T22:43:17.095Z",
+      "description": "WWBN AVideo is an open source video platform. In versions 29.0 and below, the incomplete fix for AVideo's CloneSite `deleteDump` parameter does not apply path traversal filtering, allowing `unlink()` of arbitrary files via `../../` sequences in the GET parameter. Commit 3c729717c26f160014a5c86b0b6accdbd613e7b2 contains an updated fix.",
+      "severity": 8.1,
+      "references": [
+        {
+          "url": "https://github.com/WWBN/AVideo/security/advisories/GHSA-5879-4fmr-xwf2",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/WWBN/AVideo/security/advisories/GHSA-xmjm-86qv-g226",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/WWBN/AVideo/commit/3c729717c26f160014a5c86b0b6accdbd613e7b2",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/WWBN/AVideo/commit/941decd6d19e2e694acb75e86317d10fbb560284",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "WWBN",
+          "product": "AVideo",
+          "versions": [
+            {
+              "version": "<= 29.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-41056",
+      "publishedDate": "2026-04-21T22:35:55.715Z",
+      "lastModifiedDate": "2026-04-21T22:35:55.715Z",
+      "description": "WWBN AVideo is an open source video platform. In versions 29.0 and below, the `allowOrigin($allowAll=true)` function in `objects/functions.php` reflects any arbitrary `Origin` header back in `Access-Control-Allow-Origin` along with `Access-Control-Allow-Credentials: true`. This function is called by both `plugin/API/get.json.php` and `plugin/API/set.json.php` — the primary API endpoints that handle user data retrieval, authentication, livestream credentials, and state-changing operations. Combined with the application's `SameSite=None` session cookie policy, any website can make credentialed cross-origin requests and read authenticated API responses, enabling theft of user PII, livestream keys, and performing state changes on behalf of the victim. Commit caf705f38eae0ccfac4c3af1587781355d24495e contains a fix.",
+      "severity": 8.1,
+      "references": [
+        {
+          "url": "https://github.com/WWBN/AVideo/security/advisories/GHSA-ccq9-r5cw-5hwq",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/WWBN/AVideo/commit/caf705f38eae0ccfac4c3af1587781355d24495e",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "WWBN",
+          "product": "AVideo",
+          "versions": [
+            {
+              "version": "<= 29.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-942: Permissive Cross-domain Policy with Untrusted Domains"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-41060",
+      "publishedDate": "2026-04-21T22:44:44.461Z",
+      "lastModifiedDate": "2026-04-21T22:44:44.461Z",
+      "description": "WWBN AVideo is an open source video platform. In versions 29.0 and below, the `isSSRFSafeURL()` function in `objects/functions.php` contains a same-domain shortcircuit (lines 4290-4296) that allows any URL whose hostname matches `webSiteRootURL` to bypass all SSRF protections. Because the check compares only the hostname and ignores the port, an attacker can reach arbitrary ports on the AVideo server by using the site's public hostname with a non-standard port. The response body is saved to a web-accessible path, enabling full exfiltration. Commit a0156a6398362086390d949190f9d52a823000ba fixes the issue.",
+      "severity": 7.7,
+      "references": [
+        {
+          "url": "https://github.com/WWBN/AVideo/security/advisories/GHSA-j432-4w3j-3w8j",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/WWBN/AVideo/commit/a0156a6398362086390d949190f9d52a823000ba",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "WWBN",
+          "product": "AVideo",
+          "versions": [
+            {
+              "version": "<= 29.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-918: Server-Side Request Forgery (SSRF)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-41057",
+      "publishedDate": "2026-04-21T22:37:15.582Z",
+      "lastModifiedDate": "2026-04-21T22:37:15.582Z",
+      "description": "WWBN AVideo is an open source video platform. In versions 29.0 and below, the CORS origin validation fix in commit `986e64aad` is incomplete. Two separate code paths still reflect arbitrary `Origin` headers with credentials allowed for all `/api/*` endpoints: (1) `plugin/API/router.php` lines 4-8 unconditionally reflect any origin before application code runs, and (2) `allowOrigin(true)` called by `get.json.php` and `set.json.php` reflects any origin with `Access-Control-Allow-Credentials: true`. An attacker can make cross-origin credentialed requests to any API endpoint and read authenticated responses containing user PII, email, admin status, and session-sensitive data. Commit 5e2b897ccac61eb6daca2dee4a6be3c4c2d93e13 contains a fix.",
+      "severity": 7.1,
+      "references": [
+        {
+          "url": "https://github.com/WWBN/AVideo/security/advisories/GHSA-ff5q-cc22-fgp4",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/WWBN/AVideo/commit/5e2b897ccac61eb6daca2dee4a6be3c4c2d93e13",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "WWBN",
+          "product": "AVideo",
+          "versions": [
+            {
+              "version": "<= 29.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-346: Origin Validation Error"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-5845",
+      "publishedDate": "2026-04-21T22:42:13.198Z",
+      "lastModifiedDate": "2026-04-21T22:42:13.198Z",
+      "description": "An improper authorization vulnerability in scoped user-to-server (ghu_) token authorization in GitHub Enterprise Server allows an authenticated attacker to access private repositories outside the intended installation scope, which can include write operations, via an authorization fallback that treated a revoked/deleted installation as a global installation context, which could be chained with token revocation timing and SSH push attribution to obtain and reuse a victim-scoped token. This vulnerability affected all versions of GitHub Enterprise Server prior to 3.21 and was fixed in versions 3.20.1, 3.19.5, 3.18.8, 3.17.14, 3.16.17, 3.15.21, and 3.14.26. This vulnerability was reported via the GitHub Bug Bounty program.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://docs.github.com/en/enterprise-server@3.20/admin/release-notes#3.20.1",
+          "type": "reference"
+        },
+        {
+          "url": "https://docs.github.com/en/enterprise-server@3.19/admin/release-notes#3.19.5",
+          "type": "reference"
+        },
+        {
+          "url": "https://docs.github.com/en/enterprise-server@3.18/admin/release-notes#3.18.8",
+          "type": "reference"
+        },
+        {
+          "url": "https://docs.github.com/en/enterprise-server@3.17/admin/release-notes#3.17.14",
+          "type": "reference"
+        },
+        {
+          "url": "https://docs.github.com/en/enterprise-server@3.16/admin/release-notes#3.16.17",
+          "type": "reference"
+        },
+        {
+          "url": "https://docs.github.com/en/enterprise-server@3.15/admin/release-notes#3.15.21",
+          "type": "reference"
+        },
+        {
+          "url": "https://docs.github.com/en/enterprise-server@3.14/admin/release-notes#3.14.26",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "GitHub",
+          "product": "Enterprise Server",
           "versions": [
             {
               "status": "affected",
-              "version": "0",
-              "lessThan": "PR #409",
+              "version": "3.20.0",
+              "lessThan": "3.20.1",
+              "changes": [
+                {
+                  "at": "3.20.1",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "3.19.0",
+              "lessThanOrEqual": "3.19.4",
+              "changes": [
+                {
+                  "at": "3.19.5",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "3.18.0",
+              "lessThanOrEqual": "3.18.7",
+              "changes": [
+                {
+                  "at": "3.18.8",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "3.17.0",
+              "lessThanOrEqual": "3.17.13",
+              "changes": [
+                {
+                  "at": "3.17.14",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "3.16.0",
+              "lessThanOrEqual": "3.16.16",
+              "changes": [
+                {
+                  "at": "3.16.17",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "3.15.0",
+              "lessThanOrEqual": "3.15.20",
+              "changes": [
+                {
+                  "at": "3.15.21",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "3.14.0",
+              "lessThanOrEqual": "3.14.25",
+              "changes": [
+                {
+                  "at": "3.14.26",
+                  "status": "unaffected"
+                }
+              ],
               "versionType": "semver"
             }
           ],
@@ -61,92 +324,7 @@
         }
       ],
       "problemType": [
-        "CWE-22 Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-1354",
-      "publishedDate": "2026-04-21T21:43:53.276Z",
-      "lastModifiedDate": "2026-04-21T21:43:53.276Z",
-      "description": "Zero Motorcycles firmware versions 44 and prior enable an attacker to \nforcibly pair a device with the motorcycle via Bluetooth. Once paired, \nan attacker can utilize over-the-air firmware updating functionality to \npotentially upload malicious firmware to the motorcycle. The motorcycle \nmust first be in Bluetooth pairing mode, and the attacker must be in \nproximity of the vehicle and understand the full pairing process, to be \nable to pair their device with the vehicle. The attacker's device must \nremain paired with and in proximity of the motorcycle for the entire \nduration of the firmware update.",
-      "severity": 6.4,
-      "references": [
-        {
-          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-111-06",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/cisagov/CSAF/blob/develop/csaf_files/OT/white/2026/icsa-26-111-06.json",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Zero Motorcycles",
-          "product": "Zero Motorcycles firmware",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThanOrEqual": "44",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-322"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-6830",
-      "publishedDate": "2026-04-21T21:33:28.985Z",
-      "lastModifiedDate": "2026-04-21T21:33:36.356Z",
-      "description": "nesquena hermes-webui contains an environment variable leakage vulnerability where profile switching does not clear environment variables from the previously active profile before loading the next profile. Attackers or users can exploit additive dotenv reload behavior to access provider API keys and other sensitive secrets from one profile context in another profile, breaking expected security isolation between profiles.",
-      "severity": 3.3,
-      "references": [
-        {
-          "url": "https://github.com/nesquena/hermes-webui/commit/88dc8bbe26a6055161d3251b70f5cd3d3c5831b0",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/nesquena/hermes-webui/pull/351",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/nesquena/hermes-webui/releases/tag/v0.50.132",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/nesquena/hermes-webui/releases/tag/v0.50.12",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/nesquena-hermes-webui-environment-variable-credential-leakage-via-profile-switch",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "nesquena",
-          "product": "hermes-webui",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "PR #351",
-              "versionType": "git"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-668: Exposure of Resource to Wrong Sphere",
-        "CWE-459: Incomplete Cleanup"
+        "CWE-639 Authorization bypass through User-Controlled key"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
