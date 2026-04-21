@@ -2,34 +2,73 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 13,
-    "last_updated": "2026-04-21T16:42:44.219273",
+    "total_count": 16,
+    "last_updated": "2026-04-21T17:44:36.524293",
     "severity_distribution": {
-      "critical": 0,
+      "critical": 3,
       "high": 3,
       "medium": 6,
-      "low": 2,
-      "none": 2
+      "low": 0,
+      "none": 4
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-40568",
-      "publishedDate": "2026-04-21T16:08:37.296Z",
-      "lastModifiedDate": "2026-04-21T16:08:37.296Z",
-      "description": "FreeScout is a free self-hosted help desk and shared mailbox. Versions prior to 1.8.213 have a stored cross-site scripting (XSS) vulnerability in the mailbox signature feature. The sanitization function `Helper::stripDangerousTags()` (`app/Misc/Helper.php:568`) uses an incomplete blocklist of only four HTML tags (`script`, `form`, `iframe`, `object`) and does not remove event handler attributes. When a mailbox signature is saved via `MailboxesController::updateSave()` (`app/Http/Controllers/MailboxesController.php:267`), HTML elements such as `<img>`, `<svg>`, and `<details>` with event handler attributes like `onerror` and `onload` pass through sanitization unchanged and are stored in the database. The signature is then rendered as raw HTML via the Blade `{!! !!}` tag in `editor_bottom_toolbar.blade.php:6` and re-inserted into the visible DOM by jQuery `.html()` at `main.js:1789-1790`, triggering the injected event handlers. Any authenticated user with the `ACCESS_PERM_SIGNATURE` (`sig`) permission on a mailbox -- a delegatable, non-admin permission -- can inject arbitrary HTML and JavaScript into the mailbox signature. The payload fires automatically, with no victim interaction, whenever any agent or administrator opens any conversation in the affected mailbox. This enables session hijacking (under CSP bypass conditions such as IE11 or module-weakened CSP), phishing overlays that work in all browsers regardless of CSP, and chaining to admin-level actions including email exfiltration via mass assignment and self-propagating worm behavior across all mailboxes. Version 1.8.213 fixes the issue.",
-      "severity": 8.5,
+      "id": "CVE-2026-40050",
+      "publishedDate": "2026-04-21T16:48:24.722Z",
+      "lastModifiedDate": "2026-04-21T17:25:29.299Z",
+      "description": "CrowdStrike has released security updates to address a critical unauthenticated path traversal vulnerability (CVE-2026-40050) in LogScale. This vulnerability only requires mitigation by customers that host specific versions of LogScale and does not affect Next-Gen SIEM customers. The vulnerability exists in a specific cluster API endpoint that, if exposed, allows a remote attacker to read arbitrary files from the server filesystem without authentication.\n\nNext-Gen SIEM customers are not affected and do not need to take any action. CrowdStrike mitigated the vulnerability for LogScale SaaS customers by deploying network-layer blocks to all clusters on April 7, 2026. We have proactively reviewed all log data and there is no evidence of exploitation.\n\nLogScale Self-hosted customers should upgrade to a patched version immediately to remediate the vulnerability.\n\nCrowdStrike identified this vulnerability during continuous and ongoing product testing.",
+      "severity": 9.8,
       "references": [
         {
-          "url": "https://github.com/freescout-help-desk/freescout/security/advisories/GHSA-w2f5-6wcv-677r",
+          "url": "https://www.crowdstrike.com/en-us/security-advisories/cve-2026-40050/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "CrowdStrike",
+          "product": "LogScale Self-Hosted",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "1.224.0",
+              "lessThanOrEqual": "1.235.0",
+              "changes": [
+                {
+                  "at": "1.233.1, 1.234.1, 1.235.1, 1.228.2",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-306 Missing authentication for critical function",
+        "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-41193",
+      "publishedDate": "2026-04-21T17:15:26.236Z",
+      "lastModifiedDate": "2026-04-21T17:15:26.236Z",
+      "description": "FreeScout is a free self-hosted help desk and shared mailbox. Prior to version 1.8.215, FreeScout's module installation feature extracts ZIP archives without validating file paths, allowing an authenticated admin to write files arbitrarily on the server filesystem via a specially crafted ZIP. Version 1.8.215 fixes the vulnerability.",
+      "severity": 9.1,
+      "references": [
+        {
+          "url": "https://github.com/freescout-help-desk/freescout/security/advisories/GHSA-r85m-5mc9-cc9w",
           "type": "reference"
         },
         {
-          "url": "https://github.com/freescout-help-desk/freescout/commit/1d83e1cffb0bf8d109625313530b36b0f5910b3f",
+          "url": "https://github.com/freescout-help-desk/freescout/commit/14f17a5cd22d217103a72b431b47b1f06996227b",
           "type": "reference"
         },
         {
-          "url": "https://github.com/freescout-help-desk/freescout/releases/tag/1.8.213",
+          "url": "https://github.com/freescout-help-desk/freescout/releases/tag/1.8.215",
           "type": "reference"
         }
       ],
@@ -39,184 +78,209 @@
           "product": "freescout",
           "versions": [
             {
-              "version": "< 1.8.213",
+              "version": "< 1.8.215",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
-        "CWE-116: Improper Encoding or Escaping of Output"
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-24189",
-      "publishedDate": "2026-04-21T16:17:54.323Z",
-      "lastModifiedDate": "2026-04-21T16:17:54.323Z",
-      "description": "NVIDIA CUDA-Q contains a vulnerability in an endpoint, where an unauthenticated attacker could cause an out-of-bounds read by sending a maliciously crafted request. A successful exploit of this vulnerability might lead to denial of service and information disclosure.",
-      "severity": 8.2,
+      "id": "CVE-2026-5652",
+      "publishedDate": "2026-04-21T16:33:56.878Z",
+      "lastModifiedDate": "2026-04-21T17:22:27.276Z",
+      "description": "An insecure direct object reference vulnerability in the Users API component of Crafty Controller allows a remote, authenticated attacker to perform user modification actions via improper API permissions validation.",
+      "severity": 9,
       "references": [
         {
-          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-24189",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.cve.org/CVERecord?id=CVE-2026-24189",
-          "type": "reference"
-        },
-        {
-          "url": "https://nvidia.custhelp.com/app/answers/detail/a_id/5820",
+          "url": "https://gitlab.com/crafty-controller/crafty-4/-/work_items/705",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "NVIDIA",
-          "product": "CUDA-Q",
-          "platforms": [
-            "All"
-          ],
+          "vendor": "Arcadia Technology, LLC",
+          "product": "Crafty Controller",
           "versions": [
             {
+              "version": "0",
               "status": "affected",
-              "version": "All versions prior to 0.14.0"
+              "lessThanOrEqual": "4.10.2",
+              "versionType": "semver"
             }
           ],
           "defaultStatus": "unaffected"
         }
       ],
       "problemType": [
-        "CWE-125 Out-of-bounds Read"
+        "CWE-639: Authorization Bypass Through User-Controlled Key"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-24177",
-      "publishedDate": "2026-04-21T16:17:26.431Z",
-      "lastModifiedDate": "2026-04-21T16:17:26.431Z",
-      "description": "NVIDIA KAI Scheduler contains a vulnerability where an attacker could access API endpoints without authorization. A successful exploit of this vulnerability might lead to information disclosure.",
-      "severity": 7.7,
+      "id": "CVE-2026-40588",
+      "publishedDate": "2026-04-21T17:12:08.938Z",
+      "lastModifiedDate": "2026-04-21T17:12:08.938Z",
+      "description": "blueprintUE is a tool to help Unreal Engine developers. Prior to 4.2.0, the password change form at /profile/{slug}/edit/ does not include a current_password field and does not verify the user's existing password before accepting a new one. Any attacker who obtains a valid authenticated session — through XSS exploitation, session sidejacking over HTTP, physical access to a logged-in browser, or a stolen \"remember me\" cookie — can immediately change the account password without knowing the original credential, resulting in permanent account takeover. This vulnerability is fixed in 4.2.0.",
+      "severity": 8.1,
       "references": [
         {
-          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-24177",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.cve.org/CVERecord?id=CVE-2026-24177",
-          "type": "reference"
-        },
-        {
-          "url": "https://nvidia.custhelp.com/app/answers/detail/a_id/5818",
+          "url": "https://github.com/blueprintue/blueprintue-self-hosted-edition/security/advisories/GHSA-73f2-p9jr-m44x",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "NVIDIA",
-          "product": "KAI Scheduler",
-          "platforms": [
-            "Linux"
-          ],
+          "vendor": "blueprintue",
+          "product": "blueprintue-self-hosted-edition",
           "versions": [
             {
-              "status": "affected",
-              "version": "All versions prior to 0.13.0"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-306 Missing Authentication for Critical Function"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-26274",
-      "publishedDate": "2026-04-21T16:16:06.488Z",
-      "lastModifiedDate": "2026-04-21T16:16:06.488Z",
-      "description": "October is a Content Management System (CMS) and web platform. Prior to 3.7.14 and 4.1.10, a vulnerability was identified in the Twig sandbox security policy that allowed database write operations when cms.safe_mode is enabled. Backend users with Developer permissions could use Twig template markup to execute insert, update, and delete operations on any database table through the query builder, which is included in the sandbox allow-list. This vulnerability is fixed in 3.7.14 and 4.1.10.",
-      "severity": 6.6,
-      "references": [
-        {
-          "url": "https://github.com/octobercms/october/security/advisories/GHSA-h6jm-f4hh-fw27",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "octobercms",
-          "product": "october",
-          "versions": [
-            {
-              "version": ">= 4.0.0, < 4.1.10",
-              "status": "affected"
-            },
-            {
-              "version": "< 3.7.14",
+              "version": "< 4.2.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-184: Incomplete List of Disallowed Inputs",
-        "CWE-863: Incorrect Authorization"
+        "CWE-620: Unverified Password Change"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-25542",
-      "publishedDate": "2026-04-21T16:05:43.217Z",
-      "lastModifiedDate": "2026-04-21T16:05:43.217Z",
-      "description": "Tekton Pipelines project provides k8s-style resources for declaring CI/CD-style pipelines. From 0.43.0 to 1.11.0, trusted resources verification policies match a resource source string (refSource.URI) against spec.resources[].pattern using regexp.MatchString. In Go, regexp.MatchString reports a match if the pattern matches anywhere in the string, so common unanchored patterns (including examples in tekton documentation) can be bypassed by attacker-controlled source strings that contain the trusted pattern as a substring. This can cause an unintended policy match and change which verification mode/keys apply.",
+      "id": "CVE-2026-6248",
+      "publishedDate": "2026-04-20T18:31:33.290Z",
+      "lastModifiedDate": "2026-04-21T17:35:30.317Z",
+      "description": "The wpForo Forum plugin for WordPress is vulnerable to Arbitrary File Deletion in versions up to and including 3.0.5. This is due to two compounding flaws: the Members::update() method does not validate or restrict the value of file-type custom profile fields, allowing authenticated users to store an arbitrary path instead of a legitimate upload path; and the wpforo_fix_upload_dir() sanitization function in ucf_file_delete() only remaps paths that match the expected pattern, and it is passed directly to the unlink() function. This makes it possible for authenticated attackers, with subscriber-level access and above, to delete arbitrary files on the server, which can easily lead to remote code execution when the right file is deleted (such as wp-config.php). Note: The vulnerability requires a file custom field, which requires the wpForo - User Custom Fields addon plugin.",
+      "severity": 8.1,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/79cc102a-6777-41be-a395-8c2eeb6deb73?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/wpforo/tags/2.4.16/wpforo/classes/Actions.php#L1418",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/wpforo/tags/2.4.16/wpforo/includes/functions.php#L3187",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/wpforo/tags/2.4.16/wpforo/classes/Members.php#L891",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset/3509997/wpforo",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "tomdever",
+          "product": "wpForo Forum",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "3.0.5",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-22 Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-41192",
+      "publishedDate": "2026-04-21T17:12:42.628Z",
+      "lastModifiedDate": "2026-04-21T17:12:42.628Z",
+      "description": "FreeScout is a free self-hosted help desk and shared mailbox. Prior to version 1.8.215, the reply and draft flows trust client-supplied encrypted attachment IDs. Any IDs present in `attachments_all[]` but omitted from retained lists are decrypted and passed directly to `Attachment::deleteByIds()`. Because `load_attachments` returns encrypted IDs for attachments on a visible conversation, a mailbox peer can replay those IDs through `save_draft` and delete the original attachment row and file. Version 1.8.215 fixes the vulnerability.",
+      "severity": 7.1,
+      "references": [
+        {
+          "url": "https://github.com/freescout-help-desk/freescout/security/advisories/GHSA-cv36-2j23-x6g3",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/freescout-help-desk/freescout/commit/5f182818e2391f8e711fec6ae6648ac0b367bef5",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/freescout-help-desk/freescout/releases/tag/1.8.215",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "freescout-help-desk",
+          "product": "freescout",
+          "versions": [
+            {
+              "version": "< 1.8.215",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-862: Missing Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-40587",
+      "publishedDate": "2026-04-21T17:11:23.740Z",
+      "lastModifiedDate": "2026-04-21T17:11:23.740Z",
+      "description": "blueprintUE is a tool to help Unreal Engine developers. Prior to 4.2.0, when a user changes their password via the profile edit page, or when a password reset is completed via the reset link, neither operation invalidates existing authenticated sessions for that user. A server-side session store associates userID → session; the current password change/reset flow updates only the password column in the users table and does not destroy or mark invalid any active sessions. As a result, an attacker who has already compromised a session retains full access to the account indefinitely — even after the legitimate user has detected the intrusion and changed their password — until the session's natural expiry time (configured as SESSION_GC_MAXLIFETIME, defaulting to 86400 seconds / 24 hours, with SESSION_LIFETIME=0 meaning persistent until browser close or GC, whichever is later). This vulnerability is fixed in 4.2.0.",
       "severity": 6.5,
       "references": [
         {
-          "url": "https://github.com/tektoncd/pipeline/security/advisories/GHSA-rmx9-2pp3-xhcr",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/tektoncd/pipeline/commit/b8905600322aa86327baae0a7c04d6cf1207362a",
+          "url": "https://github.com/blueprintue/blueprintue-self-hosted-edition/security/advisories/GHSA-gqpq-x62g-p4mg",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "tektoncd",
-          "product": "pipeline",
+          "vendor": "blueprintue",
+          "product": "blueprintue-self-hosted-edition",
           "versions": [
             {
-              "version": ">= 0.43.0, <= 1.11.0",
+              "version": "< 4.2.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-185: Incorrect Regular Expression"
+        "CWE-613: Insufficient Session Expiration"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-40567",
-      "publishedDate": "2026-04-21T16:06:39.878Z",
-      "lastModifiedDate": "2026-04-21T16:06:39.878Z",
-      "description": "FreeScout is a free self-hosted help desk and shared mailbox. Prior to version 1.8.213, an unauthenticated attacker can inject arbitrary HTML into outgoing emails generated by FreeScout by sending an email with a crafted From display name. The name is stored in the database without sanitization and rendered unescaped into outgoing reply emails via the `{%customer.fullName%}` signature variable. This allows embedding phishing links, tracking pixels, and spoofed content inside legitimate support emails sent from the organization's address. Version 1.8.213 fixes the issue.",
-      "severity": 5.8,
+      "id": "CVE-2026-41194",
+      "publishedDate": "2026-04-21T17:16:50.438Z",
+      "lastModifiedDate": "2026-04-21T17:16:50.438Z",
+      "description": "FreeScout is a free self-hosted help desk and shared mailbox. Prior to version 1.8.215, the mailbox OAuth disconnect action is implemented as `GET /mailbox/oauth-disconnect/{id}/{in_out}/{provider}`. It removes stored OAuth metadata from the mailbox and then redirects. Because it is a GET route, no CSRF token is required and the action can be triggered cross-site against a logged-in mailbox admin. Version 1.8.215 fixes the vulnerability.",
+      "severity": 5.4,
       "references": [
         {
-          "url": "https://github.com/freescout-help-desk/freescout/security/advisories/GHSA-q8v4-v62h-5528",
+          "url": "https://github.com/freescout-help-desk/freescout/security/advisories/GHSA-6rvw-fhqx-cfv5",
           "type": "reference"
         },
         {
-          "url": "https://github.com/freescout-help-desk/freescout/commit/9131b16f80eade81002cb9809a2603f6b61981cf",
+          "url": "https://github.com/freescout-help-desk/freescout/commit/eb397efae2086524ba0ee91abb916de8db7a4ac1",
           "type": "reference"
         },
         {
-          "url": "https://github.com/freescout-help-desk/freescout/releases/tag/1.8.213",
+          "url": "https://github.com/freescout-help-desk/freescout/releases/tag/1.8.215",
           "type": "reference"
         }
       ],
@@ -226,21 +290,67 @@
           "product": "freescout",
           "versions": [
             {
-              "version": "< 1.8.213",
+              "version": "< 1.8.215",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-116: Improper Encoding or Escaping of Output"
+        "CWE-352: Cross-Site Request Forgery (CSRF)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-41298",
+      "publishedDate": "2026-04-20T23:08:11.787Z",
+      "lastModifiedDate": "2026-04-21T17:34:23.419Z",
+      "description": "OpenClaw before 2026.4.2 fails to enforce write scopes on the POST /sessions/:sessionKey/kill endpoint in identity-bearing HTTP modes. Read-scoped callers can terminate running subagent sessions by sending requests to this endpoint, bypassing authorization controls.",
+      "severity": 5.4,
+      "references": [
+        {
+          "url": "https://github.com/openclaw/openclaw/security/advisories/GHSA-5hff-46vh-rxmw",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/openclaw/openclaw/commit/54a0878517167c6e49900498cf77420dadb74beb",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/openclaw-authorization-bypass-in-session-termination-endpoint",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "OpenClaw",
+          "product": "OpenClaw",
+          "defaultStatus": "unaffected",
+          "packageURL": "pkg:npm/openclaw",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "versionType": "semver",
+              "lessThan": "2026.4.2"
+            },
+            {
+              "version": "2026.4.2",
+              "status": "unaffected",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-862 Missing Authorization"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
       "id": "CVE-2026-26067",
       "publishedDate": "2026-04-21T16:16:03.293Z",
-      "lastModifiedDate": "2026-04-21T16:16:03.293Z",
+      "lastModifiedDate": "2026-04-21T17:35:19.882Z",
       "description": "October is a Content Management System (CMS) and web platform. Prior to 3.7.14 and 4.1.10, a server-side information disclosure vulnerability was identified in the handling of CSS preprocessor files. Backend users with Editor permissions could craft .less, .sass, or .scss files that leverage the compiler's import functionality to read arbitrary files from the server. This worked even with cms.safe_mode enabled. This vulnerability is fixed in 3.7.14 and 4.1.10.",
       "severity": 4.9,
       "references": [
@@ -272,50 +382,38 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-24176",
-      "publishedDate": "2026-04-21T16:17:00.601Z",
-      "lastModifiedDate": "2026-04-21T16:17:00.601Z",
-      "description": "NVIDIA KAI Scheduler contains a vulnerability where an attacker could cause improper authorization through cross-namespace pod references. A successful exploit of this vulnerability might lead to data tampering.",
-      "severity": 4.3,
+      "id": "CVE-2026-40594",
+      "publishedDate": "2026-04-21T17:14:03.627Z",
+      "lastModifiedDate": "2026-04-21T17:14:03.627Z",
+      "description": "pyLoad is a free and open-source download manager written in Python. Prior to 0.5.0b3.dev98, the set_session_cookie_secure before_request handler in src/pyload/webui/app/__init__.py reads the X-Forwarded-Proto header from any HTTP request without validating that the request originates from a trusted proxy, then mutates the global Flask configuration SESSION_COOKIE_SECURE on every request. Because pyLoad uses the multi-threaded Cheroot WSGI server (request_queue_size=512), this creates a race condition where an attacker's request can influence the Secure flag on other users' session cookies — either downgrading cookie security behind a TLS proxy or causing a session denial-of-service on plain HTTP deployments. This vulnerability is fixed in 0.5.0b3.dev98.",
+      "severity": 4.8,
       "references": [
         {
-          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-24176",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.cve.org/CVERecord?id=CVE-2026-24176",
-          "type": "reference"
-        },
-        {
-          "url": "https://nvidia.custhelp.com/app/answers/detail/a_id/5818",
+          "url": "https://github.com/pyload/pyload/security/advisories/GHSA-mp82-fmj6-f22v",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "NVIDIA",
-          "product": "KAI Scheduler",
-          "platforms": [
-            "Linux"
-          ],
+          "vendor": "pyload",
+          "product": "pyload",
           "versions": [
             {
-              "status": "affected",
-              "version": "All versions prior to 0.13.0"
+              "version": "< 0.5.0b3.dev98",
+              "status": "affected"
             }
-          ],
-          "defaultStatus": "unaffected"
+          ]
         }
       ],
       "problemType": [
-        "CWE-863 Incorrect Authorization"
+        "CWE-346: Origin Validation Error"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
       "id": "CVE-2026-40566",
       "publishedDate": "2026-04-21T16:04:35.587Z",
-      "lastModifiedDate": "2026-04-21T16:04:35.587Z",
+      "lastModifiedDate": "2026-04-21T17:33:11.528Z",
       "description": "FreeScout is a free self-hosted help desk and shared mailbox. Versions prior to 1.8.213 have a Server-Side Request Forgery (SSRF) vulnerability in the IMAP/SMTP connection test functionality of FreeScout's `MailboxesController`. Three AJAX actions  `fetch_test` (line 731), `send_test` (line 682), and `imap_folders` (line 773) in `app/Http/Controllers/MailboxesController.php`  pass admin-configured `in_server`/`in_port` and `out_server`/`out_port` values directly to `fsockopen()` via `Helper::checkPort()` and to IMAP/SMTP client connections with zero SSRF protection. There is no IP validation, no hostname restriction, no blocklist of internal ranges, and no call to the project's own `sanitizeRemoteUrl()` or `checkUrlIpAndHost()` functions. The validation block in `connectionIncomingSave()` is entirely commented out. An authenticated admin can configure a mailbox's IMAP or SMTP server to point at any internal host and port, then trigger a connection test. The server opens raw TCP connections (via `fsockopen()`) and protocol-level connections (via IMAP client or SMTP transport) to the attacker-specified target. The response differentiates open from closed ports, enabling internal network port scanning. When the IMAP client connects to a non-IMAP service, the target's service banner or error response is captured in the IMAP debug log and returned in the AJAX response's `log` field, making this a semi-blind SSRF that enables service fingerprinting. In cloud environments, the metadata endpoint at `169[.]254[.]169[.]254` can be probed and partial response data may be leaked through protocol error messages. This is distinct from the `sanitizeRemoteUrl()` redirect bypass (freescout-3) -- different code path, different root cause, different protocol layer. Version 1.8.213 patches the vulnerability.",
       "severity": 4.1,
       "references": [
@@ -350,202 +448,171 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-29179",
-      "publishedDate": "2026-04-21T16:19:52.447Z",
-      "lastModifiedDate": "2026-04-21T16:19:52.447Z",
-      "description": "October is a Content Management System (CMS) and web platform. Prior to 3.7.16 and 4.1.16, fine-grained sub-permission checks for asset and blueprint file operations were not enforced in the CMS and Tailor editor extensions. This only affects backend users who were explicitly granted editor access but had editor.cms_assets or editor.tailor_blueprints specifically withheld, an uncommon permission configuration. In this edge case, such users could perform file operations (create, delete, rename, move, upload) on theme assets or blueprint files despite lacking the required sub-permission. A related operator precedence error in the Tailor navigation also disclosed the theme blueprint directory tree under the same conditions. This vulnerability is fixed in 3.7.16 and 4.1.16.",
-      "severity": 3.3,
+      "id": "CVE-2026-40584",
+      "publishedDate": "2026-04-21T17:05:25.349Z",
+      "lastModifiedDate": "2026-04-21T17:29:55.759Z",
+      "description": "RansomLook is a tool to monitor Ransomware groups and markets and extract their victims. Prior to 1.9.0, the API in the affected application improperly filters private location entries in website/web/api/genericapi.py. Because the code removes elements from a list while iterating over it, entries marked as private may be unintentionally retained in API responses, allowing unauthorized disclosure of non-public location information. This vulnerability is fixed in 1.9.0.",
+      "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/octobercms/october/security/advisories/GHSA-jvwg-phxx-j3rp",
+          "url": "https://github.com/RansomLook/RansomLook/security/advisories/GHSA-hv66-vcqc-v87c",
+          "type": "reference"
+        },
+        {
+          "url": "https://vulnerability.circl.lu/vuln/gcve-1-2026-0025",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "octobercms",
-          "product": "october",
+          "vendor": "RansomLook",
+          "product": "RansomLook",
           "versions": [
             {
-              "version": ">= 4.0.0, < 4.1.16",
-              "status": "affected"
-            },
-            {
-              "version": "< 3.7.16",
+              "version": "< 1.9.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-863: Incorrect Authorization"
+        "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-27937",
-      "publishedDate": "2026-04-21T16:17:06.973Z",
-      "lastModifiedDate": "2026-04-21T16:17:06.973Z",
-      "description": "October is a Content Management System (CMS) and web platform. Prior to 3.7.16 and 4.1.16, a reflected Cross-Site Scripting (XSS) vulnerability was identified in the backend DataTable widget where a query parameter was rendered without proper output escaping. This vulnerability is fixed in 3.7.16 and 4.1.16.",
-      "severity": 3.1,
+      "id": "CVE-2026-21571",
+      "publishedDate": "2026-04-21T17:00:05.524Z",
+      "lastModifiedDate": "2026-04-21T17:24:23.557Z",
+      "description": "This Critical severity OS Command Injection vulnerability was introduced in versions 9.6.0, 10.0.0, 10.1.0, 10.2.0,\r\n11.0.0, 11.1.0, 12.0.0, and 12.1.0 of Bamboo Data Center.\r\n \r\nThis RCE (Remote Code Execution) vulnerability, with a CVSS Score of 9.4 and a CVSS Vector of\r\nCVSS:4.0/AV:N/AC:L/AT:N/PR:L/UI:N/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H allows an authenticated attacker to execute commands\r\non the remote system, which has high impact to confidentiality, high impact to integrity, high impact to availability,\r\nand requires no user interaction.\r\n \r\nAtlassian recommends that Bamboo Data Center customers upgrade to latest version, if you are unable to do so, upgrade\r\nyour instance to one of the specified supported fixed versions:\r\n Bamboo Data Center 9.6.0: Upgrade to a release greater than or equal to 9.6.25\r\n Bamboo Data Center 10.2: Upgrade to a release greater than or equal to 10.2.18 \r\n Bamboo Data Center 12.1: Upgrade to a release greater than or equal to 12.1.6\r\n\r\nSee the release notes ([https://confluence.atlassian.com/bambooreleases/bamboo-release-notes-1189793869.html]). You can download the latest version of Bamboo Data Center from the download center ([https://www.atlassian.com/software/bamboo/download-archives]).",
+      "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/octobercms/october/security/advisories/GHSA-jj38-h5w5-mvpf",
+          "url": "https://confluence.atlassian.com/pages/viewpage.action?pageId=1770913890",
+          "type": "reference"
+        },
+        {
+          "url": "https://jira.atlassian.com/browse/BAM-26364",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "octobercms",
-          "product": "october",
+          "vendor": "Atlassian",
+          "product": "Bamboo Data Center",
           "versions": [
             {
-              "version": ">= 4.0.0, < 4.1.16",
+              "version": "12.1.0 to 12.1.3",
               "status": "affected"
             },
             {
-              "version": "< 3.7.16",
+              "version": "12.0.0 to 12.0.2",
               "status": "affected"
+            },
+            {
+              "version": "11.0.0 to 11.0.8",
+              "status": "affected"
+            },
+            {
+              "version": "10.2.0 to 10.2.16",
+              "status": "affected"
+            },
+            {
+              "version": "10.1.0 to 10.1.1",
+              "status": "affected"
+            },
+            {
+              "version": "10.0.0 to 10.0.3",
+              "status": "affected"
+            },
+            {
+              "version": "9.6.2 to 9.6.24",
+              "status": "affected"
+            },
+            {
+              "version": "12.1.6",
+              "status": "unaffected"
+            },
+            {
+              "version": "10.2.18",
+              "status": "unaffected"
+            },
+            {
+              "version": "9.6.25",
+              "status": "unaffected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+        "OS Command Injection"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2019-25714",
-      "publishedDate": "2026-04-21T16:11:54.961Z",
-      "lastModifiedDate": "2026-04-21T16:12:08.494Z",
-      "description": "Seeyon OA A8 contains an unauthenticated arbitrary file write vulnerability in the /seeyon/htmlofficeservlet endpoint that allows remote attackers to write arbitrary files to the web application root by sending specially crafted POST requests with custom base64-encoded payloads. Attackers can write JSP webshells to the web root and execute them through the web server to achieve arbitrary OS command execution with web server privileges. Exploitation evidence was first observed by the Shadowserver Foundation on 2021-03-26 (UTC).",
+      "id": "CVE-2026-6778",
+      "publishedDate": "2026-04-21T12:41:09.098Z",
+      "lastModifiedDate": "2026-04-21T17:26:08.027Z",
+      "description": "Invalid pointer in the Audio/Video: Playback component. This vulnerability was fixed in Firefox 150.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://sourceforge.net/software/product/A8/",
+          "url": "https://bugzilla.mozilla.org/show_bug.cgi?id=2022746",
           "type": "reference"
         },
         {
-          "url": "https://web.archive.org/web/20190821034711/http://wyb0.com/posts/2019/seeyon-htmlofficeservlet-getshell/",
-          "type": "poc"
-        },
-        {
-          "url": "https://wiki.96.mk/Web%E5%AE%89%E5%85%A8/%E8%87%B4%E8%BF%9Coa/%E8%87%B4%E8%BF%9C%20OA%20A8%20htmlofficeservlet%20getshell%20%E6%BC%8F%E6%B4%9E/",
-          "type": "poc"
-        },
-        {
-          "url": "https://static-aliyun-doc.oss-cn-hangzhou.aliyuncs.com/download/pdf/90916/Security_Notification_reseller_en-US.pdf",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.broadcom.com/support/security-center/attacksignatures/detail?asid=31713",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.fortiguard.com/encyclopedia/ips/48874/seeyon-office-anywhere-htmlofficeservlet-arbitrary-file-upload",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/seeyon-office-anywhere-oa-a8-unauthenticated-arbitrary-file-write-via-htmlofficeservlet",
+          "url": "https://www.mozilla.org/security/advisories/mfsa2026-30/",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Seeyon Internet Software",
-          "product": "A8-V5 Collaborative Management Software",
+          "product": "Firefox",
+          "vendor": "Mozilla",
           "versions": [
             {
-              "status": "affected",
-              "version": "6.1sp1"
+              "status": "unaffected",
+              "version": "150",
+              "lessThanOrEqual": "*",
+              "versionType": "rpm"
             }
-          ],
-          "defaultStatus": "unknown"
-        },
-        {
-          "vendor": "Seeyon Internet Software",
-          "product": "A8+ Collaborative Management Software",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "7.0"
-            },
-            {
-              "status": "affected",
-              "version": "7.0sp1"
-            },
-            {
-              "status": "affected",
-              "version": "7.0sp2"
-            },
-            {
-              "status": "affected",
-              "version": "7.0sp3"
-            },
-            {
-              "status": "affected",
-              "version": "7.1"
-            }
-          ],
-          "defaultStatus": "unknown"
+          ]
         }
       ],
-      "problemType": [
-        "CWE-434 Unrestricted Upload of File with Dangerous Type"
-      ],
+      "problemType": [],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-3505",
-      "publishedDate": "2026-04-15T09:06:37.939Z",
-      "lastModifiedDate": "2026-04-21T16:04:10.293Z",
-      "description": "Allocation of resources without limits or throttling, Uncontrolled Resource Consumption vulnerability in Legion of the Bouncy Castle Inc. BC-JAVA bcpg on all (pg modules). This vulnerability is associated with program files AEADEncDataPacket.Java, BcAEADUtil.Java, JceAEADUtil.Java, OperatorHelper.Java.\n\nThis issue affects BC-JAVA: from 1.74 before 1.84.",
+      "id": "CVE-2026-6777",
+      "publishedDate": "2026-04-21T12:41:08.452Z",
+      "lastModifiedDate": "2026-04-21T17:19:18.744Z",
+      "description": "Other issue in the Networking: DNS component. This vulnerability was fixed in Firefox 150.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/bcgit/bc-java/wiki/CVE%E2%80%902026%E2%80%903505",
+          "url": "https://bugzilla.mozilla.org/show_bug.cgi?id=2022726",
           "type": "reference"
         },
         {
-          "url": "https://github.com/bcgit/bc-java/commit/dc7530939ffb6cdb57636f3609d98e23b94e71c1",
+          "url": "https://www.mozilla.org/security/advisories/mfsa2026-30/",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Legion of the Bouncy Castle Inc.",
-          "product": "BC-JAVA",
-          "platforms": [
-            "all"
-          ],
-          "collectionURL": "https://www.bouncycastle.org/download/bouncy-castle-java/",
-          "packageName": "bcpg",
-          "repo": "https://github.com/bcgit/bc-java",
-          "modules": [
-            "pg"
-          ],
-          "programFiles": [
-            "AEADEncDataPacket.java",
-            "BcAEADUtil.java",
-            "JceAEADUtil.java",
-            "OperatorHelper.java"
-          ],
+          "product": "Firefox",
+          "vendor": "Mozilla",
           "versions": [
             {
-              "status": "affected",
-              "version": "1.74",
-              "lessThan": "1.84",
-              "versionType": "maven"
+              "status": "unaffected",
+              "version": "150",
+              "lessThanOrEqual": "*",
+              "versionType": "rpm"
             }
-          ],
-          "defaultStatus": "unaffected"
+          ]
         }
       ],
-      "problemType": [
-        "CWE-770 Allocation of resources without limits or throttling",
-        "CWE-400 Uncontrolled Resource Consumption"
-      ],
+      "problemType": [],
       "fix_suggestion": "无法生成修复建议"
     }
   ]
