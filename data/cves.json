@@ -2,11 +2,11 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 5,
-    "last_updated": "2026-04-21T23:27:56.874947",
+    "total_count": 4,
+    "last_updated": "2026-04-22T00:03:53.959219",
     "severity_distribution": {
-      "critical": 2,
-      "high": 1,
+      "critical": 0,
+      "high": 2,
       "medium": 1,
       "low": 0,
       "none": 1
@@ -14,175 +14,131 @@
   },
   "cves": [
     {
-      "id": "CVE-2026-41064",
-      "publishedDate": "2026-04-21T23:04:32.047Z",
-      "lastModifiedDate": "2026-04-21T23:04:32.047Z",
-      "description": "WWBN AVideo is an open source video platform. In versions up to and including 29.0, an incomplete fix for AVideo's `test.php` adds `escapeshellarg` for wget but leaves the `file_get_contents` and `curl` code paths unsanitized, and the URL validation regex `/^http/` accepts strings like `httpevil[.]com`. Commit 78bccae74634ead68aa6528d631c9ec4fd7aa536 contains an updated fix.",
-      "severity": 9.3,
+      "id": "CVE-2026-41133",
+      "publishedDate": "2026-04-21T23:41:06.258Z",
+      "lastModifiedDate": "2026-04-21T23:41:06.258Z",
+      "description": "pyLoad is a free and open-source download manager written in Python. Versions up to and including 0.5.0b3.dev97 cache `role` and `permission` in the session at login and continues to authorize requests using these cached values, even after an admin changes the user's role/permissions in the database. As a result, an already logged-in user can keep old (revoked) privileges until logout/session expiry, enabling continued privileged actions. This is a core authorization/session-consistency issue and is not resolved by toggling an optional security feature. Commit e95804fb0d06cbb07d2ba380fc494d9ff89b68c1 contains a fix for the issue.",
+      "severity": 8.8,
       "references": [
         {
-          "url": "https://github.com/WWBN/AVideo/security/advisories/GHSA-pq8p-wc4f-vg7j",
+          "url": "https://github.com/pyload/pyload/security/advisories/GHSA-66hx-chf7-3332",
           "type": "reference"
         },
         {
-          "url": "https://github.com/WWBN/AVideo/security/advisories/GHSA-3fpm-8rjr-v5mc",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/WWBN/AVideo/commit/1e6cf03e93b5a5318204b010ea28440b0d9a5ab3",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/WWBN/AVideo/commit/78bccae74634ead68aa6528d631c9ec4fd7aa536",
+          "url": "https://github.com/pyload/pyload/commit/e95804fb0d06cbb07d2ba380fc494d9ff89b68c1",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "WWBN",
-          "product": "AVideo",
+          "vendor": "pyload",
+          "product": "pyload",
           "versions": [
             {
-              "version": "<= 29.0",
+              "version": "<= 0.5.0b3.dev97",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+        "CWE-613: Insufficient Session Expiration"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-40575",
-      "publishedDate": "2026-04-21T23:20:30.486Z",
-      "lastModifiedDate": "2026-04-21T23:20:30.486Z",
-      "description": "OAuth2 Proxy is a reverse proxy that provides authentication using OAuth2 providers. Versions 7.5.0 through 7.15.1 may trust a client-supplied `X-Forwarded-Uri` header when `--reverse-proxy` is enabled and `--skip-auth-regex` or `--skip-auth-route` is configured. An attacker can spoof this header so OAuth2 Proxy evaluates authentication and skip-auth rules against a different path than the one actually sent to the upstream application. This can result in an unauthenticated remote attacker bypassing authentication and accessing protected routes without a valid session. Impacted users are deployments that run oauth2-proxy with `--reverse-proxy` enabled and configure at least one `--skip-auth-regex` or `--skip-auth-route` rule. This issue is patched in `v7.15.2`. Some workarounds are available for those who cannot upgrade immediately. Strip any client-provided `X-Forwarded-Uri` header at the reverse proxy or load balancer level; explicitly overwrite `X-Forwarded-Uri` with the actual request URI before forwarding requests to OAuth2 Proxy; restrict direct client access to OAuth2 Proxy so it can only be reached through a trusted reverse proxy; and/or remove or narrow `--skip-auth-regex` / `--skip-auth-route` rules where possible. For nginx-based deployments, ensure `X-Forwarded-Uri` is set by nginx and not passed through from the client.",
-      "severity": 9.1,
+      "id": "CVE-2026-41135",
+      "publishedDate": "2026-04-21T23:49:19.659Z",
+      "lastModifiedDate": "2026-04-21T23:49:19.659Z",
+      "description": "free5GC UDR is the Policy Control Function (PCF) for free5GC, an an open-source project for 5th generation (5G) mobile core networks. A memory leak vulnerability in versions prior to 1.4.3 allows any unauthenticated attacker with network access to the PCF SBI interface to cause uncontrolled memory growth by sending repeated HTTP requests to the OAM endpoint. The root cause is a `router.Use()` call inside an HTTP handler that registers a new CORS middleware on every incoming request, permanently growing the Gin router's handler chain. This leads to progressive memory exhaustion and eventual Denial of Service of the PCF, preventing all UEs from obtaining AM and SM policies and blocking 5G session establishment. Version 1.4.3 contains a patch.",
+      "severity": 7.5,
       "references": [
         {
-          "url": "https://github.com/oauth2-proxy/oauth2-proxy/security/advisories/GHSA-7x63-xv5r-3p2x",
+          "url": "https://github.com/free5gc/free5gc/security/advisories/GHSA-98cp-84m9-q3qp",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/free5gc/pcf/commit/599803b1b2eb4611e26d5216481ee142bce71a16",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "oauth2-proxy",
-          "product": "oauth2-proxy",
+          "vendor": "free5gc",
+          "product": "pcf",
           "versions": [
             {
-              "version": ">= 7.5.0, < 7.15.2",
+              "version": "< 1.4.3",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-290: Authentication Bypass by Spoofing"
+        "CWE-400: Uncontrolled Resource Consumption"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-41059",
-      "publishedDate": "2026-04-21T23:17:46.743Z",
-      "lastModifiedDate": "2026-04-21T23:17:46.743Z",
-      "description": "OAuth2 Proxy is a reverse proxy that provides authentication using OAuth2 providers. Versions 7.5.0 through 7.15.1 have a configuration-dependent authentication bypass. Deployments are affected when all of the following are true: Use of `skip_auth_routes` or the legacy `skip_auth_regex`; use of patterns that can be widened by attacker-controlled suffixes, such as `^/foo/.*/bar$` causing potential exposure of `/foo/secret`; and protected upstream applications that interpret `#` as a fragment delimiter or otherwise route the request to the protected base path. In deployments that rely on these settings, an unauthenticated attacker can send a crafted request containing a number sign in the path, including the browser-safe encoded form `%23`, so that OAuth2 Proxy matches a public allowlist rule while the backend serves a protected resource. Deployments that do not use these skip-auth options, or that only allow exact public paths with tightly scoped method and path rules, are not affected. A fix has been implemented in version 7.15.2 to normalize request paths more conservatively before skip-auth matching so fragment content does not influence allowlist decisions. Users who cannot upgrade immediately can reduce exposure by tightening or removing `skip_auth_routes` and `skip_auth_regex` rules, especially patterns that use broad wildcards across path segments. Recommended mitigations include replacing broad rules with exact, anchored public paths and explicit HTTP methods; rejecting requests whose path contains `%23` or `#` at the ingress, load balancer, or WAF level; and/or avoiding placing sensitive application paths behind broad `skip_auth_routes` rules.",
-      "severity": 8.2,
+      "id": "CVE-2026-41131",
+      "publishedDate": "2026-04-21T23:38:29.955Z",
+      "lastModifiedDate": "2026-04-21T23:38:29.955Z",
+      "description": "OpenFGA is an authorization/permission engine built for developers. Prior to version 1.14.1, in specific scenarios, models using conditions with caching enabled can result in two different check requests producing the same cache key. This could result in OpenFGA reusing an earlier cached result for a subsequent request. The preconditions for vulnerability are the model having relations which rely on condition evaluation and the user having caching enabled. OpenFGA v1.14.1 contains a fix.",
+      "severity": 5,
       "references": [
         {
-          "url": "https://github.com/oauth2-proxy/oauth2-proxy/security/advisories/GHSA-pxq7-h93f-9jrg",
+          "url": "https://github.com/openfga/openfga/security/advisories/GHSA-57j5-qwp2-vqp6",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/openfga/openfga/releases/tag/v1.14.1",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "oauth2-proxy",
-          "product": "oauth2-proxy",
+          "vendor": "openfga",
+          "product": "openfga",
           "versions": [
             {
-              "version": ">= 7.5.0, < 7.15.2",
+              "version": "< 1.14.1",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-288: Authentication Bypass Using an Alternate Path or Channel"
+        "CWE-863: Incorrect Authorization",
+        "CWE-706: Use of Incorrectly-Resolved Name or Reference"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-41063",
-      "publishedDate": "2026-04-21T22:59:52.770Z",
-      "lastModifiedDate": "2026-04-21T23:07:13.350Z",
-      "description": "WWBN AVideo is an open source video platform. In versions 29.0 and below, an incomplete XSS fix in AVideo's `ParsedownSafeWithLinks` class overrides `inlineMarkup` for raw HTML but does not override `inlineLink()` or `inlineUrlTag()`, allowing `javascript:` URLs in markdown link syntax to bypass sanitization. Commit cae8f0dadbdd962c89b91d0095c76edb8aadcacf contains an updated fix.",
-      "severity": 5.4,
-      "references": [
-        {
-          "url": "https://github.com/WWBN/AVideo/security/advisories/GHSA-m7r8-6q9j-m2hc",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/WWBN/AVideo/security/advisories/GHSA-72h5-39r7-r26j",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/WWBN/AVideo/commit/3ae02fa240939dbefc5949d64f05790fd25d728d",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/WWBN/AVideo/commit/cae8f0dadbdd962c89b91d0095c76edb8aadcacf",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "WWBN",
-          "product": "AVideo",
-          "versions": [
-            {
-              "version": "<= 29.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41304",
-      "publishedDate": "2026-04-21T23:07:48.585Z",
-      "lastModifiedDate": "2026-04-21T23:07:48.585Z",
-      "description": "WWBN AVideo is an open source video platform. In versions 29.0 and below, the `cloneServer.json.php` endpoint in the CloneSite plugin constructs shell commands using user-controlled input (`url` parameter) without proper sanitization. The input is directly concatenated into a `wget` command executed via `exec()`, allowing command injection. An attacker can inject arbitrary shell commands by breaking out of the intended URL context using shell metacharacters (e.g., `;`). This leads to Remote Code Execution (RCE) on the server. Commit 473c609fc2defdea8b937b00e86ce88eba1f15bb contains a fix.",
+      "id": "CVE-2026-40343",
+      "publishedDate": "2026-04-21T23:47:33.125Z",
+      "lastModifiedDate": "2026-04-21T23:47:33.125Z",
+      "description": "free5GC UDR is the user data repository (UDR) for free5GC, an an open-source project for 5th generation (5G) mobile core networks. In versions up to and including 1.4.2, a fail-open request handling flaw in the UDR service causes the `/nudr-dr/v2/policy-data/subs-to-notify` POST handler to continue processing requests even after request body retrieval or deserialization errors. This may allow unintended creation of Policy Data notification subscriptions with invalid, empty, or partially processed input, depending on downstream processor behavior. As of time of publication, a patched version is not available.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/WWBN/AVideo/security/advisories/GHSA-xr6f-h4x7-r6qp",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/WWBN/AVideo/commit/473c609fc2defdea8b937b00e86ce88eba1f15bb",
+          "url": "https://github.com/free5gc/free5gc/security/advisories/GHSA-jwch-w7wh-gqjm",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "WWBN",
-          "product": "AVideo",
+          "vendor": "free5gc",
+          "product": "udr",
           "versions": [
             {
-              "version": "<= 29.0",
+              "version": "<= 1.4.2",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-77: Improper Neutralization of Special Elements used in a Command ('Command Injection')"
+        "CWE-754: Improper Check for Unusual or Exceptional Conditions"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
