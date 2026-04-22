@@ -2,262 +2,138 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 5,
-    "last_updated": "2026-04-22T19:40:48.002085",
+    "total_count": 4,
+    "last_updated": "2026-04-22T20:36:51.009435",
     "severity_distribution": {
-      "critical": 1,
-      "high": 2,
-      "medium": 2,
+      "critical": 0,
+      "high": 3,
+      "medium": 0,
       "low": 0,
-      "none": 0
+      "none": 1
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-33471",
-      "publishedDate": "2026-04-22T19:13:04.687Z",
-      "lastModifiedDate": "2026-04-22T19:13:04.687Z",
-      "description": "nimiq/core-rs-albatross is a Rust implementation of the Nimiq Proof-of-Stake protocol based on the Albatross consensus algorithm. `SkipBlockProof::verify` computes its quorum check using `BitSet.len()`, then iterates `BitSet` indices and casts each `usize` index to `u16` (`slot as u16`) for slot lookup. Prior to version 1.3.0, if an attacker can get a `SkipBlockProof` verified where `MultiSignature.signers` contains out-of-range indices spaced by 65536, these indices inflate `len()` but collide onto the same in-range `u16` slot during aggregation. This makes it possible for a malicious validator with far fewer than `2f+1` real signer slots to pass skip block proof verification by multiplying a single BLS signature by the same factor. The patch for this vulnerability is included as part of v1.3.0. No known workarounds are available.",
-      "severity": 9.6,
+      "id": "CVE-2026-40937",
+      "publishedDate": "2026-04-22T20:15:57.266Z",
+      "lastModifiedDate": "2026-04-22T20:15:57.266Z",
+      "description": "RustFS is a distributed object storage system built in Rust. Prior to 1.0.0-alpha.94, all four notification target admin API endpoints in `rustfs/src/admin/handlers/event.rs` use a `check_permissions` helper that validates authentication only (access key + session token), without performing any admin-action authorization via `validate_admin_request`. Every other admin handler in the codebase correctly calls `validate_admin_request` with a specific `AdminAction`. This is the only admin handler file that skips authorization. A non-admin user can overwrite a shared admin-defined notification target by name, causing subsequent bucket events to be delivered to an attacker-controlled endpoint. This enables cross-user event interception and audit evasion. 1.0.0-alpha.94 contains a patch.",
+      "severity": 8.3,
       "references": [
         {
-          "url": "https://github.com/nimiq/core-rs-albatross/security/advisories/GHSA-6973-8887-87ff",
+          "url": "https://github.com/rustfs/rustfs/security/advisories/GHSA-pfcq-4gjr-6gjm",
           "type": "reference"
         },
         {
-          "url": "https://github.com/nimiq/core-rs-albatross/commit/d02059053181ed8ddad6b59a0adfd661ef5cd823",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/nimiq/core-rs-albatross/releases/tag/v1.3.0",
+          "url": "https://github.com/rustfs/rustfs/releases/tag/1.0.0-alpha.94",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "nimiq",
-          "product": "core-rs-albatross",
+          "vendor": "rustfs",
+          "product": "rustfs",
           "versions": [
             {
-              "version": "< 1.3.0",
+              "version": "< 1.0.0-alpha.94",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-20: Improper Input Validation",
-        "CWE-190: Integer Overflow or Wraparound",
-        "CWE-345: Insufficient Verification of Data Authenticity",
-        "CWE-1284: Improper Validation of Specified Quantity in Input"
+        "CWE-862: Missing Authorization"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-41468",
-      "publishedDate": "2026-04-22T18:04:38.557Z",
-      "lastModifiedDate": "2026-04-22T19:05:22.738Z",
-      "description": "Beghelli Sicuro24 SicuroWeb embeds AngularJS 1.5.2, an end-of-life component containing known sandbox escape primitives. When combined with template injection present in the same application, these primitives allow attackers to escape the AngularJS sandbox and achieve arbitrary JavaScript execution in operator browser sessions, enabling session hijacking, DOM manipulation, and persistent browser compromise. Network-adjacent attackers can deliver the complete injection and escape chain via MITM in plaintext HTTP deployments without active user interaction.",
-      "severity": 8.7,
+      "id": "CVE-2026-40882",
+      "publishedDate": "2026-04-22T20:33:23.304Z",
+      "lastModifiedDate": "2026-04-22T20:33:23.304Z",
+      "description": "OpenRemote is an open-source internet-of-things platform. Prior to version 1.22.0, the Velbus asset import path parses attacker-controlled XML without explicit XXE hardening. An authenticated user who can call the import endpoint may trigger XML external entity processing, which can lead to server-side file disclosure and SSRF. The target file must be less than 1023 characters. Version 1.22.0 fixes the issue.",
+      "severity": 7.6,
       "references": [
         {
-          "url": "https://www.boffsec-services.com/posts/sicuroweb-cve-2026-22191/",
-          "type": "poc"
-        },
-        {
-          "url": "https://github.com/kmkz/Exploits/blob/master/2026/CVE-2026-22191-POC.py",
-          "type": "poc"
-        },
-        {
-          "url": "https://github.com/kmkz/Exploits/blob/master/2026/CVE-2026-22191-SicuroWeb-ATI-chain.txt",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.beghelli.it",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/beghelli-sicuro24-sicuroweb-angularjs-sandbox-escape-via-template-injection",
+          "url": "https://github.com/openremote/openremote/security/advisories/GHSA-g24f-mgc3-jwwc",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Beghelli",
-          "product": "SicuroWeb (Sicuro24)",
+          "vendor": "openremote",
+          "product": "openremote",
           "versions": [
             {
-              "status": "affected",
-              "version": "0"
+              "version": "< 1.22.0",
+              "status": "affected"
             }
-          ],
-          "defaultStatus": "unknown"
+          ]
         }
       ],
       "problemType": [
-        "CWE-1104 Use of Unmaintained Third-Party Components"
+        "CWE-611: Improper Restriction of XML External Entity Reference"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-34414",
-      "publishedDate": "2026-04-22T18:32:45.737Z",
-      "lastModifiedDate": "2026-04-22T18:53:47.745Z",
-      "description": "Xerte Online Toolkits versions 3.15 and earlier contain a relative path traversal vulnerability in the elFinder connector endpoint at /editor/elfinder/php/connector.php where the name parameter in rename commands is not sanitized for path traversal sequences. Attackers can supply a name value containing directory traversal sequences to move files from project media directories to arbitrary locations on the filesystem, potentially overwriting application files, achieving stored cross-site scripting, or combining with other vulnerabilities to achieve unauthenticated remote code execution by moving PHP code files to the application root.",
-      "severity": 7.1,
+      "id": "CVE-2026-41166",
+      "publishedDate": "2026-04-22T20:31:29.234Z",
+      "lastModifiedDate": "2026-04-22T20:31:29.234Z",
+      "description": "OpenRemote is an open-source internet-of-things platform. Prior to version 1.22.1, a user who has `write:admin` in one Keycloak realm can call the Manager API to update Keycloak realm roles for users in another realm, including `master`. The handler uses the `{realm}` path segment when talking to the identity provider but does not check that the caller may administer that realm. This could result in a privilege escalation to `master` realm administrator if the attacker controls any user in `master` realm. Version 1.22.1 fixes the issue.",
+      "severity": 7,
       "references": [
         {
-          "url": "https://xerte.org.uk/xertetoolkits_3.15_ChangeLog.html",
+          "url": "https://github.com/openremote/openremote/security/advisories/GHSA-49vv-25qx-mg44",
           "type": "reference"
         },
         {
-          "url": "https://xerte.org.uk/index.php/en/downloads-1/category/3-xerte-online-toolkits",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/thexerteproject/xerteonlinetoolkits/issues/1527",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/thexerteproject/xerteonlinetoolkits/commit/02661be88cc369325ea01b508086bde7fbfec805",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/thexerteproject/xerteonlinetoolkits/commit/17e4f945fe6a3400fa88c01eda18c1075ee4a212",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/thexerteproject/xerteonlinetoolkits/commit/507d55c5e91bf9310b5b1c7fad8aebfef902ad23",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/xerte-online-toolkits-path-traversal-via-connector-php",
+          "url": "https://github.com/openremote/openremote/releases/tag/1.22.1",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "thexerteproject",
-          "product": "xerteonlinetoolkits",
-          "repo": "https://github.com/thexerteproject/xerteonlinetoolkits",
+          "vendor": "openremote",
+          "product": "openremote",
           "versions": [
             {
-              "status": "affected",
-              "version": "3.15.0",
-              "versionType": "semver"
-            },
-            {
-              "status": "affected",
-              "version": "3.14.0",
-              "versionType": "semver"
-            },
-            {
-              "status": "affected",
-              "version": "3.13.0",
-              "versionType": "semver"
-            },
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "02661be88cc369325ea01b508086bde7fbfec805",
-              "versionType": "git"
-            },
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "17e4f945fe6a3400fa88c01eda18c1075ee4a212",
-              "versionType": "git"
-            },
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "507d55c5e91bf9310b5b1c7fad8aebfef902ad23",
-              "versionType": "git"
+              "version": "< 1.22.1",
+              "status": "affected"
             }
-          ],
-          "defaultStatus": "unaffected"
+          ]
         }
       ],
       "problemType": [
-        "CWE-22 Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+        "CWE-284: Improper Access Control"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-0972",
-      "publishedDate": "2026-04-21T14:14:38.146Z",
-      "lastModifiedDate": "2026-04-22T18:55:20.563Z",
-      "description": "HTML injection is possible in system generated emails in Fortra's GoAnywhere MFT prior to 7.10.0.\n\n\nNote: The title, details, and description of this CVE were corrected post-publishing.",
-      "severity": 5.4,
+      "id": "CVE-2026-41134",
+      "publishedDate": "2026-04-22T20:20:57.541Z",
+      "lastModifiedDate": "2026-04-22T20:20:57.541Z",
+      "description": "Kiota is an OpenAPI based HTTP Client code generator. Versions prior to 1.31.1 are affected by a code-generation literal injection vulnerability in multiple writer sinks (for example: serialization/deserialization keys, path/query parameter mappings, URL template metadata, enum/property metadata, and default value emission). When malicious values from an OpenAPI description are emitted into generated source without context-appropriate escaping, an attacker can break out of string literals and inject additional code into generated clients. This issue is only practically exploitable when the OpenAPI description used for generation is from an untrusted source, or a normally trusted OpenAPI description has been compromised/tampered with. Only generating from trusted, integrity-protected API descriptions significantly reduces the risk. To remediate the issue, upgrade Kiota to 1.31.1 or later and regenerate/refresh existing generated clients as a precaution. Refreshing generated clients ensures previously generated vulnerable code is replaced with hardened output.",
+      "severity": "N/A",
       "references": [
         {
-          "url": "https://www.fortra.com/security/advisories/product-security/fi-2026-006",
+          "url": "https://github.com/microsoft/kiota/security/advisories/GHSA-2hx3-vp6r-mg3f",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Fortra",
-          "product": "GoAnywhere MFT",
+          "vendor": "microsoft",
+          "product": "kiota",
           "versions": [
             {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "7.10.0",
-              "versionType": "semver"
+              "version": "< 1.31.1",
+              "status": "affected"
             }
-          ],
-          "defaultStatus": "affected"
+          ]
         }
       ],
       "problemType": [
-        "CWE-74 Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41469",
-      "publishedDate": "2026-04-22T18:04:19.337Z",
-      "lastModifiedDate": "2026-04-22T18:56:46.982Z",
-      "description": "Beghelli Sicuro24 SicuroWeb does not enforce a Content Security Policy, allowing unrestricted loading of external JavaScript resources from attacker-controlled origins. When chained with the template injection and sandbox escape vulnerabilities present in the same application, the absence of CSP removes the browser-enforced restriction that would otherwise block external script execution, enabling attackers to load arbitrary remote payloads into operator browser sessions.",
-      "severity": 5.2,
-      "references": [
-        {
-          "url": "https://www.boffsec-services.com/posts/sicuroweb-cve-2026-22191/",
-          "type": "poc"
-        },
-        {
-          "url": "https://github.com/kmkz/Exploits/blob/master/2026/CVE-2026-22191-POC.py",
-          "type": "poc"
-        },
-        {
-          "url": "https://github.com/kmkz/Exploits/blob/master/2026/CVE-2026-22191-SicuroWeb-ATI-chain.txt",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.beghelli.it",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/beghelli-sicuro24-sicuroweb-missing-content-security-policy",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Beghelli",
-          "product": "SicuroWeb (Sicuro24)",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0"
-            }
-          ],
-          "defaultStatus": "unknown"
-        }
-      ],
-      "problemType": [
-        "CWE-693 Protection Mechanism Failure"
+        "CWE-94: Improper Control of Generation of Code ('Code Injection')"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
