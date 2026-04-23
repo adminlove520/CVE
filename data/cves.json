@@ -2,143 +2,66 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 3,
-    "last_updated": "2026-04-23T06:23:17.628267",
+    "total_count": 1,
+    "last_updated": "2026-04-23T08:19:11.439866",
     "severity_distribution": {
       "critical": 0,
       "high": 0,
-      "medium": 2,
-      "low": 1,
-      "none": 0
+      "medium": 0,
+      "low": 0,
+      "none": 1
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-41989",
-      "publishedDate": "2026-04-23T04:30:26.124Z",
-      "lastModifiedDate": "2026-04-23T05:10:34.992Z",
-      "description": "Libgcrypt before 1.12.2 sometimes allows a heap-based buffer overflow and denial of service via crafted ECDH ciphertext to gcry_pk_decrypt.",
-      "severity": 6.7,
+      "id": "CVE-2026-41564",
+      "publishedDate": "2026-04-23T07:29:26.340Z",
+      "lastModifiedDate": "2026-04-23T07:29:26.340Z",
+      "description": "CryptX versions before 0.088 for Perl do not reseed the Crypt::PK PRNG state after forking.\n\nThe Crypt::PK::RSA, Crypt::PK::DSA, Crypt::PK::DH, Crypt::PK::ECC, Crypt::PK::Ed25519 and Crypt::PK::X25519 modules seed a per-object PRNG state in their constructors and reuse it without fork detection. A Crypt::PK::* object created before `fork()` shares byte-identical PRNG state with every child process, and any randomized operation they perform can produce identical output, including key generation. Two ECDSA or DSA signatures from different processes are enough to recover the signing private key through nonce-reuse key recovery.\n\nThis affects preforking services such as the Starman web server, where a Crypt::PK::* object loaded at startup is inherited by every worker process.",
+      "severity": "N/A",
       "references": [
         {
-          "url": "https://lists.gnupg.org/pipermail/gnupg-announce/2026q2/000503.html",
+          "url": "https://github.com/DCIT/perl-CryptX/security/advisories/GHSA-24c2-gp6c-24c6",
           "type": "reference"
         },
         {
-          "url": "https://dev.gnupg.org/T8211",
+          "url": "https://github.com/DCIT/perl-CryptX/commit/9a1dd3e0c27d68e32450be5538b864c2b115ee15.patch",
           "type": "reference"
         },
         {
-          "url": "https://www.openwall.com/lists/oss-security/2026/04/21/1",
+          "url": "https://metacpan.org/release/MIK/CryptX-0.088",
           "type": "reference"
         }
       ],
       "affected": [
         {
+          "collectionURL": "https://cpan.org/modules",
           "defaultStatus": "unaffected",
-          "product": "Libgcrypt",
-          "vendor": "gnupg",
+          "packageName": "CryptX",
+          "product": "CryptX",
+          "programFiles": [
+            "inc/CryptX_PK_RSA.xs.inc",
+            "inc/CryptX_PK_DSA.xs.inc",
+            "inc/CryptX_PK_DH.xs.inc",
+            "inc/CryptX_PK_ECC.xs.inc",
+            "inc/CryptX_PK_Ed25519.xs.inc",
+            "inc/CryptX_PK_X25519.xs.inc"
+          ],
+          "repo": "https://github.com/DCIT/perl-CryptX",
+          "vendor": "MIK",
           "versions": [
             {
-              "lessThan": "1.10.4",
-              "status": "affected",
-              "version": "1.8.8",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "1.11.3",
-              "status": "affected",
-              "version": "1.11.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "1.12.2",
-              "status": "affected",
-              "version": "1.12.0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-787 Out-of-bounds Write"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41990",
-      "publishedDate": "2026-04-23T04:39:04.524Z",
-      "lastModifiedDate": "2026-04-23T05:10:55.346Z",
-      "description": "Libgcrypt before 1.12.2 mishandles Dilithium signing. Writes to a static array lack a bounds check but do not use attacker-controlled data.",
-      "severity": 4,
-      "references": [
-        {
-          "url": "https://lists.gnupg.org/pipermail/gnupg-announce/2026q2/000503.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.openwall.com/lists/oss-security/2026/04/21/1",
-          "type": "reference"
-        },
-        {
-          "url": "https://dev.gnupg.org/T8208",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Libgcrypt",
-          "vendor": "gnupg",
-          "versions": [
-            {
-              "lessThan": "1.12.2",
-              "status": "affected",
-              "version": "1.12.0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-787 Out-of-bounds Write"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41988",
-      "publishedDate": "2026-04-23T04:00:54.960Z",
-      "lastModifiedDate": "2026-04-23T05:10:10.422Z",
-      "description": "uuid before 14.0.0 can make unexpected writes when external output buffers are used, and the UUID version is 3, 5, or 6. In particular, UUID version 4, which is very commonly used, is unaffected by this issue.",
-      "severity": 3.2,
-      "references": [
-        {
-          "url": "https://github.com/uuidjs/uuid/security/advisories/GHSA-w5hq-g745-h8pq",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/uuidjs/uuid/commit/3d2c5b0342f0fcb52a5ac681c3d47c13e7444b34",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "packageURL": "pkg:npm/uuid",
-          "product": "uuid",
-          "vendor": "uuidjs",
-          "versions": [
-            {
-              "lessThan": "14.0.0",
+              "lessThan": "0.088",
               "status": "affected",
               "version": "0",
-              "versionType": "semver"
+              "versionType": "custom"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-670 Always-Incorrect Control Flow Implementation"
+        "CWE-335 Incorrect Usage of Seeds in Pseudo-Random Number Generator (PRNG)",
+        "CWE-338 Use of Cryptographically Weak Pseudo-Random Number Generator (PRNG)"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
