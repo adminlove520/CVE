@@ -2,227 +2,144 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 6,
-    "last_updated": "2026-04-23T04:23:10.716811",
+    "total_count": 3,
+    "last_updated": "2026-04-23T06:23:17.628267",
     "severity_distribution": {
-      "critical": 2,
-      "high": 2,
+      "critical": 0,
+      "high": 0,
       "medium": 2,
-      "low": 0,
+      "low": 1,
       "none": 0
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-41228",
-      "publishedDate": "2026-04-23T03:41:47.479Z",
-      "lastModifiedDate": "2026-04-23T03:41:47.479Z",
-      "description": "Froxlor is open source server administration software. Prior to version 2.3.6, the Froxlor API endpoint `Customers.update` (and `Admins.update`) does not validate the `def_language` parameter against the list of available language files. An authenticated customer can set `def_language` to a path traversal payload (e.g., `../../../../../var/customers/webs/customer1/evil`), which is stored in the database. On subsequent requests, `Language::loadLanguage()` constructs a file path using this value and executes it via `require`, achieving arbitrary PHP code execution as the web server user. Version 2.3.6 fixes the issue.",
-      "severity": 10,
+      "id": "CVE-2026-41989",
+      "publishedDate": "2026-04-23T04:30:26.124Z",
+      "lastModifiedDate": "2026-04-23T05:10:34.992Z",
+      "description": "Libgcrypt before 1.12.2 sometimes allows a heap-based buffer overflow and denial of service via crafted ECDH ciphertext to gcry_pk_decrypt.",
+      "severity": 6.7,
       "references": [
         {
-          "url": "https://github.com/froxlor/froxlor/security/advisories/GHSA-w59f-67xm-rxx7",
+          "url": "https://lists.gnupg.org/pipermail/gnupg-announce/2026q2/000503.html",
           "type": "reference"
         },
         {
-          "url": "https://github.com/froxlor/froxlor/commit/bc5e6dbaa90e6f3573129da640595e8c770e1d0c",
+          "url": "https://dev.gnupg.org/T8211",
           "type": "reference"
         },
         {
-          "url": "https://github.com/froxlor/froxlor/releases/tag/2.3.6",
+          "url": "https://www.openwall.com/lists/oss-security/2026/04/21/1",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "froxlor",
-          "product": "froxlor",
+          "defaultStatus": "unaffected",
+          "product": "Libgcrypt",
+          "vendor": "gnupg",
           "versions": [
             {
-              "version": "< 2.3.6",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-98: Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41229",
-      "publishedDate": "2026-04-23T03:44:25.617Z",
-      "lastModifiedDate": "2026-04-23T03:44:25.617Z",
-      "description": "Froxlor is open source server administration software. Prior to version 2.3.6, `PhpHelper::parseArrayToString()` writes string values into single-quoted PHP string literals without escaping single quotes. When an admin with `change_serversettings` permission adds or updates a MySQL server via the API, the `privileged_user` parameter (which has no input validation) is written unescaped into `lib/userdata.inc.php`. Since this file is `require`d on every request via `Database::getDB()`, an attacker can inject arbitrary PHP code that executes as the web server user on every subsequent page load. Version 2.3.6 contains a patch.",
-      "severity": 9.1,
-      "references": [
-        {
-          "url": "https://github.com/froxlor/froxlor/security/advisories/GHSA-gc9w-cc93-rjv8",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/froxlor/froxlor/commit/3589ddf93ab59eb2a8971f0f56cbf6266d03c4ae",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/froxlor/froxlor/releases/tag/2.3.6",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "froxlor",
-          "product": "froxlor",
-          "versions": [
-            {
-              "version": "< 2.3.6",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-94: Improper Control of Generation of Code ('Code Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41230",
-      "publishedDate": "2026-04-23T03:47:11.258Z",
-      "lastModifiedDate": "2026-04-23T03:47:11.258Z",
-      "description": "Froxlor is open source server administration software. Prior to version 2.3.6, `DomainZones::add()` accepts arbitrary DNS record types without a whitelist and does not sanitize newline characters in the `content` field. When a DNS type not covered by the if/elseif validation chain is submitted (e.g., `NAPTR`, `PTR`, `HINFO`), content validation is entirely bypassed. Embedded newline characters in the content survive `trim()` processing, are stored in the database, and are written directly into BIND zone files via `DnsEntry::__toString()`. An authenticated customer can inject arbitrary DNS records and BIND directives (`$INCLUDE`, `$ORIGIN`, `$GENERATE`) into their domain's zone file. Version 2.3.6 fixes the issue.",
-      "severity": 8.5,
-      "references": [
-        {
-          "url": "https://github.com/froxlor/froxlor/security/advisories/GHSA-47hf-23pw-3m8c",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/froxlor/froxlor/commit/47a8af5d9523cb6ec94567405cfc2e294d3a1442",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/froxlor/froxlor/releases/tag/2.3.6",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "froxlor",
-          "product": "froxlor",
-          "versions": [
-            {
-              "version": "< 2.3.6",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-93: Improper Neutralization of CRLF Sequences ('CRLF Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41231",
-      "publishedDate": "2026-04-23T03:52:42.587Z",
-      "lastModifiedDate": "2026-04-23T03:52:42.587Z",
-      "description": "Froxlor is open source server administration software. Prior to version 2.3.6, `DataDump.add()` constructs the export destination path from user-supplied input without passing the `$fixed_homedir` parameter to `FileDir::makeCorrectDir()`, bypassing the symlink validation that was added to all other customer-facing path operations (likely as the fix for CVE-2023-6069). When the ExportCron runs as root, it executes `chown -R` on the resolved symlink target, allowing a customer to take ownership of arbitrary directories on the system. Version 2.3.6 contains an updated fix.",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://github.com/froxlor/froxlor/security/advisories/GHSA-75h4-c557-j89r",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/froxlor/froxlor/commit/2987b0e8806ef12b532410050ad76d13d673a87d",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/froxlor/froxlor/releases/tag/2.3.6",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "froxlor",
-          "product": "froxlor",
-          "versions": [
-            {
-              "version": "< 2.3.6",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-59: Improper Link Resolution Before File Access ('Link Following')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-3361",
-      "publishedDate": "2026-04-23T03:26:36.668Z",
-      "lastModifiedDate": "2026-04-23T03:26:36.668Z",
-      "description": "The WP Store Locator plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the 'wpsl_address' post meta value in versions up to, and including, 2.2.261 due to insufficient input sanitization and output escaping. This makes it possible for authenticated attackers, with contributor-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page and opens an injected map marker info window.",
-      "severity": 6.4,
-      "references": [
-        {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/b4b6cbb5-d82d-4035-b0c8-5c1aaee31993?source=cve",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/changeset/3482539/wp-store-locator",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "tijmensmit",
-          "product": "WP Store Locator",
-          "versions": [
-            {
-              "version": "0",
+              "lessThan": "1.10.4",
               "status": "affected",
-              "lessThanOrEqual": "2.2.261",
+              "version": "1.8.8",
+              "versionType": "semver"
+            },
+            {
+              "lessThan": "1.11.3",
+              "status": "affected",
+              "version": "1.11.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThan": "1.12.2",
+              "status": "affected",
+              "version": "1.12.0",
               "versionType": "semver"
             }
-          ],
-          "defaultStatus": "unaffected"
+          ]
         }
       ],
       "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+        "CWE-787 Out-of-bounds Write"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-3007",
-      "publishedDate": "2026-04-23T02:54:25.444Z",
-      "lastModifiedDate": "2026-04-23T02:54:25.444Z",
-      "description": "Successful exploitation of the stored cross-site scripting (XSS) vulnerability could allow an attacker to execute arbitrary JavaScript on any user account that has access to Koollab LMS’ courselet feature.",
-      "severity": 5.4,
+      "id": "CVE-2026-41990",
+      "publishedDate": "2026-04-23T04:39:04.524Z",
+      "lastModifiedDate": "2026-04-23T05:10:55.346Z",
+      "description": "Libgcrypt before 1.12.2 mishandles Dilithium signing. Writes to a static array lack a bounds check but do not use attacker-controlled data.",
+      "severity": 4,
       "references": [
         {
-          "url": "https://www.csa.gov.sg/alerts-and-advisories/alerts/al-2026-042/",
+          "url": "https://lists.gnupg.org/pipermail/gnupg-announce/2026q2/000503.html",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.openwall.com/lists/oss-security/2026/04/21/1",
+          "type": "reference"
+        },
+        {
+          "url": "https://dev.gnupg.org/T8208",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Three Learning",
-          "product": "Koollab Learning Management System",
+          "defaultStatus": "unaffected",
+          "product": "Libgcrypt",
+          "vendor": "gnupg",
           "versions": [
             {
+              "lessThan": "1.12.2",
               "status": "affected",
-              "version": "5.3.2."
+              "version": "1.12.0",
+              "versionType": "semver"
             }
-          ],
-          "defaultStatus": "unaffected"
+          ]
         }
       ],
-      "problemType": [],
+      "problemType": [
+        "CWE-787 Out-of-bounds Write"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-41988",
+      "publishedDate": "2026-04-23T04:00:54.960Z",
+      "lastModifiedDate": "2026-04-23T05:10:10.422Z",
+      "description": "uuid before 14.0.0 can make unexpected writes when external output buffers are used, and the UUID version is 3, 5, or 6. In particular, UUID version 4, which is very commonly used, is unaffected by this issue.",
+      "severity": 3.2,
+      "references": [
+        {
+          "url": "https://github.com/uuidjs/uuid/security/advisories/GHSA-w5hq-g745-h8pq",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/uuidjs/uuid/commit/3d2c5b0342f0fcb52a5ac681c3d47c13e7444b34",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "packageURL": "pkg:npm/uuid",
+          "product": "uuid",
+          "vendor": "uuidjs",
+          "versions": [
+            {
+              "lessThan": "14.0.0",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-670 Always-Incorrect Control Flow Implementation"
+      ],
       "fix_suggestion": "无法生成修复建议"
     }
   ]
