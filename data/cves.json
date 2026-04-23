@@ -2,298 +2,350 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 9,
-    "last_updated": "2026-04-22T23:29:24.692372",
+    "total_count": 10,
+    "last_updated": "2026-04-23T01:11:08.104660",
     "severity_distribution": {
-      "critical": 0,
-      "high": 1,
-      "medium": 8,
+      "critical": 1,
+      "high": 2,
+      "medium": 1,
       "low": 0,
-      "none": 0
+      "none": 6
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-3621",
-      "publishedDate": "2026-04-22T23:07:31.595Z",
-      "lastModifiedDate": "2026-04-22T23:07:31.595Z",
-      "description": "IBM WebSphere Application Server - Liberty 17.0.0.3 through 26.0.0.4 IBM WebSphere Application Server Liberty is vulnerable to identity spoofing under limited conditions when an application is deployed without authentication and authorization configured.",
+      "id": "CVE-2026-41679",
+      "publishedDate": "2026-04-23T00:53:16.391Z",
+      "lastModifiedDate": "2026-04-23T00:53:16.391Z",
+      "description": "Paperclip is a Node.js server and React UI that orchestrates a team of AI agents to run a business. Prior to version 2026.416.0, an unauthenticated attacker can achieve full remote code execution on any network-accessible Paperclip instance running in `authenticated` mode with default configuration. No user interaction, no credentials, just the target's address. The chain consists of six API calls. The attack is fully automated, requires no user interaction, and works against the default deployment configuration. Version 2026.416.0 patches the issue.",
+      "severity": 10,
+      "references": [
+        {
+          "url": "https://github.com/paperclipai/paperclip/security/advisories/GHSA-68qg-g8mg-6pr7",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "paperclipai",
+          "product": "paperclip",
+          "versions": [
+            {
+              "version": "< 2026.410.0",
+              "status": "affected"
+            }
+          ]
+        },
+        {
+          "vendor": "paperclipai",
+          "product": "@paperclipai/server",
+          "versions": [
+            {
+              "version": "< 2026.410.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-287: Improper Authentication",
+        "CWE-862: Missing Authorization",
+        "CWE-1188: Insecure Default Initialization of Resource"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-41208",
+      "publishedDate": "2026-04-23T00:47:45.824Z",
+      "lastModifiedDate": "2026-04-23T00:50:14.160Z",
+      "description": "Paperclip is a Node.js server and React UI that orchestrates a team of AI agents to run a business. Versions of @paperclipai/server prior to 2026.416.0 contain a privilege escalation vulnerability that allows an attacker with an Agent API key to execute arbitrary OS commands on the Paperclip server host. An attacker with an agent credential can escalate privileges from the agent runtime to the Paperclip server host. The vulnerability occurs because agents are allowed to update their own adapterConfig via the /agents/:id API endpoint. The configuration field adapterConfig.workspaceStrategy.provisionCommand is later executed by the server runtime. As a result, an attacker controlling an agent credential can inject arbitrary shell commands which are executed by the Paperclip server during workspace provisioning. This breaks the intended trust boundary between agent runtime configuration and server host execution, allowing a compromised or malicious agent to escalate privileges and run commands on the host system. This vulnerability allows remote code execution on the server host. @paperclipai/server version 2026.416.0 fixes the issue.",
+      "severity": 8.8,
+      "references": [
+        {
+          "url": "https://github.com/paperclipai/paperclip/security/advisories/GHSA-265w-rf2w-cjh4",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "paperclipai",
+          "product": "@paperclipai/server",
+          "versions": [
+            {
+              "version": "< 2026.416.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-41180",
+      "publishedDate": "2026-04-23T00:10:58.230Z",
+      "lastModifiedDate": "2026-04-23T00:10:58.230Z",
+      "description": "PsiTransfer is an open source, self-hosted file sharing solution. Prior to version 2.4.3, the upload PATCH flow under `/files/:uploadId` validates the mounted request path using the still-encoded `req.path`, but the downstream tus handler later writes using the decoded `req.params.uploadId`. In deployments that use a supported custom `PSITRANSFER_UPLOAD_DIR` whose basename prefixes a startup-loaded JavaScript path, such as `conf`, an unauthenticated attacker can create `config.<NODE_ENV>.js` in the application root. The attacker-controlled file is then executed on the next process restart. Version 2.4.3 contains a patch.",
       "severity": 7.5,
       "references": [
         {
-          "url": "https://www.ibm.com/support/pages/node/7270437",
+          "url": "https://github.com/psi-4ward/psitransfer/security/advisories/GHSA-533q-w4g6-5586",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/psi-4ward/psitransfer/commit/8b547bf3e09757122efa00aab90281e3915aa0c6",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/psi-4ward/psitransfer/releases/tag/v2.4.3",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "IBM",
-          "product": "WebSphere Application Server - Liberty",
+          "vendor": "psi-4ward",
+          "product": "psitransfer",
           "versions": [
             {
-              "status": "affected",
-              "version": "17.0.0.3",
-              "lessThanOrEqual": "26.0.0.4",
-              "versionType": "semver"
+              "version": "< 2.4.3",
+              "status": "affected"
             }
-          ],
-          "cpes": [
-            "cpe:2.3:a:ibm:websphere_application_server___liberty:17.0.0.3:*:*:*:*:*:*:*",
-            "cpe:2.3:a:ibm:websphere_application_server___liberty:26.0.0.4:*:*:*:*:*:*:*"
           ]
         }
       ],
       "problemType": [
-        "CWE-269 Improper Privilege Management"
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-41667",
-      "publishedDate": "2026-04-22T05:57:28.615Z",
-      "lastModifiedDate": "2026-04-22T23:18:28.533Z",
-      "description": "Integer overflow in constant tensor data size calculation in Samsung Open Source ONE could cause incorrect buffer sizing for large constant nodes.\nAffected version is prior to commit  1.30.0.",
-      "severity": 6.6,
-      "references": [
-        {
-          "url": "https://github.com/Samsung/ONE/pull/16481",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Samsung Open Source",
-          "product": "ONE",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "1.30.0"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-190 Integer overflow or wraparound"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41666",
-      "publishedDate": "2026-04-22T05:56:18.693Z",
-      "lastModifiedDate": "2026-04-22T23:18:12.183Z",
-      "description": "Integer overflow in tensor copy size calculation in Samsung Open Source ONE could lead to out of bounds access during loop state propagation.\nAffected version is prior to commit  1.30.0.",
-      "severity": 6.6,
-      "references": [
-        {
-          "url": "https://github.com/Samsung/ONE/pull/16481",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Samsung Open Source",
-          "product": "ONE",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "1.30.0"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-190 Integer overflow or wraparound"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-40450",
-      "publishedDate": "2026-04-22T05:53:10.536Z",
-      "lastModifiedDate": "2026-04-22T23:17:24.314Z",
-      "description": "Integer overflow in output tensor copy size calculation in Samsung Open Source ONE could cause incorrect copy length and memory corruption for oversized tensors.\nAffected version is prior to commit  1.30.0.",
-      "severity": 6.6,
-      "references": [
-        {
-          "url": "https://github.com/Samsung/ONE/pull/16481",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Samsung Open Source",
-          "product": "ONE",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "1.30.0"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-190 Integer overflow or wraparound"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-40449",
-      "publishedDate": "2026-04-22T05:51:35.259Z",
-      "lastModifiedDate": "2026-04-22T23:17:01.239Z",
-      "description": "Integer overflow in buffer size calculation could result in out of bounds memory access when handling large tensors in Samsung Open Source ONE.\nAffected version is prior to commit  1.30.0.",
-      "severity": 6.6,
-      "references": [
-        {
-          "url": "https://github.com/Samsung/ONE/pull/16481",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Samsung Open Source",
-          "product": "ONE",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "1.30.0"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-190 Integer overflow or wraparound"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41665",
-      "publishedDate": "2026-04-22T05:55:17.438Z",
-      "lastModifiedDate": "2026-04-22T23:17:56.785Z",
-      "description": "Integer overflow in scratch buffer initialization size calculation in Samsung Open Source ONE cause incorrect memory initialization for large intermediate tensors.\nAffected version is prior to commit  1.30.0.",
-      "severity": 6.1,
-      "references": [
-        {
-          "url": "https://github.com/Samsung/ONE/pull/16481",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Samsung Open Source",
-          "product": "ONE",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "1.30.0"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-190 Integer overflow or wraparound"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-4918",
-      "publishedDate": "2026-04-22T23:26:38.626Z",
-      "lastModifiedDate": "2026-04-22T23:26:38.626Z",
-      "description": "IBM Guardium Data Protection 12.1 is vulnerable to stored cross-site scripting. This vulnerability allows an administrative user to embed arbitrary JavaScript code in the Web UI thus altering the intended functionality potentially leading to credentials disclosure within a trusted session.",
-      "severity": 5.5,
-      "references": [
-        {
-          "url": "https://www.ibm.com/support/pages/node/7270422",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "IBM",
-          "product": "Guardium Data Protection",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "12.1.0",
-              "versionType": "semver"
-            }
-          ],
-          "cpes": [
-            "cpe:2.3:a:ibm:guardium_data_protection:12.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:ibm:guardium_data_protection:12.1.0:*:*:*:*:*:*:*"
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-40448",
-      "publishedDate": "2026-04-22T05:40:26.361Z",
-      "lastModifiedDate": "2026-04-22T23:16:41.946Z",
-      "description": "Potential Integer overflow in tensor allocation size calculation could lead to insufficient memory allocation for large tensors in Samsung Open Source ONE.\nAffected version is prior to commit  1.30.0.",
+      "id": "CVE-2026-41182",
+      "publishedDate": "2026-04-23T00:14:20.964Z",
+      "lastModifiedDate": "2026-04-23T00:14:20.964Z",
+      "description": "LangSmith Client SDKs provide SDK's for interacting with the LangSmith platform. Prior to version 0.5.19 of the JavaScript SDK and version 0.7.31 of the Python SDK, the LangSmith SDK's output redaction controls (hideOutputs in JS, hide_outputs in Python) do not apply to streaming token events. When an LLM run produces streaming output, each chunk is recorded as a new_token event containing the raw token value. These events bypass the redaction pipeline entirely — prepareRunCreateOrUpdateInputs (JS) and _hide_run_outputs (Python) only process the inputs and outputs fields on a run, never the events array. As a result, applications relying on output redaction to prevent sensitive LLM output from being stored in LangSmith will still leak the full streamed content via run events. Version 0.5.19 of the JavaScript SDK and version 0.7.31 of the Python SDK fix the issue.",
       "severity": 5.3,
       "references": [
         {
-          "url": "https://github.com/Samsung/ONE/pull/16481",
+          "url": "https://github.com/langchain-ai/langsmith-sdk/security/advisories/GHSA-rr7j-v2q5-chgv",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Samsung Open Source",
-          "product": "ONE",
+          "vendor": "langchain-ai",
+          "product": "langsmith-sdk",
           "versions": [
             {
-              "status": "affected",
-              "version": "95fba2da1880ab3eabc719520e8591c33b65b272"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-190 Integer overflow or wraparound"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-4919",
-      "publishedDate": "2026-04-22T23:23:34.961Z",
-      "lastModifiedDate": "2026-04-22T23:23:34.961Z",
-      "description": "IBM Guardium Data Protection 12.1 is vulnerable to cross-site scripting. This vulnerability allows an administrative user to embed arbitrary JavaScript code in the Web UI thus altering the intended functionality potentially leading to credentials disclosure within a trusted session.",
-      "severity": 4.8,
-      "references": [
-        {
-          "url": "https://www.ibm.com/support/pages/node/7270422",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "IBM",
-          "product": "Guardium Data Protection",
-          "versions": [
+              "version": "< 0.5.19",
+              "status": "affected"
+            },
             {
-              "status": "affected",
-              "version": "12.1",
-              "lessThanOrEqual": "26.0.0.4",
-              "versionType": "semver"
+              "version": "< 0.7.31",
+              "status": "affected"
             }
-          ],
-          "cpes": [
-            "cpe:2.3:a:ibm:guardium_data_protection:12.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:ibm:guardium_data_protection:12.1.0:*:*:*:*:*:*:*"
           ]
         }
       ],
       "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+        "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor",
+        "CWE-359: Exposure of Private Personal Information to an Unauthorized Actor",
+        "CWE-532: Insertion of Sensitive Information into Log File"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-41211",
+      "publishedDate": "2026-04-23T00:56:15.568Z",
+      "lastModifiedDate": "2026-04-23T00:56:15.568Z",
+      "description": "Vite+ is a unified toolchain and entry point for web development. Prior to version 0.1.17, `downloadPackageManager()` accepts an untrusted `version` string and uses it directly in filesystem paths. A caller can supply `../` segments or an absolute path to escape the `VP_HOME/package_manager/<pm>/` cache root and make Vite+ delete, replace, and populate directories outside the intended cache location. Version 0.1.17 contains a patch.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/voidzero-dev/vite-plus/security/advisories/GHSA-33r3-4whc-44c2",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "voidzero-dev",
+          "product": "vite-plus",
+          "versions": [
+            {
+              "version": "< 0.1.17",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-41206",
+      "publishedDate": "2026-04-23T00:42:49.204Z",
+      "lastModifiedDate": "2026-04-23T00:42:49.204Z",
+      "description": "PySpector is a static analysis security testing (SAST) Framework engineered for modern Python development workflows. The plugin security validator in PySpector uses AST-based static analysis to prevent dangerous code from being loaded as plugins. Prior to version 0.1.8, the blocklist implemented in `PluginSecurity.validate_plugin_code` is incomplete and can be bypassed using several Python constructs that are not checked. An attacker who can supply a plugin file can achieve arbitrary code execution within the PySpector process when that plugin is installed and executed. Version 0.1.8 fixes the issue.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/ParzivalHack/PySpector/security/advisories/GHSA-vp22-38m5-r39r",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/ParzivalHack/PySpector/commit/3c9547157fc07396f22b26b3484a9a91eba98555",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/ParzivalHack/PySpector/commit/4e279e078c53d760fd321ff9b698d683c65ccb8e",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "ParzivalHack",
+          "product": "PySpector",
+          "versions": [
+            {
+              "version": "< 0.1.8",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-184: Incomplete List of Disallowed Inputs"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-41200",
+      "publishedDate": "2026-04-23T00:40:23.187Z",
+      "lastModifiedDate": "2026-04-23T00:40:23.187Z",
+      "description": "STIG Manager is an API and web client for managing  Security Technical Implementation Guides (STIG) assessments of Information Systems. Versions 1.5.10 through 1.6.7 have a reflected Cross-Site Scripting (XSS) vulnerability in the OIDC authentication error handling code in `src/init.js` and `public/reauth.html`. During the OIDC redirect flow, the `error` and `error_description` query parameters returned by the OIDC provider are written directly to the DOM via `innerHTML` without HTML escaping. An attacker who can craft a malicious redirect URL and convince a user to follow it can execute arbitrary JavaScript in the application's origin context. The vulnerability is most severe when the targeted user has an active STIG Manager session running in another browser tab — injected code executes in the same origin and can communicate with the SharedWorker managing the active access token, enabling authenticated API requests on behalf of the victim including reading and modifying collection data. The vulnerability is patched in version 1.6.8. There is no workaround short of upgrading. Deployments behind a web application firewall that filters reflected XSS payloads in query parameters may have partial mitigation, but this is not a substitute for patching.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/NUWCDIVNPT/stig-manager/security/advisories/GHSA-wg33-j3rv-jq72",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "NUWCDIVNPT",
+          "product": "stig-manager",
+          "versions": [
+            {
+              "version": ">= 1.5.10, < 1.6.8",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-41197",
+      "publishedDate": "2026-04-23T00:35:37.842Z",
+      "lastModifiedDate": "2026-04-23T00:35:37.842Z",
+      "description": "Noir is a Domain Specific Language for SNARK proving systems that is designed to use any ACIR compatible proving system, and Brillig is the bytecode ACIR uses for non-determinism. Noir programs can invoke external functions through foreign calls. When compiling to Brillig bytecode, the SSA instructions are processed block-by-block in `BrilligBlock::compile_block()`. When the compiler encounters an `Instruction::Call` with a `Value::ForeignFunction` target, it invokes `codegen_call()` in `brillig_call/code_gen_call.rs`, which dispatches to `convert_ssa_foreign_call()`. Before emitting the foreign call opcode, the compiler must pre-allocate memory for any array results the call will return. This happens through `allocate_external_call_results()`, which iterates over the result types. For `Type::Array` results, it delegates to `allocate_foreign_call_result_array()` to recursively allocate memory on the heap for nested arrays. The `BrilligArray` struct is the internal representation of a Noir array in Brillig IR. Its `size` field represents the semi-flattened size, the total number of memory slots the array occupies, accounting for the fact that composite types like tuples consume multiple slots per element. This size is computed by `compute_array_length()` in `brillig_block_variables.rs`. For the outer array, `allocate_external_call_results()` correctly uses `define_variable()`, which internally calls `allocate_value_with_type()`. This function applies the formula above, producing the correct semi-flattened size. However, for nested arrays, `allocate_foreign_call_result_array()` contains a bug. The pattern `Type::Array(_, nested_size)` discards the inner types with `_` and uses only `nested_size`, the semantic length of the nested array (the number of logical elements), not the semi-flattened size. For simple element types this works correctly, but for composite element types it under-allocates. Foreign calls returning nested arrays of tuples or other composite types corrupt the Brillig VM heap. Version 1.0.0-beta.19 fixes this issue.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/noir-lang/noir/security/advisories/GHSA-jj7c-x25r-r8r3",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/noir-lang/noir/releases/tag/v1.0.0-beta.19",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "noir-lang",
+          "product": "noir",
+          "versions": [
+            {
+              "version": "< 1.0.0-beta.19",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-131: Incorrect Calculation of Buffer Size"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-41196",
+      "publishedDate": "2026-04-23T00:28:56.716Z",
+      "lastModifiedDate": "2026-04-23T00:28:56.716Z",
+      "description": "Luanti (formerly Minetest) is an open source voxel game-creation platform. Starting in version 5.0.0 and prior to version 5.15.2, a malicious mod can trivially escape the sandboxed Lua environment to execute arbitrary code and gain full filesystem access on the user's device. This applies to the server-side mod, async and mapgen as well as the client-side (CSM) environments. This vulnerability is only exploitable when using LuaJIT. Version 5.15.2 contains a patch. On release versions, one can also patch this issue without recompiling by editing `builtin/init.lua` and adding the line `getfenv = nil` at the end. Note that this will break mods relying on this function (which is not inherently unsafe).",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/luanti-org/luanti/security/advisories/GHSA-g596-mf82-w8c3",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/luanti-org/luanti/commit/8a929dfb97aa08337f49ba1bb96a56d6557dc896",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "luanti-org",
+          "product": "luanti",
+          "versions": [
+            {
+              "version": ">= 5.0.0, < 5.15.2",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-94: Improper Control of Generation of Code ('Code Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-41243",
+      "publishedDate": "2026-04-23T00:09:03.863Z",
+      "lastModifiedDate": "2026-04-23T00:09:03.863Z",
+      "description": "OpenLearn is open-source educational forum software. Prior to commit 844b2a40a69d0c4911580fe501923f0b391313ab, when `safeMode` is enabled, unapproved forum posts are hidden from the public list, but the direct post-read procedure still returns the full post to anyone with the post UUID. Commit 844b2a40a69d0c4911580fe501923f0b391313ab fixes the issue.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/siemvk/OpenLearn/security/advisories/GHSA-4rv3-hfh6-vqvm",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/siemvk/OpenLearn/commit/844b2a40a69d0c4911580fe501923f0b391313ab",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "siemvk",
+          "product": "OpenLearn",
+          "versions": [
+            {
+              "version": "< 844b2a40a69d0c4911580fe501923f0b391313ab",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-284: Improper Access Control"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
