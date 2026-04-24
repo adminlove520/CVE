@@ -2,271 +2,429 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 3,
-    "last_updated": "2026-04-23T23:58:17.386378",
+    "total_count": 12,
+    "last_updated": "2026-04-24T03:42:55.502501",
     "severity_distribution": {
-      "critical": 1,
-      "high": 0,
-      "medium": 2,
+      "critical": 0,
+      "high": 4,
+      "medium": 3,
       "low": 0,
-      "none": 0
+      "none": 5
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-40630",
-      "publishedDate": "2026-04-23T23:45:46.695Z",
-      "lastModifiedDate": "2026-04-23T23:45:46.695Z",
-      "description": "A vulnerability in \nSenseLive \n\nX3050’s web management interface allows unauthorized access to certain configuration endpoints due to improper access control enforcement. An attacker with network access to the device may be able to bypass the intended authentication mechanism and directly interact with sensitive configuration functions.",
-      "severity": 9.8,
+      "id": "CVE-2026-33318",
+      "publishedDate": "2026-04-24T02:13:47.200Z",
+      "lastModifiedDate": "2026-04-24T02:13:47.200Z",
+      "description": "Actual is a local-first personal finance tool. Prior to version 26.4.0, any authenticated user (including `BASIC` role) can escalate to `ADMIN` on servers migrated from password authentication to OpenID Connect. Three weaknesses combine: `POST /account/change-password` has no authorization check, allowing any session to overwrite the password hash; the inactive password `auth` row is never removed on migration; and the login endpoint accepts a client-supplied `loginMethod` that bypasses the server's active auth configuration. Together these allow an attacker to set a known password and authenticate as the anonymous admin account created during the multiuser migration. The three weaknesses form a single, sequential exploit chain — none produces privilege escalation on its own. Missing authorization on POST /change-password allows overwriting a password hash, but only matters if there is an orphaned row to target. Orphaned password row persisting after migration provides the target row, but is harmless without the ability to authenticate using it. Client-controlled loginMethod: \"password\" allows forcing password-based auth, but is useless without a known hash established by step 1. All three must be chained in sequence to achieve the impact. No single weakness independently results in privilege escalation. The single root cause is the missing authorization check on /change-password; the other two are preconditions that make it exploitable. Version 26.4.0 contains a fix.",
+      "severity": 8.8,
       "references": [
         {
-          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-111-12",
+          "url": "https://github.com/actualbudget/actual/security/advisories/GHSA-prp4-2f49-fcgp",
           "type": "reference"
         },
         {
-          "url": "https://github.com/cisagov/CSAF/blob/develop/csaf_files/OT/white/2026/icsa-26-111-12.json",
-          "type": "reference"
-        },
-        {
-          "url": "https://senselive.io/contact",
+          "url": "https://actualbudget.org/blog/release-26.4.0",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "SenseLive",
-          "product": "X3050",
+          "vendor": "actualbudget",
+          "product": "actual",
           "versions": [
             {
-              "status": "affected",
-              "version": "V1.523"
+              "version": "< 26.4.0",
+              "status": "affected"
             }
-          ],
-          "defaultStatus": "unaffected"
+          ]
         }
       ],
       "problemType": [
-        "CWE-288 Authentication bypass using an alternate path or channel"
+        "CWE-284: Improper Access Control",
+        "CWE-862: Missing Authorization"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-25720",
-      "publishedDate": "2026-04-23T23:48:16.663Z",
-      "lastModifiedDate": "2026-04-23T23:48:16.663Z",
-      "description": "A vulnerability exists in SenseLive\n\nX3050’s web management interface due to improper session lifetime enforcement, allowing authenticated sessions to remain active for extended periods without requiring re-authentication. An attacker with access to a previously authenticated session could continue interacting with administrative functions long after legitimate user activity has ceased.",
-      "severity": 5.4,
+      "id": "CVE-2026-33317",
+      "publishedDate": "2026-04-24T02:20:55.670Z",
+      "lastModifiedDate": "2026-04-24T02:20:55.670Z",
+      "description": "OP-TEE is a Trusted Execution Environment (TEE) designed as companion to a non-secure Linux kernel running on Arm; Cortex-A cores using the TrustZone technology. In versions 3.13.0 through 4.10.0, missing checks in `entry_get_attribute_value()`  in `ta/pkcs11/src/object.c` can lead to out-of-bounds read from the PKCS#11 TA heap or a crash. When chained with the OOB read, the PKCS#11 TA function `PKCS11_CMD_GET_ATTRIBUTE_VALUE`  or `entry_get_attribute_value()` can, with a bad template parameter, be tricked into reading at most 7 bytes beyond the end of the template buffer and writing beyond the end of the template buffer with the content of an attribute value of a PKCS#11 object. Commits e031c4e562023fd9f199e39fd2e85797e4cbdca9, 16926d5a46934c46e6656246b4fc18385a246900, and 149e8d7ecc4ef8bb00ab4a37fd2ccede6d79e1ca contain patches and are anticipated to be part of version 4.11.0.",
+      "severity": 8.7,
       "references": [
         {
-          "url": "https://senselive.io/contact",
+          "url": "https://github.com/OP-TEE/optee_os/security/advisories/GHSA-8cqw-mg7v-c9p9",
           "type": "reference"
         },
         {
-          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-111-12",
+          "url": "https://github.com/OP-TEE/optee_os/commit/149e8d7ecc4ef8bb00ab4a37fd2ccede6d79e1ca",
           "type": "reference"
         },
         {
-          "url": "https://github.com/cisagov/CSAF/blob/develop/csaf_files/OT/white/2026/icsa-26-111-12.json",
+          "url": "https://github.com/OP-TEE/optee_os/commit/16926d5a46934c46e6656246b4fc18385a246900",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/OP-TEE/optee_os/commit/e031c4e562023fd9f199e39fd2e85797e4cbdca9",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "SenseLive",
-          "product": "X3050",
+          "vendor": "OP-TEE",
+          "product": "optee_os",
           "versions": [
             {
-              "status": "affected",
-              "version": "V1.523"
+              "version": ">= 3.13.0, <= 4.10.0",
+              "status": "affected"
             }
-          ],
-          "defaultStatus": "unaffected"
+          ]
         }
       ],
       "problemType": [
-        "CWE-613 Insufficient session expiration"
+        "CWE-125: Out-of-bounds Read",
+        "CWE-787: Out-of-bounds Write"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-1789",
-      "publishedDate": "2026-04-23T23:38:11.157Z",
-      "lastModifiedDate": "2026-04-23T23:38:11.157Z",
-      "description": "A vulnerability in the browser-based remote management interface may allow an administrator to access sensitive information on the device via crafted requests, affecting certain production printers and office/small office multifunction printers.",
-      "severity": 4.9,
+      "id": "CVE-2026-41309",
+      "publishedDate": "2026-04-24T02:31:52.915Z",
+      "lastModifiedDate": "2026-04-24T02:31:52.915Z",
+      "description": "Open Source Social Network (OSSN) is open-source social networking software developed in PHP. Versions prior to 9.0 are vulnerable to resource exhaustion. An attacker can upload a specially crafted image with extreme pixel dimensions (e.g., $10000 \\times 10000$ pixels). While the compressed file size on disk may be small, the server attempts to allocate significant memory and CPU cycles during the decompression and resizing process, leading to a Denial of Service (DoS) condition. It is highly recommended to upgrade to OSSN 9.0. This version introduces stricter validation of image dimensions and improved resource management during the processing phase. Those who cannot upgrade immediately can mitigate the risk by adjusting their `php.ini` settings to strictly limit `memory_limit` and `max_execution_time` and/or implementing a client-side and server-side check on image headers to reject files exceeding reasonable pixel dimensions (e.g., $4000 \\times 4000$ pixels) before processing begins.",
+      "severity": 8.2,
       "references": [
         {
-          "url": "https://psirt.canon/advisory-information/cp2026-003/",
+          "url": "https://github.com/opensource-socialnetwork/opensource-socialnetwork/security/advisories/GHSA-72qf-xrcw-fhr2",
           "type": "reference"
         },
         {
-          "url": "https://canon.jp/support/support-info/260423vulnerability-response",
+          "url": "https://github.com/opensource-socialnetwork/opensource-socialnetwork/issues/2535",
           "type": "reference"
         },
         {
-          "url": "https://www.usa.canon.com/about-us/to-our-customers/cpa2026-003-vulnerability-mitigation-remediation-for-production-printers-and-office-multifunction-printers",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.canon-europe.com/support/product-security/",
+          "url": "https://github.com/opensource-socialnetwork/opensource-socialnetwork/commit/12357113b3be189da7f6e429979a464e4f982117",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Canon Inc.",
-          "product": "imagePRESS Series",
+          "vendor": "opensource-socialnetwork",
+          "product": "opensource-socialnetwork",
           "versions": [
             {
-              "status": "affected",
-              "version": "all version"
-            }
-          ]
-        },
-        {
-          "vendor": "Canon Inc.",
-          "product": "imageFORCE Series",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "all version"
-            }
-          ]
-        },
-        {
-          "vendor": "Canon Inc.",
-          "product": "imageRUNNER ADVANCE Series",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "all version"
-            }
-          ]
-        },
-        {
-          "vendor": "Canon Inc.",
-          "product": "imageRUNNER Series",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "all version"
-            }
-          ]
-        },
-        {
-          "vendor": "Canon Inc.",
-          "product": "Satera MF7525F",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "v15.00 or earlier"
-            }
-          ]
-        },
-        {
-          "vendor": "Canon Inc.",
-          "product": "Satera MF7625F",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "v8.12 or earlier"
-            }
-          ]
-        },
-        {
-          "vendor": "Canon Inc.",
-          "product": "Satera MF7725F",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "v16.04 or earlier"
-            }
-          ]
-        },
-        {
-          "vendor": "Canon Inc.",
-          "product": "Satera MF842CDW",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "v16.04 or earlier"
-            }
-          ]
-        },
-        {
-          "vendor": "Canon Inc.",
-          "product": "imageCLASS X C1538iF II",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "v16.04 or earlier"
-            }
-          ]
-        },
-        {
-          "vendor": "Canon Inc.",
-          "product": "imageCLASS X MF1538C II",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "v16.04 or earlier"
-            }
-          ]
-        },
-        {
-          "vendor": "Canon Inc.",
-          "product": "i-SENSYS C1533iF II",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "v16.04 or earlier"
-            }
-          ]
-        },
-        {
-          "vendor": "Canon Inc.",
-          "product": "i-SENSYS X C1538 iF II",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "v16.04 or earlier"
-            }
-          ]
-        },
-        {
-          "vendor": "Canon Inc.",
-          "product": "i-SENSYS MF842Cdw",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "v16.04 or earlier"
-            }
-          ]
-        },
-        {
-          "vendor": "Canon Inc.",
-          "product": "MF842CDW",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "v16.04 or earlier"
-            }
-          ]
-        },
-        {
-          "vendor": "Canon Inc.",
-          "product": "MF842CX",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "v16.04 or earlier"
+              "version": "< 9.0",
+              "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-807: Reliance on Untrusted Inputs in a Security Decision"
+        "CWE-770: Allocation of Resources Without Limits or Throttling",
+        "CWE-400: Uncontrolled Resource Consumption"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-41316",
+      "publishedDate": "2026-04-24T02:35:41.160Z",
+      "lastModifiedDate": "2026-04-24T02:35:41.160Z",
+      "description": "ERB is a templating system for Ruby. Ruby 2.7.0 (before ERB 2.2.0 was published on rubygems.org) introduced an `@_init` instance variable guard in `ERB#result` and `ERB#run` to prevent code execution when an ERB object is reconstructed via `Marshal.load` (deserialization). However, three other public methods that also evaluate `@src` via `eval()` were not given the same guard: `ERB#def_method`, `ERB#def_module`, and `ERB#def_class`. An attacker who can trigger `Marshal.load` on untrusted data in a Ruby application that has `erb` loaded can use `ERB#def_module` (zero-arg, default parameters) as a code execution sink, bypassing the `@_init` protection entirely. ERB 4.0.3.1, 4.0.4.1, 6.0.1.1, and 6.0.4 patch the issue.",
+      "severity": 8.1,
+      "references": [
+        {
+          "url": "https://github.com/ruby/erb/security/advisories/GHSA-q339-8rmv-2mhv",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "ruby",
+          "product": "erb",
+          "versions": [
+            {
+              "version": "< 4.0.3.1",
+              "status": "affected"
+            },
+            {
+              "version": "= 4.0.4",
+              "status": "affected"
+            },
+            {
+              "version": ">= 5.0.0, < 6.0.1.1",
+              "status": "affected"
+            },
+            {
+              "version": ">= 6.0.2, < 6.0.4",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-693: Protection Mechanism Failure"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-41305",
+      "publishedDate": "2026-04-24T02:27:47.719Z",
+      "lastModifiedDate": "2026-04-24T02:27:47.719Z",
+      "description": "PostCSS takes a CSS file and provides an API to analyze and modify its rules by transforming the rules into an Abstract Syntax Tree. Versions prior to 8.5.10 do not escape `</style>` sequences when stringifying CSS ASTs. When user-submitted CSS is parsed and re-stringified for embedding in HTML `<style>` tags, `</style>` in CSS values breaks out of the style context, enabling XSS. Version 8.5.10 fixes the issue.",
+      "severity": 6.1,
+      "references": [
+        {
+          "url": "https://github.com/postcss/postcss/security/advisories/GHSA-qx2v-qp2m-jg93",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/postcss/postcss/releases/tag/8.5.10",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "postcss",
+          "product": "postcss",
+          "versions": [
+            {
+              "version": "< 8.5.10",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-32952",
+      "publishedDate": "2026-04-24T01:46:31.573Z",
+      "lastModifiedDate": "2026-04-24T01:46:31.573Z",
+      "description": "go-ntlmssp is a Go package that provides NTLM/Negotiate authentication over HTTP. Prior to version 0.1.1, a malicious NTLM challenge message can causes an slice out of bounds panic, which can crash any Go process using `ntlmssp.Negotiator` as an HTTP transport. Version 0.1.1 patches the issue.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://github.com/Azure/go-ntlmssp/security/advisories/GHSA-pjcq-xvwq-hhpj",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/Azure/go-ntlmssp/releases/tag/v0.1.1",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Azure",
+          "product": "go-ntlmssp",
+          "versions": [
+            {
+              "version": "< 0.1.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-190: Integer Overflow or Wraparound"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-40254",
+      "publishedDate": "2026-04-24T02:24:50.794Z",
+      "lastModifiedDate": "2026-04-24T02:24:50.794Z",
+      "description": "FreeRDP is a free implementation of the Remote Desktop Protocol. Versions prior to 3.25.0 have an off-by-one in the path traversal filter in `channels/drive/client/drive_file.c`. The `contains_dotdot()` function catches `../` and `..\\` mid-path but misses `..` when it's the last component with no trailing separator. A rogue RDP server can read, list, or write files one directory above the client's shared folder through RDPDR requests. This requires the victim to connect with drive redirection enabled. Version 3.25.0 patches the issue.",
+      "severity": 4.2,
+      "references": [
+        {
+          "url": "https://github.com/FreeRDP/FreeRDP/security/advisories/GHSA-3xpj-m4hx-8vmx",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "FreeRDP",
+          "product": "FreeRDP",
+          "versions": [
+            {
+              "version": "< 3.25.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-193: Off-by-one Error"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-41317",
+      "publishedDate": "2026-04-24T02:40:16.528Z",
+      "lastModifiedDate": "2026-04-24T02:40:16.528Z",
+      "description": "Press, a Frappe custom app that runs Frappe Cloud, manages infrastructure, subscription, marketplace, and software-as-a-service (SaaS).`press.api.account.create_api_secret` is prone to CSRF-like exploits. This endpoint writes to database and it is also accessible via GET method. The patch in commit 52ea2f2d1b587be0807557e96f025f47897d00fd restricts method to POST.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/frappe/press/security/advisories/GHSA-q4wg-jrr8-vpwf",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/frappe/press/commit/52ea2f2d1b587be0807557e96f025f47897d00fd",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "frappe",
+          "product": "press",
+          "versions": [
+            {
+              "version": "< 52ea2f2d1b587be0807557e96f025f47897d00fd",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-352: Cross-Site Request Forgery (CSRF)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-33208",
+      "publishedDate": "2026-04-24T02:10:13.834Z",
+      "lastModifiedDate": "2026-04-24T02:10:13.834Z",
+      "description": "Roxy-WI is a web interface for managing Haproxy, Nginx, Apache and Keepalived servers. Prior to version 8.2.6.4, the /config/ < service > /find-in-config endpoint in Roxy-WI fails to sanitize the user-supplied words parameter before embedding it into a shell command string that is subsequently executed on a remote managed server via SSH. An authenticated attacker can inject arbitrary shell metacharacters to break out of the intended grep command context and execute arbitrary OS commands with sudo privileges on the target server, resulting in full Remote Code Execution (RCE). Version 8.2.6.4 patches the issue.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/roxy-wi/roxy-wi/security/advisories/GHSA-7m2h-gmvj-cjx2",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/roxy-wi/roxy-wi/commit/02f147d567a3cc8cf61a4b58ea4c2b7866a544de",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "roxy-wi",
+          "product": "roxy-wi",
+          "versions": [
+            {
+              "version": "< 8.2.6.4",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-33078",
+      "publishedDate": "2026-04-24T02:05:02.737Z",
+      "lastModifiedDate": "2026-04-24T02:05:02.737Z",
+      "description": "Roxy-WI is a web interface for managing Haproxy, Nginx, Apache and Keepalived servers. Versions prior to 8.2.6.4 have a SQL injection vulnerability in the haproxy_section_save function in app/routes/config/routes.py. The server_ip parameter, sourced from the URL path, is passed unsanitized through multiple function calls and ultimately interpolated into a SQL query string using Python string formatting, allowing attackers to execute arbitrary SQL commands. Version 8.2.6.4 fixes the issue.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/roxy-wi/roxy-wi/security/advisories/GHSA-jmj9-2c4q-849j",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/roxy-wi/roxy-wi/commit/aecc7971959092fa93e93531f1ffcde33524b031",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "roxy-wi",
+          "product": "roxy-wi",
+          "versions": [
+            {
+              "version": "< 8.2.6.4",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-33077",
+      "publishedDate": "2026-04-24T01:55:43.957Z",
+      "lastModifiedDate": "2026-04-24T01:55:43.957Z",
+      "description": "Roxy-WI is a web interface for managing Haproxy, Nginx, Apache and Keepalived servers. Prior to version 8.2.6.4, the oldconfig parameter in the haproxy_section_save interface has an arbitrary file read vulnerability. Version 8.2.6.4 fixes the issue.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/roxy-wi/roxy-wi/security/advisories/GHSA-c799-4ww6-q93w",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/roxy-wi/roxy-wi/commit/aecc7971959092fa93e93531f1ffcde33524b031",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "roxy-wi",
+          "product": "roxy-wi",
+          "versions": [
+            {
+              "version": "< 8.2.6.4",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-33076",
+      "publishedDate": "2026-04-24T01:52:47.208Z",
+      "lastModifiedDate": "2026-04-24T01:52:47.208Z",
+      "description": "Roxy-WI is a web interface for managing Haproxy, Nginx, Apache and Keepalived servers. Prior to version 8.2.6.4, the haproxy_section_save interface presents a vulnerability that could lead to remote code execution due to path traversal and writing into scheduled tasks. Version 8.2.6.4 fixes the issue.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/roxy-wi/roxy-wi/security/advisories/GHSA-mmgm-p9x9-h33j",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/roxy-wi/roxy-wi/commit/aecc7971959092fa93e93531f1ffcde33524b031",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "roxy-wi",
+          "product": "roxy-wi",
+          "versions": [
+            {
+              "version": "< 8.2.6.4",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
