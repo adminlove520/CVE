@@ -2,30 +2,55 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 10,
-    "last_updated": "2026-04-24T19:34:45.363530",
+    "total_count": 7,
+    "last_updated": "2026-04-24T20:28:16.421604",
     "severity_distribution": {
-      "critical": 1,
-      "high": 5,
-      "medium": 1,
+      "critical": 2,
+      "high": 0,
+      "medium": 4,
       "low": 0,
-      "none": 3
+      "none": 1
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-41327",
-      "publishedDate": "2026-04-24T18:27:51.477Z",
-      "lastModifiedDate": "2026-04-24T19:05:56.125Z",
-      "description": "Dgraph is an open source distributed GraphQL database. Prior to 25.3.3, a vulnerability has been found in Dgraph that gives an unauthenticated attacker full read access to every piece of data in the database. This affects Dgraph's default configuration where ACL is not enabled. The attack is a single HTTP POST to /mutate?commitNow=true containing a crafted cond field in an upsert mutation. The cond value is concatenated directly into a DQL query string via strings.Builder.WriteString after only a cosmetic strings.Replace transformation. No escaping, parameterization, or structural validation is applied. An attacker injects an additional DQL query block into the cond string, which the DQL parser accepts as a syntactically valid named query block. The injected query executes server-side and its results are returned in the HTTP response. This vulnerability is fixed in 25.3.3.",
+      "id": "CVE-2026-41428",
+      "publishedDate": "2026-04-24T19:17:29.501Z",
+      "lastModifiedDate": "2026-04-24T20:00:50.097Z",
+      "description": "Budibase is an open-source low-code platform. Prior to 3.35.4, the authenticated middleware uses unanchored regular expressions to match public (no-auth) endpoint patterns against ctx.request.url. Since ctx.request.url in Koa includes the query string, an attacker can access any protected endpoint by appending a public endpoint path as a query parameter. For example, POST /api/global/users/search?x=/api/system/status bypasses all authentication because the regex /api/system/status/ matches in the query string portion of the URL. This vulnerability is fixed in 3.35.4.",
       "severity": 9.1,
       "references": [
         {
-          "url": "https://github.com/dgraph-io/dgraph/security/advisories/GHSA-mrxx-39g5-ph77",
+          "url": "https://github.com/Budibase/budibase/security/advisories/GHSA-8783-3wgf-jggf",
           "type": "reference"
-        },
+        }
+      ],
+      "affected": [
         {
-          "url": "https://github.com/dgraph-io/dgraph/releases/tag/v25.3.3",
+          "vendor": "Budibase",
+          "product": "budibase",
+          "versions": [
+            {
+              "version": "< 3.35.4",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-287: Improper Authentication"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-41328",
+      "publishedDate": "2026-04-24T18:25:43.894Z",
+      "lastModifiedDate": "2026-04-24T19:57:59.743Z",
+      "description": "Dgraph is an open source distributed GraphQL database. Prior to 25.3.3, a vulnerability has been found in Dgraph that gives an unauthenticated attacker full read access to every piece of data in the database. This affects Dgraph's default configuration where ACL is not enabled. The attack requires two HTTP POSTs to port 8080. The first sets up a schema predicate with @unique @index(exact) @lang via /alter (also unauthenticated in default config). The second sends a crafted JSON mutation to /mutate?commitNow=true where a JSON key contains the predicate name followed by @ and a DQL injection payload in the language tag position. The injection exploits the addQueryIfUnique function in edgraph/server.go, which constructs DQL queries using fmt.Sprintf with unsanitized predicateName that includes the raw pred.Lang value. The Lang field is extracted from JSON mutation keys by x.PredicateLang(), which splits on @, and is never validated by any function in the codebase. The attacker injects a closing parenthesis to escape the eq() function, adds an arbitrary named query block, and uses a # comment to neutralize trailing template syntax. The injected query executes server-side and its results are returned in the HTTP response. This vulnerability is fixed in 25.3.3.",
+      "severity": 9.1,
+      "references": [
+        {
+          "url": "https://github.com/dgraph-io/dgraph/security/advisories/GHSA-x92x-px7w-4gx4",
           "type": "reference"
         }
       ],
@@ -47,98 +72,59 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-41421",
-      "publishedDate": "2026-04-24T18:53:49.983Z",
-      "lastModifiedDate": "2026-04-24T18:53:49.983Z",
-      "description": "SiYuan is an open-source personal knowledge management system. Prior to 3.6.5, SiYuan desktop renders notification messages as raw HTML inside an Electron renderer. The notification route POST /api/notification/pushMsg accepts a user-controlled msg value, forwards it through the backend broadcast layer, and the frontend inserts it into the DOM with insertAdjacentHTML(...) at message.ts. On desktop builds, this is not limited to ordinary XSS. Electron windows are created with nodeIntegration: true, contextIsolation: false, and webSecurity: false at main.js. As a result, JavaScript executed from the notification sink can directly access Node APIs and escalate to desktop code execution. This vulnerability is fixed in 3.6.5.",
-      "severity": 8.8,
+      "id": "CVE-2026-6968",
+      "publishedDate": "2026-04-24T19:44:44.835Z",
+      "lastModifiedDate": "2026-04-24T20:10:00.800Z",
+      "description": "Incomplete path traversal fixes in awslabs/tough before tough-v0.22.0 allow remote authenticated users with delegated signing authority to write files outside intended output directories via absolute target names in copy_target/link_target, symlinked parent directories in save_target, or symlinked metadata filenames in SignedRole::write, because write paths trust the joined destination path without post-resolution containment verification.\n\nWe recommend you upgrade to tough-v0.22.0 / tuftool-v0.15.0.",
+      "severity": 5.9,
       "references": [
         {
-          "url": "https://github.com/siyuan-note/siyuan/security/advisories/GHSA-grjj-6f6g-cq8q",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "siyuan-note",
-          "product": "siyuan",
-          "versions": [
-            {
-              "version": "< 3.6.5",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')",
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41485",
-      "publishedDate": "2026-04-24T03:27:08.865Z",
-      "lastModifiedDate": "2026-04-24T18:53:26.871Z",
-      "description": "Kyverno is a policy engine designed for cloud native platform engineering teams. Prior to versions 1.17.2 and 1.16.4, an unchecked type assertion in the `forEach` mutation handler allows any user with permission to create a `Policy` or `ClusterPolicy` to crash the cluster-wide background controller into a persistent CrashLoopBackOff. The same bug also causes the admission controller to drop connections and block all matching resource operations. The crash loop persists until the policy is deleted. The vulnerability is confined to the legacy engine, and CEL-based policies are unaffected. Versions 1.17.2 and 1.16.4 fix the issue.",
-      "severity": 7.7,
-      "references": [
-        {
-          "url": "https://github.com/kyverno/kyverno/security/advisories/GHSA-fpjq-c37h-cqcv",
+          "url": "https://aws.amazon.com/security/security-bulletins/2026-019-aws/",
           "type": "reference"
         },
         {
-          "url": "https://github.com/kyverno/kyverno/commit/76c8fdbe87328722e099e1fd44c3f21c9f7809cb",
+          "url": "https://github.com/awslabs/tough/releases/tag/tough-v0.22.0",
           "type": "reference"
         },
         {
-          "url": "https://github.com/kyverno/kyverno/commit/80e728c2283a0c65e5adb02d8a907106e6ebe7e3",
+          "url": "https://github.com/awslabs/tough/releases/tag/tuftool-v0.15.0",
+          "type": "reference"
+        },
+        {
+          "url": "https://crates.io/crates/tough/0.22.0",
+          "type": "reference"
+        },
+        {
+          "url": "https://crates.io/crates/tuftool/0.15.0",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/awslabs/tough/security/advisories/GHSA-v57p-gppj-p9vg",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "kyverno",
-          "product": "kyverno",
+          "vendor": "AWS",
+          "product": "tough",
           "versions": [
             {
-              "version": "< 1.16.4",
-              "status": "affected"
-            },
-            {
-              "version": ">= 1.17.0-rc1, < 1.17.2",
-              "status": "affected"
+              "status": "unaffected",
+              "version": "0.22.0"
             }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-617: Reachable Assertion"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41419",
-      "publishedDate": "2026-04-24T18:50:44.763Z",
-      "lastModifiedDate": "2026-04-24T18:50:44.763Z",
-      "description": "4ga Boards is a boards system for realtime project management. Prior to 3.3.5, a path traversal vulnerability allows an authenticated user with board import privileges to make the server ingest arbitrary host files as board attachments during BOARDS archive import. Once imported, the file can be downloaded through the normal application interface, resulting in unauthorized local file disclosure. This vulnerability is fixed in 3.3.5.",
-      "severity": 7.6,
-      "references": [
+          ],
+          "defaultStatus": "unaffected"
+        },
         {
-          "url": "https://github.com/RARgames/4gaBoards/security/advisories/GHSA-rrjq-7x8g-cmgm",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "RARgames",
-          "product": "4gaBoards",
+          "vendor": "AWS",
+          "product": "tuftool",
           "versions": [
             {
-              "version": "< 3.3.5",
-              "status": "affected"
+              "status": "unaffected",
+              "version": "0.15.0"
             }
-          ]
+          ],
+          "defaultStatus": "unaffected"
         }
       ],
       "problemType": [
@@ -147,68 +133,70 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-33662",
-      "publishedDate": "2026-04-24T18:13:28.529Z",
-      "lastModifiedDate": "2026-04-24T19:00:51.713Z",
-      "description": "OP-TEE is a Trusted Execution Environment (TEE) designed as companion to a non-secure Linux kernel running on Arm; Cortex-A cores using the TrustZone technology. From 3.8.0 to 4.10, in the function emsa_pkcs1_v1_5_encode() in core/drivers/crypto/crypto_api/acipher/rsassa.c, the amount of padding needed, \"PS size\", is calculated by subtracting the size of the digest and other fields required for the EMA-PKCS1-v1_5 encoding from the size of the modulus of the key. By selecting a small enough modulus, this subtraction can overflow. The padding is added as a string of 0xFF bytes with a call to memset(), and an underflowed integer will cause the memset() call to overwrite until OP-TEE crashes. This only affects platforms registering RSA acceleration.",
-      "severity": 7.5,
+      "id": "CVE-2026-6966",
+      "publishedDate": "2026-04-24T19:38:24.907Z",
+      "lastModifiedDate": "2026-04-24T19:59:12.012Z",
+      "description": "Improper verification of cryptographic signature uniqueness in delegated role validation in awslabs/tough before tough-v0.22.0 allows remote authenticated users to bypass the TUF signature threshold requirement by duplicating a valid signature, causing the client to accept forged delegated role metadata.\n\nWe recommend you upgrade to tough-v0.22.0 / tuftool-v0.15.0.",
+      "severity": 5.3,
       "references": [
         {
-          "url": "https://github.com/OP-TEE/optee_os/security/advisories/GHSA-4cf8-v5g3-73gr",
+          "url": "https://aws.amazon.com/security/security-bulletins/2026-019-aws/",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/awslabs/tough/releases/tag/tough-v0.22.0",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/awslabs/tough/releases/tag/tuftool-v0.15.0",
+          "type": "reference"
+        },
+        {
+          "url": "https://crates.io/crates/tough/0.22.0",
+          "type": "reference"
+        },
+        {
+          "url": "https://crates.io/crates/tuftool/0.15.0",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/awslabs/tough/security/advisories/GHSA-8m7c-8m39-rv4x",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "OP-TEE",
-          "product": "optee_os",
+          "vendor": "AWS",
+          "product": "tough",
           "versions": [
             {
-              "version": ">= 3.8.0, <= 4.10",
-              "status": "affected"
+              "status": "unaffected",
+              "version": "0.22.0"
             }
-          ]
+          ],
+          "defaultStatus": "unaffected"
+        },
+        {
+          "vendor": "AWS",
+          "product": "tuftool",
+          "versions": [
+            {
+              "status": "unaffected",
+              "version": "0.15.0"
+            }
+          ],
+          "defaultStatus": "unaffected"
         }
       ],
       "problemType": [
-        "CWE-190: Integer Overflow or Wraparound"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41324",
-      "publishedDate": "2026-04-24T03:28:48.696Z",
-      "lastModifiedDate": "2026-04-24T18:50:23.130Z",
-      "description": "basic-ftp is an FTP client for Node.js. Versions prior to 5.3.0 are vulnerable to denial of service through unbounded memory growth while processing directory listings from a remote FTP server. A malicious or compromised server can send an extremely large or never-ending listing response to `Client.list()`, causing the client process to consume memory until it becomes unstable or crashes. Version 5.3.0 fixes the issue.",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://github.com/patrickjuchli/basic-ftp/security/advisories/GHSA-rp42-5vxx-qpwr",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "patrickjuchli",
-          "product": "basic-ftp",
-          "versions": [
-            {
-              "version": "< 5.3.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-400: Uncontrolled Resource Consumption",
-        "CWE-770: Allocation of Resources Without Limits or Throttling"
+        "CWE-347: Improper Verification of Cryptographic Signature"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
       "id": "CVE-2026-41418",
       "publishedDate": "2026-04-24T18:49:38.599Z",
-      "lastModifiedDate": "2026-04-24T18:49:38.599Z",
+      "lastModifiedDate": "2026-04-24T19:59:10.069Z",
       "description": "4ga Boards is a boards system for realtime project management. Prior to 3.3.5, 4ga Boards is vulnerable to user enumeration via a timing side-channel in the login endpoint (POST /api/access-tokens). When an invalid username/email is provided, the server responds immediately (~17ms average). When a valid username/email is provided with an incorrect password, the server first performs a bcrypt.compareSync() operation (~74ms average) before responding. This ~4.4× timing difference is trivially detectable even over a network — a single request suffices. This vulnerability is fixed in 3.3.5.",
       "severity": 5.3,
       "references": [
@@ -235,99 +223,64 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-41894",
-      "publishedDate": "2026-04-24T18:56:54.001Z",
-      "lastModifiedDate": "2026-04-24T18:56:54.001Z",
-      "description": "SiYuan is an open-source personal knowledge management system. Prior to 3.6.5, the fix for CVE-2026-30869 only added a denylist check (IsSensitivePath) but did not address the root cause — a redundant url.PathUnescape() call in serveExport(). An authenticated attacker can use double URL encoding (%252e%252e) to traverse directories and read arbitrary workspace files including the full SQLite database (siyuan.db), kernel log, and all user documents. This vulnerability is fixed in 3.6.5.",
-      "severity": "N/A",
+      "id": "CVE-2026-41244",
+      "publishedDate": "2026-04-24T19:11:54.892Z",
+      "lastModifiedDate": "2026-04-24T19:59:59.355Z",
+      "description": "Mojic is a CLI tool to transform readable C code into an unrecognizable chaotic stream of emojis. Prior to 2.1.4, the CipherEngine uses a standard equality operator (!==) to verify the HMAC-SHA256 integrity seal during the decryption phase. This creates an Observable Timing Discrepancy (CWE-208), allowing a potential attacker to bypass the file integrity check via a timing attack. This vulnerability is fixed in 2.1.4.",
+      "severity": 4.7,
       "references": [
         {
-          "url": "https://github.com/siyuan-note/siyuan/security/advisories/GHSA-hjh7-r5w8-5872",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/siyuan-note/siyuan/commit/bb481e1290c4a34255652ede85a546504505d2a7",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/siyuan-note/siyuan/releases/tag/v3.6.5",
+          "url": "https://github.com/notamitgamer/mojic/security/advisories/GHSA-wqq3-wfmp-v85g",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "siyuan-note",
-          "product": "siyuan",
+          "vendor": "notamitgamer",
+          "product": "mojic",
           "versions": [
             {
-              "version": "< 3.6.5",
+              "version": "< 2.1.4",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+        "CWE-208: Observable Timing Discrepancy"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-41326",
-      "publishedDate": "2026-04-24T18:46:21.993Z",
-      "lastModifiedDate": "2026-04-24T18:46:21.993Z",
-      "description": "Kata Containers is an open source project focusing on a standard implementation of lightweight Virtual Machines (VMs) that perform like containers. From v3.4.0 to v3.28.0, an oversight in the CopyFile policy (and perhaps the CopyFile handler) allows untrusted hosts to write to arbitrary locations inside the guest workload image. This can be used to overwrite binaries inside the guest and exfiltrate data from containers; even those running inside CVMs. This vulnerability is fixed in v3.29.0.",
+      "id": "CVE-2026-41415",
+      "publishedDate": "2026-04-24T18:38:36.181Z",
+      "lastModifiedDate": "2026-04-24T19:58:40.628Z",
+      "description": "PJSIP is a free and open source multimedia communication library written in C. In 2.16 and earlier, there is an out-of-bounds read when parsing a malformed Content-ID URI in SIP multipart message body. Insufficient length validation can cause reads beyond the intended buffer bounds. This vulnerability is fixed in 2.17.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/kata-containers/kata-containers/security/advisories/GHSA-q49m-57vm-c8cc",
+          "url": "https://github.com/pjsip/pjproject/security/advisories/GHSA-935m-fmf5-j4pm",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/pjsip/pjproject/commit/4225a93c16661538005017883fbc8f1ea1d5f4b0",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "kata-containers",
-          "product": "kata-containers",
+          "vendor": "pjsip",
+          "product": "pjproject",
           "versions": [
             {
-              "version": ">= 3.4.0, < 3.29.0",
+              "version": "< 2.17",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-61: UNIX Symbolic Link (Symlink) Following"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41680",
-      "publishedDate": "2026-04-24T17:26:27.847Z",
-      "lastModifiedDate": "2026-04-24T19:08:41.300Z",
-      "description": "Marked is a markdown parser and compiler. From 18.0.0 to 18.0.1, a critical Denial of Service (DoS) vulnerability exists in marked. By providing a specific 3-byte input sequence a tab, a vertical tab, and a newline (\\x09\\x0b\\n)—an unauthenticated attacker can trigger an infinite recursion loop during parsing. This leads to unbounded memory allocation, causing the host Node.js application to crash via Memory Exhaustion (OOM). This vulnerability is fixed in 18.0.2.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/markedjs/marked/security/advisories/GHSA-6v9c-7cg6-27q7",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "markedjs",
-          "product": "marked",
-          "versions": [
-            {
-              "version": ">= 18.0.0, < 18.0.2",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-400: Uncontrolled Resource Consumption",
-        "CWE-674: Uncontrolled Recursion",
-        "CWE-835: Loop with Unreachable Exit Condition ('Infinite Loop')"
+        "CWE-125: Out-of-bounds Read"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
