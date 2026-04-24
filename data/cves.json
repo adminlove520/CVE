@@ -2,133 +2,30 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 45,
-    "last_updated": "2026-04-24T18:30:30.785363",
+    "total_count": 10,
+    "last_updated": "2026-04-24T19:34:45.363530",
     "severity_distribution": {
-      "critical": 4,
-      "high": 12,
-      "medium": 16,
+      "critical": 1,
+      "high": 5,
+      "medium": 1,
       "low": 0,
-      "none": 13
+      "none": 3
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-39920",
-      "publishedDate": "2026-04-24T15:48:26.059Z",
-      "lastModifiedDate": "2026-04-24T18:17:02.370Z",
-      "description": "BridgeHead FileStore versions prior to 24A (released in early 2024) expose the Apache Axis2 administration module on network-accessible endpoints with default credentials that allows unauthenticated remote attackers to execute arbitrary OS commands. Attackers can authenticate to the admin console using default credentials, upload a malicious Java archive as a web service, and execute arbitrary commands on the host via SOAP requests to the deployed service.",
-      "severity": 9.8,
-      "references": [
-        {
-          "url": "https://gist.github.com/VAMorales/9e6a13d7529c079a363930dff48be3ba",
-          "type": "poc"
-        },
-        {
-          "url": "https://www.bridgeheadsoftware.com/rapid-data-protection-product-updates/",
-          "type": "reference"
-        },
-        {
-          "url": "https://issues.apache.org/jira/browse/AXIS2-4279",
-          "type": "reference"
-        },
-        {
-          "url": "https://axis.apache.org/axis2/java/core/docs/webadminguide.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/bridgehead-filestore-24a-apache-axis2-default-credentials-rce",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "BridgeHead Software",
-          "product": "FileStore",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "24A",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-1188 Initialization of a Resource with an Insecure Default",
-        "CWE-1391 Use of Weak Credentials"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-24303",
-      "publishedDate": "2026-04-23T21:37:41.267Z",
-      "lastModifiedDate": "2026-04-24T18:19:37.257Z",
-      "description": "Improper access control in Microsoft Partner Center allows an authorized attacker to elevate privileges over a network.",
-      "severity": 9.6,
-      "references": [
-        {
-          "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-24303",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Microsoft",
-          "product": "Microsoft Partner Center",
-          "versions": [
-            {
-              "version": "-",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-284: Improper Access Control"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-33102",
-      "publishedDate": "2026-04-23T21:35:48.984Z",
-      "lastModifiedDate": "2026-04-24T18:19:44.113Z",
-      "description": "Url redirection to untrusted site ('open redirect') in M365 Copilot allows an unauthorized attacker to elevate privileges over a network.",
-      "severity": 9.3,
-      "references": [
-        {
-          "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-33102",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Microsoft",
-          "product": "Microsoft 365 Copilot",
-          "versions": [
-            {
-              "version": "-",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-601: URL Redirection to Untrusted Site ('Open Redirect')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41328",
-      "publishedDate": "2026-04-24T18:25:43.894Z",
-      "lastModifiedDate": "2026-04-24T18:25:43.894Z",
-      "description": "Dgraph is an open source distributed GraphQL database. Prior to 25.3.3, a vulnerability has been found in Dgraph that gives an unauthenticated attacker full read access to every piece of data in the database. This affects Dgraph's default configuration where ACL is not enabled. The attack requires two HTTP POSTs to port 8080. The first sets up a schema predicate with @unique @index(exact) @lang via /alter (also unauthenticated in default config). The second sends a crafted JSON mutation to /mutate?commitNow=true where a JSON key contains the predicate name followed by @ and a DQL injection payload in the language tag position. The injection exploits the addQueryIfUnique function in edgraph/server.go, which constructs DQL queries using fmt.Sprintf with unsanitized predicateName that includes the raw pred.Lang value. The Lang field is extracted from JSON mutation keys by x.PredicateLang(), which splits on @, and is never validated by any function in the codebase. The attacker injects a closing parenthesis to escape the eq() function, adds an arbitrary named query block, and uses a # comment to neutralize trailing template syntax. The injected query executes server-side and its results are returned in the HTTP response. This vulnerability is fixed in 25.3.3.",
+      "id": "CVE-2026-41327",
+      "publishedDate": "2026-04-24T18:27:51.477Z",
+      "lastModifiedDate": "2026-04-24T19:05:56.125Z",
+      "description": "Dgraph is an open source distributed GraphQL database. Prior to 25.3.3, a vulnerability has been found in Dgraph that gives an unauthenticated attacker full read access to every piece of data in the database. This affects Dgraph's default configuration where ACL is not enabled. The attack is a single HTTP POST to /mutate?commitNow=true containing a crafted cond field in an upsert mutation. The cond value is concatenated directly into a DQL query string via strings.Builder.WriteString after only a cosmetic strings.Replace transformation. No escaping, parameterization, or structural validation is applied. An attacker injects an additional DQL query block into the cond string, which the DQL parser accepts as a syntactically valid named query block. The injected query executes server-side and its results are returned in the HTTP response. This vulnerability is fixed in 25.3.3.",
       "severity": 9.1,
       "references": [
         {
-          "url": "https://github.com/dgraph-io/dgraph/security/advisories/GHSA-x92x-px7w-4gx4",
+          "url": "https://github.com/dgraph-io/dgraph/security/advisories/GHSA-mrxx-39g5-ph77",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/dgraph-io/dgraph/releases/tag/v25.3.3",
           "type": "reference"
         }
       ],
@@ -150,663 +47,109 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-33317",
-      "publishedDate": "2026-04-24T02:20:55.670Z",
-      "lastModifiedDate": "2026-04-24T18:18:04.912Z",
-      "description": "OP-TEE is a Trusted Execution Environment (TEE) designed as companion to a non-secure Linux kernel running on Arm; Cortex-A cores using the TrustZone technology. In versions 3.13.0 through 4.10.0, missing checks in `entry_get_attribute_value()`  in `ta/pkcs11/src/object.c` can lead to out-of-bounds read from the PKCS#11 TA heap or a crash. When chained with the OOB read, the PKCS#11 TA function `PKCS11_CMD_GET_ATTRIBUTE_VALUE`  or `entry_get_attribute_value()` can, with a bad template parameter, be tricked into reading at most 7 bytes beyond the end of the template buffer and writing beyond the end of the template buffer with the content of an attribute value of a PKCS#11 object. Commits e031c4e562023fd9f199e39fd2e85797e4cbdca9, 16926d5a46934c46e6656246b4fc18385a246900, and 149e8d7ecc4ef8bb00ab4a37fd2ccede6d79e1ca contain patches and are anticipated to be part of version 4.11.0.",
-      "severity": 8.7,
+      "id": "CVE-2026-41421",
+      "publishedDate": "2026-04-24T18:53:49.983Z",
+      "lastModifiedDate": "2026-04-24T18:53:49.983Z",
+      "description": "SiYuan is an open-source personal knowledge management system. Prior to 3.6.5, SiYuan desktop renders notification messages as raw HTML inside an Electron renderer. The notification route POST /api/notification/pushMsg accepts a user-controlled msg value, forwards it through the backend broadcast layer, and the frontend inserts it into the DOM with insertAdjacentHTML(...) at message.ts. On desktop builds, this is not limited to ordinary XSS. Electron windows are created with nodeIntegration: true, contextIsolation: false, and webSecurity: false at main.js. As a result, JavaScript executed from the notification sink can directly access Node APIs and escalate to desktop code execution. This vulnerability is fixed in 3.6.5.",
+      "severity": 8.8,
       "references": [
         {
-          "url": "https://github.com/OP-TEE/optee_os/security/advisories/GHSA-8cqw-mg7v-c9p9",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/OP-TEE/optee_os/commit/149e8d7ecc4ef8bb00ab4a37fd2ccede6d79e1ca",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/OP-TEE/optee_os/commit/16926d5a46934c46e6656246b4fc18385a246900",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/OP-TEE/optee_os/commit/e031c4e562023fd9f199e39fd2e85797e4cbdca9",
+          "url": "https://github.com/siyuan-note/siyuan/security/advisories/GHSA-grjj-6f6g-cq8q",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "OP-TEE",
-          "product": "optee_os",
+          "vendor": "siyuan-note",
+          "product": "siyuan",
           "versions": [
             {
-              "version": ">= 3.13.0, <= 4.10.0",
+              "version": "< 3.6.5",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-125: Out-of-bounds Read",
-        "CWE-787: Out-of-bounds Write"
+        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')",
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-5367",
-      "publishedDate": "2026-04-24T12:25:05.024Z",
-      "lastModifiedDate": "2026-04-24T18:17:08.701Z",
-      "description": "A flaw was found in OVN (Open Virtual Network). A remote attacker, by sending crafted DHCPv6 (Dynamic Host Configuration Protocol for IPv6) SOLICIT packets with an inflated Client ID length, could cause the ovn-controller to read beyond the bounds of a packet. This out-of-bounds read can lead to the disclosure of sensitive information stored in heap memory, which is then returned to the attacker's virtual machine port.",
-      "severity": 8.6,
+      "id": "CVE-2026-41485",
+      "publishedDate": "2026-04-24T03:27:08.865Z",
+      "lastModifiedDate": "2026-04-24T18:53:26.871Z",
+      "description": "Kyverno is a policy engine designed for cloud native platform engineering teams. Prior to versions 1.17.2 and 1.16.4, an unchecked type assertion in the `forEach` mutation handler allows any user with permission to create a `Policy` or `ClusterPolicy` to crash the cluster-wide background controller into a persistent CrashLoopBackOff. The same bug also causes the admission controller to drop connections and block all matching resource operations. The crash loop persists until the policy is deleted. The vulnerability is confined to the legacy engine, and CEL-based policies are unaffected. Versions 1.17.2 and 1.16.4 fix the issue.",
+      "severity": 7.7,
       "references": [
         {
-          "url": "https://access.redhat.com/security/cve/CVE-2026-5367",
+          "url": "https://github.com/kyverno/kyverno/security/advisories/GHSA-fpjq-c37h-cqcv",
           "type": "reference"
         },
         {
-          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2455863",
+          "url": "https://github.com/kyverno/kyverno/commit/76c8fdbe87328722e099e1fd44c3f21c9f7809cb",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/kyverno/kyverno/commit/80e728c2283a0c65e5adb02d8a907106e6ebe7e3",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 7",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn2.11",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:7::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 7",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn2.12",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:7::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 7",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn2.13",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:7::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 8",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn-2021",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:8::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 8",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn2.11",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:8::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 8",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn2.12",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:8::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 8",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn2.13",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:8::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 8",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn22.03",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:8::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 8",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn22.06",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:8::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 8",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn22.09",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:8::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 8",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn22.12",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:8::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 8",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn23.03",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:8::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 8",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn23.06",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:8::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 9",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn-2021",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:9::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 9",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn22.03",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:9::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 9",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn22.06",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:9::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 9",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn22.09",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:9::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 9",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn22.12",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:9::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 9",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn23.03",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:9::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 9",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn23.06",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:9::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 9",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn23.09",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:9::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 9",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn24.03",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:9::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 9",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn24.09",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:9::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 9",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn25.03",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:9::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 9",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn25.09",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:9::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat OpenShift Container Platform 4",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn22.06",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/a:redhat:openshift:4"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat OpenShift Container Platform 4",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn22.09",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/a:redhat:openshift:4"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat OpenShift Container Platform 4",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn22.12",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/a:redhat:openshift:4"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat OpenShift Container Platform 4",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn23.03",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/a:redhat:openshift:4"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat OpenShift Container Platform 4",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn23.06",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/a:redhat:openshift:4"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat OpenShift Container Platform 4",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn23.09",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/a:redhat:openshift:4"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat OpenShift Container Platform 4",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn24.03",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/a:redhat:openshift:4"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat OpenShift Container Platform 4",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn24.09",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/a:redhat:openshift:4"
-          ]
-        }
-      ],
-      "problemType": [
-        "Improper Handling of Length Parameter Inconsistency"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41309",
-      "publishedDate": "2026-04-24T02:31:52.915Z",
-      "lastModifiedDate": "2026-04-24T18:17:55.864Z",
-      "description": "Open Source Social Network (OSSN) is open-source social networking software developed in PHP. Versions prior to 9.0 are vulnerable to resource exhaustion. An attacker can upload a specially crafted image with extreme pixel dimensions (e.g., $10000 \\times 10000$ pixels). While the compressed file size on disk may be small, the server attempts to allocate significant memory and CPU cycles during the decompression and resizing process, leading to a Denial of Service (DoS) condition. It is highly recommended to upgrade to OSSN 9.0. This version introduces stricter validation of image dimensions and improved resource management during the processing phase. Those who cannot upgrade immediately can mitigate the risk by adjusting their `php.ini` settings to strictly limit `memory_limit` and `max_execution_time` and/or implementing a client-side and server-side check on image headers to reject files exceeding reasonable pixel dimensions (e.g., $4000 \\times 4000$ pixels) before processing begins.",
-      "severity": 8.2,
-      "references": [
-        {
-          "url": "https://github.com/opensource-socialnetwork/opensource-socialnetwork/security/advisories/GHSA-72qf-xrcw-fhr2",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/opensource-socialnetwork/opensource-socialnetwork/issues/2535",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/opensource-socialnetwork/opensource-socialnetwork/commit/12357113b3be189da7f6e429979a464e4f982117",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "opensource-socialnetwork",
-          "product": "opensource-socialnetwork",
+          "vendor": "kyverno",
+          "product": "kyverno",
           "versions": [
             {
-              "version": "< 9.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-770: Allocation of Resources Without Limits or Throttling",
-        "CWE-400: Uncontrolled Resource Consumption"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-27841",
-      "publishedDate": "2026-04-24T00:00:57.349Z",
-      "lastModifiedDate": "2026-04-24T18:18:30.759Z",
-      "description": "A vulnerability in SenseLive X3050's web management interface allows state-changing operations to be triggered without proper Cross-Site Request Forgery (CSRF) protections. Because the application does not enforce server-side validation of request origin or implement CSRF tokens, a malicious external webpage could cause a user's browser to submit unauthorized configuration requests to the device.",
-      "severity": 8.1,
-      "references": [
-        {
-          "url": "https://senselive.io/contact",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-111-12",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/cisagov/CSAF/blob/develop/csaf_files/OT/white/2026/icsa-26-111-12.json",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "SenseLive",
-          "product": "X3050",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "V1.523"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-352 Cross-Site request forgery (CSRF)"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-40623",
-      "publishedDate": "2026-04-23T23:58:47.343Z",
-      "lastModifiedDate": "2026-04-24T18:18:37.202Z",
-      "description": "A vulnerability in SenseLive X3050's web management interface allows critical system and network configuration parameters to be modified without sufficient validation and safety controls. Due to inadequate enforcement of constraints on sensitive functions, parameters such as IP addressing, watchdog timers, reconnect intervals, and service ports can be set to unsupported or unsafe values. These configuration changes directly affect core device behaviour and recovery mechanisms. The lack of proper validation and safeguards allows critical system functions to be altered in a manner that can destabilize device operation or render the device persistently unavailable.",
-      "severity": 8.1,
-      "references": [
-        {
-          "url": "https://senselive.io/contact",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-111-12",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/cisagov/CSAF/blob/develop/csaf_files/OT/white/2026/icsa-26-111-12.json",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "SenseLive",
-          "product": "X3050",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "V1.523"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-862 Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-39462",
-      "publishedDate": "2026-04-23T23:52:16.129Z",
-      "lastModifiedDate": "2026-04-24T18:18:50.532Z",
-      "description": "A vulnerability exists in SenseLive X3050’s web management interface in which password updates are not reliably applied due to improper handling of credential changes on the backend. After the device undergoes a factory restore using the SenseLive Config 2.0 tool, the interface may indicate that the password update was successful; however, the system may continue to accept the previous or default credentials, demonstrating that the password-change process is not consistently enforced. Even after a factory reset, attempted password changes may fail to propagate correctly.",
-      "severity": 8.1,
-      "references": [
-        {
-          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-111-12",
-          "type": "reference"
-        },
-        {
-          "url": "https://senselive.io/contact",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/cisagov/CSAF/blob/develop/csaf_files/OT/white/2026/icsa-26-111-12.json",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "SenseLive",
-          "product": "X3050",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "V1.523"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-522 Insufficiently Protected Credentials"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41246",
-      "publishedDate": "2026-04-23T18:44:39.907Z",
-      "lastModifiedDate": "2026-04-24T18:20:40.823Z",
-      "description": "Contour is a Kubernetes ingress controller using Envoy proxy. From v1.19.0 to before v1.33.4, v1.32.5, and v1.31.6, Contour's Cookie Rewriting feature is vulnerable to Lua code injection. An attacker with RBAC permissions to create or modify HTTPProxy resources can craft a malicious value in spec.routes[].cookieRewritePolicies[].pathRewrite.value or spec.routes[].services[].cookieRewritePolicies[].pathRewrite.value that results in arbitrary code execution in the Envoy proxy. The cookie rewriting feature is internally implemented using Envoy's HTTP Lua filter. User-controlled values are interpolated into Lua source code using Go text/template without sufficient sanitization. The injected code only executes when processing traffic on the attacker's own route, which they already control. However, since Envoy runs as shared infrastructure, the injected code can also read Envoy's xDS client credentials from the filesystem or cause denial of service for other tenants sharing the Envoy instance. This vulnerability is fixed in v1.33.4, v1.32.5, and v1.31.6.",
-      "severity": 8.1,
-      "references": [
-        {
-          "url": "https://github.com/projectcontour/contour/security/advisories/GHSA-x4mj-7f9g-29h4",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/projectcontour/contour/releases/tag/v1.31.6",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/projectcontour/contour/releases/tag/v1.32.5",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/projectcontour/contour/releases/tag/v1.33.4",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "projectcontour",
-          "product": "contour",
-          "versions": [
-            {
-              "version": ">= 1.33.0, < 1.33.4",
+              "version": "< 1.16.4",
               "status": "affected"
             },
             {
-              "version": ">= 1.32.0, < 1.32.5",
-              "status": "affected"
-            },
-            {
-              "version": ">= 1.19.0, < 1.31.6",
+              "version": ">= 1.17.0-rc1, < 1.17.2",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-94: Improper Control of Generation of Code ('Code Injection')"
+        "CWE-617: Reachable Assertion"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-33666",
-      "publishedDate": "2026-04-24T18:21:11.265Z",
-      "lastModifiedDate": "2026-04-24T18:21:11.265Z",
-      "description": "Zserio is a framework for serializing structured data with a compact and efficient way with low overhead. Prior to 2.18.1, in BitStreamReader.h readBytes() / readString(), the setBitPosition() bounds check receives the overflowed value and is completely bypassed. The code then reads len bytes (512 MB) from a buffer that is only a few bytes long, causing a segmentation fault. This vulnerability is fixed in 2.18.1.",
-      "severity": 7.5,
+      "id": "CVE-2026-41419",
+      "publishedDate": "2026-04-24T18:50:44.763Z",
+      "lastModifiedDate": "2026-04-24T18:50:44.763Z",
+      "description": "4ga Boards is a boards system for realtime project management. Prior to 3.3.5, a path traversal vulnerability allows an authenticated user with board import privileges to make the server ingest arbitrary host files as board attachments during BOARDS archive import. Once imported, the file can be downloaded through the normal application interface, resulting in unauthorized local file disclosure. This vulnerability is fixed in 3.3.5.",
+      "severity": 7.6,
       "references": [
         {
-          "url": "https://github.com/ndsev/zserio/security/advisories/GHSA-fjwv-6wcr-vqwj",
+          "url": "https://github.com/RARgames/4gaBoards/security/advisories/GHSA-rrjq-7x8g-cmgm",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "ndsev",
-          "product": "zserio",
+          "vendor": "RARgames",
+          "product": "4gaBoards",
           "versions": [
             {
-              "version": "<= 2.15.0",
+              "version": "< 3.3.5",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-190: Integer Overflow or Wraparound"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-33524",
-      "publishedDate": "2026-04-24T18:18:02.913Z",
-      "lastModifiedDate": "2026-04-24T18:18:02.913Z",
-      "description": "Zserio is a framework for serializing structured data with a compact and efficient way with low overhead. Prior to 2.18.1, a crafted payload as small as 4-5 bytes can force memory allocations of up to 16 GB, crashing any process with an OOM error (Denial of Service). This vulnerability is fixed in 2.18.1.",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://github.com/ndsev/zserio/security/advisories/GHSA-cwq5-8pvq-j65j",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "ndsev",
-          "product": "zserio",
-          "versions": [
-            {
-              "version": "< 2.18.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-789: Memory Allocation with Excessive Size Value"
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
       "id": "CVE-2026-33662",
       "publishedDate": "2026-04-24T18:13:28.529Z",
-      "lastModifiedDate": "2026-04-24T18:13:28.529Z",
+      "lastModifiedDate": "2026-04-24T19:00:51.713Z",
       "description": "OP-TEE is a Trusted Execution Environment (TEE) designed as companion to a non-secure Linux kernel running on Arm; Cortex-A cores using the TrustZone technology. From 3.8.0 to 4.10, in the function emsa_pkcs1_v1_5_encode() in core/drivers/crypto/crypto_api/acipher/rsassa.c, the amount of padding needed, \"PS size\", is calculated by subtracting the size of the digest and other fields required for the EMA-PKCS1-v1_5 encoding from the size of the modulus of the key. By selecting a small enough modulus, this subtraction can overflow. The padding is added as a string of 0xFF bytes with a call to memset(), and an underflowed integer will cause the memset() call to overwrite until OP-TEE crashes. This only affects platforms registering RSA acceleration.",
       "severity": 7.5,
       "references": [
@@ -833,1358 +176,91 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-42035",
-      "publishedDate": "2026-04-24T17:38:07.752Z",
-      "lastModifiedDate": "2026-04-24T18:08:04.827Z",
-      "description": "Axios is a promise based HTTP client for the browser and Node.js. Prior to 1.15.1 and 0.31.1, a prototype pollution gadget exists in the Axios HTTP adapter (lib/adapters/http.js) that allows an attacker to inject arbitrary HTTP headers into outgoing requests. The vulnerability exploits duck-type checking of the data payload, where if Object.prototype is polluted with getHeaders, append, pipe, on, once, and Symbol.toStringTag, Axios misidentifies any plain object payload as a FormData instance and calls the attacker-controlled getHeaders() function, merging the returned headers into the outgoing request. The vulnerable code resides exclusively in lib/adapters/http.js. The prototype pollution source does not need to originate from Axios itself — any prototype pollution primitive in any dependency in the application's dependency tree is sufficient to trigger this gadget. This vulnerability is fixed in 1.15.1 and 0.31.1.",
-      "severity": 7.4,
+      "id": "CVE-2026-41324",
+      "publishedDate": "2026-04-24T03:28:48.696Z",
+      "lastModifiedDate": "2026-04-24T18:50:23.130Z",
+      "description": "basic-ftp is an FTP client for Node.js. Versions prior to 5.3.0 are vulnerable to denial of service through unbounded memory growth while processing directory listings from a remote FTP server. A malicious or compromised server can send an extremely large or never-ending listing response to `Client.list()`, causing the client process to consume memory until it becomes unstable or crashes. Version 5.3.0 fixes the issue.",
+      "severity": 7.5,
       "references": [
         {
-          "url": "https://github.com/axios/axios/security/advisories/GHSA-6chq-wfr3-2hj9",
+          "url": "https://github.com/patrickjuchli/basic-ftp/security/advisories/GHSA-rp42-5vxx-qpwr",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "axios",
-          "product": "axios",
+          "vendor": "patrickjuchli",
+          "product": "basic-ftp",
           "versions": [
             {
-              "version": ">= 1.0.0, < 1.15.1",
-              "status": "affected"
-            },
-            {
-              "version": "< 0.31.1",
+              "version": "< 5.3.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-113: Improper Neutralization of CRLF Sequences in HTTP Headers ('HTTP Request/Response Splitting')",
-        "CWE-1321: Improperly Controlled Modification of Object Prototype Attributes ('Prototype Pollution')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41269",
-      "publishedDate": "2026-04-23T19:14:26.918Z",
-      "lastModifiedDate": "2026-04-24T18:20:27.952Z",
-      "description": "Flowise is a drag & drop user interface to build a customized large language model flow. Prior to 3.1.0, the Chatflow configuration file upload settings can be modified to allow the application/javascript MIME type. This lets an attacker upload .js files even though the frontend doesn’t normally allow JavaScript uploads. This enables attackers to persistently store malicious Node.js web shells on the server, potentially leading to Remote Code Execution (RCE). This vulnerability is fixed in 3.1.0.",
-      "severity": 7.1,
-      "references": [
-        {
-          "url": "https://github.com/FlowiseAI/Flowise/security/advisories/GHSA-rh7v-6w34-w2rr",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "FlowiseAI",
-          "product": "Flowise",
-          "versions": [
-            {
-              "version": "< 3.1.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-434: Unrestricted Upload of File with Dangerous Type"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-42044",
-      "publishedDate": "2026-04-24T17:49:49.517Z",
-      "lastModifiedDate": "2026-04-24T18:12:13.920Z",
-      "description": "Axios is a promise based HTTP client for the browser and Node.js. From 1.0.0 to before 1.15.2, he Axios library is vulnerable to a Prototype Pollution \"Gadget\" attack that allows any Object.prototype pollution in the application's dependency tree to be escalated into surgical, invisible modification of all JSON API responses — including privilege escalation, balance manipulation, and authorization bypass. The default transformResponse function at lib/defaults/index.js:124 calls JSON.parse(data, this.parseReviver), where this is the merged config object. Because parseReviver is not present in Axios defaults, not validated by assertOptions, and not subject to any constraints, a polluted Object.prototype.parseReviver function is called for every key-value pair in every JSON response, allowing the attacker to selectively modify individual values while leaving the rest of the response intact. This vulnerability is fixed in 1.15.2.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://github.com/axios/axios/security/advisories/GHSA-3w6x-2g7m-8v23",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "axios",
-          "product": "axios",
-          "versions": [
-            {
-              "version": ">= 1.0.0, < 1.15.2",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-915: Improperly Controlled Modification of Dynamically-Determined Object Attributes",
-        "CWE-1321: Improperly Controlled Modification of Object Prototype Attributes ('Prototype Pollution')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-5265",
-      "publishedDate": "2026-04-24T12:25:06.808Z",
-      "lastModifiedDate": "2026-04-24T18:21:26.388Z",
-      "description": "When generating an ICMP Destination Unreachable or Packet Too Big response, the handler copies a portion of the original packet into the ICMP error body using the IP header's self-declared total length (ip_tot_len for IPv4, ip6_plen for IPv6) without validating it against the actual packet buffer size. A VM can send a short packet with an inflated IP length field that triggers an ICMP error (e.g., by hitting a reject ACL), causing ovn-controller to read heap memory beyond the valid packet data and include it in the ICMP response sent back to the VM.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://access.redhat.com/security/cve/CVE-2026-5265",
-          "type": "reference"
-        },
-        {
-          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2453458",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 7",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn2.11",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:7::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 7",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn2.12",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:7::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 7",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn2.13",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:7::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 8",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn-2021",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:8::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 8",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn2.11",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:8::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 8",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn2.12",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:8::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 8",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn2.13",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:8::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 8",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn22.03",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:8::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 8",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn22.06",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:8::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 8",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn22.09",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:8::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 8",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn22.12",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:8::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 8",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn23.03",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:8::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 8",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn23.06",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:8::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 9",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn-2021",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:9::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 9",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn22.03",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:9::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 9",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn22.06",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:9::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 9",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn22.09",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:9::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 9",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn22.12",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:9::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 9",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn23.03",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:9::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 9",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn23.06",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:9::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 9",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn23.09",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:9::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 9",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn24.03",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:9::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 9",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn24.09",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:9::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 9",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn25.03",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:9::fastdatapath"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Fast Datapath for RHEL 9",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "ovn25.09",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:9::fastdatapath"
-          ]
-        }
-      ],
-      "problemType": [
-        "Improper Handling of Length Parameter Inconsistency"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-5428",
-      "publishedDate": "2026-04-24T05:29:38.884Z",
-      "lastModifiedDate": "2026-04-24T18:24:57.867Z",
-      "description": "The Royal Elementor Addons plugin for WordPress is vulnerable to Stored Cross-Site Scripting via image captions in the Image Grid/Slider/Carousel widget in versions up to and including 1.7.1056. This is due to insufficient output escaping in the render_post_thumbnail() function, where wp_kses_post() is used instead of esc_attr() for the alt attribute context. This makes it possible for authenticated attackers, with Author-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses a page with the malicious image displayed in the media grid widget.",
-      "severity": 6.4,
-      "references": [
-        {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/ba7b8fe5-aa49-4a70-89c9-1b95a30b1142?source=cve",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/royal-elementor-addons/trunk/modules/media-grid/widgets/wpr-media-grid.php#L6755",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/royal-elementor-addons/tags/1.7.1049/modules/media-grid/widgets/wpr-media-grid.php#L6755",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/royal-elementor-addons/trunk/modules/media-grid/widgets/wpr-media-grid.php#L6752",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/royal-elementor-addons/tags/1.7.1049/modules/media-grid/widgets/wpr-media-grid.php#L6752",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=3503209%40royal-elementor-addons&new=3503209%40royal-elementor-addons&sfp_email=&sfph_mail=",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "wproyal",
-          "product": "Royal Addons for Elementor – Addons and Templates Kit for Elementor",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "lessThanOrEqual": "1.7.1056",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-31953",
-      "publishedDate": "2026-04-24T00:08:21.548Z",
-      "lastModifiedDate": "2026-04-24T18:18:24.562Z",
-      "description": "Xibo is an open source digital signage platform with a web content management system and Windows display player software. A stored Cross-Site Scripting (XSS) vulnerability in versions prior to 4.4.1 allows an authenticated user with notification creation permissions to inject arbitrary JavaScript into the notification body. When the notification is set as an \"interrupt,\" the payload executes automatically in the browser of any targeted user upon login, requiring zero user interaction. Exploitation of the vulnerability is possible on behalf of an authorized user who has both of the following privileges, which are not granted to non-admins as standard: Access to the Notification Centre to view past notifications, and include \"Add Notification\" button to allow for the creation of new notifications. Users should upgrade to version 4.4.1 which fixes this issue. Upgrading to a fixed version is necessary to remediate. Users unable to upgrade should revoke such privileges from users they do not trust.",
-      "severity": 6.4,
-      "references": [
-        {
-          "url": "https://github.com/xibosignage/xibo-cms/security/advisories/GHSA-85w9-c833-q4w2",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/xibosignage/xibo-cms/releases/tag/4.4.1",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "xibosignage",
-          "product": "xibo-cms",
-          "versions": [
-            {
-              "version": "< 4.4.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41067",
-      "publishedDate": "2026-04-24T16:57:22.940Z",
-      "lastModifiedDate": "2026-04-24T18:16:55.536Z",
-      "description": "Astro is a web framework. Prior to 6.1.6, the defineScriptVars function in Astro's server-side rendering pipeline uses a case-sensitive regex /<\\/script>/g to sanitize values injected into inline <script> tags via the define:vars directive. HTML parsers close <script> elements case-insensitively and also accept whitespace or / before the closing >, allowing an attacker to bypass the sanitization with payloads like </Script>, </script >, or </script/> and inject arbitrary HTML/JavaScript. This vulnerability is fixed in 6.1.6.",
-      "severity": 6.1,
-      "references": [
-        {
-          "url": "https://github.com/withastro/astro/security/advisories/GHSA-j687-52p2-xcff",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "withastro",
-          "product": "astro",
-          "versions": [
-            {
-              "version": "< 6.1.6",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41318",
-      "publishedDate": "2026-04-24T02:57:16.193Z",
-      "lastModifiedDate": "2026-04-24T18:17:42.185Z",
-      "description": "AnythingLLM is an application that turns pieces of content into context that any LLM can use as references during chatting. Prior to version 1.12.1, AnythingLLM's in-chat markdown renderer has an unsafe custom rule for images that interpolates the markdown image's `alt` text into an HTML `alt=\"...\"` attribute without any HTML encoding. Every call-site in the app wraps `renderMarkdown(...)` with `DOMPurify.sanitize(...)` as defense-in-depth — except the `Chartable` component, which renders chart captions with no sanitization. The chart caption is the natural-language text the LLM emits around a `create-chart` tool call, so any attacker who can influence the LLM's output — most cheaply via indirect prompt injection in a shared workspace document, or directly if they can create a chart record in a multi-user workspace — can trigger stored DOM-level XSS in every other user's browser when they open that conversation. AnythingLLM chat history is loaded server-side via `GET /api/workspace/:slug/chats` and rendered directly into the chat UI. Version 1.12.1 contains a patch for this issue.",
-      "severity": 5.4,
-      "references": [
-        {
-          "url": "https://github.com/Mintplex-Labs/anything-llm/security/advisories/GHSA-4q6m-qh3w-9gf5",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/Mintplex-Labs/anything-llm/commit/f5fa03f4728e483949f6360093bc3ea1ef555535",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Mintplex-Labs",
-          "product": "anything-llm",
-          "versions": [
-            {
-              "version": "< 1.12.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
-        "CWE-116: Improper Encoding or Escaping of Output",
-        "CWE-1336: Improper Neutralization of Special Elements Used in a Template Engine"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41356",
-      "publishedDate": "2026-04-23T21:58:15.313Z",
-      "lastModifiedDate": "2026-04-24T18:19:04.983Z",
-      "description": "OpenClaw before 2026.3.31 fails to terminate active WebSocket sessions when rotating device tokens. Attackers with previously compromised credentials can maintain unauthorized access through existing WebSocket connections after token rotation.",
-      "severity": 5.4,
-      "references": [
-        {
-          "url": "https://github.com/openclaw/openclaw/security/advisories/GHSA-rfqg-qgf8-xr9x",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openclaw/openclaw/commit/91f7a6b0fd67b703897e6e307762d471ca09333d",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/openclaw-incomplete-websocket-session-termination-in-device-token-rotate",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "OpenClaw",
-          "product": "OpenClaw",
-          "defaultStatus": "unaffected",
-          "packageURL": "pkg:npm/openclaw",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "versionType": "semver",
-              "lessThan": "2026.3.31"
-            },
-            {
-              "version": "2026.3.31",
-              "status": "unaffected",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-613: Insufficient Session Expiration"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41344",
-      "publishedDate": "2026-04-23T21:58:02.772Z",
-      "lastModifiedDate": "2026-04-24T18:19:18.188Z",
-      "description": "OpenClaw before 2026.3.28 contains a privilege escalation vulnerability in the chat.send endpoint that allows write-scoped gateway callers to persist admin-only verboseLevel session overrides. Attackers can exploit the /verbose parameter to bypass access controls and expose sensitive reasoning or tool output intended to be restricted to administrators.",
-      "severity": 5.4,
-      "references": [
-        {
-          "url": "https://github.com/openclaw/openclaw/security/advisories/GHSA-5h2w-qmfp-ggp6",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/openclaw-privilege-escalation-via-chat-send-verbose-parameter",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "OpenClaw",
-          "product": "OpenClaw",
-          "defaultStatus": "unaffected",
-          "packageURL": "pkg:npm/openclaw",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "versionType": "semver",
-              "lessThan": "2026.3.28"
-            },
-            {
-              "version": "2026.3.28",
-              "status": "unaffected",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-863: Incorrect Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-42034",
-      "publishedDate": "2026-04-24T17:59:47.802Z",
-      "lastModifiedDate": "2026-04-24T18:13:14.474Z",
-      "description": "Axios is a promise based HTTP client for the browser and Node.js. Prior to 1.15.1 and 0.31.1, for stream request bodies, maxBodyLength is bypassed when maxRedirects is set to 0 (native http/https transport path). Oversized streamed uploads are sent fully even when the caller sets strict body limits. This vulnerability is fixed in 1.15.1 and 0.31.1.",
-      "severity": 5.3,
-      "references": [
-        {
-          "url": "https://github.com/axios/axios/security/advisories/GHSA-5c9x-8gcm-mpgx",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "axios",
-          "product": "axios",
-          "versions": [
-            {
-              "version": ">= 1.0.0, < 1.15.1",
-              "status": "affected"
-            },
-            {
-              "version": "< 0.31.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
+        "CWE-400: Uncontrolled Resource Consumption",
         "CWE-770: Allocation of Resources Without Limits or Throttling"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-5488",
-      "publishedDate": "2026-04-24T03:27:06.309Z",
-      "lastModifiedDate": "2026-04-24T18:17:35.257Z",
-      "description": "The ExactMetrics – Google Analytics Dashboard for WordPress plugin for WordPress is vulnerable to Missing Authorization in versions up to and including 9.1.2. This is due to missing capability checks in the get_ads_access_token() and reset_experience() AJAX handlers. While the mi-admin-nonce is localized on all admin pages (including profile.php which subscribers can access), and while other similar AJAX endpoints in the same class properly check for the exactmetrics_save_settings capability, these two endpoints only verify the nonce. This makes it possible for authenticated attackers, with subscriber-level access and above, to retrieve valid Google Ads access tokens and reset Google Ads integration settings.",
+      "id": "CVE-2026-41418",
+      "publishedDate": "2026-04-24T18:49:38.599Z",
+      "lastModifiedDate": "2026-04-24T18:49:38.599Z",
+      "description": "4ga Boards is a boards system for realtime project management. Prior to 3.3.5, 4ga Boards is vulnerable to user enumeration via a timing side-channel in the login endpoint (POST /api/access-tokens). When an invalid username/email is provided, the server responds immediately (~17ms average). When a valid username/email is provided with an incorrect password, the server first performs a bcrypt.compareSync() operation (~74ms average) before responding. This ~4.4× timing difference is trivially detectable even over a network — a single request suffices. This vulnerability is fixed in 3.3.5.",
       "severity": 5.3,
       "references": [
         {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/6a4359e4-5843-4d2c-b288-5c35f819241a?source=cve",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/google-analytics-dashboard-for-wp/trunk/includes/ppc/google/class-exactmetrics-google-ads.php#L243",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/google-analytics-dashboard-for-wp/tags/9.0.3/includes/ppc/google/class-exactmetrics-google-ads.php#L243",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/google-analytics-dashboard-for-wp/trunk/includes/ppc/google/class-exactmetrics-google-ads.php#L167",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/google-analytics-dashboard-for-wp/tags/9.0.3/includes/ppc/google/class-exactmetrics-google-ads.php#L167",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/google-analytics-dashboard-for-wp/trunk/includes/admin/admin-assets.php#L196",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/google-analytics-dashboard-for-wp/tags/9.0.3/includes/admin/admin-assets.php#L196",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=3513041%40google-analytics-dashboard-for-wp&new=3513041%40google-analytics-dashboard-for-wp&sfp_email=&sfph_mail=",
+          "url": "https://github.com/RARgames/4gaBoards/security/advisories/GHSA-8mj9-p99h-jhxp",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "smub",
-          "product": "ExactMetrics – Google Analytics Dashboard for WordPress (Website Stats Plugin)",
+          "vendor": "RARgames",
+          "product": "4gaBoards",
           "versions": [
             {
-              "version": "0",
-              "status": "affected",
-              "lessThanOrEqual": "9.1.2",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-862 Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-40431",
-      "publishedDate": "2026-04-23T23:56:49.967Z",
-      "lastModifiedDate": "2026-04-24T18:18:43.495Z",
-      "description": "A vulnerability exists in SenseLive X3050’s web management interface due to its reliance on unencrypted HTTP for all administrative communication. Because management traffic, including authentication attempts and configuration data, is transmitted in cleartext, an attacker with access to the same network segment could intercept or observe sensitive operational information.",
-      "severity": 5.3,
-      "references": [
-        {
-          "url": "https://senselive.io/contact",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-111-12",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/cisagov/CSAF/blob/develop/csaf_files/OT/white/2026/icsa-26-111-12.json",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "SenseLive",
-          "product": "X3050",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "V1.523"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-319 Cleartext transmission of sensitive information"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41332",
-      "publishedDate": "2026-04-23T21:57:52.999Z",
-      "lastModifiedDate": "2026-04-24T18:19:30.910Z",
-      "description": "OpenClaw before 2026.3.28 contains an environment variable sanitization vulnerability where GIT_TEMPLATE_DIR and AWS_CONFIG_FILE are not blocked in the host-env blocklist. Attackers can exploit approved exec requests to redirect git or AWS CLI behavior through attacker-controlled configuration files to execute untrusted code or load malicious credentials.",
-      "severity": 5.3,
-      "references": [
-        {
-          "url": "https://github.com/openclaw/openclaw/security/advisories/GHSA-m866-6qv5-p2fg",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/openclaw-code-execution-via-missing-environment-variable-blocklist",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "OpenClaw",
-          "product": "OpenClaw",
-          "defaultStatus": "unaffected",
-          "packageURL": "pkg:npm/openclaw",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "versionType": "semver",
-              "lessThan": "2026.3.28"
-            },
-            {
-              "version": "2026.3.28",
-              "status": "unaffected",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-184: Incomplete List of Disallowed Inputs"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41338",
-      "publishedDate": "2026-04-23T21:57:57.757Z",
-      "lastModifiedDate": "2026-04-24T18:19:24.482Z",
-      "description": "OpenClaw before 2026.3.31 contains a time-of-check-time-of-use vulnerability in sandbox file operations that allows attackers to bypass fd-based defenses. Attackers can exploit check-then-act patterns in apply_patch, remove, and mkdir operations to manipulate files between validation and execution.",
-      "severity": 5,
-      "references": [
-        {
-          "url": "https://github.com/openclaw/openclaw/security/advisories/GHSA-rm5c-4rmf-vvhw",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openclaw/openclaw/commit/32a4a47d602e0618f87b3e59f94d8c142767f860",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/openclaw-time-of-check-time-of-use-toctou-vulnerability-in-sandbox-file-operations",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "OpenClaw",
-          "product": "OpenClaw",
-          "defaultStatus": "unaffected",
-          "packageURL": "pkg:npm/openclaw",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "versionType": "semver",
-              "lessThan": "2026.3.31"
-            },
-            {
-              "version": "2026.3.31",
-              "status": "unaffected",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-367: Time-of-check Time-of-use (TOCTOU) Race Condition"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-1789",
-      "publishedDate": "2026-04-23T23:38:11.157Z",
-      "lastModifiedDate": "2026-04-24T18:18:56.812Z",
-      "description": "A vulnerability in the browser-based remote management interface may allow an administrator to access sensitive information on the device via crafted requests, affecting certain production printers and office/small office multifunction printers.",
-      "severity": 4.9,
-      "references": [
-        {
-          "url": "https://psirt.canon/advisory-information/cp2026-003/",
-          "type": "reference"
-        },
-        {
-          "url": "https://canon.jp/support/support-info/260423vulnerability-response",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.usa.canon.com/about-us/to-our-customers/cpa2026-003-vulnerability-mitigation-remediation-for-production-printers-and-office-multifunction-printers",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.canon-europe.com/support/product-security/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Canon Inc.",
-          "product": "imagePRESS Series",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "all version"
-            }
-          ]
-        },
-        {
-          "vendor": "Canon Inc.",
-          "product": "imageFORCE Series",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "all version"
-            }
-          ]
-        },
-        {
-          "vendor": "Canon Inc.",
-          "product": "imageRUNNER ADVANCE Series",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "all version"
-            }
-          ]
-        },
-        {
-          "vendor": "Canon Inc.",
-          "product": "imageRUNNER Series",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "all version"
-            }
-          ]
-        },
-        {
-          "vendor": "Canon Inc.",
-          "product": "Satera MF7525F",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "v15.00 or earlier"
-            }
-          ]
-        },
-        {
-          "vendor": "Canon Inc.",
-          "product": "Satera MF7625F",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "v8.12 or earlier"
-            }
-          ]
-        },
-        {
-          "vendor": "Canon Inc.",
-          "product": "Satera MF7725F",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "v16.04 or earlier"
-            }
-          ]
-        },
-        {
-          "vendor": "Canon Inc.",
-          "product": "Satera MF842CDW",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "v16.04 or earlier"
-            }
-          ]
-        },
-        {
-          "vendor": "Canon Inc.",
-          "product": "imageCLASS X C1538iF II",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "v16.04 or earlier"
-            }
-          ]
-        },
-        {
-          "vendor": "Canon Inc.",
-          "product": "imageCLASS X MF1538C II",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "v16.04 or earlier"
-            }
-          ]
-        },
-        {
-          "vendor": "Canon Inc.",
-          "product": "i-SENSYS C1533iF II",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "v16.04 or earlier"
-            }
-          ]
-        },
-        {
-          "vendor": "Canon Inc.",
-          "product": "i-SENSYS X C1538 iF II",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "v16.04 or earlier"
-            }
-          ]
-        },
-        {
-          "vendor": "Canon Inc.",
-          "product": "i-SENSYS MF842Cdw",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "v16.04 or earlier"
-            }
-          ]
-        },
-        {
-          "vendor": "Canon Inc.",
-          "product": "MF842CDW",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "v16.04 or earlier"
-            }
-          ]
-        },
-        {
-          "vendor": "Canon Inc.",
-          "product": "MF842CX",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "v16.04 or earlier"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-807: Reliance on Untrusted Inputs in a Security Decision"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-11762",
-      "publishedDate": "2026-04-24T07:45:06.751Z",
-      "lastModifiedDate": "2026-04-24T18:17:28.206Z",
-      "description": "The HubSpot All-In-One Marketing - Forms, Popups, Live Chat plugin for WordPress is vulnerable to Sensitive Information Exposure in all versions up to, and including, 11.3.32 via the leadin/public/admin/class-adminconstants.php file. This makes it possible for authenticated attackers, with Contributor-level access and above, to extract a list of all installed plugins and their versions which can be leveraged for reconnaissance and further attacks.",
-      "severity": 4.3,
-      "references": [
-        {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/2a8c62e6-f459-433a-b0c4-c79285ea7fe9?source=cve",
-          "type": "reference"
-        },
-        {
-          "url": "https://research.cleantalk.org/CVE-2025-11762",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/leadin/tags/11.3.33/public/admin/class-adminconstants.php",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "hubspotdev",
-          "product": "HubSpot All-In-One Marketing – Forms, Popups, Live Chat",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "lessThanOrEqual": "11.3.32",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-862 Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41350",
-      "publishedDate": "2026-04-23T21:58:10.623Z",
-      "lastModifiedDate": "2026-04-24T18:19:11.543Z",
-      "description": "OpenClaw before 2026.3.31 contains a session visibility bypass vulnerability where the session_status function fails to enforce configured tools.sessions.visibility restrictions for unsandboxed invocations. Attackers can invoke session_status without sandbox constraints to bypass session-policy controls and access restricted session information.",
-      "severity": 4.3,
-      "references": [
-        {
-          "url": "https://github.com/openclaw/openclaw/security/advisories/GHSA-fwjq-xwfj-gv75",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openclaw/openclaw/commit/4d369a3400dc9b737fbe8daa63f09d909ce7beb8",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/openclaw-session-visibility-bypass-via-session-status-in-unsandboxed-invocations",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "OpenClaw",
-          "product": "OpenClaw",
-          "defaultStatus": "unaffected",
-          "packageURL": "pkg:npm/openclaw",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "versionType": "semver",
-              "lessThan": "2026.3.31"
-            },
-            {
-              "version": "2026.3.31",
-              "status": "unaffected",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-863: Incorrect Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41907",
-      "publishedDate": "2026-04-24T18:09:24.744Z",
-      "lastModifiedDate": "2026-04-24T18:09:24.744Z",
-      "description": "uuid is for the creation of RFC9562 (formerly RFC4122) UUIDs. Prior to 14.0.0, v3, v5, and v6 accept external output buffers but do not reject out-of-range writes (small buf or large offset). This allows silent partial writes into caller-provided buffers. This vulnerability is fixed in 14.0.0.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/uuidjs/uuid/security/advisories/GHSA-w5hq-g745-h8pq",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "uuidjs",
-          "product": "uuid",
-          "versions": [
-            {
-              "version": "< 14.0.0",
+              "version": "< 3.3.5",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-823: Use of Out-of-range Pointer Offset",
-        "CWE-787: Out-of-bounds Write"
+        "CWE-208: Observable Timing Discrepancy"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-42039",
-      "publishedDate": "2026-04-24T18:01:30.775Z",
-      "lastModifiedDate": "2026-04-24T18:14:37.802Z",
-      "description": "Axios is a promise based HTTP client for the browser and Node.js. Prior to 1.15.1 and 0.31.1, toFormData recursively walks nested objects with no depth limit, so a deeply nested value passed as request data crashes the Node.js process with a RangeError. This vulnerability is fixed in 1.15.1 and 0.31.1.",
+      "id": "CVE-2026-41894",
+      "publishedDate": "2026-04-24T18:56:54.001Z",
+      "lastModifiedDate": "2026-04-24T18:56:54.001Z",
+      "description": "SiYuan is an open-source personal knowledge management system. Prior to 3.6.5, the fix for CVE-2026-30869 only added a denylist check (IsSensitivePath) but did not address the root cause — a redundant url.PathUnescape() call in serveExport(). An authenticated attacker can use double URL encoding (%252e%252e) to traverse directories and read arbitrary workspace files including the full SQLite database (siyuan.db), kernel log, and all user documents. This vulnerability is fixed in 3.6.5.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/axios/axios/security/advisories/GHSA-62hf-57xw-28j9",
+          "url": "https://github.com/siyuan-note/siyuan/security/advisories/GHSA-hjh7-r5w8-5872",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/siyuan-note/siyuan/commit/bb481e1290c4a34255652ede85a546504505d2a7",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/siyuan-note/siyuan/releases/tag/v3.6.5",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "axios",
-          "product": "axios",
+          "vendor": "siyuan-note",
+          "product": "siyuan",
           "versions": [
             {
-              "version": ">= 1.0.0, < 1.15.1",
-              "status": "affected"
-            },
-            {
-              "version": "< 0.31.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-674: Uncontrolled Recursion"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41043",
-      "publishedDate": "2026-04-24T10:16:23.810Z",
-      "lastModifiedDate": "2026-04-24T18:17:14.457Z",
-      "description": "Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS) vulnerability in Apache ActiveMQ, Apache ActiveMQ Web.\n\nAn authenticated attacker can show malicious content when browsing queues in the web console by overriding the content type to be HTML (instead of XML) and by injecting HTML into a JMS selector field.\n\nThis issue affects Apache ActiveMQ: before 5.19.6, from 6.0.0 before 6.2.5; Apache ActiveMQ Web: before 5.19.6, from 6.0.0 before 6.2.5.\n\nUsers are recommended to upgrade to version 6.2.5 or 5.19.6, which fixes the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://activemq.apache.org/security-advisories.data/CVE-2026-41043-announcement.txt",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://repo.maven.apache.org/maven2",
-          "defaultStatus": "unaffected",
-          "packageName": "org.apache.activemq:apache-activemq",
-          "product": "Apache ActiveMQ",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThan": "5.19.6",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "6.2.5",
-              "status": "affected",
-              "version": "6.0.0",
-              "versionType": "semver"
-            }
-          ]
-        },
-        {
-          "collectionURL": "https://repo.maven.apache.org/maven2",
-          "defaultStatus": "unaffected",
-          "packageName": "org.apache.activemq:activemq-web",
-          "product": "Apache ActiveMQ Web",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThan": "5.19.6",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "6.2.5",
-              "status": "affected",
-              "version": "6.0.0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
-        "CWE-915 Improperly Controlled Modification of Dynamically-Determined Object Attributes"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-40466",
-      "publishedDate": "2026-04-24T10:15:44.445Z",
-      "lastModifiedDate": "2026-04-24T18:17:21.178Z",
-      "description": "Improper Input Validation, Improper Control of Generation of Code ('Code Injection') vulnerability in Apache ActiveMQ Broker, Apache ActiveMQ All, Apache ActiveMQ.\n\n\n\nAn authenticated attacker may bypass the fix in CVE-2026-34197 by adding a connector using an HTTP Discovery transport via BrokerView.addNetworkConnector or BrokerView.addConnector through Jolokia if the activemq-http module is on the classpath.\nA malicious HTTP endpoint can return a VM transport through the HTTP URI which will bypass the validation added in CVE-2026-34197. The attacker can then use the VM transport's brokerConfig parameter to load a remote Spring XML application context using ResourceXmlApplicationContext.\nBecause Spring's ResourceXmlApplicationContext instantiates all singleton beans before the BrokerService validates the configuration, arbitrary code execution occurs on the broker's JVM through bean factory methods such as Runtime.exec().\n\n\nThis issue affects Apache ActiveMQ Broker: before 5.19.6, from 6.0.0 before 6.2.5; Apache ActiveMQ All: before 5.19.6, from 6.0.0 before 6.2.5; Apache ActiveMQ: before 5.19.6, from 6.0.0 before 6.2.5.\n\nUsers are recommended to upgrade to version 5.19.6 or 6.2.5, which fixes the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://activemq.apache.org/security-advisories.data/CVE-2026-34197-announcement.txt",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://repo.maven.apache.org/maven2",
-          "defaultStatus": "unaffected",
-          "packageName": "org.apache.activemq:activemq-broker",
-          "product": "Apache ActiveMQ Broker",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThan": "5.19.6",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "6.2.5",
-              "status": "affected",
-              "version": "6.0.0",
-              "versionType": "semver"
-            }
-          ]
-        },
-        {
-          "collectionURL": "https://repo.maven.apache.org/maven2",
-          "defaultStatus": "unaffected",
-          "packageName": "org.apache.activemq:activemq-all",
-          "product": "Apache ActiveMQ All",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThan": "5.19.6",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "6.2.5",
-              "status": "affected",
-              "version": "6.0.0",
-              "versionType": "semver"
-            }
-          ]
-        },
-        {
-          "collectionURL": "https://repo.maven.apache.org/maven2",
-          "defaultStatus": "unaffected",
-          "packageName": "org.apache.activemq:apache-activemq",
-          "product": "Apache ActiveMQ",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThan": "5.19.6",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "6.2.5",
-              "status": "affected",
-              "version": "6.0.0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-20 Improper Input Validation",
-        "CWE-94 Improper Control of Generation of Code ('Code Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41430",
-      "publishedDate": "2026-04-24T02:42:30.228Z",
-      "lastModifiedDate": "2026-04-24T18:17:49.311Z",
-      "description": "Press, a Frappe custom app that runs Frappe Cloud, manages infrastructure, subscription, marketplace, and software-as-a-service (SaaS). Redirect parameter on login page is vulnerable to reflected XSS. The patch in commit 16d1b6ca2559f858a1de77bcb03fd7f1b81671c6 fixes the issue by restricting redirects to internal URLs only.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/frappe/press/security/advisories/GHSA-mpww-rq79-8r2c",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/frappe/press/commit/16d1b6ca2559f858a1de77bcb03fd7f1b81671c6",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "frappe",
-          "product": "press",
-          "versions": [
-            {
-              "version": "< 16d1b6ca2559f858a1de77bcb03fd7f1b81671c6",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-33076",
-      "publishedDate": "2026-04-24T01:52:47.208Z",
-      "lastModifiedDate": "2026-04-24T18:18:11.424Z",
-      "description": "Roxy-WI is a web interface for managing Haproxy, Nginx, Apache and Keepalived servers. Prior to version 8.2.6.4, the haproxy_section_save interface presents a vulnerability that could lead to remote code execution due to path traversal and writing into scheduled tasks. Version 8.2.6.4 fixes the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/roxy-wi/roxy-wi/security/advisories/GHSA-mmgm-p9x9-h33j",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/roxy-wi/roxy-wi/commit/aecc7971959092fa93e93531f1ffcde33524b031",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "roxy-wi",
-          "product": "roxy-wi",
-          "versions": [
-            {
-              "version": "< 8.2.6.4",
+              "version": "< 3.6.5",
               "status": "affected"
             }
           ]
@@ -2196,248 +272,62 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-34587",
-      "publishedDate": "2026-04-24T00:23:36.931Z",
-      "lastModifiedDate": "2026-04-24T18:18:17.883Z",
-      "description": "Kirby is an open-source content management system. Prior to versions 4.9.0 and 5.4.0, Kirby's user permissions control which user role is allowed to perform specific actions to content models in the CMS. These permissions are defined for each role in the user blueprint (`site/blueprints/users/...`). It is also possible to customize the permissions for each target model in the model blueprints (such as in `site/blueprints/pages/...`) using the `options` feature. The permissions and options together control the authorization of user actions. For pages, Kirby provides the `pages.create` and `pages.changeStatus` permissions (among others). In affected releases, Kirby checked these permissions independently and only for the respective action. However the `changeStatus` permission didn't take effect on page creation. New pages are created as drafts by default and need to be published by changing the page status of an existing page draft. This is ensured when the page is created via the Kirby Panel. However the REST API allows to override the `isDraft` flag when creating a new page. This allowed authenticated attackers with the `pages.create` permission to immediately create published pages, bypassing the normal editorial workflow. The problem has been patched in Kirby 4.9.0 and Kirby 5.4.0. Kirby has updated the `Options` logic to no longer double-resolve queries in option values coming from `OptionsQuery` or `OptionsApi` sources. Kirby now only resolves queries that are directly configured in the blueprints.",
+      "id": "CVE-2026-41326",
+      "publishedDate": "2026-04-24T18:46:21.993Z",
+      "lastModifiedDate": "2026-04-24T18:46:21.993Z",
+      "description": "Kata Containers is an open source project focusing on a standard implementation of lightweight Virtual Machines (VMs) that perform like containers. From v3.4.0 to v3.28.0, an oversight in the CopyFile policy (and perhaps the CopyFile handler) allows untrusted hosts to write to arbitrary locations inside the guest workload image. This can be used to overwrite binaries inside the guest and exfiltrate data from containers; even those running inside CVMs. This vulnerability is fixed in v3.29.0.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/getkirby/kirby/security/advisories/GHSA-jcjw-58rv-c452",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/getkirby/kirby/releases/tag/4.9.0",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/getkirby/kirby/releases/tag/5.4.0",
+          "url": "https://github.com/kata-containers/kata-containers/security/advisories/GHSA-q49m-57vm-c8cc",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "getkirby",
-          "product": "kirby",
+          "vendor": "kata-containers",
+          "product": "kata-containers",
           "versions": [
             {
-              "version": "< 4.9.0",
-              "status": "affected"
-            },
-            {
-              "version": ">= 5.0.0, < 5.4.0",
+              "version": ">= 3.4.0, < 3.29.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-1336: Improper Neutralization of Special Elements Used in a Template Engine"
+        "CWE-61: UNIX Symbolic Link (Symlink) Following"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-41274",
-      "publishedDate": "2026-04-23T21:12:51.627Z",
-      "lastModifiedDate": "2026-04-24T18:19:51.514Z",
-      "description": "Flowise is a drag & drop user interface to build a customized large language model flow. Prior to 3.1.0, the GraphCypherQAChain node forwards user-provided input directly into the Cypher query execution pipeline without proper sanitization. An attacker can inject arbitrary Cypher commands that are executed on the underlying Neo4j database, enabling data exfiltration, modification, or deletion. This vulnerability is fixed in 3.1.0.",
+      "id": "CVE-2026-41680",
+      "publishedDate": "2026-04-24T17:26:27.847Z",
+      "lastModifiedDate": "2026-04-24T19:08:41.300Z",
+      "description": "Marked is a markdown parser and compiler. From 18.0.0 to 18.0.1, a critical Denial of Service (DoS) vulnerability exists in marked. By providing a specific 3-byte input sequence a tab, a vertical tab, and a newline (\\x09\\x0b\\n)—an unauthenticated attacker can trigger an infinite recursion loop during parsing. This leads to unbounded memory allocation, causing the host Node.js application to crash via Memory Exhaustion (OOM). This vulnerability is fixed in 18.0.2.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/FlowiseAI/Flowise/security/advisories/GHSA-28g4-38q8-3cwc",
+          "url": "https://github.com/markedjs/marked/security/advisories/GHSA-6v9c-7cg6-27q7",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "FlowiseAI",
-          "product": "Flowise",
+          "vendor": "markedjs",
+          "product": "marked",
           "versions": [
             {
-              "version": "< 3.1.0",
-              "status": "affected"
-            }
-          ]
-        },
-        {
-          "vendor": "FlowiseAI",
-          "product": "flowise-components",
-          "versions": [
-            {
-              "version": "< 3.1.0",
+              "version": ">= 18.0.0, < 18.0.2",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-943: Improper Neutralization of Special Elements in Data Query Logic"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-6375",
-      "publishedDate": "2026-04-23T20:07:23.930Z",
-      "lastModifiedDate": "2026-04-24T18:19:59.492Z",
-      "description": "A vulnerability in SpiceJet’s booking API allows unauthenticated users to query passenger name records (PNRs) without any access controls. Because PNR identifiers follow a predictable pattern, an attacker could systematically enumerate valid records and obtain associated passenger names. This flaw stems from missing authorization checks on an endpoint intended for authenticated profile access.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-113-04",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "SpiceJet",
-          "product": "Online Booking System",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "All"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-639 Authorization bypass through User-Controlled key"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41276",
-      "publishedDate": "2026-04-23T19:49:26.442Z",
-      "lastModifiedDate": "2026-04-24T18:20:07.284Z",
-      "description": "Flowise is a drag & drop user interface to build a customized large language model flow. Prior to 3.1.0, this vulnerability allows remote attackers to bypass authentication on affected installations of FlowiseAI Flowise. Authentication is not required to exploit this vulnerability. The specific flaw exists within the resetPassword method of the AccountService class. There is no check performed to ensure that a password reset token has actually been generated for a user account. By default the value of the reset token stored in a users account is null, or an empty string if they've reset their password before. An attacker with knowledge of the user's email address can submit a request to the \"/api/v1/account/reset-password\" endpoint containing a null or empty string reset token value and reset that user's password to a value of their choosing. This vulnerability is fixed in 3.1.0.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/FlowiseAI/Flowise/security/advisories/GHSA-f6hc-c5jr-878p",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "FlowiseAI",
-          "product": "Flowise",
-          "versions": [
-            {
-              "version": "< 3.1.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-287: Improper Authentication"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-25874",
-      "publishedDate": "2026-04-23T19:45:01.090Z",
-      "lastModifiedDate": "2026-04-24T18:20:13.815Z",
-      "description": "LeRobot through 0.5.1 contains an unsafe deserialization vulnerability in the async inference pipeline where pickle.loads() is used to deserialize data received over unauthenticated gRPC channels without TLS in the policy server and robot client components. An unauthenticated network-reachable attacker can achieve arbitrary code execution on the server or client by sending a crafted pickle payload through the SendPolicyInstructions, SendObservations, or GetActions gRPC calls.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://chocapikk.com/posts/2026/lerobot-pickle-rce/",
-          "type": "poc"
-        },
-        {
-          "url": "https://github.com/huggingface/lerobot/issues/3047",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/huggingface/lerobot/pull/3048",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/huggingface/lerobot/issues/3134",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/lerobot-unsafe-deserialization-remote-code-execution-via-grpc",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Hugging Face",
-          "product": "LeRobot",
-          "repo": "https://github.com/huggingface/lerobot",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThanOrEqual": "0.5.1",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unknown"
-        }
-      ],
-      "problemType": [
-        "CWE-502 Deserialization of Untrusted Data"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41273",
-      "publishedDate": "2026-04-23T19:29:16.526Z",
-      "lastModifiedDate": "2026-04-24T18:20:20.316Z",
-      "description": "Flowise is a drag & drop user interface to build a customized large language model flow. Prior to 3.1.0, Flowise contains an authentication bypass vulnerability that allows an unauthenticated attacker to obtain OAuth 2.0 access tokens associated with a public chatflow. By accessing a public chatflow configuration endpoint, an attacker can retrieve internal workflow data, including OAuth credential identifiers, which can then be used to refresh and obtain valid OAuth 2.0 access tokens without authentication. This vulnerability is fixed in 3.1.0.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/FlowiseAI/Flowise/security/advisories/GHSA-6f7g-v4pp-r667",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "FlowiseAI",
-          "product": "Flowise",
-          "versions": [
-            {
-              "version": "< 3.1.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-306: Missing Authentication for Critical Function"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41138",
-      "publishedDate": "2026-04-23T19:05:22.327Z",
-      "lastModifiedDate": "2026-04-24T18:20:34.172Z",
-      "description": "Flowise is a drag & drop user interface to build a customized large language model flow. Prior to 3.1.0, there is a remote code execution vulnerability in AirtableAgent.ts caused by lack of input verification when using Pandas. The user’s input is directly applied to the question parameter within the prompt template and it is reflected to the Python code without any sanitization. This vulnerability is fixed in 3.1.0.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/FlowiseAI/Flowise/security/advisories/GHSA-f228-chmx-v6j6",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "FlowiseAI",
-          "product": "Flowise",
-          "versions": [
-            {
-              "version": "< 3.1.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-94: Improper Control of Generation of Code ('Code Injection')"
+        "CWE-400: Uncontrolled Resource Consumption",
+        "CWE-674: Uncontrolled Recursion",
+        "CWE-835: Loop with Unreachable Exit Condition ('Infinite Loop')"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
