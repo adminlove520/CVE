@@ -2,15 +2,384 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 0,
-    "last_updated": "2026-04-24T23:55:35.089116",
+    "total_count": 11,
+    "last_updated": "2026-04-25T03:21:07.852384",
     "severity_distribution": {
       "critical": 0,
-      "high": 0,
-      "medium": 0,
+      "high": 5,
+      "medium": 5,
       "low": 0,
-      "none": 0
+      "none": 1
     }
   },
-  "cves": []
+  "cves": [
+    {
+      "id": "CVE-2026-41421",
+      "publishedDate": "2026-04-24T18:53:49.983Z",
+      "lastModifiedDate": "2026-04-25T01:49:47.322Z",
+      "description": "SiYuan is an open-source personal knowledge management system. Prior to 3.6.5, SiYuan desktop renders notification messages as raw HTML inside an Electron renderer. The notification route POST /api/notification/pushMsg accepts a user-controlled msg value, forwards it through the backend broadcast layer, and the frontend inserts it into the DOM with insertAdjacentHTML(...) at message.ts. On desktop builds, this is not limited to ordinary XSS. Electron windows are created with nodeIntegration: true, contextIsolation: false, and webSecurity: false at main.js. As a result, JavaScript executed from the notification sink can directly access Node APIs and escalate to desktop code execution. This vulnerability is fixed in 3.6.5.",
+      "severity": 8.8,
+      "references": [
+        {
+          "url": "https://github.com/siyuan-note/siyuan/security/advisories/GHSA-grjj-6f6g-cq8q",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "siyuan-note",
+          "product": "siyuan",
+          "versions": [
+            {
+              "version": "< 3.6.5",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')",
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-33318",
+      "publishedDate": "2026-04-24T02:13:47.200Z",
+      "lastModifiedDate": "2026-04-25T01:44:08.129Z",
+      "description": "Actual is a local-first personal finance tool. Prior to version 26.4.0, any authenticated user (including `BASIC` role) can escalate to `ADMIN` on servers migrated from password authentication to OpenID Connect. Three weaknesses combine: `POST /account/change-password` has no authorization check, allowing any session to overwrite the password hash; the inactive password `auth` row is never removed on migration; and the login endpoint accepts a client-supplied `loginMethod` that bypasses the server's active auth configuration. Together these allow an attacker to set a known password and authenticate as the anonymous admin account created during the multiuser migration. The three weaknesses form a single, sequential exploit chain — none produces privilege escalation on its own. Missing authorization on POST /change-password allows overwriting a password hash, but only matters if there is an orphaned row to target. Orphaned password row persisting after migration provides the target row, but is harmless without the ability to authenticate using it. Client-controlled loginMethod: \"password\" allows forcing password-based auth, but is useless without a known hash established by step 1. All three must be chained in sequence to achieve the impact. No single weakness independently results in privilege escalation. The single root cause is the missing authorization check on /change-password; the other two are preconditions that make it exploitable. Version 26.4.0 contains a fix.",
+      "severity": 8.8,
+      "references": [
+        {
+          "url": "https://github.com/actualbudget/actual/security/advisories/GHSA-prp4-2f49-fcgp",
+          "type": "reference"
+        },
+        {
+          "url": "https://actualbudget.org/blog/release-26.4.0",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "actualbudget",
+          "product": "actual",
+          "versions": [
+            {
+              "version": "< 26.4.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-284: Improper Access Control",
+        "CWE-862: Missing Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-41433",
+      "publishedDate": "2026-04-24T19:26:19.701Z",
+      "lastModifiedDate": "2026-04-25T01:52:06.558Z",
+      "description": "OpenTelemetry eBPF Instrumentation provides eBPF instrumentation based on the OpenTelemetry standard. From 0.4.0 to before 0.8.0, a flaw in the Java agent injection path allows a local attacker controlling a Java workload to overwrite arbitrary host files when Java injection is enabled and OBI is running with elevated privileges. The injector trusted TMPDIR from the target process and used unsafe file creation semantics, enabling both filesystem boundary escape and symlink-based file clobbering. This vulnerability is fixed in 0.8.0.",
+      "severity": 8.4,
+      "references": [
+        {
+          "url": "https://github.com/open-telemetry/opentelemetry-ebpf-instrumentation/security/advisories/GHSA-8gmg-3w2q-65f4",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/open-telemetry/opentelemetry-ebpf-instrumentation/releases/tag/v0.8.0",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "open-telemetry",
+          "product": "opentelemetry-ebpf-instrumentation",
+          "versions": [
+            {
+              "version": ">= 0.4.0, < 0.8.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')",
+        "CWE-59: Improper Link Resolution Before File Access ('Link Following')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-41316",
+      "publishedDate": "2026-04-24T02:35:41.160Z",
+      "lastModifiedDate": "2026-04-25T01:45:43.173Z",
+      "description": "ERB is a templating system for Ruby. Ruby 2.7.0 (before ERB 2.2.0 was published on rubygems.org) introduced an `@_init` instance variable guard in `ERB#result` and `ERB#run` to prevent code execution when an ERB object is reconstructed via `Marshal.load` (deserialization). However, three other public methods that also evaluate `@src` via `eval()` were not given the same guard: `ERB#def_method`, `ERB#def_module`, and `ERB#def_class`. An attacker who can trigger `Marshal.load` on untrusted data in a Ruby application that has `erb` loaded can use `ERB#def_module` (zero-arg, default parameters) as a code execution sink, bypassing the `@_init` protection entirely. ERB 4.0.3.1, 4.0.4.1, 6.0.1.1, and 6.0.4 patch the issue.",
+      "severity": 8.1,
+      "references": [
+        {
+          "url": "https://github.com/ruby/erb/security/advisories/GHSA-q339-8rmv-2mhv",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "ruby",
+          "product": "erb",
+          "versions": [
+            {
+              "version": "< 4.0.3.1",
+              "status": "affected"
+            },
+            {
+              "version": "= 4.0.4",
+              "status": "affected"
+            },
+            {
+              "version": ">= 5.0.0, < 6.0.1.1",
+              "status": "affected"
+            },
+            {
+              "version": ">= 6.0.2, < 6.0.4",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-693: Protection Mechanism Failure"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-42171",
+      "publishedDate": "2026-04-24T21:20:35.525Z",
+      "lastModifiedDate": "2026-04-25T01:56:37.358Z",
+      "description": "NSIS (Nullsoft Scriptable Install System) 3.06.1 before 3.12 sometimes uses the Low IL temp directory when executing as SYSTEM, allowing local attackers to gain privileges (if they can cause my_GetTempFileName to return 0, as shown in the references).",
+      "severity": 7.8,
+      "references": [
+        {
+          "url": "https://nsis.sourceforge.io/Docs/AppendixF.html#v3.12-cl",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/NSIS-Dev/nsis/commit/8e6f02205d5f22da6c7855dbfe59b2af667330ca",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/NSIS-Dev/nsis/blob/7359413009afd4f0fff472d841fc2f2cc0e0a5f8/Source/exehead/util.c#L475-L484",
+          "type": "reference"
+        },
+        {
+          "url": "https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-gettempfilename",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Nullsoft Scriptable Install System",
+          "vendor": "Nullsoft",
+          "versions": [
+            {
+              "lessThan": "3.12",
+              "status": "affected",
+              "version": "3.06.1",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-427 Uncontrolled Search Path Element"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-41481",
+      "publishedDate": "2026-04-24T20:54:27.713Z",
+      "lastModifiedDate": "2026-04-25T01:54:16.304Z",
+      "description": "LangChain is a framework for building agents and LLM-powered applications. Prior to langchain-text-splitters\n 1.1.2, HTMLHeaderTextSplitter.split_text_from_url() validated the initial URL using validate_safe_url() but then performed the fetch with requests.get() with redirects enabled (the default). Because redirect targets were not revalidated, a URL pointing to an attacker-controlled server could redirect to internal, localhost, or cloud metadata endpoints, bypassing SSRF protections. The response body is parsed and returned as Document objects to the calling application code. Whether this constitutes a data exfiltration path depends on the application: if it exposes Document contents (or derivatives) back to the requester who supplied the URL, sensitive data from internal endpoints could be leaked. Applications that store or process Documents internally without returning raw content to the requester are not directly exposed to data exfiltration through this issue. This vulnerability is fixed in 1.1.2.",
+      "severity": 6.5,
+      "references": [
+        {
+          "url": "https://github.com/langchain-ai/langchain/security/advisories/GHSA-fv5p-p927-qmxr",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "langchain-ai",
+          "product": "langchain-text-splitters",
+          "versions": [
+            {
+              "version": "< 1.1.2",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-918: Server-Side Request Forgery (SSRF)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-41319",
+      "publishedDate": "2026-04-24T03:07:24.335Z",
+      "lastModifiedDate": "2026-04-25T01:46:35.002Z",
+      "description": "MailKit is a cross-platform mail client library built on top of MimeKit. A STARTTLS Response Injection vulnerability in versions prior to 4.16.0 allows a Man-in-the-Middle attacker to inject arbitrary protocol responses across the plaintext-to-TLS trust boundary, enabling SASL authentication mechanism downgrade (e.g., forcing PLAIN instead of SCRAM-SHA-256). The internal read buffer in `SmtpStream`, `ImapStream`, and `Pop3Stream` is not flushed when the underlying stream is replaced with `SslStream` during STARTTLS upgrade, causing pre-TLS attacker-injected data to be processed as trusted post-TLS responses. Version 4.16.0 patches the issue.",
+      "severity": 6.5,
+      "references": [
+        {
+          "url": "https://github.com/jstedfast/MailKit/security/advisories/GHSA-9j88-vvj5-vhgr",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "jstedfast",
+          "product": "MailKit",
+          "versions": [
+            {
+              "version": "< 4.16.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-74: Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-41426",
+      "publishedDate": "2026-04-24T19:15:39.205Z",
+      "lastModifiedDate": "2026-04-25T01:50:38.208Z",
+      "description": "pretalx is a conference planning tool. Prior to 2026.1.0, an unauthenticated attacker can send arbitrary HTML-rendered emails from a pretalx instance's configured sender address by embedding malformed HTML or markdown link syntax in a user-controlled template placeholder such as the account display name. The most direct vector is the password-reset flow: the attacker registers an account with a malicious name, enters the victim's email address, and triggers a password reset. The resulting email is delivered from the event's legitimate sender address and passes SPF/DKIM/DMARC validation, making it a ready-made phishing vector. This vulnerability is fixed in 2026.1.0.",
+      "severity": 6.1,
+      "references": [
+        {
+          "url": "https://github.com/pretalx/pretalx/security/advisories/GHSA-jm8c-9f3j-4378",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "pretalx",
+          "product": "pretalx",
+          "versions": [
+            {
+              "version": "< 2026.1.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
+        "CWE-116: Improper Encoding or Escaping of Output"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-41322",
+      "publishedDate": "2026-04-24T17:08:13.080Z",
+      "lastModifiedDate": "2026-04-25T01:48:27.606Z",
+      "description": "@astrojs/node allows Astro to deploy your SSR site to Node targets. Prior to 10.0.5, requesting a static js/css resources from _astro path with an incorrect/malformed if-match header returns a 500 error with a one year cache lifetime instead of 412 in some cases. This has the effect that all subsequent requests to that file, regardless of if-match header will be served a 5xx error instead of the file until the cache expires. This vulnerability is fixed in 10.0.5.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://github.com/withastro/astro/security/advisories/GHSA-c57f-mm3j-27q9",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "withastro",
+          "product": "astro",
+          "versions": [
+            {
+              "version": "< 10.0.5",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-525: Use of Web Browser Cache Containing Sensitive Information"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-41079",
+      "publishedDate": "2026-04-24T16:54:38.742Z",
+      "lastModifiedDate": "2026-04-25T01:47:44.540Z",
+      "description": "OpenPrinting CUPS is an open source printing system for Linux and other Unix-like operating systems. Prior to 2.4.17, a network-adjacent attacker can send a crafted SNMP response to the CUPS SNMP backend that causes an out-of-bounds read of up to 176 bytes past a stack buffer. The leaked memory is converted from UTF-16 to UTF-8 and stored as printer supply description strings, which are subsequently visible to authenticated users via IPP Get-Printer-Attributes responses and the CUPS web interface. This vulnerability is fixed in 2.4.17.",
+      "severity": 4.3,
+      "references": [
+        {
+          "url": "https://github.com/OpenPrinting/cups/security/advisories/GHSA-6wpw-g8g6-wvrv",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/OpenPrinting/cups/commit/b7c2525a885f528d243c3a92197ca99609b3f080",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/OpenPrinting/cups/commit/d7fe0f521ff3b24676511e747b058362b9a20737",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "OpenPrinting",
+          "product": "cups",
+          "versions": [
+            {
+              "version": "< 2.4.17",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-125: Out-of-bounds Read",
+        "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-41502",
+      "publishedDate": "2026-04-24T19:40:43.059Z",
+      "lastModifiedDate": "2026-04-25T01:53:32.781Z",
+      "description": "BACnet Stack is a BACnet open source protocol stack C library for embedded systems. Prior to 1.4.3, an off-by-one out-of-bounds read vulnerability in bacnet-stack's ReadPropertyMultiple service decoder allows unauthenticated remote attackers to read one byte past an allocated buffer boundary by sending a crafted RPM request with a truncated object identifier. The vulnerability is in rpm_decode_object_id(), which checks apdu_len < 5 but then accesses all 6 byte positions (indices 0-5) — consuming 1 byte for the context tag, 4 bytes for the object ID, then reading apdu[5] for the opening tag check. A 5-byte input passes the length check but causes a 1-byte OOB read, leading to crashes on embedded BACnet devices. The vulnerability exists in src/bacnet/rpm.c and affects any deployment that enables the ReadPropertyMultiple confirmed service handler (enabled by default in the reference server). This vulnerability is fixed in 1.4.3.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/bacnet-stack/bacnet-stack/security/advisories/GHSA-7545-3fpx-4xw3",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "bacnet-stack",
+          "product": "bacnet-stack",
+          "versions": [
+            {
+              "version": ">= 1.4.0, < 1.4.3",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-125: Out-of-bounds Read",
+        "CWE-193: Off-by-one Error"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    }
+  ]
 }
