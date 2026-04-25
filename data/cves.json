@@ -2,219 +2,36 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 11,
-    "last_updated": "2026-04-25T03:21:07.852384",
+    "total_count": 18,
+    "last_updated": "2026-04-25T05:25:29.102540",
     "severity_distribution": {
-      "critical": 0,
+      "critical": 5,
       "high": 5,
-      "medium": 5,
+      "medium": 0,
       "low": 0,
-      "none": 1
+      "none": 8
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-41421",
-      "publishedDate": "2026-04-24T18:53:49.983Z",
-      "lastModifiedDate": "2026-04-25T01:49:47.322Z",
-      "description": "SiYuan is an open-source personal knowledge management system. Prior to 3.6.5, SiYuan desktop renders notification messages as raw HTML inside an Electron renderer. The notification route POST /api/notification/pushMsg accepts a user-controlled msg value, forwards it through the backend broadcast layer, and the frontend inserts it into the DOM with insertAdjacentHTML(...) at message.ts. On desktop builds, this is not limited to ordinary XSS. Electron windows are created with nodeIntegration: true, contextIsolation: false, and webSecurity: false at main.js. As a result, JavaScript executed from the notification sink can directly access Node APIs and escalate to desktop code execution. This vulnerability is fixed in 3.6.5.",
-      "severity": 8.8,
+      "id": "CVE-2026-35431",
+      "publishedDate": "2026-04-23T21:37:42.137Z",
+      "lastModifiedDate": "2026-04-25T03:55:39.775Z",
+      "description": "Server-side request forgery (ssrf) in Microsoft Entra ID Entitlement Management allows an unauthorized attacker to perform spoofing over a network.",
+      "severity": 10,
       "references": [
         {
-          "url": "https://github.com/siyuan-note/siyuan/security/advisories/GHSA-grjj-6f6g-cq8q",
+          "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-35431",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "siyuan-note",
-          "product": "siyuan",
+          "vendor": "Microsoft",
+          "product": "Microsoft Entra",
           "versions": [
             {
-              "version": "< 3.6.5",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')",
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-33318",
-      "publishedDate": "2026-04-24T02:13:47.200Z",
-      "lastModifiedDate": "2026-04-25T01:44:08.129Z",
-      "description": "Actual is a local-first personal finance tool. Prior to version 26.4.0, any authenticated user (including `BASIC` role) can escalate to `ADMIN` on servers migrated from password authentication to OpenID Connect. Three weaknesses combine: `POST /account/change-password` has no authorization check, allowing any session to overwrite the password hash; the inactive password `auth` row is never removed on migration; and the login endpoint accepts a client-supplied `loginMethod` that bypasses the server's active auth configuration. Together these allow an attacker to set a known password and authenticate as the anonymous admin account created during the multiuser migration. The three weaknesses form a single, sequential exploit chain — none produces privilege escalation on its own. Missing authorization on POST /change-password allows overwriting a password hash, but only matters if there is an orphaned row to target. Orphaned password row persisting after migration provides the target row, but is harmless without the ability to authenticate using it. Client-controlled loginMethod: \"password\" allows forcing password-based auth, but is useless without a known hash established by step 1. All three must be chained in sequence to achieve the impact. No single weakness independently results in privilege escalation. The single root cause is the missing authorization check on /change-password; the other two are preconditions that make it exploitable. Version 26.4.0 contains a fix.",
-      "severity": 8.8,
-      "references": [
-        {
-          "url": "https://github.com/actualbudget/actual/security/advisories/GHSA-prp4-2f49-fcgp",
-          "type": "reference"
-        },
-        {
-          "url": "https://actualbudget.org/blog/release-26.4.0",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "actualbudget",
-          "product": "actual",
-          "versions": [
-            {
-              "version": "< 26.4.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-284: Improper Access Control",
-        "CWE-862: Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41433",
-      "publishedDate": "2026-04-24T19:26:19.701Z",
-      "lastModifiedDate": "2026-04-25T01:52:06.558Z",
-      "description": "OpenTelemetry eBPF Instrumentation provides eBPF instrumentation based on the OpenTelemetry standard. From 0.4.0 to before 0.8.0, a flaw in the Java agent injection path allows a local attacker controlling a Java workload to overwrite arbitrary host files when Java injection is enabled and OBI is running with elevated privileges. The injector trusted TMPDIR from the target process and used unsafe file creation semantics, enabling both filesystem boundary escape and symlink-based file clobbering. This vulnerability is fixed in 0.8.0.",
-      "severity": 8.4,
-      "references": [
-        {
-          "url": "https://github.com/open-telemetry/opentelemetry-ebpf-instrumentation/security/advisories/GHSA-8gmg-3w2q-65f4",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/open-telemetry/opentelemetry-ebpf-instrumentation/releases/tag/v0.8.0",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "open-telemetry",
-          "product": "opentelemetry-ebpf-instrumentation",
-          "versions": [
-            {
-              "version": ">= 0.4.0, < 0.8.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')",
-        "CWE-59: Improper Link Resolution Before File Access ('Link Following')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41316",
-      "publishedDate": "2026-04-24T02:35:41.160Z",
-      "lastModifiedDate": "2026-04-25T01:45:43.173Z",
-      "description": "ERB is a templating system for Ruby. Ruby 2.7.0 (before ERB 2.2.0 was published on rubygems.org) introduced an `@_init` instance variable guard in `ERB#result` and `ERB#run` to prevent code execution when an ERB object is reconstructed via `Marshal.load` (deserialization). However, three other public methods that also evaluate `@src` via `eval()` were not given the same guard: `ERB#def_method`, `ERB#def_module`, and `ERB#def_class`. An attacker who can trigger `Marshal.load` on untrusted data in a Ruby application that has `erb` loaded can use `ERB#def_module` (zero-arg, default parameters) as a code execution sink, bypassing the `@_init` protection entirely. ERB 4.0.3.1, 4.0.4.1, 6.0.1.1, and 6.0.4 patch the issue.",
-      "severity": 8.1,
-      "references": [
-        {
-          "url": "https://github.com/ruby/erb/security/advisories/GHSA-q339-8rmv-2mhv",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "ruby",
-          "product": "erb",
-          "versions": [
-            {
-              "version": "< 4.0.3.1",
-              "status": "affected"
-            },
-            {
-              "version": "= 4.0.4",
-              "status": "affected"
-            },
-            {
-              "version": ">= 5.0.0, < 6.0.1.1",
-              "status": "affected"
-            },
-            {
-              "version": ">= 6.0.2, < 6.0.4",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-693: Protection Mechanism Failure"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-42171",
-      "publishedDate": "2026-04-24T21:20:35.525Z",
-      "lastModifiedDate": "2026-04-25T01:56:37.358Z",
-      "description": "NSIS (Nullsoft Scriptable Install System) 3.06.1 before 3.12 sometimes uses the Low IL temp directory when executing as SYSTEM, allowing local attackers to gain privileges (if they can cause my_GetTempFileName to return 0, as shown in the references).",
-      "severity": 7.8,
-      "references": [
-        {
-          "url": "https://nsis.sourceforge.io/Docs/AppendixF.html#v3.12-cl",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/NSIS-Dev/nsis/commit/8e6f02205d5f22da6c7855dbfe59b2af667330ca",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/NSIS-Dev/nsis/blob/7359413009afd4f0fff472d841fc2f2cc0e0a5f8/Source/exehead/util.c#L475-L484",
-          "type": "reference"
-        },
-        {
-          "url": "https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-gettempfilename",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Nullsoft Scriptable Install System",
-          "vendor": "Nullsoft",
-          "versions": [
-            {
-              "lessThan": "3.12",
-              "status": "affected",
-              "version": "3.06.1",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-427 Uncontrolled Search Path Element"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41481",
-      "publishedDate": "2026-04-24T20:54:27.713Z",
-      "lastModifiedDate": "2026-04-25T01:54:16.304Z",
-      "description": "LangChain is a framework for building agents and LLM-powered applications. Prior to langchain-text-splitters\n 1.1.2, HTMLHeaderTextSplitter.split_text_from_url() validated the initial URL using validate_safe_url() but then performed the fetch with requests.get() with redirects enabled (the default). Because redirect targets were not revalidated, a URL pointing to an attacker-controlled server could redirect to internal, localhost, or cloud metadata endpoints, bypassing SSRF protections. The response body is parsed and returned as Document objects to the calling application code. Whether this constitutes a data exfiltration path depends on the application: if it exposes Document contents (or derivatives) back to the requester who supplied the URL, sensitive data from internal endpoints could be leaked. Applications that store or process Documents internally without returning raw content to the requester are not directly exposed to data exfiltration through this issue. This vulnerability is fixed in 1.1.2.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://github.com/langchain-ai/langchain/security/advisories/GHSA-fv5p-p927-qmxr",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "langchain-ai",
-          "product": "langchain-text-splitters",
-          "versions": [
-            {
-              "version": "< 1.1.2",
+              "version": "-",
               "status": "affected"
             }
           ]
@@ -226,158 +43,686 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-41319",
-      "publishedDate": "2026-04-24T03:07:24.335Z",
-      "lastModifiedDate": "2026-04-25T01:46:35.002Z",
-      "description": "MailKit is a cross-platform mail client library built on top of MimeKit. A STARTTLS Response Injection vulnerability in versions prior to 4.16.0 allows a Man-in-the-Middle attacker to inject arbitrary protocol responses across the plaintext-to-TLS trust boundary, enabling SASL authentication mechanism downgrade (e.g., forcing PLAIN instead of SCRAM-SHA-256). The internal read buffer in `SmtpStream`, `ImapStream`, and `Pop3Stream` is not flushed when the underlying stream is replaced with `SslStream` during STARTTLS upgrade, causing pre-TLS attacker-injected data to be processed as trusted post-TLS responses. Version 4.16.0 patches the issue.",
-      "severity": 6.5,
+      "id": "CVE-2026-33819",
+      "publishedDate": "2026-04-23T21:35:50.367Z",
+      "lastModifiedDate": "2026-04-25T03:55:50.152Z",
+      "description": "Deserialization of untrusted data in Microsoft Bing allows an unauthorized attacker to execute code over a network.",
+      "severity": 10,
       "references": [
         {
-          "url": "https://github.com/jstedfast/MailKit/security/advisories/GHSA-9j88-vvj5-vhgr",
+          "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-33819",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "jstedfast",
-          "product": "MailKit",
+          "vendor": "Microsoft",
+          "product": "Microsoft Bing",
           "versions": [
             {
-              "version": "< 4.16.0",
+              "version": "-",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-74: Improper Neutralization of Special Elements in Output Used by a Downstream Component ('Injection')"
+        "CWE-502: Deserialization of Untrusted Data"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-41426",
-      "publishedDate": "2026-04-24T19:15:39.205Z",
-      "lastModifiedDate": "2026-04-25T01:50:38.208Z",
-      "description": "pretalx is a conference planning tool. Prior to 2026.1.0, an unauthenticated attacker can send arbitrary HTML-rendered emails from a pretalx instance's configured sender address by embedding malformed HTML or markdown link syntax in a user-controlled template placeholder such as the account display name. The most direct vector is the password-reset flow: the attacker registers an account with a malicious name, enters the victim's email address, and triggers a password reset. The resulting email is delivered from the event's legitimate sender address and passes SPF/DKIM/DMARC validation, making it a ready-made phishing vector. This vulnerability is fixed in 2026.1.0.",
-      "severity": 6.1,
+      "id": "CVE-2026-24303",
+      "publishedDate": "2026-04-23T21:37:41.267Z",
+      "lastModifiedDate": "2026-04-25T03:55:48.974Z",
+      "description": "Improper access control in Microsoft Partner Center allows an authorized attacker to elevate privileges over a network.",
+      "severity": 9.6,
       "references": [
         {
-          "url": "https://github.com/pretalx/pretalx/security/advisories/GHSA-jm8c-9f3j-4378",
+          "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-24303",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "pretalx",
-          "product": "pretalx",
+          "vendor": "Microsoft",
+          "product": "Microsoft Partner Center",
           "versions": [
             {
-              "version": "< 2026.1.0",
+              "version": "-",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
-        "CWE-116: Improper Encoding or Escaping of Output"
+        "CWE-284: Improper Access Control"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-41322",
-      "publishedDate": "2026-04-24T17:08:13.080Z",
-      "lastModifiedDate": "2026-04-25T01:48:27.606Z",
-      "description": "@astrojs/node allows Astro to deploy your SSR site to Node targets. Prior to 10.0.5, requesting a static js/css resources from _astro path with an incorrect/malformed if-match header returns a 500 error with a one year cache lifetime instead of 412 in some cases. This has the effect that all subsequent requests to that file, regardless of if-match header will be served a 5xx error instead of the file until the cache expires. This vulnerability is fixed in 10.0.5.",
-      "severity": 5.3,
+      "id": "CVE-2026-33102",
+      "publishedDate": "2026-04-23T21:35:48.984Z",
+      "lastModifiedDate": "2026-04-25T03:55:51.274Z",
+      "description": "Url redirection to untrusted site ('open redirect') in M365 Copilot allows an unauthorized attacker to elevate privileges over a network.",
+      "severity": 9.3,
       "references": [
         {
-          "url": "https://github.com/withastro/astro/security/advisories/GHSA-c57f-mm3j-27q9",
+          "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-33102",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "withastro",
-          "product": "astro",
+          "vendor": "Microsoft",
+          "product": "Microsoft 365 Copilot",
           "versions": [
             {
-              "version": "< 10.0.5",
+              "version": "-",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-525: Use of Web Browser Cache Containing Sensitive Information"
+        "CWE-601: URL Redirection to Untrusted Site ('Open Redirect')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-41079",
-      "publishedDate": "2026-04-24T16:54:38.742Z",
-      "lastModifiedDate": "2026-04-25T01:47:44.540Z",
-      "description": "OpenPrinting CUPS is an open source printing system for Linux and other Unix-like operating systems. Prior to 2.4.17, a network-adjacent attacker can send a crafted SNMP response to the CUPS SNMP backend that causes an out-of-bounds read of up to 176 bytes past a stack buffer. The leaked memory is converted from UTF-16 to UTF-8 and stored as printer supply description strings, which are subsequently visible to authenticated users via IPP Get-Printer-Attributes responses and the CUPS web interface. This vulnerability is fixed in 2.4.17.",
-      "severity": 4.3,
+      "id": "CVE-2026-32210",
+      "publishedDate": "2026-04-23T21:35:47.638Z",
+      "lastModifiedDate": "2026-04-25T03:55:52.352Z",
+      "description": "Server-side request forgery (ssrf) in Microsoft Dynamics 365 (Online) allows an unauthorized attacker to perform spoofing over a network.",
+      "severity": 9.3,
       "references": [
         {
-          "url": "https://github.com/OpenPrinting/cups/security/advisories/GHSA-6wpw-g8g6-wvrv",
+          "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-32210",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Microsoft Dynamics 365 (online)",
+          "versions": [
+            {
+              "version": "-",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-918: Server-Side Request Forgery (SSRF)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-32172",
+      "publishedDate": "2026-04-23T21:37:42.706Z",
+      "lastModifiedDate": "2026-04-25T03:55:47.811Z",
+      "description": "Uncontrolled search path element in Microsoft Power Apps allows an unauthorized attacker to execute code over a network.",
+      "severity": 8,
+      "references": [
+        {
+          "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-32172",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Microsoft Power Apps",
+          "versions": [
+            {
+              "version": "-",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-427: Uncontrolled Search Path Element"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-42035",
+      "publishedDate": "2026-04-24T17:38:07.752Z",
+      "lastModifiedDate": "2026-04-25T03:55:59.169Z",
+      "description": "Axios is a promise based HTTP client for the browser and Node.js. Prior to 1.15.1 and 0.31.1, a prototype pollution gadget exists in the Axios HTTP adapter (lib/adapters/http.js) that allows an attacker to inject arbitrary HTTP headers into outgoing requests. The vulnerability exploits duck-type checking of the data payload, where if Object.prototype is polluted with getHeaders, append, pipe, on, once, and Symbol.toStringTag, Axios misidentifies any plain object payload as a FormData instance and calls the attacker-controlled getHeaders() function, merging the returned headers into the outgoing request. The vulnerable code resides exclusively in lib/adapters/http.js. The prototype pollution source does not need to originate from Axios itself — any prototype pollution primitive in any dependency in the application's dependency tree is sufficient to trigger this gadget. This vulnerability is fixed in 1.15.1 and 0.31.1.",
+      "severity": 7.4,
+      "references": [
+        {
+          "url": "https://github.com/axios/axios/security/advisories/GHSA-6chq-wfr3-2hj9",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "axios",
+          "product": "axios",
+          "versions": [
+            {
+              "version": ">= 1.0.0, < 1.15.1",
+              "status": "affected"
+            },
+            {
+              "version": "< 0.31.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-113: Improper Neutralization of CRLF Sequences in HTTP Headers ('HTTP Request/Response Splitting')",
+        "CWE-1321: Improperly Controlled Modification of Object Prototype Attributes ('Prototype Pollution')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-42033",
+      "publishedDate": "2026-04-24T17:36:44.132Z",
+      "lastModifiedDate": "2026-04-25T03:55:57.725Z",
+      "description": "Axios is a promise based HTTP client for the browser and Node.js. Prior to 1.15.1 and 0.31.1, when Object.prototype has been polluted by any co-dependency with keys that axios reads without a hasOwnProperty guard, an attacker can (a) silently intercept and modify every JSON response before the application sees it, or (b) fully hijack the underlying HTTP transport, gaining access to request credentials, headers, and body. The precondition is prototype pollution from a separate source in the same process. This vulnerability is fixed in 1.15.1 and 0.31.1.",
+      "severity": 7.4,
+      "references": [
+        {
+          "url": "https://github.com/axios/axios/security/advisories/GHSA-pf86-5x62-jrwf",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "axios",
+          "product": "axios",
+          "versions": [
+            {
+              "version": ">= 1.0.0, < 1.15.1",
+              "status": "affected"
+            },
+            {
+              "version": "< 0.31.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-1321: Improperly Controlled Modification of Object Prototype Attributes ('Prototype Pollution')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-35368",
+      "publishedDate": "2026-04-22T16:08:48.965Z",
+      "lastModifiedDate": "2026-04-25T03:55:34.110Z",
+      "description": "A vulnerability exists in the chroot utility of uutils coreutils when using the --userspec option. The utility resolves the user specification via getpwnam() after entering the chroot but before dropping root privileges. On glibc-based systems, this can trigger the Name Service Switch (NSS) to load shared libraries (e.g., libnss_*.so.2) from the new root directory. If the NEWROOT is writable by an attacker, they can inject a malicious NSS module to execute arbitrary code as root, facilitating a full container escape or privilege escalation.",
+      "severity": 7.2,
+      "references": [
+        {
+          "url": "https://github.com/uutils/coreutils/issues/10327",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Uutils",
+          "product": "coreutils",
+          "platforms": [
+            "Linux",
+            "Unix",
+            "macOS"
+          ],
+          "collectionURL": "https://github.com/uutils",
+          "packageName": "coreutils",
+          "repo": "https://github.com/uutils/coreutils",
+          "defaultStatus": "affected"
+        }
+      ],
+      "problemType": [
+        "CWE-426: Untrusted Search Path"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-41166",
+      "publishedDate": "2026-04-22T20:31:29.234Z",
+      "lastModifiedDate": "2026-04-25T03:55:56.317Z",
+      "description": "OpenRemote is an open-source internet-of-things platform. Prior to version 1.22.1, a user who has `write:admin` in one Keycloak realm can call the Manager API to update Keycloak realm roles for users in another realm, including `master`. The handler uses the `{realm}` path segment when talking to the identity provider but does not check that the caller may administer that realm. This could result in a privilege escalation to `master` realm administrator if the attacker controls any user in `master` realm. Version 1.22.1 fixes the issue.",
+      "severity": 7,
+      "references": [
+        {
+          "url": "https://github.com/openremote/openremote/security/advisories/GHSA-49vv-25qx-mg44",
           "type": "reference"
         },
         {
-          "url": "https://github.com/OpenPrinting/cups/commit/b7c2525a885f528d243c3a92197ca99609b3f080",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/OpenPrinting/cups/commit/d7fe0f521ff3b24676511e747b058362b9a20737",
+          "url": "https://github.com/openremote/openremote/releases/tag/1.22.1",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "OpenPrinting",
-          "product": "cups",
+          "vendor": "openremote",
+          "product": "openremote",
           "versions": [
             {
-              "version": "< 2.4.17",
+              "version": "< 1.22.1",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-125: Out-of-bounds Read",
-        "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor"
+        "CWE-284: Improper Access Control"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-41502",
-      "publishedDate": "2026-04-24T19:40:43.059Z",
-      "lastModifiedDate": "2026-04-25T01:53:32.781Z",
-      "description": "BACnet Stack is a BACnet open source protocol stack C library for embedded systems. Prior to 1.4.3, an off-by-one out-of-bounds read vulnerability in bacnet-stack's ReadPropertyMultiple service decoder allows unauthenticated remote attackers to read one byte past an allocated buffer boundary by sending a crafted RPM request with a truncated object identifier. The vulnerability is in rpm_decode_object_id(), which checks apdu_len < 5 but then accesses all 6 byte positions (indices 0-5) — consuming 1 byte for the context tag, 4 bytes for the object ID, then reading apdu[5] for the opening tag check. A 5-byte input passes the length check but causes a 1-byte OOB read, leading to crashes on embedded BACnet devices. The vulnerability exists in src/bacnet/rpm.c and affects any deployment that enables the ReadPropertyMultiple confirmed service handler (enabled by default in the reference server). This vulnerability is fixed in 1.4.3.",
+      "id": "CVE-2026-41044",
+      "publishedDate": "2026-04-24T10:16:53.518Z",
+      "lastModifiedDate": "2026-04-25T03:55:54.877Z",
+      "description": "Improper Input Validation, Improper Control of Generation of Code ('Code Injection') vulnerability in Apache ActiveMQ, Apache ActiveMQ Broker, Apache ActiveMQ All.\n\nAn authenticated attacker can use the admin web console page to construct a malicious broker name that bypasses name validation to include an xbean binding that can be later used by a VM transport to load a remote Spring XML application.\nThe attacker can then use the DestinationView mbean to send a message to trigger a VM transport creation that will reference this malicious broker name which can lead to loading the malicious Spring XML context file.\n\n\nBecause Spring's ResourceXmlApplicationContext instantiates all singleton beans before the BrokerService validates the configuration, arbitrary code execution occurs on the broker's JVM through bean factory methods such as Runtime.exec().\n\nThis issue affects Apache ActiveMQ: before 5.19.6, from 6.0.0 before 6.2.5; Apache ActiveMQ Broker: before 5.19.6, from 6.0.0 before 6.2.5; Apache ActiveMQ All: before 5.19.6, from 6.0.0 before 6.2.5.\n\nUsers are recommended to upgrade to version 6.2.5 or 5.19.6, which fixes the issue.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/bacnet-stack/bacnet-stack/security/advisories/GHSA-7545-3fpx-4xw3",
+          "url": "https://activemq.apache.org/security-advisories.data/CVE-2026-41044-announcement.txt",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "bacnet-stack",
-          "product": "bacnet-stack",
+          "collectionURL": "https://repo.maven.apache.org/maven2",
+          "defaultStatus": "unaffected",
+          "packageName": "org.apache.activemq:apache-activemq",
+          "product": "Apache ActiveMQ",
+          "vendor": "Apache Software Foundation",
           "versions": [
             {
-              "version": ">= 1.4.0, < 1.4.3",
+              "lessThan": "5.19.6",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            },
+            {
+              "lessThan": "6.2.5",
+              "status": "affected",
+              "version": "6.0.0",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "collectionURL": "https://repo.maven.apache.org/maven2",
+          "defaultStatus": "unaffected",
+          "packageName": "org.apache.activemq:activemq-broker",
+          "product": "Apache ActiveMQ Broker",
+          "vendor": "Apache Software Foundation",
+          "versions": [
+            {
+              "lessThan": "5.19.6",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            },
+            {
+              "lessThan": "6.2.5",
+              "status": "affected",
+              "version": "6.0.0",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "collectionURL": "https://repo.maven.apache.org/maven2",
+          "defaultStatus": "unaffected",
+          "packageName": "org.apache.activemq:activemq-all",
+          "product": "Apache ActiveMQ All",
+          "vendor": "Apache Software Foundation",
+          "versions": [
+            {
+              "lessThan": "5.19.6",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            },
+            {
+              "lessThan": "6.2.5",
+              "status": "affected",
+              "version": "6.0.0",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-20 Improper Input Validation",
+        "CWE-94 Improper Control of Generation of Code ('Code Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-40466",
+      "publishedDate": "2026-04-24T10:15:44.445Z",
+      "lastModifiedDate": "2026-04-25T03:55:53.465Z",
+      "description": "Improper Input Validation, Improper Control of Generation of Code ('Code Injection') vulnerability in Apache ActiveMQ Broker, Apache ActiveMQ All, Apache ActiveMQ.\n\n\n\nAn authenticated attacker may bypass the fix in CVE-2026-34197 by adding a connector using an HTTP Discovery transport via BrokerView.addNetworkConnector or BrokerView.addConnector through Jolokia if the activemq-http module is on the classpath.\nA malicious HTTP endpoint can return a VM transport through the HTTP URI which will bypass the validation added in CVE-2026-34197. The attacker can then use the VM transport's brokerConfig parameter to load a remote Spring XML application context using ResourceXmlApplicationContext.\nBecause Spring's ResourceXmlApplicationContext instantiates all singleton beans before the BrokerService validates the configuration, arbitrary code execution occurs on the broker's JVM through bean factory methods such as Runtime.exec().\n\n\nThis issue affects Apache ActiveMQ Broker: before 5.19.6, from 6.0.0 before 6.2.5; Apache ActiveMQ All: before 5.19.6, from 6.0.0 before 6.2.5; Apache ActiveMQ: before 5.19.6, from 6.0.0 before 6.2.5.\n\nUsers are recommended to upgrade to version 5.19.6 or 6.2.5, which fixes the issue.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://activemq.apache.org/security-advisories.data/CVE-2026-34197-announcement.txt",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://repo.maven.apache.org/maven2",
+          "defaultStatus": "unaffected",
+          "packageName": "org.apache.activemq:activemq-broker",
+          "product": "Apache ActiveMQ Broker",
+          "vendor": "Apache Software Foundation",
+          "versions": [
+            {
+              "lessThan": "5.19.6",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            },
+            {
+              "lessThan": "6.2.5",
+              "status": "affected",
+              "version": "6.0.0",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "collectionURL": "https://repo.maven.apache.org/maven2",
+          "defaultStatus": "unaffected",
+          "packageName": "org.apache.activemq:activemq-all",
+          "product": "Apache ActiveMQ All",
+          "vendor": "Apache Software Foundation",
+          "versions": [
+            {
+              "lessThan": "5.19.6",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            },
+            {
+              "lessThan": "6.2.5",
+              "status": "affected",
+              "version": "6.0.0",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "collectionURL": "https://repo.maven.apache.org/maven2",
+          "defaultStatus": "unaffected",
+          "packageName": "org.apache.activemq:apache-activemq",
+          "product": "Apache ActiveMQ",
+          "vendor": "Apache Software Foundation",
+          "versions": [
+            {
+              "lessThan": "5.19.6",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            },
+            {
+              "lessThan": "6.2.5",
+              "status": "affected",
+              "version": "6.0.0",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-20 Improper Input Validation",
+        "CWE-94 Improper Control of Generation of Code ('Code Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-41197",
+      "publishedDate": "2026-04-23T00:35:37.842Z",
+      "lastModifiedDate": "2026-04-25T03:55:38.608Z",
+      "description": "Noir is a Domain Specific Language for SNARK proving systems that is designed to use any ACIR compatible proving system, and Brillig is the bytecode ACIR uses for non-determinism. Noir programs can invoke external functions through foreign calls. When compiling to Brillig bytecode, the SSA instructions are processed block-by-block in `BrilligBlock::compile_block()`. When the compiler encounters an `Instruction::Call` with a `Value::ForeignFunction` target, it invokes `codegen_call()` in `brillig_call/code_gen_call.rs`, which dispatches to `convert_ssa_foreign_call()`. Before emitting the foreign call opcode, the compiler must pre-allocate memory for any array results the call will return. This happens through `allocate_external_call_results()`, which iterates over the result types. For `Type::Array` results, it delegates to `allocate_foreign_call_result_array()` to recursively allocate memory on the heap for nested arrays. The `BrilligArray` struct is the internal representation of a Noir array in Brillig IR. Its `size` field represents the semi-flattened size, the total number of memory slots the array occupies, accounting for the fact that composite types like tuples consume multiple slots per element. This size is computed by `compute_array_length()` in `brillig_block_variables.rs`. For the outer array, `allocate_external_call_results()` correctly uses `define_variable()`, which internally calls `allocate_value_with_type()`. This function applies the formula above, producing the correct semi-flattened size. However, for nested arrays, `allocate_foreign_call_result_array()` contains a bug. The pattern `Type::Array(_, nested_size)` discards the inner types with `_` and uses only `nested_size`, the semantic length of the nested array (the number of logical elements), not the semi-flattened size. For simple element types this works correctly, but for composite element types it under-allocates. Foreign calls returning nested arrays of tuples or other composite types corrupt the Brillig VM heap. Version 1.0.0-beta.19 fixes this issue.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/noir-lang/noir/security/advisories/GHSA-jj7c-x25r-r8r3",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/noir-lang/noir/releases/tag/v1.0.0-beta.19",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "noir-lang",
+          "product": "noir",
+          "versions": [
+            {
+              "version": "< 1.0.0-beta.19",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-125: Out-of-bounds Read",
-        "CWE-193: Off-by-one Error"
+        "CWE-131: Incorrect Calculation of Buffer Size"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-41179",
+      "publishedDate": "2026-04-23T00:03:36.282Z",
+      "lastModifiedDate": "2026-04-25T03:55:41.241Z",
+      "description": "Rclone is a command-line program to sync files and directories to and from different cloud storage providers. Starting in version 1.48.0 and prior to version 1.73.5, the RC endpoint `operations/fsinfo` is exposed without `AuthRequired: true` and accepts attacker-controlled `fs` input. Because `rc.GetFs(...)` supports inline backend definitions, an unauthenticated attacker can instantiate an attacker-controlled backend on demand. For the WebDAV backend, `bearer_token_command` is executed during backend initialization, making single-request unauthenticated local command execution possible on reachable RC deployments without global HTTP authentication. Version 1.73.5 patches the issue.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/rclone/rclone/security/advisories/GHSA-jfwf-28xr-xw6q",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/rclone/rclone/blob/bf55d5e6d37fd86164a87782191f9e1ffcaafa82/backend/webdav/webdav.go",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/rclone/rclone/blob/bf55d5e6d37fd86164a87782191f9e1ffcaafa82/fs/operations/rc.go",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/rclone/rclone/blob/bf55d5e6d37fd86164a87782191f9e1ffcaafa82/fs/rc/cache.go",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "rclone",
+          "product": "rclone",
+          "versions": [
+            {
+              "version": ">= 1.48.0, < 1.73.5",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')",
+        "CWE-306: Missing Authentication for Critical Function"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-41176",
+      "publishedDate": "2026-04-22T23:57:54.075Z",
+      "lastModifiedDate": "2026-04-25T03:55:43.150Z",
+      "description": "Rclone is a command-line program to sync files and directories to and from different cloud storage providers. The RC endpoint `options/set` is exposed without `AuthRequired: true`, but it can mutate global runtime configuration, including the RC option block itself. Starting in version 1.45.0 and prior to version 1.73.5, an unauthenticated attacker can set `rc.NoAuth=true`, which disables the authorization gate for many RC methods registered with `AuthRequired: true` on reachable RC servers that are started without global HTTP authentication. This can lead to unauthorized access to sensitive administrative functionality, including configuration and operational RC methods. Version 1.73.5 patches the issue.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/rclone/rclone/security/advisories/GHSA-25qr-6mpr-f7qx",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/rclone/rclone/blob/bf55d5e6d37fd86164a87782191f9e1ffcaafa82/fs/rc/config.go",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/rclone/rclone/blob/bf55d5e6d37fd86164a87782191f9e1ffcaafa82/fs/rc/rcserver/rcserver.go",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "rclone",
+          "product": "rclone",
+          "versions": [
+            {
+              "version": ">= 1.45.0, < 1.73.5",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-306: Missing Authentication for Critical Function"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-1726",
+      "publishedDate": "2026-04-22T23:42:05.901Z",
+      "lastModifiedDate": "2026-04-25T03:55:44.611Z",
+      "description": "IBM Guardium Key Lifecycle Manager 4.1, 4.1.1, 4.2, 4.2.1, 5.0, and 5.1",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.ibm.com/support/pages/node/7268697",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "IBM",
+          "product": "Guardium Key Lifecycle Manager",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "4.1.0",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "4.1.1",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "4.2.0",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "4.2.1",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "5.0.0",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "5.1.0",
+              "versionType": "semver"
+            }
+          ],
+          "cpes": [
+            "cpe:2.3:a:ibm:guardium_key_lifecycle_manager:4.1:*:*:*:*:*:*:*",
+            "cpe:2.3:a:ibm:guardium_key_lifecycle_manager:4.1.0:*:*:*:*:*:*:*",
+            "cpe:2.3:a:ibm:guardium_key_lifecycle_manager:4.1.1:*:*:*:*:*:*:*",
+            "cpe:2.3:a:ibm:guardium_key_lifecycle_manager:4.2:*:*:*:*:*:*:*",
+            "cpe:2.3:a:ibm:guardium_key_lifecycle_manager:4.2.0:*:*:*:*:*:*:*",
+            "cpe:2.3:a:ibm:guardium_key_lifecycle_manager:4.2.1:*:*:*:*:*:*:*",
+            "cpe:2.3:a:ibm:guardium_key_lifecycle_manager:5.0:*:*:*:*:*:*:*",
+            "cpe:2.3:a:ibm:guardium_key_lifecycle_manager:5.0.0:*:*:*:*:*:*:*",
+            "cpe:2.3:a:ibm:guardium_key_lifecycle_manager:5.1:*:*:*:*:*:*:*",
+            "cpe:2.3:a:ibm:guardium_key_lifecycle_manager:5.1.0:*:*:*:*:*:*:*"
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-269 Improper Privilege Management"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-41134",
+      "publishedDate": "2026-04-22T20:20:57.541Z",
+      "lastModifiedDate": "2026-04-25T03:55:46.165Z",
+      "description": "Kiota is an OpenAPI based HTTP Client code generator. Versions prior to 1.31.1 are affected by a code-generation literal injection vulnerability in multiple writer sinks (for example: serialization/deserialization keys, path/query parameter mappings, URL template metadata, enum/property metadata, and default value emission). When malicious values from an OpenAPI description are emitted into generated source without context-appropriate escaping, an attacker can break out of string literals and inject additional code into generated clients. This issue is only practically exploitable when the OpenAPI description used for generation is from an untrusted source, or a normally trusted OpenAPI description has been compromised/tampered with. Only generating from trusted, integrity-protected API descriptions significantly reduces the risk. To remediate the issue, upgrade Kiota to 1.31.1 or later and regenerate/refresh existing generated clients as a precaution. Refreshing generated clients ensures previously generated vulnerable code is replaced with hardened output.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/microsoft/kiota/security/advisories/GHSA-2hx3-vp6r-mg3f",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "microsoft",
+          "product": "kiota",
+          "versions": [
+            {
+              "version": "< 1.31.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-94: Improper Control of Generation of Code ('Code Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-39866",
+      "publishedDate": "2026-04-21T01:19:47.510Z",
+      "lastModifiedDate": "2026-04-25T03:55:32.652Z",
+      "description": "Lawnchair is a free, open-source home app for Android. Prior to commit fcba413f55dd47f8a3921445252849126c6266b2, command injection in release_update.yml workflow dispatch input allows arbitrary code execution. Commit fcba413f55dd47f8a3921445252849126c6266b2 patches the issue.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/LawnchairLauncher/lawnchair/security/advisories/GHSA-9prc-pp2c-3427",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/LawnchairLauncher/lawnchair/commit/fcba413f55dd47f8a3921445252849126c6266b2",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "LawnchairLauncher",
+          "product": "lawnchair",
+          "versions": [
+            {
+              "version": "< fcba413f55dd47f8a3921445252849126c6266b2",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-77: Improper Neutralization of Special Elements used in a Command ('Command Injection')"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
