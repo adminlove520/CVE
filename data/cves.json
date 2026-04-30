@@ -3,138 +3,230 @@
   "dataVersion": "5.1",
   "cveMetadata": {
     "total_count": 3,
-    "last_updated": "2026-04-30T11:03:40.310816",
+    "last_updated": "2026-04-30T12:22:32.369063",
     "severity_distribution": {
       "critical": 0,
       "high": 0,
-      "medium": 0,
+      "medium": 1,
       "low": 0,
-      "none": 3
+      "none": 2
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-7324",
-      "publishedDate": "2026-04-28T13:49:11.358Z",
-      "lastModifiedDate": "2026-04-30T10:19:47.087Z",
-      "description": "Memory safety bugs present in Firefox 150.0.0. Some of these bugs showed evidence of memory corruption and we presume that with enough effort some of these could have been exploited to run arbitrary code. This vulnerability was fixed in Firefox 150.0.1.",
-      "severity": "N/A",
+      "id": "CVE-2026-6498",
+      "publishedDate": "2026-04-30T09:29:13.284Z",
+      "lastModifiedDate": "2026-04-30T12:04:55.235Z",
+      "description": "The Five Star Restaurant Reservations plugin for WordPress is vulnerable to a payment bypass via PHP type juggling in versions up to, and including, 2.7.16 This is due to the valid_payment() function using a PHP loose comparison (==) between the attacker-controlled payment_id POST parameter and the booking's stripe_payment_intent_id property. When an unauthenticated attacker submits a request to the nopriv AJAX handler rtb_stripe_pmt_succeed before the Stripe payment intent has been created for a booking (i.e., before the JavaScript-triggered create_stripe_pmtIntnt() call has stored an intent ID in post meta), the stripe_payment_intent_id property on the booking object remains null. The comparison sanitize_text_field('') == null evaluates to TRUE in PHP loose comparison, causing the payment verification check to pass with zero actual payment. This makes it possible for unauthenticated attackers to mark any existing payment_pending booking as paid without completing a Stripe payment by submitting an empty payment_id parameter.",
+      "severity": 5.3,
       "references": [
         {
-          "url": "https://bugzilla.mozilla.org/buglist.cgi?bug_id=2029419%2C2029717%2C2029769%2C2029886",
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/8ee08aac-7bcc-4809-a5aa-7b95ed736f19?source=cve",
           "type": "reference"
         },
         {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-35/",
+          "url": "https://plugins.trac.wordpress.org/browser/restaurant-reservations/trunk/includes/PaymentGatewayStripe.class.php#L458",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/restaurant-reservations/tags/2.7.13/includes/PaymentGatewayStripe.class.php#L458",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/restaurant-reservations/trunk/includes/PaymentGatewayStripe.class.php#L404",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/restaurant-reservations/tags/2.7.13/includes/PaymentGatewayStripe.class.php#L404",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset/3518833/restaurant-reservations/trunk/includes/PaymentGatewayStripe.class.php",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset?old_path=%2Frestaurant-reservations/tags/2.7.16&new_path=%2Frestaurant-reservations/tags/2.7.17",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "product": "Firefox",
-          "vendor": "Mozilla",
+          "vendor": "rustaurius",
+          "product": "Five Star Restaurant Reservations – WordPress Booking Plugin",
           "versions": [
             {
-              "status": "unaffected",
-              "version": "150.0.1",
-              "lessThanOrEqual": "*",
-              "versionType": "rpm"
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "2.7.16",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-345 Insufficient Verification of Data Authenticity"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-5080",
+      "publishedDate": "2026-04-30T11:49:29.736Z",
+      "lastModifiedDate": "2026-04-30T11:49:29.736Z",
+      "description": "Dancer::Session::Abstract versions through 1.3522 for Perl generates session ids insecurely.\n\nThe session id is generated from summing the character codepoints of the absolute pathname with the process id, the epoch time and calls to the built-in rand() function to return a number between 0 and 999-billion, and concatenating that result three times.\n\nThe path name might be known or guessed by an attacker, especially for applications known to be written using Dancer with standard installation locations.\n\nThe epoch time can be guessed by an attacker, and may be leaked in the HTTP header.\n\nThe process id comes from a small set of numbers, and workers may have sequential process ids.\n\nThe built-in rand() function is seeded with 32-bits and is considered unsuitable for security applications.\n\nPredictable session ids could allow an attacker to gain access to systems.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://security.metacpan.org/patches/D/Dancer/1.3522/CVE-2026-5080-r1.patch",
+          "type": "reference"
+        },
+        {
+          "url": "https://metacpan.org/release/BIGPRESH/Dancer-1.3522/source/lib/Dancer/Session/Abstract.pm#L85-102",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://cpan.org/modules",
+          "defaultStatus": "unaffected",
+          "packageName": "Dancer",
+          "product": "Dancer::Session::Abstract",
+          "programFiles": [
+            "lib/Dancer/Session/Abstract.pm"
+          ],
+          "programRoutines": [
+            {
+              "name": "Dancer::Session::Abstract::build_id"
+            }
+          ],
+          "repo": "https://github.com/PerlDancer/Dancer",
+          "vendor": "BIGPRESH",
+          "versions": [
+            {
+              "lessThanOrEqual": "1.3522",
+              "status": "affected",
+              "version": "0",
+              "versionType": "custom"
             }
           ]
         }
       ],
-      "problemType": [],
+      "problemType": [
+        "CWE-340 Generation of Predictable Numbers or Identifiers",
+        "CWE-338 Use of Cryptographically Weak Pseudo-Random Number Generator"
+      ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-7323",
-      "publishedDate": "2026-04-28T13:49:10.299Z",
-      "lastModifiedDate": "2026-04-30T10:20:17.946Z",
-      "description": "Memory safety bugs present in Firefox ESR 140.10.0 and Firefox 150.0.0. Some of these bugs showed evidence of memory corruption and we presume that with enough effort some of these could have been exploited to run arbitrary code. This vulnerability was fixed in Firefox 150.0.1 and Firefox ESR 140.10.1.",
+      "id": "CVE-2026-31693",
+      "publishedDate": "2026-04-30T11:47:01.230Z",
+      "lastModifiedDate": "2026-04-30T11:47:01.230Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\ncifs: some missing initializations on replay\n\nIn several places in the code, we have a label to signify\nthe start of the code where a request can be replayed if\nnecessary. However, some of these places were missing the\nnecessary reinitializations of certain local variables\nbefore replay.\n\nThis change makes sure that these variables get initialized\nafter the label.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://bugzilla.mozilla.org/buglist.cgi?bug_id=2028537%2C2029911%2C2031121%2C2033602",
+          "url": "https://git.kernel.org/stable/c/c854ab481ece4b3e5f4c2e8b22824f015ff874a5",
           "type": "reference"
         },
         {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-35/",
+          "url": "https://git.kernel.org/stable/c/1d731e512134495e0ef490ade0e4d91dc0d515ec",
           "type": "reference"
         },
         {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-36/",
+          "url": "https://git.kernel.org/stable/c/7c9ce68192eef14c777cb6ce17155d2eb2431aea",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/c99e160938b627f6f28edee930e8abc157e84386",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/14f66f44646333d2bfd7ece36585874fd72f8286",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "product": "Firefox",
-          "vendor": "Mozilla",
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "unaffected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "fs/smb/client/smb2ops.c",
+            "fs/smb/client/smb2pdu.c"
+          ],
           "versions": [
             {
-              "status": "unaffected",
-              "version": "140.10.1",
-              "lessThanOrEqual": "140.*",
-              "versionType": "rpm"
+              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
+              "lessThan": "c854ab481ece4b3e5f4c2e8b22824f015ff874a5",
+              "status": "affected",
+              "versionType": "git"
             },
             {
-              "status": "unaffected",
-              "version": "150.0.1",
-              "lessThanOrEqual": "*",
-              "versionType": "rpm"
+              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
+              "lessThan": "1d731e512134495e0ef490ade0e4d91dc0d515ec",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
+              "lessThan": "7c9ce68192eef14c777cb6ce17155d2eb2431aea",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
+              "lessThan": "c99e160938b627f6f28edee930e8abc157e84386",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
+              "lessThan": "14f66f44646333d2bfd7ece36585874fd72f8286",
+              "status": "affected",
+              "versionType": "git"
             }
           ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-7322",
-      "publishedDate": "2026-04-28T13:49:09.314Z",
-      "lastModifiedDate": "2026-04-30T10:20:27.399Z",
-      "description": "Memory safety bugs present in Firefox ESR 115.35.0, Firefox ESR 140.10.0 and Firefox 150.0.0. Some of these bugs showed evidence of memory corruption and we presume that with enough effort some of these could have been exploited to run arbitrary code. This vulnerability was fixed in Firefox 150.0.1, Firefox ESR 140.10.1, and Firefox ESR 115.35.1.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://bugzilla.mozilla.org/buglist.cgi?bug_id=2021904%2C2022731%2C2027158%2C2027733%2C2027973%2C2027976%2C2028231%2C2028731%2C2028886%2C2029067%2C2029700%2C2029724%2C2029806%2C2029814%2C2030108%2C2030111%2C2031524%2C2031921%2C2032040",
-          "type": "reference"
         },
         {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-35/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-36/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.mozilla.org/security/advisories/mfsa2026-37/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Firefox",
-          "vendor": "Mozilla",
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "affected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "fs/smb/client/smb2ops.c",
+            "fs/smb/client/smb2pdu.c"
+          ],
           "versions": [
             {
+              "version": "6.6.128",
+              "lessThanOrEqual": "6.6.*",
               "status": "unaffected",
-              "version": "115.35.1",
-              "lessThanOrEqual": "115.*",
-              "versionType": "rpm"
+              "versionType": "semver"
             },
             {
+              "version": "6.12.75",
+              "lessThanOrEqual": "6.12.*",
               "status": "unaffected",
-              "version": "140.10.1",
-              "lessThanOrEqual": "140.*",
-              "versionType": "rpm"
+              "versionType": "semver"
             },
             {
+              "version": "6.18.16",
+              "lessThanOrEqual": "6.18.*",
               "status": "unaffected",
-              "version": "150.0.1",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.19.6",
+              "lessThanOrEqual": "6.19.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "7.0",
               "lessThanOrEqual": "*",
-              "versionType": "rpm"
+              "status": "unaffected",
+              "versionType": "original_commit_for_fix"
             }
           ]
         }
