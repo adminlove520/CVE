@@ -2,484 +2,349 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 12,
-    "last_updated": "2026-05-01T15:41:36.274111",
+    "total_count": 11,
+    "last_updated": "2026-05-01T16:39:51.096154",
     "severity_distribution": {
-      "critical": 0,
-      "high": 2,
-      "medium": 8,
+      "critical": 1,
+      "high": 5,
+      "medium": 3,
       "low": 0,
       "none": 2
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-42167",
-      "publishedDate": "2026-04-28T00:00:00.000Z",
-      "lastModifiedDate": "2026-05-01T15:07:09.636Z",
-      "description": "mod_sql in ProFTPD before 1.3.9a allows remote attackers to execute arbitrary code via a username, in scenarios where there is logging of USER requests with an expansion such as %U, and the SQL backend allows commands (e.g., COPY TO PROGRAM).",
-      "severity": 8.1,
+      "id": "CVE-2026-37531",
+      "publishedDate": "2026-05-01T00:00:00.000Z",
+      "lastModifiedDate": "2026-05-01T16:28:33.371Z",
+      "description": "AGL app-framework-main thru 17.1.12 contains a Zip Slip path traversal vulnerability (CWE-22) combined with a TOCTOU race condition (CWE-367) in the widget installation flow. The is_valid_filename function in wgtpkg-zip.c validates ZIP entry names but does not check for dot notation directory traversal sequences it only blocks absolute paths. The zread extraction function uses openat(workdirfd, filename, O_CREAT) which resolves dot notation values relative to the work directory, allowing files to be written anywhere on the filesystem. Critically, in function install_widget in file wgtpkg-install.c, extraction via zread occurs BEFORE signature verification via check_all_signatures. Even if signature verification fails, the error cleanup (remove_workdir) only deletes the temporary work directory files written outside via path traversal persist permanently.",
+      "severity": 9.8,
       "references": [
         {
-          "url": "http://www.proftpd.org/docs/RELEASE_NOTES-1.3.10rc1",
+          "url": "https://gerrit.automotivelinux.org/gerrit/src/app-framework-main",
           "type": "reference"
         },
         {
-          "url": "https://github.com/proftpd/proftpd/issues/2052",
+          "url": "https://gist.github.com/sgInnora/8526eedcfd826d05ef1fc45d8f405643",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "n/a",
+          "versions": [
+            {
+              "version": "n/a",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "n/a"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-37525",
+      "publishedDate": "2026-05-01T00:00:00.000Z",
+      "lastModifiedDate": "2026-05-01T16:14:35.776Z",
+      "description": "AGL app-framework-binder (afb-daemon) through v19.90.0 contains a privilege escalation vulnerability in the supervision Do command. The on_supervision_call function in src/afb-supervision.c explicitly nullifies the request credentials by calling afb_context_change_cred(&xreq->context, NULL) before dispatching an attacker-controlled API call via xapi->itf->call(xapi->closure, xreq). The NULL propagation chain through afb-context.c:110 (context->credentials = afb_cred_addref(NULL)) and afb-cred.c:163 (returns NULL when cred is NULL) confirms that credentials are zeroed before the target API executes. The attacker controls both api and verb parameters via JSON input, allowing execution of any registered API with a NULL credential context. APIs that rely on context->credentials for authorization decisions may fail open when receiving NULL credentials, enabling privilege escalation. This vulnerability was introduced in commit abbb4599f0b921c6f434b6bd02bcfb277eecf745 on 2018-02-14.",
+      "severity": 7.8,
+      "references": [
+        {
+          "url": "https://gerrit.automotivelinux.org/gerrit/src/app-framework-binder",
           "type": "reference"
         },
         {
-          "url": "https://zeropath.com/blog/proftpd-cve-2026-42167-auth-bypass-privesc-rce",
+          "url": "https://gist.github.com/sgInnora/8526eedcfd826d05ef1fc45d8f405643",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "n/a",
+          "versions": [
+            {
+              "version": "n/a",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "n/a"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-37526",
+      "publishedDate": "2026-05-01T00:00:00.000Z",
+      "lastModifiedDate": "2026-05-01T16:15:27.603Z",
+      "description": "AGL app-framework-binder (afb-daemon) through v19.90.0 allows any local process to execute privileged supervision commands (Exit, Do, Sclose, Config, Trace, Debug, Token, slist) without authentication via the abstract Unix socket @urn:AGL:afs:supervision:socket. The on_supervision_call function in src/afb-supervision.c dispatches all 8 commands without any credential verification. The abstract socket has no DAC protection, as acknowledged in the official CAUTION comment in src/afs-supervision.h. This allows a low-privileged local process to kill the daemon (DoS via Exit command), execute arbitrary API calls (via Do command), close arbitrary user sessions (via Sclose command), or leak the entire global configuration (via Config command). The vulnerability was introduced in commit b8c9d5de384efcfa53ebdb3f0053d7b3723777e1 on 2017-06-29.",
+      "severity": 7.8,
+      "references": [
+        {
+          "url": "https://gerrit.automotivelinux.org/gerrit/src/app-framework-binder",
           "type": "reference"
         },
         {
-          "url": "https://github.com/ZeroPathAI/proftpd-CVE-2026-42167-poc",
+          "url": "https://gist.github.com/sgInnora/8526eedcfd826d05ef1fc45d8f405643",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "n/a",
+          "versions": [
+            {
+              "version": "n/a",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "n/a"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-42402",
+      "publishedDate": "2026-05-01T08:54:41.427Z",
+      "lastModifiedDate": "2026-05-01T16:21:05.909Z",
+      "description": "Apache Neethi is vulnerable to a Denial of Service attack through algorithmic complexity in policy normalization. Specially crafted WS-Policy documents can trigger an exponential Cartesian cross-product expansion during the normalization process, causing unbounded memory allocation that exhausts the JVM heap. This occurs when the normalization process generates an excessive number of policy alternatives without bounds, leading to runtime memory exhaustion.\n\nUsers should upgrade to 3.2.2 which limits the maximum number of normalized policy alternatives.",
+      "severity": 7.5,
+      "references": [
+        {
+          "url": "https://lists.apache.org/thread/p826j0phhmr9f83wzpmys1y0bdfrr2q4",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://repo.maven.apache.org/maven2",
+          "defaultStatus": "unaffected",
+          "packageName": "org.apache.neethi:neethi",
+          "product": "Apache Neethi",
+          "vendor": "Apache Software Foundation",
+          "versions": [
+            {
+              "lessThan": "3.2.2",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-400 Uncontrolled Resource Consumption"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-42403",
+      "publishedDate": "2026-05-01T08:38:16.035Z",
+      "lastModifiedDate": "2026-05-01T16:21:07.061Z",
+      "description": "Apache Neethi does not properly detect circular references in policy definitions. When a WS-Policy document contains circular policy references (where Policy A references Policy B which references Policy A), the policy normalization process can enter an infinite loop or cause excessive recursion, leading to a stack overflow or application hang. An attacker can craft malicious policy documents with circular references to cause a Denial of Service condition\n\nUsers are recommended to upgrade to version 3.2.2, which fixes this issue.",
+      "severity": 7.5,
+      "references": [
+        {
+          "url": "https://lists.apache.org/thread/zm6t8skkkskjwk1881l4m4n0l7dqclzo",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://repo.maven.apache.org/maven2",
+          "defaultStatus": "unaffected",
+          "packageName": "org.apache.neethi:neethi",
+          "product": "Apache Neethi",
+          "vendor": "Apache Software Foundation",
+          "versions": [
+            {
+              "lessThan": "3.2.2",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-400 Uncontrolled Resource Consumption"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-37532",
+      "publishedDate": "2026-05-01T00:00:00.000Z",
+      "lastModifiedDate": "2026-05-01T16:29:06.245Z",
+      "description": "AGL agl-service-can-low-level thru 17.1.12 contains a heap buffer over-read in the isotp-c library. In isotp_continue_receive (receive.c:87-89), the payload_length for a Single Frame is extracted from a 4-bit nibble in the CAN frame data, yielding values 0-15. However, a standard CAN frame is only 8 bytes, with payload starting at data[1] (7 bytes available). When payload_length exceeds the available data (e.g., nibble=15 but only 7 payload bytes exist), memcpy(message.payload, &data[1], payload_length) reads up to 8 bytes past the end of the data buffer.",
+      "severity": 7.1,
+      "references": [
+        {
+          "url": "https://gerrit.automotivelinux.org/gerrit/apps/agl-service-can-low-level",
           "type": "reference"
         },
         {
-          "url": "https://www.openwall.com/lists/oss-security/2026/05/01/4",
+          "url": "https://gist.github.com/sgInnora/8526eedcfd826d05ef1fc45d8f405643",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "n/a",
+          "versions": [
+            {
+              "version": "n/a",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "n/a"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-23863",
+      "publishedDate": "2026-05-01T16:01:39.565Z",
+      "lastModifiedDate": "2026-05-01T16:15:38.171Z",
+      "description": "An attachment spoofing issue in WhatsApp for Windows prior to v2.3000.1032164386.258709 could have allowed maliciously formatted documents with embedded NUL bytes in the filename to be shown in the application as one type of file but run as an executable when opened. We have not seen evidence of exploitation in the wild.",
+      "severity": 6.5,
+      "references": [
+        {
+          "url": "https://www.facebook.com/security/advisories/cve-2026-23863",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.whatsapp.com/security/advisories/2026",
           "type": "reference"
         }
       ],
       "affected": [
         {
           "defaultStatus": "unaffected",
-          "product": "ProFTPD",
-          "vendor": "ProFTPD",
+          "product": "WhatsApp Desktop for Windows",
+          "vendor": "Facebook",
           "versions": [
             {
-              "lessThan": "1.3.9a",
+              "lessThan": "2.3000.1032164386.258709",
               "status": "affected",
-              "version": "1.3.7b",
+              "version": "2.3000.*.252500",
               "versionType": "custom"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+        "Improper Neutralization of Null Byte or NUL Character (CWE-158)"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-5174",
-      "publishedDate": "2026-04-30T15:07:21.589Z",
-      "lastModifiedDate": "2026-05-01T15:24:46.453Z",
-      "description": "Improper input validation vulnerability in Progress Software MOVEit Automation allows Privilege Escalation.\n\nThis issue affects MOVEit Automation: from 2025.1.0 before 2025.1.5, from 2025.0.0 before 2025.0.9, from 2024.0.0 before 2024.1.8, versions prior to 2024.0.0.",
-      "severity": 7.7,
-      "references": [
-        {
-          "url": "https://community.progress.com/s/article/MOVEit-Automation-Critical-Security-Alert-Bulletin-April-2026-CVE-2026-4670-CVE-2026-5174",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Progress Software",
-          "product": "MOVEit Automation",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "2025.1.0",
-              "lessThan": "2025.1.5",
-              "versionType": "semver"
-            },
-            {
-              "status": "affected",
-              "version": "2025.0.0",
-              "lessThan": "2025.0.9",
-              "versionType": "semver"
-            },
-            {
-              "status": "affected",
-              "version": "2024.0.0",
-              "lessThan": "2024.1.8",
-              "versionType": "semver"
-            },
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "2024.0.0",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-20 Improper input validation"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-37503",
-      "publishedDate": "2026-05-01T00:00:00.000Z",
-      "lastModifiedDate": "2026-05-01T15:20:28.341Z",
-      "description": "Cross-Site Scripting (XSS) in V2Board thru 1.7.4. The custom_html field in theme configuration is rendered using Blade unescaped output in public/theme/v2board/dashboard.blade.php. An admin can inject arbitrary JavaScript via the saveThemeConfig API. All site visitors execute the payload, enabling cookie theft, session hijacking, or phishing.",
-      "severity": 6.9,
-      "references": [
-        {
-          "url": "https://github.com/v2board/v2board",
-          "type": "reference"
-        },
-        {
-          "url": "https://gist.github.com/sgInnora/1330e1a82caa79906eec55eeff2c99b9",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n/a",
-          "product": "n/a",
-          "versions": [
-            {
-              "version": "n/a",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "n/a"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-43505",
-      "publishedDate": "2026-05-01T14:42:33.451Z",
-      "lastModifiedDate": "2026-05-01T15:02:35.379Z",
-      "description": "An issue was discovered in Prosody before 0.12.6 and 1.0.0 through 13.0.0 before 13.0.5, when mod_proxy65 is enabled. Because mod_proxy65 mishandles access control in the activation scenario, relaying of unauthenticated traffic can occur.",
+      "id": "CVE-2026-42404",
+      "publishedDate": "2026-05-01T09:46:49.958Z",
+      "lastModifiedDate": "2026-05-01T16:21:08.152Z",
+      "description": "Apache Neethi does not impose any restrictions on URIs when manually fetching remote policy references through the PolicyReference API. When an application explicitly calls the API to retrieve a policy from a remote URI, an outbound request is made for arbitrary protocols and internal IP adddresses. From 3.2.2, only http or https URIs are allowed, and link-local/multicast/any-local addresses are forbidden.\n\nUsers are recommended to upgrade to version 3.2.2, which fixes this issue.",
       "severity": 6.5,
       "references": [
         {
-          "url": "https://www.openwall.com/lists/oss-security/2026/05/01/5",
-          "type": "reference"
-        },
-        {
-          "url": "https://prosody.im/security/advisory_735dd9d3/",
+          "url": "https://lists.apache.org/thread/zdspnt64zznyjyn648553kptx69w23oq",
           "type": "reference"
         }
       ],
       "affected": [
         {
+          "collectionURL": "https://repo.maven.apache.org/maven2",
           "defaultStatus": "unaffected",
-          "product": "Prosody",
-          "vendor": "Prosody",
+          "packageName": "org.apache.neethi:neethi",
+          "product": "Apache Neethi",
+          "vendor": "Apache Software Foundation",
           "versions": [
             {
-              "lessThan": "0.12.6",
+              "lessThan": "3.2.2",
               "status": "affected",
               "version": "0",
               "versionType": "semver"
-            },
-            {
-              "lessThan": "13.0.5",
-              "status": "affected",
-              "version": "1.0.0",
-              "versionType": "semver"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-420 Unprotected Alternate Channel"
+        "CWE-918 Server-Side Request Forgery (SSRF)"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-43504",
-      "publishedDate": "2026-05-01T14:40:09.451Z",
-      "lastModifiedDate": "2026-05-01T15:02:16.165Z",
-      "description": "An issue was discovered in Prosody before 0.12.6 and 1.0.0 through 13.0.0 before 13.0.5, when mod_proxy65 is enabled. Because mod_proxy65 mishandles access control in a paused scenario, relaying of unauthenticated traffic can occur.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://www.openwall.com/lists/oss-security/2026/05/01/5",
-          "type": "reference"
-        },
-        {
-          "url": "https://prosody.im/security/advisory_735dd9d3/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Prosody",
-          "vendor": "Prosody",
-          "versions": [
-            {
-              "lessThan": "0.12.6",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "13.0.5",
-              "status": "affected",
-              "version": "1.0.0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-863 Incorrect Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-6542",
-      "publishedDate": "2026-04-30T21:16:10.787Z",
-      "lastModifiedDate": "2026-05-01T15:00:43.375Z",
-      "description": "IBM Langflow OSS 1.0.0 through 1.8.4 could allow any user to supply a flow_id to read transaction logs and vertex build data belonging to other users, and to delete persisted vertex build data for another user's flow.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://www.ibm.com/support/pages/node/7270886",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "IBM",
-          "product": "Langflow OSS",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "1.0.0",
-              "lessThanOrEqual": "1.8.4",
-              "versionType": "semver"
-            }
-          ],
-          "cpes": [
-            "cpe:2.3:a:ibm:langflow_oss:1.0.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:ibm:langflow_oss:1.8.4:*:*:*:*:*:*:*"
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-639 Authorization Bypass Through User-Controlled Key"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-43507",
-      "publishedDate": "2026-05-01T14:47:22.616Z",
-      "lastModifiedDate": "2026-05-01T15:20:38.141Z",
-      "description": "An issue was discovered in Prosody before 0.12.6 and 1.0.0 through 13.0.0 before 13.0.5. A Denial of Service can occur via memory exhaustion caused by XML parsing resource amplification from unauthenticated connections.",
-      "severity": 5.3,
-      "references": [
-        {
-          "url": "https://www.openwall.com/lists/oss-security/2026/05/01/5",
-          "type": "reference"
-        },
-        {
-          "url": "https://prosody.im/security/advisory_735dd9d3/",
-          "type": "reference"
-        },
-        {
-          "url": "https://blog.unionium.org/ARTICLES/1.HTM",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Prosody",
-          "vendor": "Prosody",
-          "versions": [
-            {
-              "lessThan": "0.12.6",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "13.0.5",
-              "status": "affected",
-              "version": "1.0.0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-770 Allocation of Resources Without Limits or Throttling"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-43506",
-      "publishedDate": "2026-05-01T14:45:20.906Z",
-      "lastModifiedDate": "2026-05-01T15:23:08.010Z",
-      "description": "An issue was discovered in Prosody before 0.12.6 and 1.0.0 through 13.0.0 before 13.0.5. A Denial of Service can occur via memory exhaustion caused by memory leaks from unauthenticated connections.",
-      "severity": 5.3,
-      "references": [
-        {
-          "url": "https://www.openwall.com/lists/oss-security/2026/05/01/5",
-          "type": "reference"
-        },
-        {
-          "url": "https://prosody.im/security/advisory_735dd9d3/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Prosody",
-          "vendor": "Prosody",
-          "versions": [
-            {
-              "lessThan": "0.12.6",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "13.0.5",
-              "status": "affected",
-              "version": "1.0.0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-401 Missing Release of Memory after Effective Lifetime"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-37504",
-      "publishedDate": "2026-05-01T00:00:00.000Z",
-      "lastModifiedDate": "2026-05-01T15:21:11.010Z",
-      "description": "Sensitive server_token exposed via GET parameter in V2Board thru 1.7.4. In app/Http/Controllers/Server/UniProxyController.php, the server authentication token is accepted via GET parameter transmission. The token appears in URLs such as /api/v1/server/UniProxy/user?token=SECRET, causing it to be recorded in web server access logs, browser history, HTTP Referer headers, and proxy/CDN logs. An attacker who gains access to any log source can extract the token and impersonate a proxy server node, potentially intercepting all user traffic.",
-      "severity": 5.3,
-      "references": [
-        {
-          "url": "https://github.com/v2board/v2board",
-          "type": "reference"
-        },
-        {
-          "url": "https://gist.github.com/sgInnora/1330e1a82caa79906eec55eeff2c99b9",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n/a",
-          "product": "n/a",
-          "versions": [
-            {
-              "version": "n/a",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "n/a"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-7585",
-      "publishedDate": "2026-05-01T15:15:11.088Z",
-      "lastModifiedDate": "2026-05-01T15:15:11.088Z",
-      "description": "A vulnerability was determined in Open5GS up to 2.7.7. The impacted element is the function amf_nudm_sdm_handle_provisioned of the file /src/amf/nudm-handler.c of the component AMF. Executing a manipulation can lead to denial of service. The attack can be launched remotely. The exploit has been publicly disclosed and may be utilized. The project was informed of the problem early through an issue report but has not responded yet.",
+      "id": "CVE-2026-23866",
+      "publishedDate": "2026-05-01T16:02:03.304Z",
+      "lastModifiedDate": "2026-05-01T16:10:25.306Z",
+      "description": "Incomplete validation of AI rich response messages for Instagram Reels in WhatsApp for iOS v2.25.8.0 to v2.26.15.72 and WhatsApp for Android v2.25.8.0 to v2.26.7.10 could have allowed a user to trigger processing of media content from an arbitrary URL on another user’s device, including triggering OS-controlled custom URL scheme handlers. We have not seen evidence of exploitation in the wild.",
       "severity": 4.3,
       "references": [
         {
-          "url": "https://vuldb.com/vuln/360533",
+          "url": "https://www.facebook.com/security/advisories/cve-2026-23866",
           "type": "reference"
         },
         {
-          "url": "https://vuldb.com/vuln/360533/cti",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/submit/804334",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/submit/804335",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/submit/804337",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/open5gs/open5gs/issues/4403",
-          "type": "poc"
-        },
-        {
-          "url": "https://github.com/open5gs/open5gs/",
+          "url": "https://www.whatsapp.com/security/advisories/2026",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "n/a",
-          "product": "Open5GS",
+          "defaultStatus": "unaffected",
+          "product": "WhatsApp for Android",
+          "vendor": "Facebook",
           "versions": [
             {
-              "version": "2.7.0",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.1",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.2",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.3",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.4",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.5",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.6",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.7",
-              "status": "affected"
+              "lessThan": "2.26.7.10",
+              "status": "affected",
+              "version": "2.25.8.0",
+              "versionType": "semver"
             }
-          ],
-          "cpes": [
-            "cpe:2.3:a:open5gs:open5gs:*:*:*:*:*:*:*:*"
-          ],
-          "modules": [
-            "AMF"
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "WhatsApp for iOS",
+          "vendor": "Facebook",
+          "versions": [
+            {
+              "lessThan": "2.26.15.72",
+              "status": "affected",
+              "version": "2.25.8.0",
+              "versionType": "semver"
+            }
           ]
         }
       ],
       "problemType": [
-        "Denial of Service"
+        "Improper Verification of Source of a Communication Channel (CWE-940)"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-42480",
+      "id": "CVE-2026-37530",
       "publishedDate": "2026-05-01T00:00:00.000Z",
-      "lastModifiedDate": "2026-05-01T15:05:08.819Z",
-      "description": "A stack-based out-of-bounds read vulnerability in VrmlData_Scene::ReadLine in the VRML parser in Open CASCADE Technology (OCCT) V8_0_0_rc5 allows attackers to cause a denial of service via a crafted VRML file. The issue occurs because the quoted-string escape handler uses ptr[++anOffset] without proper bounds checking, which can read past the end of a fixed-size stack buffer.",
+      "lastModifiedDate": "2026-05-01T16:16:11.563Z",
+      "description": "AGL agl-service-can-low-level thru 17.1.12 contains a stack buffer overflow in the uds-c library. The send_diagnostic_request function in uds.c allocates a 6-byte stack buffer (MAX_DIAGNOSTIC_PAYLOAD_SIZE=6) but copies up to 7 bytes (MAX_UDS_REQUEST_PAYLOAD_LENGTH=7) via memcpy at an offset of 1+pid_length (2-3 bytes), resulting in 1-4 bytes of controlled stack overflow. The payload_length field (uint8_t) has no bounds check against the destination buffer. On 32-bit ARM automotive ECUs without stack canaries, this can lead to return address overwrite and RCE.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://gist.github.com/sgInnora/dfba083d04906283e9c92aea78e2d94a",
+          "url": "https://gerrit.automotivelinux.org/gerrit/apps/agl-service-can-low-level",
+          "type": "reference"
+        },
+        {
+          "url": "https://gist.github.com/sgInnora/8526eedcfd826d05ef1fc45d8f405643",
           "type": "reference"
         }
       ],
@@ -501,14 +366,18 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-42481",
+      "id": "CVE-2026-42485",
       "publishedDate": "2026-05-01T00:00:00.000Z",
-      "lastModifiedDate": "2026-05-01T15:06:00.658Z",
-      "description": "Open CASCADE Technology (OCCT) V8_0_0_rc5 contains multiple vulnerabilities in its IGES and STEP file parsers that can be triggered by crafted IGES or STEP files. These issues include an out-of-bounds read in Geom2d_BSplineCurve::EvalD0 during IGES B-spline curve evaluation, an out-of-bounds read in MakeBSplineCurveCommon during STEP B-spline curve construction, and infinite recursion in StepShape_OrientedEdge::EdgeStart when processing a self-referential OrientedEdge entity. Successful exploitation may result in denial of service or unintended memory disclosure.",
+      "lastModifiedDate": "2026-05-01T16:29:37.095Z",
+      "description": "AGL agl-service-can-low-level contains a stack buffer overflow in the uds-c library. The send_diagnostic_request function in uds.c allocates a 6-byte stack buffer (MAX_DIAGNOSTIC_PAYLOAD_SIZE=6) but copies up to 7 bytes (MAX_UDS_REQUEST_PAYLOAD_LENGTH=7) via memcpy at an offset of 1+pid_length (2-3 bytes), resulting in 1-4 bytes of controlled stack overflow. The payload_length field (uint8_t) has no bounds check against the destination buffer. On 32-bit ARM automotive ECUs without stack canaries, this can lead to return address overwrite and RCE.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://gist.github.com/sgInnora/dfba083d04906283e9c92aea78e2d94a",
+          "url": "https://gerrit.automotivelinux.org/gerrit/apps/agl-service-can-low-level",
+          "type": "reference"
+        },
+        {
+          "url": "https://gist.github.com/sgInnora/8526eedcfd826d05ef1fc45d8f405643",
           "type": "reference"
         }
       ],
