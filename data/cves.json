@@ -2,30 +2,63 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 11,
-    "last_updated": "2026-05-01T16:39:51.096154",
+    "total_count": 28,
+    "last_updated": "2026-05-01T17:43:13.375945",
     "severity_distribution": {
-      "critical": 1,
-      "high": 5,
-      "medium": 3,
+      "critical": 2,
+      "high": 10,
+      "medium": 11,
       "low": 0,
-      "none": 2
+      "none": 5
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-37531",
+      "id": "CVE-2026-37541",
       "publishedDate": "2026-05-01T00:00:00.000Z",
-      "lastModifiedDate": "2026-05-01T16:28:33.371Z",
-      "description": "AGL app-framework-main thru 17.1.12 contains a Zip Slip path traversal vulnerability (CWE-22) combined with a TOCTOU race condition (CWE-367) in the widget installation flow. The is_valid_filename function in wgtpkg-zip.c validates ZIP entry names but does not check for dot notation directory traversal sequences it only blocks absolute paths. The zread extraction function uses openat(workdirfd, filename, O_CREAT) which resolves dot notation values relative to the work directory, allowing files to be written anywhere on the filesystem. Critically, in function install_widget in file wgtpkg-install.c, extraction via zread occurs BEFORE signature verification via check_all_signatures. Even if signature verification fails, the error cleanup (remove_workdir) only deletes the temporary work directory files written outside via path traversal persist permanently.",
+      "lastModifiedDate": "2026-05-01T16:54:31.265Z",
+      "description": "Buffer overflow vulnerability in Open Vehicle Monitoring System 3 (OVMS3) 3.3.005. In canformat_gvret.cpp, the length field in GVRET binary data is not properly validated, allowing remote attackers to cause a denial of service or possibly execute arbitrary code via crafted GVRET frames.",
+      "severity": 10,
+      "references": [
+        {
+          "url": "https://github.com/openvehicles/Open-Vehicle-Monitoring-System-3",
+          "type": "reference"
+        },
+        {
+          "url": "https://gist.github.com/sgInnora/f4ac66faeefe07a653ceeb3f58cdc381",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "n/a",
+          "versions": [
+            {
+              "version": "n/a",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "n/a"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-37539",
+      "publishedDate": "2026-05-01T00:00:00.000Z",
+      "lastModifiedDate": "2026-05-01T16:51:03.579Z",
+      "description": "Buffer overflow vulnerability in cannelloni v2.0.0 in CAN frame parsing in parser.cpp in function parseCANFrame, and decoder.cpp in function decodeFrame allowing remote attackers to cause a denial of service (crash) or possibly execute arbitrary code via crafted CAN FD frames.",
       "severity": 9.8,
       "references": [
         {
-          "url": "https://gerrit.automotivelinux.org/gerrit/src/app-framework-main",
+          "url": "https://github.com/mguentner/cannelloni",
           "type": "reference"
         },
         {
-          "url": "https://gist.github.com/sgInnora/8526eedcfd826d05ef1fc45d8f405643",
+          "url": "https://gist.github.com/sgInnora/f4ac66faeefe07a653ceeb3f58cdc381",
           "type": "reference"
         }
       ],
@@ -47,51 +80,66 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-37525",
-      "publishedDate": "2026-05-01T00:00:00.000Z",
-      "lastModifiedDate": "2026-05-01T16:14:35.776Z",
-      "description": "AGL app-framework-binder (afb-daemon) through v19.90.0 contains a privilege escalation vulnerability in the supervision Do command. The on_supervision_call function in src/afb-supervision.c explicitly nullifies the request credentials by calling afb_context_change_cred(&xreq->context, NULL) before dispatching an attacker-controlled API call via xapi->itf->call(xapi->closure, xreq). The NULL propagation chain through afb-context.c:110 (context->credentials = afb_cred_addref(NULL)) and afb-cred.c:163 (returns NULL when cred is NULL) confirms that credentials are zeroed before the target API executes. The attacker controls both api and verb parameters via JSON input, allowing execution of any registered API with a NULL credential context. APIs that rely on context->credentials for authorization decisions may fail open when receiving NULL credentials, enabling privilege escalation. This vulnerability was introduced in commit abbb4599f0b921c6f434b6bd02bcfb277eecf745 on 2018-02-14.",
-      "severity": 7.8,
+      "id": "CVE-2026-3772",
+      "publishedDate": "2026-05-01T11:18:47.686Z",
+      "lastModifiedDate": "2026-05-01T16:35:20.995Z",
+      "description": "The WP Editor plugin for WordPress is vulnerable to Cross-Site Request Forgery in all versions up to, and including, 1.2.9.2. This is due to missing nonce verification in the 'add_plugins_page' and 'add_themes_page' functions. This makes it possible for unauthenticated attackers to overwrite arbitrary plugin and theme PHP files with attacker-controlled code via a forged request, granted they can trick a site administrator into performing an action such as clicking a link.",
+      "severity": 8.8,
       "references": [
         {
-          "url": "https://gerrit.automotivelinux.org/gerrit/src/app-framework-binder",
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/b1bc4a87-d5de-4d66-9cc5-802ef11f886c?source=cve",
           "type": "reference"
         },
         {
-          "url": "https://gist.github.com/sgInnora/8526eedcfd826d05ef1fc45d8f405643",
+          "url": "https://plugins.trac.wordpress.org/browser/wp-editor/trunk/classes/WPEditorPlugins.php#L60",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/wp-editor/trunk/classes/WPEditorThemes.php#L103",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset/3480577/",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "n/a",
-          "product": "n/a",
+          "vendor": "benjaminprojas",
+          "product": "WP Editor",
           "versions": [
             {
-              "version": "n/a",
-              "status": "affected"
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "1.2.9.2",
+              "versionType": "semver"
             }
-          ]
+          ],
+          "defaultStatus": "unaffected"
         }
       ],
       "problemType": [
-        "n/a"
+        "CWE-352 Cross-Site Request Forgery (CSRF)"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-37526",
+      "id": "CVE-2026-37536",
       "publishedDate": "2026-05-01T00:00:00.000Z",
-      "lastModifiedDate": "2026-05-01T16:15:27.603Z",
-      "description": "AGL app-framework-binder (afb-daemon) through v19.90.0 allows any local process to execute privileged supervision commands (Exit, Do, Sclose, Config, Trace, Debug, Token, slist) without authentication via the abstract Unix socket @urn:AGL:afs:supervision:socket. The on_supervision_call function in src/afb-supervision.c dispatches all 8 commands without any credential verification. The abstract socket has no DAC protection, as acknowledged in the official CAUTION comment in src/afs-supervision.h. This allows a low-privileged local process to kill the daemon (DoS via Exit command), execute arbitrary API calls (via Do command), close arbitrary user sessions (via Sclose command), or leak the entire global configuration (via Config command). The vulnerability was introduced in commit b8c9d5de384efcfa53ebdb3f0053d7b3723777e1 on 2017-06-29.",
-      "severity": 7.8,
+      "lastModifiedDate": "2026-05-01T16:48:13.373Z",
+      "description": "miaofng/uds-c commit e506334e270d77b20c0bc259ac6c7d8c9b702b7a (2016-10-05) contains a stack buffer overflow in send_diagnostic_request. A 6-byte stack buffer (MAX_DIAGNOSTIC_PAYLOAD_SIZE=6) receives memcpy at offset 1+pid_length with payload_length bytes. MAX_UDS_REQUEST_PAYLOAD_LENGTH=7, so 1+2+7=10 exceeds buffer by 4 bytes. No bounds check on payload_length before memcpy.",
+      "severity": 8.8,
       "references": [
         {
-          "url": "https://gerrit.automotivelinux.org/gerrit/src/app-framework-binder",
+          "url": "https://github.com/miaofng/uds-c",
           "type": "reference"
         },
         {
-          "url": "https://gist.github.com/sgInnora/8526eedcfd826d05ef1fc45d8f405643",
+          "url": "https://github.com/openxc/uds-c",
+          "type": "reference"
+        },
+        {
+          "url": "https://gist.github.com/sgInnora/f4ac66faeefe07a653ceeb3f58cdc381",
           "type": "reference"
         }
       ],
@@ -113,86 +161,293 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-42402",
-      "publishedDate": "2026-05-01T08:54:41.427Z",
-      "lastModifiedDate": "2026-05-01T16:21:05.909Z",
-      "description": "Apache Neethi is vulnerable to a Denial of Service attack through algorithmic complexity in policy normalization. Specially crafted WS-Policy documents can trigger an exponential Cartesian cross-product expansion during the normalization process, causing unbounded memory allocation that exhausts the JVM heap. This occurs when the normalization process generates an excessive number of policy alternatives without bounds, leading to runtime memory exhaustion.\n\nUsers should upgrade to 3.2.2 which limits the maximum number of normalized policy alternatives.",
+      "id": "CVE-2026-6389",
+      "publishedDate": "2026-04-30T21:17:06.371Z",
+      "lastModifiedDate": "2026-05-01T16:37:57.048Z",
+      "description": "IBM Turbonomic prometurbo agent 8.16.0 through 8.17.6 IBM Turbonomic Application Resource Management grants excessive cluster‑wide permissions, including unrestricted read access to all secrets. An attacker that compromises the operator or its service account can exfiltrate sensitive credentials, escalate privileges, and potentially achieve full cluster compromise.",
+      "severity": 8.8,
+      "references": [
+        {
+          "url": "https://www.ibm.com/support/pages/node/7270720",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "IBM",
+          "product": "Turbonomic prometurbo agent",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "8.16.0",
+              "lessThanOrEqual": "8.17.6",
+              "versionType": "semver"
+            }
+          ],
+          "cpes": [
+            "cpe:2.3:a:ibm:turbonomic_prometurbo_agent:8.16.0:*:*:*:*:*:*:*",
+            "cpe:2.3:a:ibm:turbonomic_prometurbo_agent:8.17.6:*:*:*:*:*:*:*"
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-269 Improper Privilege Management"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-34965",
+      "publishedDate": "2026-04-29T19:50:01.366Z",
+      "lastModifiedDate": "2026-05-01T16:38:49.032Z",
+      "description": "Cockpit CMS contains an authenticated remote code execution vulnerability in the /cockpit/collections/save_collection endpoint that allows authenticated attackers with collection management privileges to inject arbitrary PHP code into collection rules parameters. Attackers can inject malicious PHP code through rule parameters which is written directly to server-side PHP files and executed via include() to achieve arbitrary command execution on the underlying server.",
+      "severity": 8.8,
+      "references": [
+        {
+          "url": "https://github.com/agentejo/cockpit",
+          "type": "reference"
+        },
+        {
+          "url": "https://gist.github.com/thepiyushkumarshukla/64d2318518b17f529bc3ccb11fd5be90",
+          "type": "poc"
+        },
+        {
+          "url": "https://github.com/agentejo/cockpit/commits/494765e4f0fb9484f320aee0c6ee889b6fa789b9",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/cockpit-cms-authenticated-remote-code-execution-via-collections",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Cockpit",
+          "product": "Cockpit CMS",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThanOrEqual": "494765e",
+              "versionType": "git"
+            }
+          ],
+          "defaultStatus": "unknown"
+        }
+      ],
+      "problemType": [
+        "CWE-94: Improper Control of Generation of Code ('Code Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-37540",
+      "publishedDate": "2026-05-01T00:00:00.000Z",
+      "lastModifiedDate": "2026-05-01T16:51:39.212Z",
+      "description": "OpenAMP v2025.10.0 ELF loader contains an integer overflow vulnerability in firmware image parsing. In elf_loader.c, it performs multiplication of two attacker-controlled 16-bit values from the ELF header without overflow checking. On 32-bit embedded systems (STM32MP1, Zynq, i.MX), large values can cause the product to wrap around to a small value.",
+      "severity": 8.4,
+      "references": [
+        {
+          "url": "https://github.com/OpenAMP/open-amp",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/OpenAMP/open-amp/blob/main/lib/remoteproc/elf_loader.c",
+          "type": "reference"
+        },
+        {
+          "url": "https://gist.github.com/sgInnora/f4ac66faeefe07a653ceeb3f58cdc381",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "n/a",
+          "versions": [
+            {
+              "version": "n/a",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "n/a"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2018-25307",
+      "publishedDate": "2026-04-29T19:24:38.629Z",
+      "lastModifiedDate": "2026-05-01T16:39:07.231Z",
+      "description": "SysGauge Pro 4.6.12 contains a local buffer overflow vulnerability in the Register function that allows local attackers to overwrite the structured exception handler by supplying a crafted unlock key. Attackers can inject shellcode through the Unlock Key field during registration to execute arbitrary code with application privileges.",
+      "severity": 8.4,
+      "references": [
+        {
+          "url": "https://www.exploit-db.com/exploits/44455",
+          "type": "poc"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/sysgauge-pro-local-buffer-overflow-seh",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Sysgauge",
+          "product": "SysGauge Pro",
+          "versions": [
+            {
+              "version": "4.6.12",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Buffer Copy without Checking Size of Input ('Classic Buffer Overflow')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2018-25301",
+      "publishedDate": "2026-04-29T19:24:34.531Z",
+      "lastModifiedDate": "2026-05-01T16:39:16.201Z",
+      "description": "Easy MPEG to DVD Burner 1.7.11 contains a structured exception handling (SEH) local buffer overflow vulnerability that allows local attackers to execute arbitrary code by supplying a malicious username string. Attackers can craft a payload containing junk data, SEH chain pointers, and shellcode that overwrites the SEH handler to redirect execution and run arbitrary commands like opening calc.exe.",
+      "severity": 8.4,
+      "references": [
+        {
+          "url": "https://www.exploit-db.com/exploits/44565",
+          "type": "poc"
+        },
+        {
+          "url": "https://downloads.tomsguide.com/MPEG-Easy-Burner,0301-10418.html",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/easy-mpeg-to-dvd-burner-seh-local-buffer-overflow",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Easy MPEG",
+          "product": "Easy MPEG to DVD Burner",
+          "versions": [
+            {
+              "version": "1.7.11",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Buffer Copy without Checking Size of Input ('Classic Buffer Overflow')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-37537",
+      "publishedDate": "2026-05-01T00:00:00.000Z",
+      "lastModifiedDate": "2026-05-01T16:49:37.914Z",
+      "description": "collin80/Open-SAE-J1939 thru commit 744024d4306bc387857dfce439558336806acb06 (2023-03-08) contains an integer underflow leading to out-of-bounds write in Transport Protocol Data Transfer handling. At line 23: uint8_t index = data[0] - 1. When data[0] (sequence number from CAN frame) is 0, index underflows to 255. Subsequent write at tp_dt->data[255*7 + i-1] reaches offset 1791, exceeding the MAX_TP_DT buffer (1785 bytes) by 6 bytes.",
+      "severity": 8.1,
+      "references": [
+        {
+          "url": "https://github.com/DanielMartensson/Open-SAE-J1939",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/collin80/Open-SAE-J1939",
+          "type": "reference"
+        },
+        {
+          "url": "https://gist.github.com/sgInnora/f4ac66faeefe07a653ceeb3f58cdc381",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "n/a",
+          "versions": [
+            {
+              "version": "n/a",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "n/a"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-2892",
+      "publishedDate": "2026-04-30T13:28:21.322Z",
+      "lastModifiedDate": "2026-05-01T16:38:40.570Z",
+      "description": "The Otter Blocks plugin for WordPress is vulnerable to Purchase Verification Bypass in all versions up to, and including, 3.1.4. This is due to the 'get_customer_data' method relying on an unsigned 'o_stripe_data' cookie to determine Stripe product ownership for unauthenticated users. The 'check_purchase' method trusts this cookie data without performing server-side verification against the Stripe API for one-time 'payment' mode purchases. This makes it possible for unauthenticated attackers to bypass Stripe purchase-gated content visibility conditions by forging the 'o_stripe_data' cookie with a target product ID, which is publicly exposed in the checkout block's HTML source.",
       "severity": 7.5,
       "references": [
         {
-          "url": "https://lists.apache.org/thread/p826j0phhmr9f83wzpmys1y0bdfrr2q4",
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/3443950f-1f94-4e0b-8906-1a9b9602a746?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/otter-blocks/trunk/inc/plugins/class-stripe-api.php#L260",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/otter-blocks/trunk/inc/plugins/class-stripe-api.php#L284",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/otter-blocks/trunk/inc/plugins/class-block-conditions.php#L274",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset/3471326/",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "collectionURL": "https://repo.maven.apache.org/maven2",
-          "defaultStatus": "unaffected",
-          "packageName": "org.apache.neethi:neethi",
-          "product": "Apache Neethi",
-          "vendor": "Apache Software Foundation",
+          "vendor": "themeisle",
+          "product": "Otter Blocks – Gutenberg Blocks, Page Builder for Gutenberg Editor & FSE",
           "versions": [
             {
-              "lessThan": "3.2.2",
-              "status": "affected",
               "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "3.1.4",
               "versionType": "semver"
             }
-          ]
+          ],
+          "defaultStatus": "unaffected"
         }
       ],
       "problemType": [
-        "CWE-400 Uncontrolled Resource Consumption"
+        "CWE-285 Improper Authorization"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-42403",
-      "publishedDate": "2026-05-01T08:38:16.035Z",
-      "lastModifiedDate": "2026-05-01T16:21:07.061Z",
-      "description": "Apache Neethi does not properly detect circular references in policy definitions. When a WS-Policy document contains circular policy references (where Policy A references Policy B which references Policy A), the policy normalization process can enter an infinite loop or cause excessive recursion, leading to a stack overflow or application hang. An attacker can craft malicious policy documents with circular references to cause a Denial of Service condition\n\nUsers are recommended to upgrade to version 3.2.2, which fixes this issue.",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://lists.apache.org/thread/zm6t8skkkskjwk1881l4m4n0l7dqclzo",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://repo.maven.apache.org/maven2",
-          "defaultStatus": "unaffected",
-          "packageName": "org.apache.neethi:neethi",
-          "product": "Apache Neethi",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThan": "3.2.2",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-400 Uncontrolled Resource Consumption"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-37532",
+      "id": "CVE-2026-37535",
       "publishedDate": "2026-05-01T00:00:00.000Z",
-      "lastModifiedDate": "2026-05-01T16:29:06.245Z",
-      "description": "AGL agl-service-can-low-level thru 17.1.12 contains a heap buffer over-read in the isotp-c library. In isotp_continue_receive (receive.c:87-89), the payload_length for a Single Frame is extracted from a 4-bit nibble in the CAN frame data, yielding values 0-15. However, a standard CAN frame is only 8 bytes, with payload starting at data[1] (7 bytes available). When payload_length exceeds the available data (e.g., nibble=15 but only 7 payload bytes exist), memcpy(message.payload, &data[1], payload_length) reads up to 8 bytes past the end of the data buffer.",
+      "lastModifiedDate": "2026-05-01T16:47:28.205Z",
+      "description": "openxc/isotp-c thru commit 5a5d19245f65189202719321facd49ce6f5d46ac (2021-08-09) contains an out-of-bounds read in the ISO-TP Single Frame receive handler, where the 4-bit payload length nibble is used directly as the memcpy size without validating it against the actual CAN data length. A malicious CAN frame with an oversized length nibble can cause memory reads beyond the buffer, allowing attackers to cause a denial of service, or gain sensitive information.",
       "severity": 7.1,
       "references": [
         {
-          "url": "https://gerrit.automotivelinux.org/gerrit/apps/agl-service-can-low-level",
+          "url": "https://github.com/openxc/isotp-c",
           "type": "reference"
         },
         {
-          "url": "https://gist.github.com/sgInnora/8526eedcfd826d05ef1fc45d8f405643",
+          "url": "https://github.com/openxc/isotp-c/blob/master/src/isotp/receive.c",
+          "type": "reference"
+        },
+        {
+          "url": "https://gist.github.com/sgInnora/f4ac66faeefe07a653ceeb3f58cdc381",
           "type": "reference"
         }
       ],
@@ -214,67 +469,106 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-23863",
-      "publishedDate": "2026-05-01T16:01:39.565Z",
-      "lastModifiedDate": "2026-05-01T16:15:38.171Z",
-      "description": "An attachment spoofing issue in WhatsApp for Windows prior to v2.3000.1032164386.258709 could have allowed maliciously formatted documents with embedded NUL bytes in the filename to be shown in the application as one type of file but run as an executable when opened. We have not seen evidence of exploitation in the wild.",
+      "id": "CVE-2026-1577",
+      "publishedDate": "2026-04-30T21:49:24.614Z",
+      "lastModifiedDate": "2026-05-01T16:37:23.068Z",
+      "description": "IBM Db2 11.5.0 through 11.5.9, and 12.1.0 through 12.1.4 for Linux, UNIX and Windows (includes Db2 Connect Server) could allow an authenticated user to cause a denial of service due to improper neutralization of special elements in data query logic.",
       "severity": 6.5,
       "references": [
         {
-          "url": "https://www.facebook.com/security/advisories/cve-2026-23863",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.whatsapp.com/security/advisories/2026",
+          "url": "https://www.ibm.com/support/pages/node/7269434",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "unaffected",
-          "product": "WhatsApp Desktop for Windows",
-          "vendor": "Facebook",
+          "vendor": "IBM",
+          "product": "Db2",
           "versions": [
             {
-              "lessThan": "2.3000.1032164386.258709",
               "status": "affected",
-              "version": "2.3000.*.252500",
-              "versionType": "custom"
+              "version": "11.5.0",
+              "lessThanOrEqual": "11.5.9",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "12.1.0",
+              "lessThanOrEqual": "12.1.4",
+              "versionType": "semver"
             }
+          ],
+          "cpes": [
+            "cpe:2.3:a:ibm:db2:11.5.0:*:*:*:*:*:*:*",
+            "cpe:2.3:a:ibm:db2:11.5.9:*:*:*:*:*:*:*",
+            "cpe:2.3:a:ibm:db2:12.1.0:*:*:*:*:*:*:*",
+            "cpe:2.3:a:ibm:db2:12.1.4:*:*:*:*:*:*:*"
+          ]
+        }
+      ],
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3345",
+      "publishedDate": "2026-04-30T21:11:20.614Z",
+      "lastModifiedDate": "2026-05-01T16:38:05.399Z",
+      "description": "IBM Langflow Desktop <=1.8.4 Langflow could allow a remote attacker to traverse directories on the system. An attacker could send a specially crafted URL request containing \"dot dot\" sequences (/../) to view arbitrary files on the system.",
+      "severity": 6.5,
+      "references": [
+        {
+          "url": "https://www.ibm.com/support/pages/node/7271094",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "IBM",
+          "product": "Langflow Desktop",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "1.8.4",
+              "versionType": "semver"
+            }
+          ],
+          "cpes": [
+            "cpe:2.3:a:ibm:langflow_desktop:1.8.4:*:*:*:*:*:*:*"
           ]
         }
       ],
       "problemType": [
-        "Improper Neutralization of Null Byte or NUL Character (CWE-158)"
+        "CWE-22 Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-42404",
-      "publishedDate": "2026-05-01T09:46:49.958Z",
-      "lastModifiedDate": "2026-05-01T16:21:08.152Z",
-      "description": "Apache Neethi does not impose any restrictions on URIs when manually fetching remote policy references through the PolicyReference API. When an application explicitly calls the API to retrieve a policy from a remote URI, an outbound request is made for arbitrary protocols and internal IP adddresses. From 3.2.2, only http or https URIs are allowed, and link-local/multicast/any-local addresses are forbidden.\n\nUsers are recommended to upgrade to version 3.2.2, which fixes this issue.",
+      "id": "CVE-2026-3340",
+      "publishedDate": "2026-04-30T21:04:14.027Z",
+      "lastModifiedDate": "2026-05-01T16:38:23.079Z",
+      "description": "IBM Langflow Desktop 1.0.0 through 1.8.4 IBM Langflow is vulnerable to server-side request forgery (SSRF). This may allow an authenticated attacker to send unauthorized requests from the system, potentially leading to network enumeration or facilitating other attacks.",
       "severity": 6.5,
       "references": [
         {
-          "url": "https://lists.apache.org/thread/zdspnt64zznyjyn648553kptx69w23oq",
+          "url": "https://www.ibm.com/support/pages/node/7271096",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "collectionURL": "https://repo.maven.apache.org/maven2",
-          "defaultStatus": "unaffected",
-          "packageName": "org.apache.neethi:neethi",
-          "product": "Apache Neethi",
-          "vendor": "Apache Software Foundation",
+          "vendor": "IBM",
+          "product": "Langflow Desktop",
           "versions": [
             {
-              "lessThan": "3.2.2",
               "status": "affected",
-              "version": "0",
+              "version": "1.0.0",
+              "lessThanOrEqual": "1.8.4",
               "versionType": "semver"
             }
+          ],
+          "cpes": [
+            "cpe:2.3:a:ibm:langflow_desktop:1.0.0:*:*:*:*:*:*:*",
+            "cpe:2.3:a:ibm:langflow_desktop:1.8.4:*:*:*:*:*:*:*"
           ]
         }
       ],
@@ -284,67 +578,390 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-23866",
-      "publishedDate": "2026-05-01T16:02:03.304Z",
-      "lastModifiedDate": "2026-05-01T16:10:25.306Z",
-      "description": "Incomplete validation of AI rich response messages for Instagram Reels in WhatsApp for iOS v2.25.8.0 to v2.26.15.72 and WhatsApp for Android v2.25.8.0 to v2.26.7.10 could have allowed a user to trigger processing of media content from an arbitrary URL on another user’s device, including triggering OS-controlled custom URL scheme handlers. We have not seen evidence of exploitation in the wild.",
-      "severity": 4.3,
+      "id": "CVE-2026-35514",
+      "publishedDate": "2026-04-30T18:21:09.709Z",
+      "lastModifiedDate": "2026-05-01T16:38:31.525Z",
+      "description": "Chartbrew is an open-source web application that can connect directly to databases and APIs and use the data to create charts. In version 4.9.0, the endpoint POST /user/invited does not validate any invite token, authentication header, or session. Any unauthenticated attacker can call this endpoint directly to create a fully active account and receive a valid JWT — even when the instance has existing users and signupRestricted is enabled. This bypass is distinct from the normal registration endpoint (POST /user) which enforces signupRestricted and sets active: false pending verification. This issue has been patched in version 5.0.0.",
+      "severity": 6.5,
       "references": [
         {
-          "url": "https://www.facebook.com/security/advisories/cve-2026-23866",
+          "url": "https://github.com/chartbrew/chartbrew/security/advisories/GHSA-g47g-v5cp-j8hp",
           "type": "reference"
         },
         {
-          "url": "https://www.whatsapp.com/security/advisories/2026",
+          "url": "https://github.com/chartbrew/chartbrew/releases/tag/v5.0.0",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "unaffected",
-          "product": "WhatsApp for Android",
-          "vendor": "Facebook",
+          "vendor": "chartbrew",
+          "product": "chartbrew",
           "versions": [
             {
-              "lessThan": "2.26.7.10",
-              "status": "affected",
-              "version": "2.25.8.0",
-              "versionType": "semver"
-            }
-          ]
-        },
-        {
-          "defaultStatus": "unaffected",
-          "product": "WhatsApp for iOS",
-          "vendor": "Facebook",
-          "versions": [
-            {
-              "lessThan": "2.26.15.72",
-              "status": "affected",
-              "version": "2.25.8.0",
-              "versionType": "semver"
+              "version": "= 4.9.0",
+              "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "Improper Verification of Source of a Communication Channel (CWE-940)"
+        "CWE-306: Missing Authentication for Critical Function"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-37530",
-      "publishedDate": "2026-05-01T00:00:00.000Z",
-      "lastModifiedDate": "2026-05-01T16:16:11.563Z",
-      "description": "AGL agl-service-can-low-level thru 17.1.12 contains a stack buffer overflow in the uds-c library. The send_diagnostic_request function in uds.c allocates a 6-byte stack buffer (MAX_DIAGNOSTIC_PAYLOAD_SIZE=6) but copies up to 7 bytes (MAX_UDS_REQUEST_PAYLOAD_LENGTH=7) via memcpy at an offset of 1+pid_length (2-3 bytes), resulting in 1-4 bytes of controlled stack overflow. The payload_length field (uint8_t) has no bounds check against the destination buffer. On 32-bit ARM automotive ECUs without stack canaries, this can lead to return address overwrite and RCE.",
-      "severity": "N/A",
+      "id": "CVE-2026-6127",
+      "publishedDate": "2026-05-01T05:29:53.183Z",
+      "lastModifiedDate": "2026-05-01T16:37:14.033Z",
+      "description": "The Elementor Website Builder plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the _elementor_data meta field in versions up to, and including, 4.0.4. This is due to insufficient input sanitization when processing form-encoded REST API requests. The plugin registers the _elementor_data meta field with show_in_rest but omits a sanitize_callback, relying instead on a rest_pre_insert_post filter (sanitize_post_data function) that only sanitizes JSON-encoded request bodies. When a contributor sends a form-encoded PATCH request to the WordPress REST API, the json_decode() call on the raw body returns null, causing all sanitization to be skipped. The unsanitized data is then stored via update_post_meta() and later output without escaping through multiple widget sinks including the HTML widget's print_unescaped_setting() function. This makes it possible for authenticated attackers, with contributor-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page.",
+      "severity": 6.4,
       "references": [
         {
-          "url": "https://gerrit.automotivelinux.org/gerrit/apps/agl-service-can-low-level",
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/826a2003-c526-4760-8c21-10d5ae7bb384?source=cve",
           "type": "reference"
         },
         {
-          "url": "https://gist.github.com/sgInnora/8526eedcfd826d05ef1fc45d8f405643",
+          "url": "https://plugins.trac.wordpress.org/browser/elementor/trunk/includes/base/widget-base.php#L794",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/elementor/tags/4.0.1/includes/base/widget-base.php#L794",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/elementor/trunk/includes/plugin.php#L840",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/elementor/tags/4.0.1/includes/plugin.php#L840",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/elementor/trunk/modules/wp-rest/classes/elementor-post-meta.php#L68",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/elementor/tags/4.0.1/modules/wp-rest/classes/elementor-post-meta.php#L68",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset/3519457/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "elemntor",
+          "product": "Elementor Website Builder – more than just a page builder",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "4.0.4",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-2311",
+      "publishedDate": "2026-04-30T21:45:08.343Z",
+      "lastModifiedDate": "2026-05-01T16:37:41.092Z",
+      "description": "IBM i 7.6, 7.5, 7.4, 7.3, and 7.2 s vulnerable to privilege escalation caused by an invalid IBM i Web Administration GUI authorization check.  A malicious actor could cause user-controlled code to run with administrator privilege.",
+      "severity": 6.4,
+      "references": [
+        {
+          "url": "https://www.ibm.com/support/pages/node/7269560",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "IBM",
+          "product": "i",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "7.6.0",
+              "lessThanOrEqual": "2.3.0",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "7.5.0"
+            },
+            {
+              "status": "affected",
+              "version": "7.4.0"
+            },
+            {
+              "status": "affected",
+              "version": "7.3.0"
+            },
+            {
+              "status": "affected",
+              "version": "7.2.0"
+            }
+          ],
+          "cpes": [
+            "cpe:2.3:a:ibm:i:7.6.0:*:*:*:*:*:*:*",
+            "cpe:2.3:a:ibm:i:7.5.0:*:*:*:*:*:*:*",
+            "cpe:2.3:a:ibm:i:7.4.0:*:*:*:*:*:*:*",
+            "cpe:2.3:a:ibm:i:7.3.0:*:*:*:*:*:*:*",
+            "cpe:2.3:a:ibm:i:7.2.0:*:*:*:*:*:*:*"
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-284 Improper Access Control"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3346",
+      "publishedDate": "2026-04-30T21:06:10.276Z",
+      "lastModifiedDate": "2026-05-01T16:38:14.702Z",
+      "description": "IBM Langflow Desktop 1.6.0 through 1.8.4 Lanflow is vulnerable to stored cross-site scripting. This vulnerability allows an authenticated user to embed arbitrary JavaScript code in the Web UI thus altering the intended functionality potentially leading to credentials disclosure within a trusted session.",
+      "severity": 6.4,
+      "references": [
+        {
+          "url": "https://www.ibm.com/support/pages/node/7271095",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "IBM",
+          "product": "Langflow Desktop",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "1.6.0",
+              "lessThanOrEqual": "1.8.4",
+              "versionType": "semver"
+            }
+          ],
+          "cpes": [
+            "cpe:2.3:a:ibm:langflow_desktop:1.6.0:*:*:*:*:*:*:*",
+            "cpe:2.3:a:ibm:langflow_desktop:1.8.4:*:*:*:*:*:*:*"
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2018-25313",
+      "publishedDate": "2026-04-29T19:24:42.700Z",
+      "lastModifiedDate": "2026-05-01T16:38:58.218Z",
+      "description": "SysGauge 4.5.18 contains a buffer overflow vulnerability in the proxy configuration handler that allows local attackers to cause a denial of service by supplying an oversized string. Attackers can inject a large payload through the Proxy Server Host Name field in the Options menu to crash the application.",
+      "severity": 6.2,
+      "references": [
+        {
+          "url": "https://www.exploit-db.com/exploits/44372",
+          "type": "poc"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/sysgauge-local-denial-of-service-via-proxy-configuration",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Sysgauge",
+          "product": "SysGauge",
+          "versions": [
+            {
+              "version": "4.5.18",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Buffer Copy without Checking Size of Input ('Classic Buffer Overflow')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-14688",
+      "publishedDate": "2026-04-30T21:48:11.642Z",
+      "lastModifiedDate": "2026-05-01T16:37:32.038Z",
+      "description": "IBM Db2 11.5.0 through 11.5.9, and 12.1.0 through 12.1.3 for Linux, UNIX and Windows (includes Db2 Connect Server) could allow an authenticated user to cause a denial of service due to improper neutralization of special elements in data query logic when certain configurations exist.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://www.ibm.com/support/pages/node/7269424",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "IBM",
+          "product": "Db2",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "11.5.0",
+              "lessThanOrEqual": "11.5.9",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "12.1.0",
+              "lessThanOrEqual": "12.1.3",
+              "versionType": "semver"
+            }
+          ],
+          "cpes": [
+            "cpe:2.3:a:ibm:db2:11.5.0:*:*:*:*:*:*:*",
+            "cpe:2.3:a:ibm:db2:11.5.9:*:*:*:*:*:*:*",
+            "cpe:2.3:a:ibm:db2:12.1.0:*:*:*:*:*:*:*",
+            "cpe:2.3:a:ibm:db2:12.1.3:*:*:*:*:*:*:*"
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-1284 Improper Validation of Specified Quantity in Input"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-36180",
+      "publishedDate": "2026-04-30T21:28:00.171Z",
+      "lastModifiedDate": "2026-05-01T16:37:49.064Z",
+      "description": "IBM watsonx.data 2.2 through 2.3 IBM Lakehouse does not properly restrict communication between pods which could allow an attacker to transfer data between pods without restrictions.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://www.ibm.com/support/pages/node/7270593",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "IBM",
+          "product": "watsonx.data",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "2.2.0",
+              "lessThanOrEqual": "2.3.0",
+              "versionType": "semver"
+            }
+          ],
+          "cpes": [
+            "cpe:2.3:a:ibm:watsonxdata:2.2.0:*:*:*:*:*:*:*",
+            "cpe:2.3:a:ibm:watsonxdata:2.3.0:*:*:*:*:*:*:*"
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-923 Improper Restriction of Communication Channel to Intended Endpoints"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-7587",
+      "publishedDate": "2026-05-01T16:45:09.996Z",
+      "lastModifiedDate": "2026-05-01T16:45:09.996Z",
+      "description": "A vulnerability has been found in Open5GS up to 2.7.7. This vulnerability affects the function amf_nsmf_pdusession_handle_update_sm_context of the file /src/amf/nsmf-handler.c of the component AMF. The manipulation leads to denial of service. It is possible to initiate the attack remotely. The exploit has been disclosed to the public and may be used. The project was informed of the problem early through an issue report but has not responded yet.",
+      "severity": 4.3,
+      "references": [
+        {
+          "url": "https://vuldb.com/vuln/360540",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/vuln/360540/cti",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/submit/804339",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/open5gs/open5gs/issues/4408",
+          "type": "poc"
+        },
+        {
+          "url": "https://github.com/open5gs/open5gs/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "Open5GS",
+          "versions": [
+            {
+              "version": "2.7.0",
+              "status": "affected"
+            },
+            {
+              "version": "2.7.1",
+              "status": "affected"
+            },
+            {
+              "version": "2.7.2",
+              "status": "affected"
+            },
+            {
+              "version": "2.7.3",
+              "status": "affected"
+            },
+            {
+              "version": "2.7.4",
+              "status": "affected"
+            },
+            {
+              "version": "2.7.5",
+              "status": "affected"
+            },
+            {
+              "version": "2.7.6",
+              "status": "affected"
+            },
+            {
+              "version": "2.7.7",
+              "status": "affected"
+            }
+          ],
+          "cpes": [
+            "cpe:2.3:a:open5gs:open5gs:*:*:*:*:*:*:*:*"
+          ],
+          "modules": [
+            "AMF"
+          ]
+        }
+      ],
+      "problemType": [
+        "Denial of Service"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-37538",
+      "publishedDate": "2026-05-01T00:00:00.000Z",
+      "lastModifiedDate": "2026-05-01T16:50:22.716Z",
+      "description": "Buffer overflow vulnerability in socketcand 0.4.2 in file socketcand.c in function main allows attackers to cause a denial of service or other unspecified impacts via crafted bus_name.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/dschanoeh/socketcand",
+          "type": "reference"
+        },
+        {
+          "url": "https://gist.github.com/sgInnora/f4ac66faeefe07a653ceeb3f58cdc381",
           "type": "reference"
         }
       ],
@@ -366,18 +983,105 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-42485",
+      "id": "CVE-2026-42468",
       "publishedDate": "2026-05-01T00:00:00.000Z",
-      "lastModifiedDate": "2026-05-01T16:29:37.095Z",
-      "description": "AGL agl-service-can-low-level contains a stack buffer overflow in the uds-c library. The send_diagnostic_request function in uds.c allocates a 6-byte stack buffer (MAX_DIAGNOSTIC_PAYLOAD_SIZE=6) but copies up to 7 bytes (MAX_UDS_REQUEST_PAYLOAD_LENGTH=7) via memcpy at an offset of 1+pid_length (2-3 bytes), resulting in 1-4 bytes of controlled stack overflow. The payload_length field (uint8_t) has no bounds check against the destination buffer. On 32-bit ARM automotive ECUs without stack canaries, this can lead to return address overwrite and RCE.",
+      "lastModifiedDate": "2026-05-01T16:55:08.603Z",
+      "description": "Buffer overflow vulnerability in Open Vehicle Monitoring System 3 (OVMS3) 3.3.005. In canformat_pcap.cpp , the parser's phdr.len field is not properly validated, allowing remote attackers to cause a denial of service or possibly execute arbitrary code via crafted PCAP input.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://gerrit.automotivelinux.org/gerrit/apps/agl-service-can-low-level",
+          "url": "https://gist.github.com/sgInnora/f4ac66faeefe07a653ceeb3f58cdc381",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "n/a",
+          "versions": [
+            {
+              "version": "n/a",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "n/a"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-37534",
+      "publishedDate": "2026-05-01T00:00:00.000Z",
+      "lastModifiedDate": "2026-05-01T16:45:47.985Z",
+      "description": "Integer underflow vulnerability in Open-SAE-J1939 thru commit b6caf884df46435e539b1ecbf92b6c29b345bdfe (2025-11-30) in SAE_J1939_Read_Transport_Protocol_Data_Transfer,allows attackers to write to arbitrary memory via crafted sequence number from the CAN frame.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/DanielMartensson/Open-SAE-J1939",
           "type": "reference"
         },
         {
-          "url": "https://gist.github.com/sgInnora/8526eedcfd826d05ef1fc45d8f405643",
+          "url": "https://gist.github.com/sgInnora/f4ac66faeefe07a653ceeb3f58cdc381",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "n/a",
+          "versions": [
+            {
+              "version": "n/a",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "n/a"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-42469",
+      "publishedDate": "2026-05-01T00:00:00.000Z",
+      "lastModifiedDate": "2026-05-01T16:55:46.086Z",
+      "description": "Buffer overflow vulnerability in Open Vehicle Monitoring System 3 (OVMS3) 3.3.005. In canformat_canswitch.cpp the parser does not properly validate a CANswitch DLC value, allowing remote attackers to cause a denial of service or possibly execute arbitrary code via crafted CANswitch frames.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://gist.github.com/sgInnora/f4ac66faeefe07a653ceeb3f58cdc381",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "n/a",
+          "versions": [
+            {
+              "version": "n/a",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "n/a"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-42467",
+      "publishedDate": "2026-05-01T00:00:00.000Z",
+      "lastModifiedDate": "2026-05-01T16:46:25.005Z",
+      "description": "An issue was discovered in Open-SAE-J1939 thru commit b6caf884df46435e539b1ecbf92b6c29b345bdfe (2025-11-30) in SAE_J1939_Read_Binary_Data_Transfer_DM16 causing a denial of service via crafted CAN frame on the J1939 bus.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://gist.github.com/sgInnora/f4ac66faeefe07a653ceeb3f58cdc381",
           "type": "reference"
         }
       ],
