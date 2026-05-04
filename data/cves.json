@@ -2,26 +2,26 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 37,
-    "last_updated": "2026-05-04T18:55:11.465539",
+    "total_count": 23,
+    "last_updated": "2026-05-04T20:19:55.852213",
     "severity_distribution": {
-      "critical": 3,
+      "critical": 2,
       "high": 6,
       "medium": 4,
-      "low": 7,
-      "none": 17
+      "low": 1,
+      "none": 10
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-42810",
-      "publishedDate": "2026-05-04T16:48:49.754Z",
-      "lastModifiedDate": "2026-05-04T18:33:09.056Z",
-      "description": "Apache Polaris accepts literal `*` characters in namespace and table names. When it\nlater builds temporary S3 access policies for delegated table access, those\nsame characters appear to be reused unescaped in S3 IAM resource patterns\nand\n`s3:prefix` conditions.\n\n\n\nIn S3 IAM policy matching, `*` is treated as a wildcard rather than as\nordinary text. That means temporary credentials issued for one crafted table\ncan match the storage path of a different table.\n\n\n\nIn private testing against Polaris 1.4.0 using Polaris' AWS S3 temporary-\ncredential path on both MinIO and real AWS S3, credentials returned for\ncrafted tables such as `f*.t1`, `f*.*`, `*.*`, and `foo.*` could reach other\ntables' S3 locations.\n\n\nThe confirmed behavior includes:\n\n\n- reading another table's metadata control file ([Iceberg metadata JSON]);\n\n- listing another table's exact S3 table prefix ([table prefix]);\n\n- and, when write delegation was returned for the crafted table, creating\nand\ndeleting an object under another table's exact S3 table prefix.\n\n\n\nA control case using ordinary different names did not allow the same\ncross-table access.\n\n\n\nA least-privilege AWS S3 variant was also confirmed in which the attacker\nprincipal had no Polaris permissions on the victim table and only the\nminimal permissions required to create and use a crafted wildcard table\n(namespace-scoped `TABLE_CREATE` and `TABLE_WRITE_DATA` on `*`). In that\nsetup, direct Polaris access to `foo.t1` remained forbidden, but the\nattacker\ncould still create and load `*.*`, receive delegated S3 credentials, and use\nthose credentials to list, read, create, and delete objects under `foo.t1`.\n\n\n\nIn Iceberg, the metadata JSON file is a control file: it tells readers which\ndata files belong to the table, which snapshots exist, and which table\nversion\nto read. So unauthorized access to it is already a meaningful\nconfidentiality\nproblem. The confirmed write-capable variant means the issue is not limited\nto\ndisclosure.",
+      "id": "CVE-2026-42811",
+      "publishedDate": "2026-05-04T16:37:02.030Z",
+      "lastModifiedDate": "2026-05-04T19:48:33.457Z",
+      "description": "In plain terms, Apache Polaris is supposed to issue short-lived GCS credentials\nthat\nonly work for one table's files, but a crafted namespace or table name can\ncause those credentials to work across the configured bucket instead.\n\n\nApache Polaris builds Google Cloud Storage downscoped credentials by creating a\nCredential Access Boundary (CAB) with CEL conditions that are intended to\nrestrict access to the requested table's storage path.\n\n\n\nThe relevant CEL string is built from the bucket name and the table path.\nThat\ntable path is derived from namespace and table identifiers. In current code,\nthat path appears to be inserted into the CEL expression without escaping.\n\n\n\nAs a result, a namespace or table identifier containing a single quote and\nother URI-safe CEL fragments can break out of the intended quoted string and\nchange the meaning of the CEL condition.\n\n\n\nIn private testing against Polaris 1.4.0 on real Google Cloud Storage, it was confirmed that Polaris accepted a crafted identifier and returned delegated\nGCS\ncredentials whose CEL path restriction had effectively collapsed.\n\n\nThose delegated credentials could then:\n\n\n- list another table's object prefix;\n\n- read another table's metadata control file (Iceberg metadata JSON);\n\n- create and delete an object under another table's object prefix;\n\n- and also list, read, create, and delete objects under an unrelated\nexternal\nprefix in the same bucket that was not part of any table path.\n\n\n\nThat last point is important. The issue is not limited to \"another table\".\nIn\nthe confirmed setup, once Apache Polaris returned credentials for the crafted\ntable,\nthe path restriction inside the configured bucket was effectively gone.\n\nThe practical effect is that temporary credentials for one crafted table\ncan be\nbroader than the table Polaris was asked to authorize, and can become\neffectively bucket-wide within the configured bucket.\n\n\n\nThe current GCS testing used a Polaris principal with broad catalog\nprivileges for setup. A separate least-privilege Polaris RBAC variant\nhas not yet been tested on GCS. However, the storage-credential\nbroadening behavior itself has been confirmed on GCS.",
       "severity": 9.9,
       "references": [
         {
-          "url": "https://lists.apache.org/thread/gg3qq9sqg4hdjmprqy46p40xmln61dm9",
+          "url": "https://lists.apache.org/thread/hovn5hmkj9wj7v9cd8sn67svg03klgvg",
           "type": "reference"
         }
       ],
@@ -41,953 +41,211 @@
         }
       ],
       "problemType": [
-        "CWE-116 Improper Encoding or Escaping of Output",
+        "CWE-917 Improper Neutralization of Special Elements used in an Expression Language Statement ('Expression Language Injection')",
         "CWE-20 Improper Input Validation"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-24118",
-      "publishedDate": "2026-05-04T16:28:43.650Z",
-      "lastModifiedDate": "2026-05-04T18:24:33.166Z",
-      "description": "vm2 is an open source vm/sandbox for Node.js. Prior to version 3.11.0, VM2 suffers from a sandbox breakout vulnerability. This allows attackers to write code which can escape from the VM2 sandbox and execute arbitrary commands on the host system. This issue has been patched in version 3.11.0.",
-      "severity": 9.8,
-      "references": [
-        {
-          "url": "https://github.com/patriksimek/vm2/security/advisories/GHSA-grj5-jjm8-h35p",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/patriksimek/vm2/commit/2b5f3e3a060d9088f5e1cdd585d683d491f990a3",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/patriksimek/vm2/commit/f9b700b1c7d9ef2df416666cb24e0b659140cc74",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/patriksimek/vm2/releases/tag/v3.11.0",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "patriksimek",
-          "product": "vm2",
-          "versions": [
-            {
-              "version": "< 3.11.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-94: Improper Control of Generation of Code ('Code Injection')",
-        "CWE-693: Protection Mechanism Failure"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-25293",
-      "publishedDate": "2026-05-04T16:43:21.430Z",
-      "lastModifiedDate": "2026-05-04T18:29:20.615Z",
-      "description": "Buffer overflow due to incorrect authorization in PLC FW",
+      "id": "CVE-2026-42088",
+      "publishedDate": "2026-05-04T17:21:27.311Z",
+      "lastModifiedDate": "2026-05-04T19:36:16.686Z",
+      "description": "OpenC3 COSMOS provides the functionality needed to send commands to and receive data from one or more embedded systems. Prior to version 7.0.0-rc3, the Script Runner widget allows users to execute Python and Ruby scripts directly from the openc3-COSMOS-script-runner-api container. Because all the docker containers share a network, users can execute specially crafted scripts to bypass the API permissions check and perform administrative actions, including reading and modifying data inside the Redis database, which can be used to read secrets and change COSMOS settings, as well as read and write to the buckets service, which holds configuration, log, and plugin files. These actions are normally only available from the Admin Console or with administrative privileges. Any user with permission to create and run scripts can connect to any service in the docker network. This issue has been patched in version 7.0.0-rc3.",
       "severity": 9.6,
       "references": [
         {
-          "url": "https://docs.qualcomm.com/product/publicresources/securitybulletin/may-2026-bulletin.html",
+          "url": "https://github.com/OpenC3/cosmos/security/advisories/GHSA-2wvh-87g2-89hr",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/OpenC3/cosmos/releases/tag/v7.0.0",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/OpenC3/cosmos/releases/tag/v7.0.0-rc3",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "unaffected",
-          "platforms": [
-            "Snapdragon Auto"
-          ],
-          "product": "Snapdragon",
-          "vendor": "Qualcomm, Inc.",
+          "vendor": "OpenC3",
+          "product": "cosmos",
           "versions": [
             {
-              "status": "affected",
-              "version": "QCA7005"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-863"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2018-25301",
-      "publishedDate": "2026-04-29T19:24:34.531Z",
-      "lastModifiedDate": "2026-05-04T18:23:21.844Z",
-      "description": "Easy MPEG to DVD Burner 1.7.11 contains a structured exception handling (SEH) local buffer overflow vulnerability that allows local attackers to execute arbitrary code by supplying a malicious username string. Attackers can craft a payload containing junk data, SEH chain pointers, and shellcode that overwrites the SEH handler to redirect execution and run arbitrary commands like opening calc.exe.",
-      "severity": 8.4,
-      "references": [
-        {
-          "url": "https://www.exploit-db.com/exploits/44565",
-          "type": "poc"
-        },
-        {
-          "url": "https://downloads.tomsguide.com/MPEG-Easy-Burner,0301-10418.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/easy-mpeg-to-dvd-burner-seh-local-buffer-overflow",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Easy MPEG",
-          "product": "Easy MPEG to DVD Burner",
-          "versions": [
-            {
-              "version": "1.7.11",
+              "version": "< 7.0.0-rc3",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "Buffer Copy without Checking Size of Input ('Classic Buffer Overflow')"
+        "CWE-250: Execution with Unnecessary Privileges"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-24082",
-      "publishedDate": "2026-05-04T16:43:15.644Z",
-      "lastModifiedDate": "2026-05-04T18:09:34.891Z",
-      "description": "Memory Corruption when copying data from a freed source while executing performance counter deselect operation.",
+      "id": "CVE-2026-42079",
+      "publishedDate": "2026-05-04T16:57:09.422Z",
+      "lastModifiedDate": "2026-05-04T19:42:53.677Z",
+      "description": "PPTAgent is an agentic framework for reflective PowerPoint generation. Prior to commit 418491a, PPTAgent is vulnerable to arbitrary code execution via Python eval() of LLM-generated code with builtins in scope. This issue has been patched via commit 418491a.",
+      "severity": 8.6,
+      "references": [
+        {
+          "url": "https://github.com/icip-cas/PPTAgent/security/advisories/GHSA-89g2-xw5c-v95p",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/icip-cas/PPTAgent/commit/418491a9a1c02d9d93194b5973bb58df35cf9d00",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "icip-cas",
+          "product": "PPTAgent",
+          "versions": [
+            {
+              "version": "< 418491a9a1c02d9d93194b5973bb58df35cf9d00",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-5405",
+      "publishedDate": "2026-04-30T23:03:53.654Z",
+      "lastModifiedDate": "2026-05-04T19:41:26.095Z",
+      "description": "RDP protocol dissector crash in Wireshark 4.6.0 to 4.6.4 and 4.4.0 to 4.4.14 allows denial of service and possible code execution",
       "severity": 7.8,
       "references": [
         {
-          "url": "https://docs.qualcomm.com/product/publicresources/securitybulletin/may-2026-bulletin.html",
+          "url": "https://www.wireshark.org/security/wnpa-sec-2026-17.html",
+          "type": "reference"
+        },
+        {
+          "url": "https://gitlab.com/wireshark/wireshark/-/issues/21105",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "unaffected",
-          "platforms": [
-            "Snapdragon Auto",
-            "Snapdragon Compute",
-            "Snapdragon Consumer IOT",
-            "Snapdragon Industrial IOT",
-            "Snapdragon Mobile",
-            "Snapdragon Voice & Music",
-            "Snapdragon WBC",
-            "Snapdragon Wearables"
-          ],
-          "product": "Snapdragon",
-          "vendor": "Qualcomm, Inc.",
+          "vendor": "Wireshark Foundation",
+          "product": "Wireshark",
           "versions": [
             {
+              "version": "4.6.0",
               "status": "affected",
-              "version": "AR8031"
+              "lessThan": "4.6.5",
+              "versionType": "semver"
             },
             {
+              "version": "4.4.0",
               "status": "affected",
-              "version": "AR8035"
-            },
-            {
-              "status": "affected",
-              "version": "CSRA6620"
-            },
-            {
-              "status": "affected",
-              "version": "CSRA6640"
-            },
-            {
-              "status": "affected",
-              "version": "FastConnect 6200"
-            },
-            {
-              "status": "affected",
-              "version": "FastConnect 6700"
-            },
-            {
-              "status": "affected",
-              "version": "FastConnect 6900"
-            },
-            {
-              "status": "affected",
-              "version": "FastConnect 7800"
-            },
-            {
-              "status": "affected",
-              "version": "Flight RB5 5G Platform"
-            },
-            {
-              "status": "affected",
-              "version": "FWA Gen 3 Ultra Platform"
-            },
-            {
-              "status": "affected",
-              "version": "G1 Gen 1"
-            },
-            {
-              "status": "affected",
-              "version": "G3x Gen 2"
-            },
-            {
-              "status": "affected",
-              "version": "Kalpeni"
-            },
-            {
-              "status": "affected",
-              "version": "LeMans_AU_LGIT"
-            },
-            {
-              "status": "affected",
-              "version": "LeMansAU"
-            },
-            {
-              "status": "affected",
-              "version": "MDM9250"
-            },
-            {
-              "status": "affected",
-              "version": "MDM9628"
-            },
-            {
-              "status": "affected",
-              "version": "Milos"
-            },
-            {
-              "status": "affected",
-              "version": "Milos_IOT"
-            },
-            {
-              "status": "affected",
-              "version": "Pandeiro"
-            },
-            {
-              "status": "affected",
-              "version": "QAM8255P"
-            },
-            {
-              "status": "affected",
-              "version": "QAM8295P"
-            },
-            {
-              "status": "affected",
-              "version": "QAMSRV1H"
-            },
-            {
-              "status": "affected",
-              "version": "QAMSRV1M"
-            },
-            {
-              "status": "affected",
-              "version": "QCA2066"
-            },
-            {
-              "status": "affected",
-              "version": "QCA6174A"
-            },
-            {
-              "status": "affected",
-              "version": "QCA6391"
-            },
-            {
-              "status": "affected",
-              "version": "QCA6564A"
-            },
-            {
-              "status": "affected",
-              "version": "QCA6564AU"
-            },
-            {
-              "status": "affected",
-              "version": "QCA6574"
-            },
-            {
-              "status": "affected",
-              "version": "QCA6574A"
-            },
-            {
-              "status": "affected",
-              "version": "QCA6574AU"
-            },
-            {
-              "status": "affected",
-              "version": "QCA6584AU"
-            },
-            {
-              "status": "affected",
-              "version": "QCA6595"
-            },
-            {
-              "status": "affected",
-              "version": "QCA6595AU"
-            },
-            {
-              "status": "affected",
-              "version": "QCA6678AQ"
-            },
-            {
-              "status": "affected",
-              "version": "QCA6688AQ"
-            },
-            {
-              "status": "affected",
-              "version": "QCA6696"
-            },
-            {
-              "status": "affected",
-              "version": "QCA6698AQ"
-            },
-            {
-              "status": "affected",
-              "version": "QCA6698AU"
-            },
-            {
-              "status": "affected",
-              "version": "QCA6797AQ"
-            },
-            {
-              "status": "affected",
-              "version": "QCA8081"
-            },
-            {
-              "status": "affected",
-              "version": "QCA8337"
-            },
-            {
-              "status": "affected",
-              "version": "QCA8695AU"
-            },
-            {
-              "status": "affected",
-              "version": "QCA9367"
-            },
-            {
-              "status": "affected",
-              "version": "QCA9377"
-            },
-            {
-              "status": "affected",
-              "version": "QCC710"
-            },
-            {
-              "status": "affected",
-              "version": "QCM2290"
-            },
-            {
-              "status": "affected",
-              "version": "QCM4325"
-            },
-            {
-              "status": "affected",
-              "version": "QCM5430"
-            },
-            {
-              "status": "affected",
-              "version": "QCM6125"
-            },
-            {
-              "status": "affected",
-              "version": "QCM6490"
-            },
-            {
-              "status": "affected",
-              "version": "QCN6224"
-            },
-            {
-              "status": "affected",
-              "version": "QCN6274"
-            },
-            {
-              "status": "affected",
-              "version": "QCN9011"
-            },
-            {
-              "status": "affected",
-              "version": "QCN9012"
-            },
-            {
-              "status": "affected",
-              "version": "QCS2290"
-            },
-            {
-              "status": "affected",
-              "version": "QCS4290"
-            },
-            {
-              "status": "affected",
-              "version": "QCS6690"
-            },
-            {
-              "status": "affected",
-              "version": "QCS8550"
-            },
-            {
-              "status": "affected",
-              "version": "QDU1000"
-            },
-            {
-              "status": "affected",
-              "version": "QDU1110"
-            },
-            {
-              "status": "affected",
-              "version": "QDU1210"
-            },
-            {
-              "status": "affected",
-              "version": "QDX1010"
-            },
-            {
-              "status": "affected",
-              "version": "QDX1011"
-            },
-            {
-              "status": "affected",
-              "version": "QEP8111"
-            },
-            {
-              "status": "affected",
-              "version": "QFW7114"
-            },
-            {
-              "status": "affected",
-              "version": "QFW7124"
-            },
-            {
-              "status": "affected",
-              "version": "QLN1083BD"
-            },
-            {
-              "status": "affected",
-              "version": "QLN1086BD"
-            },
-            {
-              "status": "affected",
-              "version": "QPA1083BD"
-            },
-            {
-              "status": "affected",
-              "version": "QPA1086BD"
-            },
-            {
-              "status": "affected",
-              "version": "QRB5165M"
-            },
-            {
-              "status": "affected",
-              "version": "QRB5165N"
-            },
-            {
-              "status": "affected",
-              "version": "QRU1032"
-            },
-            {
-              "status": "affected",
-              "version": "Qualcomm Dragonwing QRU100 Platform"
-            },
-            {
-              "status": "affected",
-              "version": "Qualcomm Dragonwing X100 Accelerator Card"
-            },
-            {
-              "status": "affected",
-              "version": "Qualcomm Video Collaboration VC1 Platform"
-            },
-            {
-              "status": "affected",
-              "version": "Qualcomm Video Collaboration VC3 Platform"
-            },
-            {
-              "status": "affected",
-              "version": "Qualcomm Video Collaboration VC5 Platform"
-            },
-            {
-              "status": "affected",
-              "version": "QXM1083"
-            },
-            {
-              "status": "affected",
-              "version": "QXM1086"
-            },
-            {
-              "status": "affected",
-              "version": "QXM1093"
-            },
-            {
-              "status": "affected",
-              "version": "QXM1094"
-            },
-            {
-              "status": "affected",
-              "version": "QXM1095"
-            },
-            {
-              "status": "affected",
-              "version": "QXM1096"
-            },
-            {
-              "status": "affected",
-              "version": "Robotics RB2 Platform"
-            },
-            {
-              "status": "affected",
-              "version": "Robotics RB5 Platform"
-            },
-            {
-              "status": "affected",
-              "version": "SA4150P"
-            },
-            {
-              "status": "affected",
-              "version": "SA4155P"
-            },
-            {
-              "status": "affected",
-              "version": "SA6145P"
-            },
-            {
-              "status": "affected",
-              "version": "SA6150P"
-            },
-            {
-              "status": "affected",
-              "version": "SA6155P"
-            },
-            {
-              "status": "affected",
-              "version": "SA7255P"
-            },
-            {
-              "status": "affected",
-              "version": "SA7775P"
-            },
-            {
-              "status": "affected",
-              "version": "SA8145P"
-            },
-            {
-              "status": "affected",
-              "version": "SA8150P"
-            },
-            {
-              "status": "affected",
-              "version": "SA8155P"
-            },
-            {
-              "status": "affected",
-              "version": "SA8195P"
-            },
-            {
-              "status": "affected",
-              "version": "SA8255P"
-            },
-            {
-              "status": "affected",
-              "version": "SA8295P"
-            },
-            {
-              "status": "affected",
-              "version": "SA8620P"
-            },
-            {
-              "status": "affected",
-              "version": "SA8770P"
-            },
-            {
-              "status": "affected",
-              "version": "SA9000P"
-            },
-            {
-              "status": "affected",
-              "version": "SAR1165P"
-            },
-            {
-              "status": "affected",
-              "version": "SD662"
-            },
-            {
-              "status": "affected",
-              "version": "SM6225P"
-            },
-            {
-              "status": "affected",
-              "version": "SM6650P"
-            },
-            {
-              "status": "affected",
-              "version": "SM7525"
-            },
-            {
-              "status": "affected",
-              "version": "SM7550"
-            },
-            {
-              "status": "affected",
-              "version": "SM7550P"
-            },
-            {
-              "status": "affected",
-              "version": "SM7635P"
-            },
-            {
-              "status": "affected",
-              "version": "SM7675"
-            },
-            {
-              "status": "affected",
-              "version": "SM7675P"
-            },
-            {
-              "status": "affected",
-              "version": "SM8550P"
-            },
-            {
-              "status": "affected",
-              "version": "SM8635"
-            },
-            {
-              "status": "affected",
-              "version": "SM8635P"
-            },
-            {
-              "status": "affected",
-              "version": "SM8650Q"
-            },
-            {
-              "status": "affected",
-              "version": "Smart Audio 400 Platform"
-            },
-            {
-              "status": "affected",
-              "version": "Snapdragon 4 Gen 1 Mobile Platform"
-            },
-            {
-              "status": "affected",
-              "version": "Snapdragon 460 Mobile Platform"
-            },
-            {
-              "status": "affected",
-              "version": "Snapdragon 480 5G Mobile Platform"
-            },
-            {
-              "status": "affected",
-              "version": "Snapdragon 480+ 5G Mobile Platform"
-            },
-            {
-              "status": "affected",
-              "version": "Snapdragon 6 Gen 4 Mobile Platform"
-            },
-            {
-              "status": "affected",
-              "version": "Snapdragon 662 Mobile Platform"
-            },
-            {
-              "status": "affected",
-              "version": "Snapdragon 680 4G Mobile Platform"
-            },
-            {
-              "status": "affected",
-              "version": "Snapdragon 685 4G Mobile Platform"
-            },
-            {
-              "status": "affected",
-              "version": "Snapdragon 695 5G Mobile Platform"
-            },
-            {
-              "status": "affected",
-              "version": "Snapdragon 7s Gen 3 Mobile Platform"
-            },
-            {
-              "status": "affected",
-              "version": "Snapdragon 8 Gen 2 Mobile Platform"
-            },
-            {
-              "status": "affected",
-              "version": "Snapdragon 8 Gen 3 Mobile Platform"
-            },
-            {
-              "status": "affected",
-              "version": "Snapdragon 8+ Gen 2 Mobile Platform"
-            },
-            {
-              "status": "affected",
-              "version": "Snapdragon AR1 Gen 1 Platform"
-            },
-            {
-              "status": "affected",
-              "version": "Snapdragon AR1+ Gen 1 Platform"
-            },
-            {
-              "status": "affected",
-              "version": "Snapdragon Auto 5G Modem-RF"
-            },
-            {
-              "status": "affected",
-              "version": "Snapdragon Auto 5G Modem-RF Gen 2"
-            },
-            {
-              "status": "affected",
-              "version": "Snapdragon X32 5G Modem-RF System"
-            },
-            {
-              "status": "affected",
-              "version": "Snapdragon X35 5G Modem-RF System"
-            },
-            {
-              "status": "affected",
-              "version": "Snapdragon X72 5G Modem-RF System"
-            },
-            {
-              "status": "affected",
-              "version": "Snapdragon X75 5G Modem-RF System"
-            },
-            {
-              "status": "affected",
-              "version": "SRV1H"
-            },
-            {
-              "status": "affected",
-              "version": "SRV1M"
-            },
-            {
-              "status": "affected",
-              "version": "SW5100"
-            },
-            {
-              "status": "affected",
-              "version": "SW5100P"
-            },
-            {
-              "status": "affected",
-              "version": "SXR2330P"
-            },
-            {
-              "status": "affected",
-              "version": "SXR2350P"
-            },
-            {
-              "status": "affected",
-              "version": "WCD9335"
-            },
-            {
-              "status": "affected",
-              "version": "WCD9340"
-            },
-            {
-              "status": "affected",
-              "version": "WCD9370"
-            },
-            {
-              "status": "affected",
-              "version": "WCD9371"
-            },
-            {
-              "status": "affected",
-              "version": "WCD9375"
-            },
-            {
-              "status": "affected",
-              "version": "WCD9378"
-            },
-            {
-              "status": "affected",
-              "version": "WCD9380"
-            },
-            {
-              "status": "affected",
-              "version": "WCD9385"
-            },
-            {
-              "status": "affected",
-              "version": "WCD9390"
-            },
-            {
-              "status": "affected",
-              "version": "WCD9395"
-            },
-            {
-              "status": "affected",
-              "version": "WCN3910"
-            },
-            {
-              "status": "affected",
-              "version": "WCN3950"
-            },
-            {
-              "status": "affected",
-              "version": "WCN3980"
-            },
-            {
-              "status": "affected",
-              "version": "WCN3988"
-            },
-            {
-              "status": "affected",
-              "version": "WCN6450"
-            },
-            {
-              "status": "affected",
-              "version": "WCN6650"
-            },
-            {
-              "status": "affected",
-              "version": "WCN6755"
-            },
-            {
-              "status": "affected",
-              "version": "WCN7860"
-            },
-            {
-              "status": "affected",
-              "version": "WCN7861"
-            },
-            {
-              "status": "affected",
-              "version": "WCN7881"
-            },
-            {
-              "status": "affected",
-              "version": "WSA8810"
-            },
-            {
-              "status": "affected",
-              "version": "WSA8815"
-            },
-            {
-              "status": "affected",
-              "version": "WSA8830"
-            },
-            {
-              "status": "affected",
-              "version": "WSA8832"
-            },
-            {
-              "status": "affected",
-              "version": "WSA8835"
-            },
-            {
-              "status": "affected",
-              "version": "WSA8840"
-            },
-            {
-              "status": "affected",
-              "version": "WSA8845"
-            },
-            {
-              "status": "affected",
-              "version": "WSA8845H"
-            },
-            {
-              "status": "affected",
-              "version": "XRV7209"
-            },
-            {
-              "status": "affected",
-              "version": "XRV9209"
+              "lessThan": "4.4.15",
+              "versionType": "semver"
             }
-          ]
+          ],
+          "defaultStatus": "unaffected"
         }
       ],
       "problemType": [
-        "CWE-416 Use After Free"
+        "CWE-122: Heap-based Buffer Overflow"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-25863",
-      "publishedDate": "2026-05-04T18:29:01.446Z",
-      "lastModifiedDate": "2026-05-04T18:29:01.446Z",
-      "description": "Conditional Fields for Contact Form 7 WordPress plugin through version 2.6.7 contains an uncontrolled resource consumption vulnerability in the Wpcf7cfMailParser class where the hide_hidden_mail_fields_regex_callback() method reads an iteration count directly from user-supplied POST parameters without validation or upper bound enforcement. Unauthenticated attackers can supply an arbitrarily large integer value through the REST API endpoint to cause unbounded loop execution with multiple preg_replace() operations, exhausting server memory and crashing the PHP process.",
+      "id": "CVE-2026-6321",
+      "publishedDate": "2026-05-04T19:31:57.253Z",
+      "lastModifiedDate": "2026-05-04T19:31:57.253Z",
+      "description": "fast-uri decoded percent-encoded path separators and dot segments before applying dot-segment removal in its normalize() and equal() functions. Encoded path data was treated like real slashes and parent-directory references, so distinct URIs could collapse onto the same normalized path. Applications that normalize or compare attacker-controlled URLs to enforce path-based policy can be bypassed, with a path that appears confined under an allowed prefix normalizing to a different location. Versions <= 3.1.0 are affected. Update to 3.1.1 or later.",
       "severity": 7.5,
       "references": [
         {
-          "url": "https://wordpress.org/plugins/cf7-conditional-fields/#developers",
+          "url": "https://github.com/fastify/fast-uri/security/advisories/GHSA-q3j6-qgpj-74h6",
           "type": "reference"
         },
         {
-          "url": "https://www.vulncheck.com/advisories/conditional-fields-for-contact-form-7-dos-via-uncontrolled-resource-consumption",
+          "url": "https://cna.openjsf.org/security-advisories.html",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "affected",
-          "vendor": "Jules Colle",
-          "product": "Conditional Fields for Contact Form 7",
+          "vendor": "fast-uri",
+          "product": "fast-uri",
+          "defaultStatus": "unaffected",
           "versions": [
             {
+              "versionType": "semver",
               "status": "affected",
               "version": "0",
+              "lessThan": "3.1.1"
+            },
+            {
               "versionType": "semver",
-              "lessThan": "2.7.3"
+              "status": "unaffected",
+              "version": "3.1.1"
             }
-          ]
+          ],
+          "packageURL": "pkg:npm/fast-uri"
         }
       ],
       "problemType": [
-        "CWE-1284 Improper Validation of Specified Quantity in Input"
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-42154",
-      "publishedDate": "2026-05-04T18:13:12.340Z",
-      "lastModifiedDate": "2026-05-04T18:13:12.340Z",
-      "description": "Prometheus is an open-source monitoring system and time series database. Prior to versions 3.5.3 and 3.11.3, the remote read endpoint (/api/v1/read) does not validate the declared decoded length in a snappy-compressed request body before allocating memory. An unauthenticated attacker can send a small payload that causes a huge heap allocation per request. Under concurrent load this can exhaust available memory and crash the Prometheus process. This issue has been patched in versions 3.5.3 and 3.11.3.",
+      "id": "CVE-2026-7768",
+      "publishedDate": "2026-05-04T19:14:36.828Z",
+      "lastModifiedDate": "2026-05-04T19:50:16.465Z",
+      "description": "@fastify/accepts-serializer cached serializer-selection results keyed by the request Accept header without a size limit or eviction policy. A remote unauthenticated client could send many distinct but matching Accept header variants to make the cache grow unbounded, eventually exhausting the Node.js heap and crashing the process. Versions <= 6.0.3 are affected. Update to 6.0.4 or later, which bounds the cache via an LRU with a default size of 100 entries, configurable through the new cacheSize plugin option.",
       "severity": 7.5,
       "references": [
         {
-          "url": "https://github.com/prometheus/prometheus/security/advisories/GHSA-8rm2-7qqf-34qm",
+          "url": "https://cna.openjsf.org/security-advisories.html",
           "type": "reference"
         },
         {
-          "url": "https://github.com/prometheus/prometheus/pull/18584",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/prometheus/prometheus/pull/18585",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/prometheus/prometheus/releases/tag/v3.11.3",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/prometheus/prometheus/releases/tag/v3.5.3",
+          "url": "https://github.com/fastify/fastify-accepts-serializer/security/advisories/GHSA-qxhc-wx3p-2wmg",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "prometheus",
-          "product": "prometheus",
+          "vendor": "@fastify/accepts-serializer",
+          "product": "@fastify/accepts-serializer",
+          "defaultStatus": "unaffected",
           "versions": [
             {
-              "version": "< 3.5.3",
-              "status": "affected"
+              "versionType": "semver",
+              "status": "affected",
+              "version": "0",
+              "lessThan": "6.0.4"
             },
             {
-              "version": ">= 3.6.0, < 3.11.3",
-              "status": "affected"
+              "versionType": "semver",
+              "status": "unaffected",
+              "version": "6.0.4"
             }
-          ]
+          ],
+          "packageURL": "pkg:npm/@fastify/accepts-serializer"
         }
       ],
       "problemType": [
-        "CWE-400: Uncontrolled Resource Consumption",
-        "CWE-789: Memory Allocation with Excessive Size Value"
+        "CWE-770: Allocation of Resources Without Limits or Throttling"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
       "id": "CVE-2026-42151",
       "publishedDate": "2026-05-04T18:12:16.917Z",
-      "lastModifiedDate": "2026-05-04T18:12:16.917Z",
+      "lastModifiedDate": "2026-05-04T19:55:09.255Z",
       "description": "Prometheus is an open-source monitoring system and time series database. Prior to versions 3.5.3 and 3.11.3, the client_secret field in the Azure AD remote write OAuth configuration (storage/remote/azuread) was typed as string instead of Secret. Prometheus redacts fields of type Secret when serving the configuration via the /-/config HTTP API endpoint. Because the field was a plain string, the Azure OAuth client secret was exposed in plaintext to any user or process with access to that endpoint. This issue has been patched in versions 3.5.3 and 3.11.3.",
       "severity": 7.5,
       "references": [
@@ -1035,51 +293,67 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-41471",
-      "publishedDate": "2026-05-04T17:40:31.322Z",
-      "lastModifiedDate": "2026-05-04T18:25:02.485Z",
-      "description": "Easy PayPal Events & Tickets plugin for WordPress versions 1.3 and earlier contain an information disclosure vulnerability in the QR code scanning endpoint that allows unauthenticated attackers to enumerate and retrieve all customer order records. Attackers can iterate over sequential WordPress post IDs through the scan_qr.php endpoint to harvest the complete set of orders stored in the database without requiring authentication or prior knowledge of specific order identifiers. This plugin was officially closed as of 2026-03-18.",
-      "severity": 7.5,
+      "id": "CVE-2026-43616",
+      "publishedDate": "2026-05-04T17:33:48.591Z",
+      "lastModifiedDate": "2026-05-04T19:39:05.720Z",
+      "description": "Detect-It-Easy prior to 3.21 contains a path traversal vulnerability that allows attackers to write arbitrary files to the filesystem by crafting malicious archive entries with relative traversal sequences or absolute paths. Attackers can exploit insufficient path normalization during archive extraction to write files outside the intended extraction directory and achieve persistent code execution by overwriting user startup scripts.",
+      "severity": 7.1,
       "references": [
         {
-          "url": "https://gist.github.com/4lec4st/9fd04b4bfadb3f7e388f61588f5f2564",
-          "type": "poc"
-        },
-        {
-          "url": "https://wordpress.org/plugins/easy-paypal-events-tickets",
+          "url": "https://github.com/horsicq/DIE-engine/releases/tag/3.21",
           "type": "reference"
         },
         {
-          "url": "https://www.vulncheck.com/advisories/easy-paypal-events-tickets-information-disclosure-via-qr-code-endpoint",
+          "url": "https://github.com/horsicq/Detect-It-Easy",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/horsicq/Formats/commit/56cdf50ee3c72c56284e2819b23e98332842d259",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/horsicq/XArchive/commit/6a2aa84c2fd120b704f76bb5c5ee3e9b5a7a0fcc",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/horsicq/DIE-engine/commit/cbbe1688e58ffd430d284bf65f336973f083db69",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/horsicq/DIE-engine/commit/7fd300b926daf19707b2a36f0abe8b60a51308ee",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/detect-it-easy-path-traversal-arbitrary-file-write",
           "type": "reference"
         }
       ],
       "affected": [
         {
           "defaultStatus": "affected",
-          "vendor": "Scott Paterson",
-          "product": "easy-paypal-events-tickets",
+          "vendor": "horsicq",
+          "product": "DIE-engine",
           "versions": [
             {
               "status": "affected",
               "version": "0",
               "versionType": "semver",
-              "lessThanOrEqual": "1.3"
+              "lessThan": "3.21.0"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-639 Authorization Bypass Through User-Controlled Key"
+        "CWE-23: Relative Path Traversal"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-25266",
-      "publishedDate": "2026-05-04T16:43:19.977Z",
-      "lastModifiedDate": "2026-05-04T18:10:31.034Z",
-      "description": "Memory corruption while processing IOCTL command when device is in power-save state.",
-      "severity": 5.5,
+      "id": "CVE-2025-47401",
+      "publishedDate": "2026-05-04T16:43:07.614Z",
+      "lastModifiedDate": "2026-05-04T19:49:09.440Z",
+      "description": "Transient DOS when processing target power rate tables during channel configuration.",
+      "severity": 6.5,
       "references": [
         {
           "url": "https://docs.qualcomm.com/product/publicresources/securitybulletin/may-2026-bulletin.html",
@@ -1090,17 +364,48 @@
         {
           "defaultStatus": "unaffected",
           "platforms": [
+            "Snapdragon Auto",
             "Snapdragon CCW",
             "Snapdragon Compute",
             "Snapdragon Connectivity",
-            "Snapdragon MC"
+            "Snapdragon Consumer Electronics Connectivity",
+            "Snapdragon Consumer IOT",
+            "Snapdragon Industrial IOT",
+            "Snapdragon MC",
+            "Snapdragon Mobile",
+            "Snapdragon WBC",
+            "Snapdragon Wired Infrastructure and Networking"
           ],
           "product": "Snapdragon",
           "vendor": "Qualcomm, Inc.",
           "versions": [
             {
               "status": "affected",
+              "version": "AR8035"
+            },
+            {
+              "status": "affected",
               "version": "Cologne"
+            },
+            {
+              "status": "affected",
+              "version": "CQ7790"
+            },
+            {
+              "status": "affected",
+              "version": "CQ8725S"
+            },
+            {
+              "status": "affected",
+              "version": "CQ8750M"
+            },
+            {
+              "status": "affected",
+              "version": "FastConnect 6200"
+            },
+            {
+              "status": "affected",
+              "version": "FastConnect 6700"
             },
             {
               "status": "affected",
@@ -1112,11 +417,815 @@
             },
             {
               "status": "affected",
+              "version": "Flight RB5 5G Platform"
+            },
+            {
+              "status": "affected",
+              "version": "FWA Gen 3 Ultra Platform"
+            },
+            {
+              "status": "affected",
+              "version": "G2 Gen 1"
+            },
+            {
+              "status": "affected",
+              "version": "G3x Gen 2"
+            },
+            {
+              "status": "affected",
+              "version": "Immersive Home 3210 Platform"
+            },
+            {
+              "status": "affected",
+              "version": "Immersive Home 326 Platform"
+            },
+            {
+              "status": "affected",
+              "version": "IPQ5300"
+            },
+            {
+              "status": "affected",
+              "version": "IPQ5302"
+            },
+            {
+              "status": "affected",
+              "version": "IPQ5312"
+            },
+            {
+              "status": "affected",
+              "version": "IPQ5332"
+            },
+            {
+              "status": "affected",
+              "version": "IPQ9008"
+            },
+            {
+              "status": "affected",
+              "version": "IPQ9554"
+            },
+            {
+              "status": "affected",
+              "version": "IPQ9570"
+            },
+            {
+              "status": "affected",
+              "version": "IPQ9574"
+            },
+            {
+              "status": "affected",
+              "version": "IQ6 Series Platform"
+            },
+            {
+              "status": "affected",
+              "version": "IQ8 Series Platform"
+            },
+            {
+              "status": "affected",
+              "version": "IQ9 Series Platform"
+            },
+            {
+              "status": "affected",
+              "version": "IQX5121"
+            },
+            {
+              "status": "affected",
+              "version": "IQX7181"
+            },
+            {
+              "status": "affected",
+              "version": "LeMans_AU_LGIT"
+            },
+            {
+              "status": "affected",
+              "version": "LeMansAU"
+            },
+            {
+              "status": "affected",
+              "version": "Marina"
+            },
+            {
+              "status": "affected",
+              "version": "Milos"
+            },
+            {
+              "status": "affected",
+              "version": "Milos_IOT"
+            },
+            {
+              "status": "affected",
+              "version": "Molokai"
+            },
+            {
+              "status": "affected",
+              "version": "Monaco_IOT"
+            },
+            {
+              "status": "affected",
+              "version": "Netrani"
+            },
+            {
+              "status": "affected",
+              "version": "Networking Pro 1200 Platform"
+            },
+            {
+              "status": "affected",
+              "version": "Networking Pro 1210 Platform"
+            },
+            {
+              "status": "affected",
+              "version": "Networking Pro 1610 Platform"
+            },
+            {
+              "status": "affected",
+              "version": "Networking Pro 610 Platform"
+            },
+            {
+              "status": "affected",
+              "version": "Networking Pro 810 Platform"
+            },
+            {
+              "status": "affected",
+              "version": "Orne"
+            },
+            {
+              "status": "affected",
+              "version": "Palawan25"
+            },
+            {
+              "status": "affected",
+              "version": "Pandeiro"
+            },
+            {
+              "status": "affected",
+              "version": "QAM8255P"
+            },
+            {
+              "status": "affected",
+              "version": "QAM8295P"
+            },
+            {
+              "status": "affected",
+              "version": "QAM8397P"
+            },
+            {
+              "status": "affected",
+              "version": "QAMSRV1H"
+            },
+            {
+              "status": "affected",
+              "version": "QAMSRV1M"
+            },
+            {
+              "status": "affected",
+              "version": "QCA0000"
+            },
+            {
+              "status": "affected",
+              "version": "QCA2062"
+            },
+            {
+              "status": "affected",
+              "version": "QCA2064"
+            },
+            {
+              "status": "affected",
+              "version": "QCA2065"
+            },
+            {
+              "status": "affected",
+              "version": "QCA2066"
+            },
+            {
+              "status": "affected",
+              "version": "QCA6174A"
+            },
+            {
+              "status": "affected",
+              "version": "QCA6391"
+            },
+            {
+              "status": "affected",
+              "version": "QCA6554A"
+            },
+            {
+              "status": "affected",
+              "version": "QCA6564AU"
+            },
+            {
+              "status": "affected",
+              "version": "QCA6574"
+            },
+            {
+              "status": "affected",
+              "version": "QCA6574A"
+            },
+            {
+              "status": "affected",
+              "version": "QCA6574AU"
+            },
+            {
+              "status": "affected",
+              "version": "QCA6584AU"
+            },
+            {
+              "status": "affected",
+              "version": "QCA6595"
+            },
+            {
+              "status": "affected",
+              "version": "QCA6595AU"
+            },
+            {
+              "status": "affected",
+              "version": "QCA6678AQ"
+            },
+            {
+              "status": "affected",
+              "version": "QCA6688AQ"
+            },
+            {
+              "status": "affected",
+              "version": "QCA6696"
+            },
+            {
+              "status": "affected",
+              "version": "QCA6698AQ"
+            },
+            {
+              "status": "affected",
+              "version": "QCA6777AQ"
+            },
+            {
+              "status": "affected",
+              "version": "QCA6787AQ"
+            },
+            {
+              "status": "affected",
+              "version": "QCA6797AQ"
+            },
+            {
+              "status": "affected",
+              "version": "QCA8075"
+            },
+            {
+              "status": "affected",
+              "version": "QCA8080"
+            },
+            {
+              "status": "affected",
+              "version": "QCA8081"
+            },
+            {
+              "status": "affected",
+              "version": "QCA8082"
+            },
+            {
+              "status": "affected",
+              "version": "QCA8084"
+            },
+            {
+              "status": "affected",
+              "version": "QCA8085"
+            },
+            {
+              "status": "affected",
+              "version": "QCA8101"
+            },
+            {
+              "status": "affected",
+              "version": "QCA8102"
+            },
+            {
+              "status": "affected",
+              "version": "QCA8111"
+            },
+            {
+              "status": "affected",
+              "version": "QCA8112"
+            },
+            {
+              "status": "affected",
+              "version": "QCA8337"
+            },
+            {
+              "status": "affected",
+              "version": "QCA8384"
+            },
+            {
+              "status": "affected",
+              "version": "QCA8385"
+            },
+            {
+              "status": "affected",
+              "version": "QCA8386"
+            },
+            {
+              "status": "affected",
+              "version": "QCA8695AU"
+            },
+            {
+              "status": "affected",
+              "version": "QCC710"
+            },
+            {
+              "status": "affected",
+              "version": "QCF8000"
+            },
+            {
+              "status": "affected",
+              "version": "QCF8001"
+            },
+            {
+              "status": "affected",
+              "version": "QCM4490"
+            },
+            {
+              "status": "affected",
+              "version": "QCM5430"
+            },
+            {
+              "status": "affected",
+              "version": "QCM6490"
+            },
+            {
+              "status": "affected",
+              "version": "QCN5124"
+            },
+            {
+              "status": "affected",
+              "version": "QCN5154"
+            },
+            {
+              "status": "affected",
+              "version": "QCN5224"
+            },
+            {
+              "status": "affected",
+              "version": "QCN6024"
+            },
+            {
+              "status": "affected",
+              "version": "QCN6224"
+            },
+            {
+              "status": "affected",
+              "version": "QCN6274"
+            },
+            {
+              "status": "affected",
+              "version": "QCN6402"
+            },
+            {
+              "status": "affected",
+              "version": "QCN6412"
+            },
+            {
+              "status": "affected",
+              "version": "QCN6422"
+            },
+            {
+              "status": "affected",
+              "version": "QCN6432"
+            },
+            {
+              "status": "affected",
+              "version": "QCN9000"
+            },
+            {
+              "status": "affected",
+              "version": "QCN9011"
+            },
+            {
+              "status": "affected",
+              "version": "QCN9012"
+            },
+            {
+              "status": "affected",
+              "version": "QCN9024"
+            },
+            {
+              "status": "affected",
+              "version": "QCN9160"
+            },
+            {
+              "status": "affected",
+              "version": "QCN9274"
+            },
+            {
+              "status": "affected",
+              "version": "QCS4490"
+            },
+            {
+              "status": "affected",
+              "version": "QCS6690"
+            },
+            {
+              "status": "affected",
+              "version": "QCS8550"
+            },
+            {
+              "status": "affected",
+              "version": "QEP8111"
+            },
+            {
+              "status": "affected",
+              "version": "QFW7114"
+            },
+            {
+              "status": "affected",
+              "version": "QFW7124"
+            },
+            {
+              "status": "affected",
+              "version": "QLN1083BD"
+            },
+            {
+              "status": "affected",
+              "version": "QLN1086BD"
+            },
+            {
+              "status": "affected",
+              "version": "QMB415"
+            },
+            {
+              "status": "affected",
+              "version": "QMB715"
+            },
+            {
+              "status": "affected",
+              "version": "QMP1000"
+            },
+            {
+              "status": "affected",
+              "version": "QMP2001"
+            },
+            {
+              "status": "affected",
+              "version": "QPA1083BD"
+            },
+            {
+              "status": "affected",
+              "version": "QPA1086BD"
+            },
+            {
+              "status": "affected",
+              "version": "QRB5165M"
+            },
+            {
+              "status": "affected",
+              "version": "QRB5165N"
+            },
+            {
+              "status": "affected",
+              "version": "Qualcomm Video Collaboration VC3 Platform"
+            },
+            {
+              "status": "affected",
+              "version": "QXM1083"
+            },
+            {
+              "status": "affected",
+              "version": "QXM1086"
+            },
+            {
+              "status": "affected",
+              "version": "QXM1093"
+            },
+            {
+              "status": "affected",
+              "version": "QXM1094"
+            },
+            {
+              "status": "affected",
+              "version": "QXM1095"
+            },
+            {
+              "status": "affected",
+              "version": "QXM1096"
+            },
+            {
+              "status": "affected",
+              "version": "QXM8083"
+            },
+            {
+              "status": "affected",
+              "version": "Robotics RB5 Platform"
+            },
+            {
+              "status": "affected",
+              "version": "SA510M"
+            },
+            {
+              "status": "affected",
+              "version": "SA6155P"
+            },
+            {
+              "status": "affected",
+              "version": "SA7255P"
+            },
+            {
+              "status": "affected",
+              "version": "SA7775P"
+            },
+            {
+              "status": "affected",
+              "version": "SA8155P"
+            },
+            {
+              "status": "affected",
+              "version": "SA8195P"
+            },
+            {
+              "status": "affected",
+              "version": "SA8255P"
+            },
+            {
+              "status": "affected",
+              "version": "SA8295P"
+            },
+            {
+              "status": "affected",
+              "version": "SA8620P"
+            },
+            {
+              "status": "affected",
+              "version": "SA8770P"
+            },
+            {
+              "status": "affected",
+              "version": "SA9000P"
+            },
+            {
+              "status": "affected",
+              "version": "SAR1165P"
+            },
+            {
+              "status": "affected",
+              "version": "SAR2130P"
+            },
+            {
+              "status": "affected",
               "version": "SC8380XP"
             },
             {
               "status": "affected",
+              "version": "SD 8 Gen1 5G"
+            },
+            {
+              "status": "affected",
+              "version": "SDX61"
+            },
+            {
+              "status": "affected",
+              "version": "SM6450P"
+            },
+            {
+              "status": "affected",
+              "version": "SM6475P"
+            },
+            {
+              "status": "affected",
+              "version": "SM6475Q"
+            },
+            {
+              "status": "affected",
+              "version": "SM6650P"
+            },
+            {
+              "status": "affected",
+              "version": "SM6850"
+            },
+            {
+              "status": "affected",
+              "version": "SM7425"
+            },
+            {
+              "status": "affected",
+              "version": "SM7435"
+            },
+            {
+              "status": "affected",
+              "version": "SM7435P"
+            },
+            {
+              "status": "affected",
+              "version": "SM7525"
+            },
+            {
+              "status": "affected",
+              "version": "SM7550"
+            },
+            {
+              "status": "affected",
+              "version": "SM7550P"
+            },
+            {
+              "status": "affected",
+              "version": "SM7635P"
+            },
+            {
+              "status": "affected",
+              "version": "SM7675"
+            },
+            {
+              "status": "affected",
+              "version": "SM7675P"
+            },
+            {
+              "status": "affected",
+              "version": "SM8425"
+            },
+            {
+              "status": "affected",
+              "version": "SM8475P"
+            },
+            {
+              "status": "affected",
+              "version": "SM8550P"
+            },
+            {
+              "status": "affected",
+              "version": "SM8635"
+            },
+            {
+              "status": "affected",
+              "version": "SM8635P"
+            },
+            {
+              "status": "affected",
+              "version": "SM8650Q"
+            },
+            {
+              "status": "affected",
+              "version": "SM8735P"
+            },
+            {
+              "status": "affected",
+              "version": "SM8750P"
+            },
+            {
+              "status": "affected",
+              "version": "SM8845P"
+            },
+            {
+              "status": "affected",
+              "version": "Snapdragon 4 Gen 2 Mobile Platform"
+            },
+            {
+              "status": "affected",
+              "version": "Snapdragon 6 Gen 1 Mobile Platform"
+            },
+            {
+              "status": "affected",
+              "version": "Snapdragon 6 Gen 3 Mobile Platform"
+            },
+            {
+              "status": "affected",
+              "version": "Snapdragon 6 Gen 4 Mobile Platform"
+            },
+            {
+              "status": "affected",
+              "version": "Snapdragon 7 Gen 1 Mobile Platform"
+            },
+            {
+              "status": "affected",
+              "version": "Snapdragon 7 Gen 4 Mobile Platform"
+            },
+            {
+              "status": "affected",
+              "version": "Snapdragon 7+ Gen 2 Mobile Platform"
+            },
+            {
+              "status": "affected",
+              "version": "Snapdragon 7s Gen 3 Mobile Platform"
+            },
+            {
+              "status": "affected",
+              "version": "Snapdragon 8 Elite"
+            },
+            {
+              "status": "affected",
+              "version": "Snapdragon 8 Elite Gen 5"
+            },
+            {
+              "status": "affected",
+              "version": "Snapdragon 8 Gen 1 Mobile Platform"
+            },
+            {
+              "status": "affected",
+              "version": "Snapdragon 8 Gen 2 Mobile Platform"
+            },
+            {
+              "status": "affected",
+              "version": "Snapdragon 8 Gen 3 Mobile Platform"
+            },
+            {
+              "status": "affected",
+              "version": "Snapdragon 8+ Gen 1 Mobile Platform"
+            },
+            {
+              "status": "affected",
+              "version": "Snapdragon 8+ Gen 2 Mobile Platform"
+            },
+            {
+              "status": "affected",
+              "version": "Snapdragon 888 5G Mobile Platform"
+            },
+            {
+              "status": "affected",
+              "version": "Snapdragon 888+ 5G Mobile Platform"
+            },
+            {
+              "status": "affected",
+              "version": "Snapdragon 8cx Gen 3 Compute Platform"
+            },
+            {
+              "status": "affected",
               "version": "Snapdragon AR1 Gen 1 Platform"
+            },
+            {
+              "status": "affected",
+              "version": "Snapdragon AR1+ Gen 1 Platform"
+            },
+            {
+              "status": "affected",
+              "version": "Snapdragon Auto 5G Modem-RF"
+            },
+            {
+              "status": "affected",
+              "version": "Snapdragon Auto 5G Modem-RF Gen 2"
+            },
+            {
+              "status": "affected",
+              "version": "Snapdragon X32 5G Modem-RF System"
+            },
+            {
+              "status": "affected",
+              "version": "Snapdragon X35 5G Modem-RF System"
+            },
+            {
+              "status": "affected",
+              "version": "Snapdragon X62 5G Modem-RF System"
+            },
+            {
+              "status": "affected",
+              "version": "Snapdragon X65 5G Modem-RF System"
+            },
+            {
+              "status": "affected",
+              "version": "Snapdragon X72 5G Modem-RF System"
+            },
+            {
+              "status": "affected",
+              "version": "Snapdragon X75 5G Modem-RF System"
+            },
+            {
+              "status": "affected",
+              "version": "SRV1H"
+            },
+            {
+              "status": "affected",
+              "version": "SRV1M"
+            },
+            {
+              "status": "affected",
+              "version": "SW-only"
+            },
+            {
+              "status": "affected",
+              "version": "SXR2230P"
+            },
+            {
+              "status": "affected",
+              "version": "SXR2250P"
+            },
+            {
+              "status": "affected",
+              "version": "SXR2330P"
+            },
+            {
+              "status": "affected",
+              "version": "SXR2350P"
+            },
+            {
+              "status": "affected",
+              "version": "WCD9340"
+            },
+            {
+              "status": "affected",
+              "version": "WCD9370"
+            },
+            {
+              "status": "affected",
+              "version": "WCD9371"
+            },
+            {
+              "status": "affected",
+              "version": "WCD9375"
+            },
+            {
+              "status": "affected",
+              "version": "WCD9378"
             },
             {
               "status": "affected",
@@ -1132,11 +1241,59 @@
             },
             {
               "status": "affected",
+              "version": "WCD9390"
+            },
+            {
+              "status": "affected",
+              "version": "WCD9395"
+            },
+            {
+              "status": "affected",
+              "version": "WCN3950"
+            },
+            {
+              "status": "affected",
+              "version": "WCN3988"
+            },
+            {
+              "status": "affected",
+              "version": "WCN6450"
+            },
+            {
+              "status": "affected",
+              "version": "WCN6650"
+            },
+            {
+              "status": "affected",
+              "version": "WCN6755"
+            },
+            {
+              "status": "affected",
+              "version": "WCN7760"
+            },
+            {
+              "status": "affected",
+              "version": "WCN7860"
+            },
+            {
+              "status": "affected",
               "version": "WCN7861"
             },
             {
               "status": "affected",
               "version": "WCN7880"
+            },
+            {
+              "status": "affected",
+              "version": "WCN7881"
+            },
+            {
+              "status": "affected",
+              "version": "WSA8810"
+            },
+            {
+              "status": "affected",
+              "version": "WSA8815"
             },
             {
               "status": "affected",
@@ -1161,6 +1318,22 @@
             {
               "status": "affected",
               "version": "WSA8845H"
+            },
+            {
+              "status": "affected",
+              "version": "WSA8850"
+            },
+            {
+              "status": "affected",
+              "version": "WSA8850W"
+            },
+            {
+              "status": "affected",
+              "version": "WSA8855C"
+            },
+            {
+              "status": "affected",
+              "version": "X1E80100"
             },
             {
               "status": "affected",
@@ -1193,121 +1366,65 @@
             {
               "status": "affected",
               "version": "XG101039"
+            },
+            {
+              "status": "affected",
+              "version": "XRV7209"
+            },
+            {
+              "status": "affected",
+              "version": "XRV9209"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-749: Exposed Dangerous Method or Function"
+        "CWE-126 Buffer Over-read"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-3143",
-      "publishedDate": "2026-05-01T13:28:42.825Z",
-      "lastModifiedDate": "2026-05-04T18:23:30.972Z",
-      "description": "The Total Upkeep – WordPress Backup Plugin plus Restore & Migrate by BoldGrid plugin for WordPress is vulnerable to unauthorized modification of data due to a missing capability check on the 'wp_ajax_cli_cancel' function in all versions up to, and including, 1.17.1. This makes it possible for unauthenticated attackers to cancel a pending rollback, potentially preventing a WordPress installation from automatically reverting a failed update.",
+      "id": "CVE-2026-41572",
+      "publishedDate": "2026-05-04T17:44:01.157Z",
+      "lastModifiedDate": "2026-05-04T19:39:55.331Z",
+      "description": "Note Mark is an open-source note-taking application. Prior to version 0.19.3, after a note-mark owner soft-deletes a public book, its notes and uploaded assets stay readable at /api/notes/{id}, /api/notes/{id}/content, the slug URL, and the asset endpoints. Unauthenticated callers who hold the note ID or the slug path retain access. GORM's soft-delete scope does not reach the raw \"JOIN books ...\" clauses used by the note and asset queries. This issue has been patched in version 0.19.3.",
       "severity": 5.3,
       "references": [
         {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/f25dcd7e-8fb1-471e-bd22-782409de45c4?source=cve",
+          "url": "https://github.com/enchant97/note-mark/security/advisories/GHSA-3gr9-485j-v4xf",
           "type": "reference"
         },
         {
-          "url": "https://plugins.trac.wordpress.org/browser/boldgrid-backup/trunk/admin/class-boldgrid-backup-admin-auto-rollback.php#L1202",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/boldgrid-backup/trunk/includes/class-boldgrid-backup.php#L459",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/boldgrid-backup/trunk/admin/class-boldgrid-backup-admin-core.php#L864",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/changeset/3480378/",
+          "url": "https://github.com/enchant97/note-mark/releases/tag/v0.19.3",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "boldgrid",
-          "product": "Total Upkeep – WordPress Backup Plugin plus Restore & Migrate by BoldGrid",
+          "vendor": "enchant97",
+          "product": "note-mark",
           "versions": [
             {
-              "version": "0",
-              "status": "affected",
-              "lessThanOrEqual": "1.17.1",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-862 Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-42078",
-      "publishedDate": "2026-05-04T16:55:17.870Z",
-      "lastModifiedDate": "2026-05-04T18:38:50.608Z",
-      "description": "PPTAgent is an agentic framework for reflective PowerPoint generation. Prior to commit 418491a, PPTAgent is vulnerable to arbitrary file write and directory creation via markdown_table_to_image. This issue has been patched via commit 418491a.",
-      "severity": 4.6,
-      "references": [
-        {
-          "url": "https://github.com/icip-cas/PPTAgent/security/advisories/GHSA-hrcw-xc63-g29m",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/icip-cas/PPTAgent/commit/418491a9a1c02d9d93194b5973bb58df35cf9d00",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "icip-cas",
-          "product": "PPTAgent",
-          "versions": [
-            {
-              "version": "< 418491a9a1c02d9d93194b5973bb58df35cf9d00",
+              "version": "< 0.19.3",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+        "CWE-285: Improper Authorization"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-42085",
-      "publishedDate": "2026-05-04T17:13:39.277Z",
-      "lastModifiedDate": "2026-05-04T18:47:32.584Z",
-      "description": "OpenC3 COSMOS provides the functionality needed to send commands to and receive data from one or more embedded systems. Prior to versions 6.10.5 and 7.0.0-rc3, OpenC3 COSMOS contains a design flaw in the save_tool_config() function that allows saving tool configuration files at arbitrary locations inside the shared /plugins directory tree by supplying crafted configuration filenames. Although the implementation sufficiently mitigates standard path traversal attacks, by canonicalizing filename to an absolute path, all plugins share this same root directory. That enables users to create arbitrary file structures and overwrite existing configuration files within the shared /plugins directory. This issue has been patched in versions 6.10.5 and 7.0.0-rc3.",
-      "severity": 4.3,
+      "id": "CVE-2026-42086",
+      "publishedDate": "2026-05-04T17:15:59.239Z",
+      "lastModifiedDate": "2026-05-04T19:47:16.828Z",
+      "description": "OpenC3 COSMOS provides the functionality needed to send commands to and receive data from one or more embedded systems. Prior to version 7.0.0, the Command Sender UI uses an unsafe eval() function on array-like command parameters, which allows a user-supplied payload to execute in the browser when sending a command. This creates a self-XSS risk because an attacker can trigger their own script execution in the victim’s session, if allowed to influence the array parameter input, for example via phishing. If successful, an attacker may read or modify data in the authenticated browser context, including session tokens in local storage. This issue has been patched in version 7.0.0.",
+      "severity": 4.6,
       "references": [
         {
-          "url": "https://github.com/OpenC3/cosmos/security/advisories/GHSA-4jvx-93h3-f45h",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/OpenC3/cosmos/commit/9957a9fa460c0c0cf5cdbf6a5931bbdd025246a5",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/OpenC3/cosmos/commit/e6efccbd148ba0e3361c5891027f2373aa140d42",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/OpenC3/cosmos/releases/tag/v6.10.5",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/OpenC3/cosmos/releases/tag/v7.0.0-rc3",
+          "url": "https://github.com/OpenC3/cosmos/security/advisories/GHSA-ffq5-qpvf-xq7x",
           "type": "reference"
         }
       ],
@@ -1317,25 +1434,58 @@
           "product": "cosmos",
           "versions": [
             {
-              "version": "< 6.10.5",
-              "status": "affected"
-            },
-            {
-              "version": ">= 7.0.0.pre.rc1, < 7.0.0-rc3",
+              "version": "< 7.0.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-23: Relative Path Traversal"
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-42140",
+      "publishedDate": "2026-05-04T17:37:09.481Z",
+      "lastModifiedDate": "2026-05-04T19:52:14.187Z",
+      "description": "PlantUML Macro is a macro for rendering UML diagrams from simple textual schemes. Prior to version 2.4.1, the PlantUML Macro is vulnerable to Server-Side Request Forgery (SSRF). The macro allows users to specify an alternative PlantUML server via the server parameter. However, the application does not validate the supplied URL. An attacker can supply an internal IP address or a malicious external URL. The XWiki server will attempt to connect to this URL to \"render\" the diagram. This issue has been patched in version 2.4.1.",
+      "severity": 4.4,
+      "references": [
+        {
+          "url": "https://github.com/xwiki-contrib/macro-plantuml/security/advisories/GHSA-42fc-7w97-8vrc",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/xwiki-contrib/macro-plantuml/commit/c8b19bda93058794e04c8862fc7ca85c59b5fe5c",
+          "type": "reference"
+        },
+        {
+          "url": "https://jira.xwiki.org/browse/PLANTUML-25",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "xwiki-contrib",
+          "product": "macro-plantuml",
+          "versions": [
+            {
+              "version": "< 2.4.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-918: Server-Side Request Forgery (SSRF)"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
       "id": "CVE-2026-43964",
       "publishedDate": "2026-05-04T18:10:10.509Z",
-      "lastModifiedDate": "2026-05-04T18:28:07.825Z",
+      "lastModifiedDate": "2026-05-04T19:49:41.165Z",
       "description": "Postfix before 3.8.16, 3.9 before 3.9.10, and 3.10 before 3.10.9 sometimes allows a buffer over-read and process crash via an enhanced status code that lacks text after the third number.",
       "severity": 3.7,
       "references": [
@@ -1377,416 +1527,140 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-43863",
-      "publishedDate": "2026-05-04T06:05:53.300Z",
-      "lastModifiedDate": "2026-05-04T18:25:49.692Z",
-      "description": "mutt before 2.3.2 has an infinite loop in data_object_to_stream in crypt-gpgme.c.",
-      "severity": 3.7,
-      "references": [
-        {
-          "url": "https://github.com/muttmua/mutt/commit/fdc04a171777327218a1e78db504926c388b48c4",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "mutt",
-          "vendor": "mutt",
-          "versions": [
-            {
-              "lessThan": "2.3.2",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-253 Incorrect Check of Function Return Value"
-      ],
+      "id": "CVE-2026-34882",
+      "publishedDate": "2026-05-04T20:19:46.280481+00:00",
+      "lastModifiedDate": "2026-05-04T19:43:03.682Z",
+      "description": "",
+      "severity": "N/A",
+      "references": [],
+      "affected": [],
+      "problemType": [],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-43862",
-      "publishedDate": "2026-05-04T06:00:46.368Z",
-      "lastModifiedDate": "2026-05-04T18:21:26.993Z",
-      "description": "In mutt before 2.3.2, the imap_auth_gss security level is mishandled.",
-      "severity": 3.7,
-      "references": [
-        {
-          "url": "https://github.com/muttmua/mutt/commit/f547a849cdacb512800a5f477c27de217e1c8151",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "mutt",
-          "vendor": "mutt",
-          "versions": [
-            {
-              "lessThan": "2.3.2",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-843 Access of Resource Using Incompatible Type ('Type Confusion')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-43861",
-      "publishedDate": "2026-05-04T05:52:59.642Z",
-      "lastModifiedDate": "2026-05-04T18:20:52.988Z",
-      "description": "mutt before 2.3.2 does not check for '\\0' in url_pct_decode.",
-      "severity": 3.7,
-      "references": [
-        {
-          "url": "https://github.com/muttmua/mutt/commit/12f54fe3b61f761c096fe95e95d5e3072af00ed2",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "mutt",
-          "vendor": "mutt",
-          "versions": [
-            {
-              "lessThan": "2.3.2",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-158 Improper Neutralization of Null Byte or NUL Character"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-43860",
-      "publishedDate": "2026-05-04T05:45:05.581Z",
-      "lastModifiedDate": "2026-05-04T18:20:29.272Z",
-      "description": "mutt before 2.3.2 sometimes truncates the hash_passwd by one byte for IMAP auth_cram MD5 digest.",
-      "severity": 3.7,
-      "references": [
-        {
-          "url": "https://github.com/muttmua/mutt/commit/834c5a2ed0479e51e8662a31caed129f136f4805",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "mutt",
-          "vendor": "mutt",
-          "versions": [
-            {
-              "lessThan": "2.3.2",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-193 Off-by-one Error"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-43859",
-      "publishedDate": "2026-05-04T05:41:07.610Z",
-      "lastModifiedDate": "2026-05-04T18:20:07.821Z",
-      "description": "mutt before 2.3.2 sometimes uses strfcpy instead of memcpy for the IMAP auth_cram MD5 digest.",
-      "severity": 3.7,
-      "references": [
-        {
-          "url": "https://github.com/muttmua/mutt/commit/834c5a2ed0479e51e8662a31caed129f136f4805",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "mutt",
-          "vendor": "mutt",
-          "versions": [
-            {
-              "lessThan": "2.3.2",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-158 Improper Neutralization of Null Byte or NUL Character"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-43864",
-      "publishedDate": "2026-05-04T06:10:52.725Z",
-      "lastModifiedDate": "2026-05-04T18:26:15.822Z",
-      "description": "mutt before 2.3.2 has a show_sig_summary NULL pointer dereference.",
-      "severity": 2.5,
-      "references": [
-        {
-          "url": "https://github.com/muttmua/mutt/commit/ebfa2969042d89303d15334193fcc32866c8a8df",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "mutt",
-          "vendor": "mutt",
-          "versions": [
-            {
-              "lessThan": "2.3.2",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-476 NULL Pointer Dereference"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41686",
-      "publishedDate": "2026-05-04T18:41:40.183Z",
-      "lastModifiedDate": "2026-05-04T18:41:40.183Z",
-      "description": "Claude SDK for TypeScript provides access to the Claude API from server-side TypeScript or JavaScript applications. From version 0.79.0 to before version 0.91.1, the BetaLocalFilesystemMemoryTool in the Anthropic TypeScript SDK created memory files and directories using the Node.js default modes (0o666 for files, 0o777 for directories), leaving them world-readable on systems with a standard umask and world-writable in environments with a permissive umask such as many Docker base images. A local attacker on a shared host could read persisted agent state, and in containerized deployments could modify memory files to influence subsequent model behavior. This issue has been patched in version 0.91.1.",
+      "id": "CVE-2026-41927",
+      "publishedDate": "2026-05-04T19:20:59.885Z",
+      "lastModifiedDate": "2026-05-04T19:20:59.885Z",
+      "description": "WDR201A WiFi Extender (HW V2.1, FW LFMZX28040922V1.02) contains a stack-based buffer overflow vulnerability in the firewall.cgi and makeRequest.cgi binaries that allows unauthenticated attackers to overwrite the saved return address by sending a POST request with a Content-Length header exceeding 512 bytes. Attackers can exploit insufficient length validation in the fgets() call to achieve arbitrary code execution through return-oriented programming or return-to-libc techniques.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/anthropics/anthropic-sdk-typescript/security/advisories/GHSA-p7fg-763f-g4gf",
+          "url": "https://mstreet97.github.io/security-research/iot/vulnerability-disclosure/ai-assisted-research/cybersecurity/cve/2026/05/04/Teaching_the_Machine_Where_to_Look.html",
+          "type": "poc"
+        },
+        {
+          "url": "https://www.made-in-china.com/showroom/yeapook/#:~:text=Established%20in%202015.%2CDistrict%2C%20Shenzhen%2C%20Guangdong%2C%20China",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/wdr201a-wifi-extender-stack-based-buffer-overflow-via-firewall-cgi",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "anthropics",
-          "product": "anthropic-sdk-typescript",
+          "vendor": "Shenzhen Yipu Commercial and Trading Co., Ltd",
+          "product": "WDR201A WiFi Extender",
           "versions": [
             {
-              "version": ">= 0.79.0, < 0.91.1",
-              "status": "affected"
+              "status": "affected",
+              "version": "0",
+              "lessThanOrEqual": "1.02",
+              "versionType": "semver"
             }
-          ]
+          ],
+          "defaultStatus": "unaffected"
         }
       ],
       "problemType": [
-        "CWE-732: Incorrect Permission Assignment for Critical Resource"
+        "CWE-121: Stack-based Buffer Overflow"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-42237",
-      "publishedDate": "2026-05-04T18:39:56.263Z",
-      "lastModifiedDate": "2026-05-04T18:39:56.263Z",
-      "description": "n8n is an open source workflow automation platform. Prior to versions 1.123.32, 2.17.4, and 2.18.1, the fix for GHSA-f3f2-mcxc-pwjx did not cover the Snowflake node or the legacy MySQL v1 node. Both nodes construct SQL queries by directly interpolating user-controlled table names, column names, and update keys into query strings without identifier escaping, enabling SQL injection against the connected database. This issue has been patched in versions 1.123.32, 2.17.4, and 2.18.1.",
+      "id": "CVE-2026-41926",
+      "publishedDate": "2026-05-04T19:17:52.100Z",
+      "lastModifiedDate": "2026-05-04T19:19:26.495Z",
+      "description": "WDR201A WiFi Extender (HW V2.1, FW LFMZX28040922V1.02) contains an OS command injection vulnerability in the firewall.cgi binary across five request handlers that apply insufficient input validation. Attackers can inject arbitrary shell commands through vulnerable parameters like websURLFilter, websHostFilter, portForward, singlePortForward, and ipportFilter using subshell syntax or unfiltered parameters, with payloads persisting in NVRAM and re-executing on every subsequent firewall.cgi request.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/n8n-io/n8n/security/advisories/GHSA-hp3c-vfpm-q4f7",
+          "url": "https://mstreet97.github.io/security-research/iot/vulnerability-disclosure/ai-assisted-research/cybersecurity/cve/2026/05/04/Teaching_the_Machine_Where_to_Look.html",
+          "type": "poc"
+        },
+        {
+          "url": "https://www.made-in-china.com/showroom/yeapook/#:~:text=Established%20in%202015.%2CDistrict%2C%20Shenzhen%2C%20Guangdong%2C%20China",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/wdr201a-wifi-extender-os-command-injection-via-firewall-cgi",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "n8n-io",
-          "product": "n8n",
+          "vendor": "Shenzhen Yipu Commercial and Trading Co., Ltd",
+          "product": "WDR201A WiFi Extender",
           "versions": [
             {
-              "version": "< 1.123.32",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.17.0, < 2.17.4",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.18.0, < 2.18.1",
-              "status": "affected"
+              "status": "affected",
+              "version": "0",
+              "lessThanOrEqual": "1.02",
+              "versionType": "semver"
             }
-          ]
+          ],
+          "defaultStatus": "unaffected"
         }
       ],
       "problemType": [
-        "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+        "Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') (CWE-78)"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-42236",
-      "publishedDate": "2026-05-04T18:38:51.626Z",
-      "lastModifiedDate": "2026-05-04T18:38:51.626Z",
-      "description": "n8n is an open source workflow automation platform. Prior to versions 1.123.32, 2.17.4, and 2.18.1, the MCP OAuth client registration endpoint accepted unauthenticated requests and stored client data without adequate resource controls. An unauthenticated remote attacker could exhaust server memory resources by sending large registration payloads, rendering the n8n instance unavailable. The MCP enable/disable toggle gates MCP access but did not restrict client registrations, meaning the endpoint is reachable regardless of whether MCP access is enabled on the instance. This issue has been patched in versions 1.123.32, 2.17.4, and 2.18.1.",
+      "id": "CVE-2026-41925",
+      "publishedDate": "2026-05-04T19:15:43.966Z",
+      "lastModifiedDate": "2026-05-04T19:40:39.886Z",
+      "description": "WDR201A WiFi Extender (HW V2.1, FW LFMZX28040922V1.02) contains an OS command injection vulnerability in the adm.cgi binary's reboot_time function that allows unauthenticated remote attackers to execute arbitrary shell commands by injecting malicious input into the reboot_time POST parameter. Attackers can send a crafted request with shell metacharacters in the reboot_time parameter when reboot_enabled=1 to achieve remote code execution.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/n8n-io/n8n/security/advisories/GHSA-49m9-pgww-9vq6",
+          "url": "https://mstreet97.github.io/security-research/iot/vulnerability-disclosure/ai-assisted-research/cybersecurity/cve/2026/05/04/Teaching_the_Machine_Where_to_Look.html",
+          "type": "poc"
+        },
+        {
+          "url": "https://www.made-in-china.com/showroom/yeapook/#:~:text=Established%20in%202015.%2CDistrict%2C%20Shenzhen%2C%20Guangdong%2C%20China",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/wdr201a-wifi-extender-os-command-injection-via-adm-cgi-reboot-time",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "n8n-io",
-          "product": "n8n",
+          "vendor": "Shenzhen Yipu Commercial and Trading Co., Ltd",
+          "product": "WDR201A WiFi Extender",
           "versions": [
             {
-              "version": "< 1.123.32",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.17.0, < 2.17.4",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.18.0, < 2.18.1",
-              "status": "affected"
+              "status": "affected",
+              "version": "0",
+              "lessThanOrEqual": "1.02",
+              "versionType": "semver"
             }
-          ]
+          ],
+          "defaultStatus": "unaffected"
         }
       ],
       "problemType": [
-        "CWE-770: Allocation of Resources Without Limits or Throttling"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-42235",
-      "publishedDate": "2026-05-04T18:38:09.488Z",
-      "lastModifiedDate": "2026-05-04T18:38:09.488Z",
-      "description": "n8n is an open source workflow automation platform. Prior to versions 1.123.32, 2.17.4, and 2.18.1, an unauthenticated attacker could register a malicious MCP OAuth client with a crafted client_name. If a victim user authorized the OAuth consent dialog and a second user subsequently revoked that access, a toast notification would render the injected script. Clicking the link would execute arbitrary JavaScript in the victim's authenticated n8n browser session, enabling credential and session token theft, workflow manipulation, or privilege escalation. This issue has been patched in versions 1.123.32, 2.17.4, and 2.18.1.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/n8n-io/n8n/security/advisories/GHSA-537j-gqpc-p7fq",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n8n-io",
-          "product": "n8n",
-          "versions": [
-            {
-              "version": "< 1.123.32",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.17.0, < 2.17.4",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.18.0, < 2.18.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-87: Improper Neutralization of Alternate XSS Syntax",
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-42234",
-      "publishedDate": "2026-05-04T18:36:55.630Z",
-      "lastModifiedDate": "2026-05-04T18:36:55.630Z",
-      "description": "n8n is an open source workflow automation platform. Prior to versions 1.123.32, 2.17.4, and 2.18.1, an authenticated user with permission to create or modify workflows containing a Python Code Node could escape the sandbox and achieve arbitrary code execution on the task runner container. This issue only affects instances where the Python Task Runner is enabled. This issue has been patched in versions 1.123.32, 2.17.4, and 2.18.1.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/n8n-io/n8n/security/advisories/GHSA-44v6-jhgm-p3m4",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n8n-io",
-          "product": "n8n",
-          "versions": [
-            {
-              "version": "< 1.123.32",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.17.0, < 2.17.4",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.18.0, < 2.18.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-94: Improper Control of Generation of Code ('Code Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-42233",
-      "publishedDate": "2026-05-04T18:35:42.298Z",
-      "lastModifiedDate": "2026-05-04T18:35:42.298Z",
-      "description": "n8n is an open source workflow automation platform. Prior to versions 1.123.32, 2.17.4, and 2.18.1, a flaw in the Oracle Database node's select operation allowed user-controlled input passed into the Limit field via expressions to be interpolated directly into the SQL query without sanitization or parameterization. In workflows where external input is passed into the Limit field (e.g., from a webhook), an attacker could inject arbitrary SQL and exfiltrate data from the connected Oracle database. This issue has been patched in versions 1.123.32, 2.17.4, and 2.18.1.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/n8n-io/n8n/security/advisories/GHSA-r6jc-mpqw-m755",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n8n-io",
-          "product": "n8n",
-          "versions": [
-            {
-              "version": "< 1.123.32",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.17.0, < 2.17.4",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.18.0, < 2.18.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+        "Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection') (CWE-78)"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
       "id": "CVE-2026-42232",
       "publishedDate": "2026-05-04T18:34:11.062Z",
-      "lastModifiedDate": "2026-05-04T18:34:11.062Z",
+      "lastModifiedDate": "2026-05-04T19:41:20.552Z",
       "description": "n8n is an open source workflow automation platform. Prior to versions 1.123.32, 2.17.4, and 2.18.1, an authenticated user with permission to create or modify workflows could achieve global prototype pollution via the XML Node leading to RCE when combined with other nodes exploiting the prototype pollution. This issue has been patched in versions 1.123.32, 2.17.4, and 2.18.1.",
       "severity": "N/A",
       "references": [
@@ -1821,194 +1695,9 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-42231",
-      "publishedDate": "2026-05-04T18:30:27.032Z",
-      "lastModifiedDate": "2026-05-04T18:30:27.032Z",
-      "description": "n8n is an open source workflow automation platform. Prior to versions 1.123.32, 2.17.4, and 2.18.1, a flaw in the xml2js library used to parse XML request bodies in n8n's webhook handler allowed prototype pollution via a crafted XML payload. An authenticated user with permission to create or modify workflows could exploit this to pollute the JavaScript object prototype and, by chaining the pollution with the Git node's SSH operations, achieve remote code execution on the n8n host. This issue has been patched in versions 1.123.32, 2.17.4, and 2.18.1.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/n8n-io/n8n/security/advisories/GHSA-q5f4-99jv-pgg5",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n8n-io",
-          "product": "n8n",
-          "versions": [
-            {
-              "version": "< 1.123.32",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.17.0, < 2.17.4",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.18.0, < 2.18.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-1321: Improperly Controlled Modification of Object Prototype Attributes ('Prototype Pollution')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-42230",
-      "publishedDate": "2026-05-04T18:28:43.069Z",
-      "lastModifiedDate": "2026-05-04T18:28:43.069Z",
-      "description": "n8n is an open source workflow automation platform. Prior to versions 1.123.32, 2.17.4, and 2.18.1, the /mcp-oauth/register endpoint accepted OAuth client registrations without authentication, allowing arbitrary redirect_uri values to be registered. When a user denies the MCP OAuth consent dialog, the handleDeny handler redirects the user to the registered redirect_uri without validation, enabling an open redirect to an attacker-controlled URL. An attacker can craft a phishing link and send it to a victim; if the victim clicks \"Deny\" on the consent page, they are silently redirected to an external site. This issue has been patched in versions 1.123.32, 2.17.4, and 2.18.1.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/n8n-io/n8n/security/advisories/GHSA-f6x8-65q6-j9m9",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n8n-io",
-          "product": "n8n",
-          "versions": [
-            {
-              "version": "< 1.123.32",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.17.0, < 2.17.4",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.18.0, < 2.18.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-601: URL Redirection to Untrusted Site ('Open Redirect')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-42229",
-      "publishedDate": "2026-05-04T18:27:44.785Z",
-      "lastModifiedDate": "2026-05-04T18:27:44.785Z",
-      "description": "n8n is an open source workflow automation platform. Prior to versions 1.123.32, 2.17.4, and 2.18.1, a flaw in the SeaTable node's row:search and row:get operations allowed user-controlled input to be concatenated directly into SQL query strings without escaping or parameterization. In workflows where external user input is passed via expressions into the SeaTable node's search or row retrieval parameters, an attacker could manipulate the constructed query to retrieve unintended rows from the connected SeaTable base, bypassing row-level filtering logic implemented in the workflow. This issue has been patched in versions 1.123.32, 2.17.4, and 2.18.1.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/n8n-io/n8n/security/advisories/GHSA-mp4j-h6gh-f6mp",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n8n-io",
-          "product": "n8n",
-          "versions": [
-            {
-              "version": "< 1.123.32",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.17.0, < 2.17.4",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.18.0, < 2.18.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-42228",
-      "publishedDate": "2026-05-04T18:27:06.649Z",
-      "lastModifiedDate": "2026-05-04T18:27:06.649Z",
-      "description": "n8n is an open source workflow automation platform. Prior to versions 1.123.32, 2.17.4, and 2.18.1, the /chat WebSocket endpoint used by the Chat Trigger node's Hosted Chat feature did not verify that an incoming connection was authorized to interact with the target execution. An unauthenticated remote attacker who could identify a valid execution ID for a workflow in a waiting state could attach to that execution, receive the pending prompt intended for the legitimate user, and submit arbitrary input to resume or influence downstream workflow behavior. This issue has been patched in versions 1.123.32, 2.17.4, and 2.18.1.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/n8n-io/n8n/security/advisories/GHSA-f77h-j2v7-g6mw",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n8n-io",
-          "product": "n8n",
-          "versions": [
-            {
-              "version": "< 1.123.32",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.17.0, < 2.17.4",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.18.0, < 2.18.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-862: Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-42227",
-      "publishedDate": "2026-05-04T18:26:18.419Z",
-      "lastModifiedDate": "2026-05-04T18:26:18.419Z",
-      "description": "n8n is an open source workflow automation platform. Prior to versions 1.123.32, 2.17.4, and 2.18.1, an authenticated user with a valid API key scoped to variable:list could read variables from projects they are not a member of by supplying an arbitrary projectId query parameter to the public API variables endpoint. The handler queried the variables repository directly without enforcing project membership checks, bypassing the authorization-aware service layer used by the internal enterprise controller. If variables were misused to store sensitive information such as credentials or tokens, they should be rotated immediately. This issue only affects licensed enterprise or team deployments with multiple projects and the variables feature enabled. This issue has been patched in versions 1.123.32, 2.17.4, and 2.18.1.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/n8n-io/n8n/security/advisories/GHSA-756q-gq9h-fp22",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n8n-io",
-          "product": "n8n",
-          "versions": [
-            {
-              "version": "< 1.123.32",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.17.0, < 2.17.4",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.18.0, < 2.18.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-639: Authorization Bypass Through User-Controlled Key"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
       "id": "CVE-2026-42226",
       "publishedDate": "2026-05-04T18:26:08.390Z",
-      "lastModifiedDate": "2026-05-04T18:26:08.390Z",
+      "lastModifiedDate": "2026-05-04T19:41:52.763Z",
       "description": "n8n is an open source workflow automation platform. Prior to versions 1.123.33 and 2.17.5, the dynamic-node-parameters endpoints did not verify whether the authenticated caller was authorized to use a supplied credential reference. An authenticated user with access to a shared workflow could supply a foreign credential ID in the request body, causing the backend to decrypt and use that credential in a helper execution path where the caller also controls the destination URL. This allowed the caller to force the backend to authenticate against attacker-controlled infrastructure using a credential belonging to another user, effectively exfiltrating a reusable API key. The issue is not limited to any single node type; any node that resolves credentials dynamically through these endpoints may be affected. This issue has been patched in versions 1.123.33, 2.17.5, and 2.18.0.",
       "severity": "N/A",
       "references": [
@@ -2039,124 +1728,113 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-0073",
-      "publishedDate": "2026-05-04T18:00:10.613Z",
-      "lastModifiedDate": "2026-05-04T18:30:38.129Z",
-      "description": "In adbd_tls_verify_cert of auth.cpp, there is a possible bypass of wireless ADB mutual authentication due to a logic error in the code. This could lead to remote (proximal/adjacent) code execution as the shell user with no additional execution privileges needed. User interaction is not needed for exploitation.",
+      "id": "CVE-2026-29200",
+      "publishedDate": "2026-05-04T05:42:15.576Z",
+      "lastModifiedDate": "2026-05-04T19:44:22.056Z",
+      "description": "A critical IDOR vulnerability has been discovered in Comet Backup affecting all versions from 20.11.0 to 26.1.1 and 26.2.1. The vulnerability allows a tenant administrator to impersonate any end-user account of other tenants on the same server via a vulnerable API call.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://source.android.com/docs/security/bulletin/2026/2026-05-01",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Google",
-          "product": "Android",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "16-qpr2"
-            },
-            {
-              "status": "affected",
-              "version": "16"
-            },
-            {
-              "status": "affected",
-              "version": "15"
-            },
-            {
-              "status": "affected",
-              "version": "14"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "Remote code execution"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-33006",
-      "publishedDate": "2026-05-04T14:42:03.473Z",
-      "lastModifiedDate": "2026-05-04T18:23:55.292Z",
-      "description": "A timing attack against mod_auth_digest in Apache HTTP Server 2.4.66 allows a bypass of Digest authentication by a remote attacker.\n\nUsers are recommended to upgrade to version 2.4.67, which fixes this issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://httpd.apache.org/security/vulnerabilities_24.html",
+          "url": "https://support.cometbackup.com/hc/en-us/articles/40090945484823--CVE-2026-29200-%D0%A1ritical-IDOR-vulnerability-in-Comet-Backup",
           "type": "reference"
         }
       ],
       "affected": [
         {
           "defaultStatus": "unaffected",
-          "product": "Apache HTTP Server",
-          "vendor": "Apache Software Foundation",
+          "vendor": "WebPros",
+          "product": "Comet Backup",
           "versions": [
             {
-              "lessThanOrEqual": "2.4.66",
+              "version": "20.11.0",
               "status": "affected",
-              "version": "0",
+              "lessThan": "26.1.2",
+              "versionType": "semver"
+            },
+            {
+              "version": "26.2.0",
+              "status": "affected",
+              "lessThan": "26.2.2",
               "versionType": "semver"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-208 Observable Timing Discrepancy"
+        "CWE-639 Insecure Direct Object Reference (IDOR)"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-24072",
-      "publishedDate": "2026-05-04T12:37:57.673Z",
-      "lastModifiedDate": "2026-05-04T18:23:43.614Z",
-      "description": "An escalation of privilege bug in various modules in Apache HTTP 2.4.66 and earlier allows local .htaccess authors to read files with the privileges of the httpd user.\n\nUsers are recommended to upgrade to version 2.4.67, which fixes this issue.",
+      "id": "CVE-2026-29199",
+      "publishedDate": "2026-05-04T05:42:15.554Z",
+      "lastModifiedDate": "2026-05-04T19:43:18.257Z",
+      "description": "phpBB before 3.3.16 is vulnerable to Host Header Injection that can lead to password rest link poisoning. When force_server_vars is disabled, the servers hostname may be extracted from the HTTP Host header which is used to generate the password reset link URL. An attacker who can manipulate the Host header (e.g. through misconfigured host setup or missing header validation by the webserver) can cause password reset emails to contain a link pointing to an attacker-controlled domain, potentially leading to account takeover.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://httpd.apache.org/security/vulnerabilities_24.html",
+          "url": "https://hackerone.com/reports/3543246",
           "type": "reference"
         }
       ],
       "affected": [
         {
           "defaultStatus": "unaffected",
-          "product": "Apache HTTP Server",
-          "vendor": "Apache Software Foundation",
+          "vendor": "phpBB",
+          "product": "phpBB",
           "versions": [
             {
-              "lessThanOrEqual": "2.4.66",
+              "version": "3.0.0",
               "status": "affected",
-              "version": "0",
+              "lessThanOrEqual": "3.3.15",
               "versionType": "semver"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-269 Improper Privilege Management"
+        "CWE-640 Weak Password Recovery Mechanism for Forgotten Password"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-38751",
+      "id": "CVE-2026-37459",
       "publishedDate": "2026-05-04T00:00:00.000Z",
-      "lastModifiedDate": "2026-05-04T18:40:54.253Z",
-      "description": "OpenSTAManager version 2.10 and earlier contains an arbitrary file upload vulnerability in the module update functionality (modules/aggiornamenti/upload_modules.php)",
+      "lastModifiedDate": "2026-05-04T19:48:06.779Z",
+      "description": "An integer underflow in FRRouting (FRR) stable/10.0 to stable/10.6 allows attackers to cause a Denial of Service (DoS) via supplying a crafted BGP UPDATE message.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/devcode-it/openstamanager",
+          "url": "https://github.com/FRRouting/frr/commit/693a2e02687cdc9d16501275e05136edea9650d9",
           "type": "reference"
-        },
+        }
+      ],
+      "affected": [
         {
-          "url": "https://github.com/fuutianyii/poc",
+          "vendor": "n/a",
+          "product": "n/a",
+          "versions": [
+            {
+              "version": "n/a",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "n/a"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-38669",
+      "publishedDate": "2026-05-04T00:00:00.000Z",
+      "lastModifiedDate": "2026-05-04T19:47:09.271Z",
+      "description": "wCMS v.1.4 is vulnerable to Cross Site Scripting (XSS) when creating a new blog.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/thv930/yumeng_wu/tree/main/1/readme.md",
           "type": "reference"
         }
       ],
