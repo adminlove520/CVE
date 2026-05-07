@@ -2,342 +2,533 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 12,
-    "last_updated": "2026-05-07T06:48:58.673908",
+    "total_count": 2,
+    "last_updated": "2026-05-07T09:24:20.464935",
     "severity_distribution": {
       "critical": 0,
-      "high": 6,
-      "medium": 2,
+      "high": 1,
+      "medium": 1,
       "low": 0,
-      "none": 4
+      "none": 0
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-41143",
-      "publishedDate": "2026-05-07T05:08:23.146Z",
-      "lastModifiedDate": "2026-05-07T05:08:23.146Z",
-      "description": "YesWiki is a wiki system written in PHP. Prior to version 4.6.1, YesWiki bazar module contains a SQL injection vulnerability in tools/bazar/services/EntryManager.php at line 704. The $data['id_fiche'] value (sourced from $_POST['id_fiche']) is concatenated directly into a raw SQL query without any sanitization or parameterization. This issue has been patched in version 4.6.1.",
-      "severity": 8.8,
+      "id": "CVE-2024-43384",
+      "publishedDate": "2026-05-07T08:37:04.384Z",
+      "lastModifiedDate": "2026-05-07T08:37:04.384Z",
+      "description": "A low privileged remote attacker can gain the root password due to improper removal of sensitive information before storage or transfer.",
+      "severity": 8,
       "references": [
         {
-          "url": "https://github.com/YesWiki/yeswiki/security/advisories/GHSA-f58v-p6j9-24c2",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/YesWiki/yeswiki/releases/tag/v4.6.1",
+          "url": "https://certvde.com/en/advisories/VDE-2024-039",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "YesWiki",
-          "product": "yeswiki",
-          "versions": [
-            {
-              "version": "< 4.6.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-6692",
-      "publishedDate": "2026-05-07T04:27:10.449Z",
-      "lastModifiedDate": "2026-05-07T04:27:10.449Z",
-      "description": "The Slider Revolution plugin for WordPress is vulnerable to Arbitrary File Upload in versions 7.0.0 to 7.0.10 via the '_get_media_url' and '_check_file_path' function. This is due to insufficient file type validation. This makes it possible for authenticated attackers, with subscriber-level access and above, to upload files that may be executable, which makes remote code execution possible. The vulnerability was partially patched in version 7.0.10 and fully patched in version 7.0.11.",
-      "severity": 8.8,
-      "references": [
-        {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/a2e802a6-d2f1-47cc-883a-89110e569168?source=cve",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.sliderrevolution.com/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Revolution Slider",
-          "product": "Slider Revolution",
-          "versions": [
-            {
-              "version": "7.0.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.0.10",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-434 Unrestricted Upload of File with Dangerous Type"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-31709",
-      "publishedDate": "2026-05-01T13:56:06.522Z",
-      "lastModifiedDate": "2026-05-07T04:35:07.948Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nsmb: client: validate the whole DACL before rewriting it in cifsacl\n\nbuild_sec_desc() and id_mode_to_cifs_acl() derive a DACL pointer from a\nserver-supplied dacloffset and then use the incoming ACL to rebuild the\nchmod/chown security descriptor.\n\nThe original fix only checked that the struct smb_acl header fits before\nreading dacl_ptr->size or dacl_ptr->num_aces.  That avoids the immediate\nheader-field OOB read, but the rewrite helpers still walk ACEs based on\npdacl->num_aces with no structural validation of the incoming DACL body.\n\nA malicious server can return a truncated DACL that still contains a\nheader, claims one or more ACEs, and then drive\nreplace_sids_and_copy_aces() or set_chmod_dacl() past the validated\nextent while they compare or copy attacker-controlled ACEs.\n\nFactor the DACL structural checks into validate_dacl(), extend them to\nvalidate each ACE against the DACL bounds, and use the shared validator\nbefore the chmod/chown rebuild paths.  parse_dacl() reuses the same\nvalidator so the read-side parser and write-side rewrite paths agree on\nwhat constitutes a well-formed incoming DACL.",
-      "severity": 8.8,
-      "references": [
-        {
-          "url": "https://git.kernel.org/stable/c/d92f3f0b22414e7515696a02224d0af55e3004a3",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/b78db9bddc84136f6a0bb49e8883cf200dfb87a8",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/0a8cf165566ba55a39fd0f4de172119dd646d39a",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Linux",
-          "vendor": "Linux",
           "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "fs/smb/client/cifsacl.c"
-          ],
+          "product": "FL MGUARD 2102",
+          "vendor": "PHOENIX CONTACT",
           "versions": [
             {
-              "version": "bc3e9dd9d104ca1b75644eab87b38ce8a924aef4",
-              "lessThan": "d92f3f0b22414e7515696a02224d0af55e3004a3",
+              "lessThan": "10.4.1",
               "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "bc3e9dd9d104ca1b75644eab87b38ce8a924aef4",
-              "lessThan": "b78db9bddc84136f6a0bb49e8883cf200dfb87a8",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "bc3e9dd9d104ca1b75644eab87b38ce8a924aef4",
-              "lessThan": "0a8cf165566ba55a39fd0f4de172119dd646d39a",
-              "status": "affected",
-              "versionType": "git"
+              "version": "0",
+              "versionType": "semver"
             }
           ]
         },
         {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "fs/smb/client/cifsacl.c"
-          ],
+          "defaultStatus": "unaffected",
+          "product": "FL MGUARD 2105",
+          "vendor": "PHOENIX CONTACT",
           "versions": [
             {
-              "version": "5.12",
-              "status": "affected"
-            },
-            {
+              "lessThan": "10.4.1",
+              "status": "affected",
               "version": "0",
-              "lessThan": "5.12",
-              "status": "unaffected",
               "versionType": "semver"
-            },
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "FL MGUARD 4102 PCI",
+          "vendor": "PHOENIX CONTACT",
+          "versions": [
             {
-              "version": "6.12.86",
-              "lessThanOrEqual": "6.12.*",
-              "status": "unaffected",
+              "lessThan": "10.4.1",
+              "status": "affected",
+              "version": "0",
               "versionType": "semver"
-            },
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "FL MGUARD 4102 PCIE",
+          "vendor": "PHOENIX CONTACT",
+          "versions": [
             {
-              "version": "7.0.2",
-              "lessThanOrEqual": "7.0.*",
-              "status": "unaffected",
+              "lessThan": "10.4.1",
+              "status": "affected",
+              "version": "0",
               "versionType": "semver"
-            },
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "FL MGUARD 4302",
+          "vendor": "PHOENIX CONTACT",
+          "versions": [
             {
-              "version": "7.1-rc1",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
+              "lessThan": "10.4.1",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "FL MGUARD 4305",
+          "vendor": "PHOENIX CONTACT",
+          "versions": [
+            {
+              "lessThan": "10.4.1",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "FL MGUARD CENTERPORT VPN-1000",
+          "vendor": "PHOENIX CONTACT",
+          "versions": [
+            {
+              "lessThan": "8.9.3",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "FL MGUARD CORE TX",
+          "vendor": "PHOENIX CONTACT",
+          "versions": [
+            {
+              "lessThan": "8.9.3",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "FL MGUARD CORE TX VPN",
+          "vendor": "PHOENIX CONTACT",
+          "versions": [
+            {
+              "lessThan": "8.9.3",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "FL MGUARD DELTA TX/TX",
+          "vendor": "PHOENIX CONTACT",
+          "versions": [
+            {
+              "lessThan": "8.9.3",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "FL MGUARD DELTA TX/TX VPN",
+          "vendor": "PHOENIX CONTACT",
+          "versions": [
+            {
+              "lessThan": "8.9.3",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "FL MGUARD GT/GT",
+          "vendor": "PHOENIX CONTACT",
+          "versions": [
+            {
+              "lessThan": "8.9.3",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "FL MGUARD GT/GT VPN",
+          "vendor": "PHOENIX CONTACT",
+          "versions": [
+            {
+              "lessThan": "8.9.3",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "FL MGUARD PCI4000",
+          "vendor": "PHOENIX CONTACT",
+          "versions": [
+            {
+              "lessThan": "8.9.3",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "FL MGUARD PCI4000 VPN",
+          "vendor": "PHOENIX CONTACT",
+          "versions": [
+            {
+              "lessThan": "8.9.3",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "FL MGUARD PCIE4000",
+          "vendor": "PHOENIX CONTACT",
+          "versions": [
+            {
+              "lessThan": "8.9.3",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "FL MGUARD PCIE4000 VPN",
+          "vendor": "PHOENIX CONTACT",
+          "versions": [
+            {
+              "lessThan": "8.9.3",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "FL MGUARD RS2000 TX/TX-B",
+          "vendor": "PHOENIX CONTACT",
+          "versions": [
+            {
+              "lessThan": "8.9.3",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "FL MGUARD RS2000 TX/TX VPN",
+          "vendor": "PHOENIX CONTACT",
+          "versions": [
+            {
+              "lessThan": "8.9.3",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "FL MGUARD RS2005 TX VPN",
+          "vendor": "PHOENIX CONTACT",
+          "versions": [
+            {
+              "lessThan": "8.9.3",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "FL MGUARD RS4000 TX/TX",
+          "vendor": "PHOENIX CONTACT",
+          "versions": [
+            {
+              "lessThan": "8.9.3",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "FL MGUARD RS4000 TX/TX-M",
+          "vendor": "PHOENIX CONTACT",
+          "versions": [
+            {
+              "lessThan": "8.9.3",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "FL MGUARD RS4000 TX/TX-P",
+          "vendor": "PHOENIX CONTACT",
+          "versions": [
+            {
+              "lessThan": "8.9.3",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "FL MGUARD RS4000 TX/TX VPN",
+          "vendor": "PHOENIX CONTACT",
+          "versions": [
+            {
+              "lessThan": "8.9.3",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "FL MGUARD RS4004 TX/DTX",
+          "vendor": "PHOENIX CONTACT",
+          "versions": [
+            {
+              "lessThan": "8.9.3",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "FL MGUARD RS4004 TX/DTX VPN",
+          "vendor": "PHOENIX CONTACT",
+          "versions": [
+            {
+              "lessThan": "8.9.3",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "FL MGUARD SMART2",
+          "vendor": "PHOENIX CONTACT",
+          "versions": [
+            {
+              "lessThan": "8.9.3",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "FL MGUARD SMART2 VPN",
+          "vendor": "PHOENIX CONTACT",
+          "versions": [
+            {
+              "lessThan": "8.9.3",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "TC MGUARD RS2000 3G VPN",
+          "vendor": "PHOENIX CONTACT",
+          "versions": [
+            {
+              "lessThan": "8.9.3",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "TC MGUARD RS2000 4G ATT VPN",
+          "vendor": "PHOENIX CONTACT",
+          "versions": [
+            {
+              "lessThan": "8.9.3",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "TC MGUARD RS2000 4G VPN",
+          "vendor": "PHOENIX CONTACT",
+          "versions": [
+            {
+              "lessThan": "8.9.3",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "TC MGUARD RS2000 4G VZW VPN",
+          "vendor": "PHOENIX CONTACT",
+          "versions": [
+            {
+              "lessThan": "8.9.3",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "TC MGUARD RS4000 3G VPN",
+          "vendor": "PHOENIX CONTACT",
+          "versions": [
+            {
+              "lessThan": "8.9.3",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "TC MGUARD RS4000 4G ATT VPN",
+          "vendor": "PHOENIX CONTACT",
+          "versions": [
+            {
+              "lessThan": "8.9.3",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "TC MGUARD RS4000 4G VPN",
+          "vendor": "PHOENIX CONTACT",
+          "versions": [
+            {
+              "lessThan": "8.9.3",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "product": "TC MGUARD RS4000 4G VZW VPN",
+          "vendor": "PHOENIX CONTACT",
+          "versions": [
+            {
+              "lessThan": "8.9.3",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
             }
           ]
         }
       ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-7252",
-      "publishedDate": "2026-05-07T04:27:10.902Z",
-      "lastModifiedDate": "2026-05-07T04:27:10.902Z",
-      "description": "The WP-Optimize – Cache, Compress images, Minify & Clean database to boost page speed & performance plugin for WordPress is vulnerable to arbitrary file deletion due to insufficient file path validation in the unscheduled_original_file_deletion function in all versions up to, and including, 4.5.2 This makes it possible for authenticated attackers, with author-level access and above, to delete arbitrary files on the server, which can easily lead to remote code execution when the right file is deleted (such as wp-config.php). This is possible because 'original-file' is a public (non-protected) meta key — it does not begin with an underscore — allowing Authors to freely create or modify it on their own attachment posts via the standard Edit Media form or the REST API.",
-      "severity": 8.1,
-      "references": [
-        {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/cc815ef2-dd02-4faa-b202-dd1552f889db?source=cve",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/wp-optimize/trunk/includes/class-updraft-smush-manager.php#L1649",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/wp-optimize/tags/4.5.2/includes/class-updraft-smush-manager.php#L1649",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/wp-optimize/trunk/includes/class-updraft-smush-manager.php#L1645",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/wp-optimize/tags/4.5.2/includes/class-updraft-smush-manager.php#L1645",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/wp-optimize/trunk/includes/class-updraft-smush-manager.php#L81",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/wp-optimize/tags/4.5.2/includes/class-updraft-smush-manager.php#L81",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/changeset/3518513/wp-optimize/trunk/includes/class-updraft-smush-manager.php",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/changeset?old_path=%2Fwp-optimize/tags/4.5.2&new_path=%2Fwp-optimize/tags/4.5.3",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "davidanderson",
-          "product": "WP-Optimize – Cache, Compress images, Minify & Clean database to boost page speed & performance",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "lessThanOrEqual": "4.5.2",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
       "problemType": [
-        "CWE-22 Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+        "CWE-212 Improper Removal of Sensitive Information Before Storage or Transfer"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-4348",
-      "publishedDate": "2026-05-07T04:27:09.916Z",
-      "lastModifiedDate": "2026-05-07T04:27:09.916Z",
-      "description": "The BetterDocs Pro plugin for WordPress is vulnerable to SQL Injection via the `get_current_letter_docs` and `docs_sort_by_letter` AJAX actions in all versions up to, and including, 3.7.0. This is due to the `limit` POST parameter being interpolated directly into a SQL query string before being passed to `$wpdb->prepare()`, which only parameterizes other variables. This makes it possible for unauthenticated attackers to append additional SQL queries into already existing queries that can be used to extract sensitive information from the database. The Encyclopedia feature must be enabled in BetterDocs Pro settings for the vulnerability to be exploitable.",
-      "severity": 7.5,
+      "id": "CVE-2026-27416",
+      "publishedDate": "2026-05-07T08:38:15.411Z",
+      "lastModifiedDate": "2026-05-07T08:38:15.411Z",
+      "description": "Missing Authorization vulnerability in bPlugins PDF Poster allows Exploiting Incorrectly Configured Access Control Security Levels.\n\nThis issue affects PDF Poster: from n/a through 2.4.1.",
+      "severity": 5.3,
       "references": [
         {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/5c0f02ad-f5f1-42b1-8116-e391aaa85430?source=cve",
-          "type": "reference"
-        },
-        {
-          "url": "https://betterdocs.co/changelog/",
+          "url": "https://patchstack.com/database/wordpress/plugin/pdf-poster/vulnerability/wordpress-pdf-poster-plugin-2-4-1-broken-access-control-vulnerability?_s_id=cve",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "betterdocs",
-          "product": "BetterDocs Pro",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "lessThanOrEqual": "3.7.0",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41641",
-      "publishedDate": "2026-05-07T04:13:33.609Z",
-      "lastModifiedDate": "2026-05-07T04:13:33.609Z",
-      "description": "NocoBase is an AI-powered no-code/low-code platform for building business applications and enterprise solutions. Prior to version 2.0.39, the checkSQL() validation function that blocks dangerous SQL keywords (e.g., pg_read_file, LOAD_FILE, dblink) is applied on the collections:create and sqlCollection:execute endpoints but is entirely missing on the sqlCollection:update endpoint. An attacker with collection management permissions can create a SQL collection with benign SQL, then update it with arbitrary SQL that bypasses all validation, and query the collection to execute the injected SQL and exfiltrate data. This issue has been patched in version 2.0.39.",
-      "severity": 7.2,
-      "references": [
-        {
-          "url": "https://github.com/nocobase/nocobase/security/advisories/GHSA-wrwh-c28m-9jjh",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/nocobase/nocobase/pull/9134",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/nocobase/nocobase/commit/851aee543efa894142e0f7be03eb55d9cec06a91",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/nocobase/nocobase/releases/tag/v2.0.39",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "nocobase",
-          "product": "nocobase",
-          "versions": [
-            {
-              "version": "< 2.0.39",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')",
-        "CWE-284: Improper Access Control"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-8063",
-      "publishedDate": "2026-05-07T04:12:54.524Z",
-      "lastModifiedDate": "2026-05-07T04:12:54.524Z",
-      "description": "An authenticated user can crash mongod when running $rankFusion or $scoreFusion with an empty pipeline on a view.\n\nWhen resolving a view, the server inspects the aggregation pipeline to determine whether it begins with an Atlas Search stage. For $rankFusion and $scoreFusion, this inspection reads the first element on each stage’s input pipeline array without first verifying that the array is non-empty. Supplying an empty pipeline causes a null pointer dereference and crashes the server.\n\nThis issue affects MongoDB Server 8.2 versions prior to 8.2.7.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://jira.mongodb.org/browse/SERVER-121851",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "MongoDB Inc.",
-          "product": "MongoDB Server",
+          "vendor": "bPlugins",
+          "product": "PDF Poster",
+          "collectionURL": "https://wordpress.org/plugins",
+          "packageName": "pdf-poster",
           "versions": [
             {
               "status": "affected",
-              "version": "8.2.0",
-              "lessThan": "8.2.7",
+              "version": "n/a",
+              "lessThanOrEqual": "2.4.1",
+              "changes": [
+                {
+                  "at": "2.5.0",
+                  "status": "unaffected"
+                }
+              ],
               "versionType": "custom"
             }
           ],
@@ -345,349 +536,8 @@
         }
       ],
       "problemType": [
-        "CWE-476: NULL Pointer Dereference"
+        "CWE-862 Missing Authorization"
       ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41413",
-      "publishedDate": "2026-05-07T04:18:32.040Z",
-      "lastModifiedDate": "2026-05-07T04:18:32.040Z",
-      "description": "Istio is an open platform to connect, manage, and secure microservices. Prior to versions 1.28.6 and 1.29.2, when a RequestAuthentication resource is created with a jwksUri pointing to an internal service, istiod makes an unauthenticated HTTP GET request to that URL without filtering out localhost or link local ips. This can result in sensitive data being distributed to Envoy proxies via xDS configuration. This issue has been patched in versions 1.28.6 and 1.29.2.",
-      "severity": 5,
-      "references": [
-        {
-          "url": "https://github.com/istio/istio/security/advisories/GHSA-fgw5-hp8f-xfhc",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/istio/istio/releases/tag/1.28.6",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/istio/istio/releases/tag/1.29.2",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "istio",
-          "product": "istio",
-          "versions": [
-            {
-              "version": "< 1.28.6",
-              "status": "affected"
-            },
-            {
-              "version": ">= 1.29.0-alpha.0, < 1.29.2",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-918: Server-Side Request Forgery (SSRF)"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41586",
-      "publishedDate": "2026-05-07T05:12:35.666Z",
-      "lastModifiedDate": "2026-05-07T05:12:35.666Z",
-      "description": "Hyperledger Fabric is an enterprise-grade permissioned distributed ledger framework for developing solutions and applications. From versions 1.0.0 to 2.2.26, Channel.java implements readObject() and exposes deSerializeChannel() which call ObjectInputStream.readObject() on untrusted byte arrays without configuring an ObjectInputFilter. This is a classic Java deserialization RCE pattern. At time of publication, there are no publicly available patches.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/hyperledger/fabric/security/advisories/GHSA-prf8-cf2x-rhx7",
-          "type": "reference"
-        },
-        {
-          "url": "https://hyperledger.github.io/fabric-gateway",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "hyperledger",
-          "product": "fabric",
-          "versions": [
-            {
-              "version": ">= 1.0.0, <= 2.2.26",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-502: Deserialization of Untrusted Data"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41139",
-      "publishedDate": "2026-05-07T05:06:28.746Z",
-      "lastModifiedDate": "2026-05-07T05:06:28.746Z",
-      "description": "Math.js is an extensive math library for JavaScript and Node.js. From version 13.1.0 to before version 15.2.0, arbitrary JavaScript can be executed via the expression parser of mathjs. This issue has been patched in version 15.2.0.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/josdejong/mathjs/security/advisories/GHSA-5v89-rwgr-qj6g",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/josdejong/mathjs/pull/3656",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/josdejong/mathjs/commit/0aee2f61866e35ffa0aef915221cdf6b026ffdd4",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/josdejong/mathjs/commit/bcf0da46f0b8577ec03c9ecd7bff8b5c2543a611",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/josdejong/mathjs/releases/tag/v15.2.0",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "josdejong",
-          "product": "mathjs",
-          "versions": [
-            {
-              "version": ">= 13.1.0, < 15.2.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-915: Improperly Controlled Modification of Dynamically-Determined Object Attributes"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-32689",
-      "publishedDate": "2026-05-05T15:17:30.664Z",
-      "lastModifiedDate": "2026-05-07T04:25:07.013Z",
-      "description": "Allocation of Resources Without Limits or Throttling vulnerability in phoenixframework phoenix allows a denial of service via the long-poll transport's NDJSON body handling.\n\nIn 'Elixir.Phoenix.Transports.LongPoll':publish/4, when a POST request is received with Content-Type: application/x-ndjson, the request body is split on newline characters using String.split/2 with no limit on the number of resulting segments. An attacker can send a body consisting entirely of newline bytes, causing a 1:1 amplification into a list of empty binaries — a 1 MB body produces approximately one million list elements, an 8 MB body approximately 8.4 million. Each element is then walked by Enum.map, materializing another list of the same size. This exhausts BEAM memory and schedulers, crashing the node and terminating all active sessions.\n\nA session token required to reach the vulnerable endpoint is freely obtainable by any client via an unauthenticated GET request to the same URL with a matching Origin header, making this attack effectively unauthenticated.\n\nThis issue affects phoenix: from 1.7.0 before 1.7.22 and 1.8.6.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/phoenixframework/phoenix/security/advisories/GHSA-628h-q48j-jr6q",
-          "type": "reference"
-        },
-        {
-          "url": "https://cna.erlef.org/cves/CVE-2026-32689.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://osv.dev/vulnerability/EEF-CVE-2026-32689",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/phoenixframework/phoenix/commit/1a67c61ff9ce0a7711662ac7354861917a7c80f7",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/phoenixframework/phoenix/commit/912ea181fd247c21dbcc49fb97d0053b947d81bf",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://repo.hex.pm",
-          "cpes": [
-            "cpe:2.3:a:phoenixframework:phoenix:*:*:*:*:*:*:*:*"
-          ],
-          "defaultStatus": "unaffected",
-          "modules": [
-            "'Elixir.Phoenix.Transports.LongPoll'"
-          ],
-          "packageName": "phoenix",
-          "packageURL": "pkg:hex/phoenix",
-          "product": "phoenix",
-          "programFiles": [
-            "lib/phoenix/transports/long_poll.ex"
-          ],
-          "programRoutines": [
-            {
-              "name": "'Elixir.Phoenix.Transports.LongPoll':publish/4"
-            }
-          ],
-          "repo": "https://github.com/phoenixframework/phoenix",
-          "vendor": "phoenixframework",
-          "versions": [
-            {
-              "lessThan": "1.7.22",
-              "status": "affected",
-              "version": "1.7.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "1.8.6",
-              "status": "affected",
-              "version": "1.8.0",
-              "versionType": "semver"
-            }
-          ]
-        },
-        {
-          "collectionURL": "https://github.com",
-          "cpes": [
-            "cpe:2.3:a:phoenixframework:phoenix:*:*:*:*:*:*:*:*"
-          ],
-          "defaultStatus": "unaffected",
-          "modules": [
-            "'Elixir.Phoenix.Transports.LongPoll'"
-          ],
-          "packageName": "phoenixframework/phoenix",
-          "packageURL": "pkg:github/phoenixframework/phoenix",
-          "product": "phoenix",
-          "programFiles": [
-            "lib/phoenix/transports/long_poll.ex"
-          ],
-          "programRoutines": [
-            {
-              "name": "'Elixir.Phoenix.Transports.LongPoll':publish/4"
-            }
-          ],
-          "repo": "https://github.com/phoenixframework/phoenix",
-          "vendor": "phoenixframework",
-          "versions": [
-            {
-              "changes": [
-                {
-                  "at": "1a67c61ff9ce0a7711662ac7354861917a7c80f7",
-                  "status": "unaffected"
-                },
-                {
-                  "at": "912ea181fd247c21dbcc49fb97d0053b947d81bf",
-                  "status": "unaffected"
-                }
-              ],
-              "lessThan": "*",
-              "status": "affected",
-              "version": "2674c6ea30634667f9b09966b90269393b445953",
-              "versionType": "git"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-770 Allocation of Resources Without Limits or Throttling"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-31715",
-      "publishedDate": "2026-05-01T13:56:10.591Z",
-      "lastModifiedDate": "2026-05-07T04:35:09.122Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nf2fs: fix UAF caused by decrementing sbi->nr_pages[] in f2fs_write_end_io()\n\nThe xfstests case \"generic/107\" and syzbot have both reported a NULL\npointer dereference.\n\nThe concurrent scenario that triggers the panic is as follows:\n\nF2FS_WB_CP_DATA write callback          umount\n                                        - f2fs_write_checkpoint\n                                         - f2fs_wait_on_all_pages(sbi, F2FS_WB_CP_DATA)\n- blk_mq_end_request\n - bio_endio\n  - f2fs_write_end_io\n   : dec_page_count(sbi, F2FS_WB_CP_DATA)\n   : wake_up(&sbi->cp_wait)\n                                        - kill_f2fs_super\n                                         - kill_block_super\n                                          - f2fs_put_super\n                                           : iput(sbi->node_inode)\n                                           : sbi->node_inode = NULL\n   : f2fs_in_warm_node_list\n    - is_node_folio // sbi->node_inode is NULL and panic\n\nThe root cause is that f2fs_put_super() calls iput(sbi->node_inode) and\nsets sbi->node_inode to NULL after sbi->nr_pages[F2FS_WB_CP_DATA] is\ndecremented to zero. As a result, f2fs_in_warm_node_list() may\ndereference a NULL node_inode when checking whether a folio belongs to\nthe node inode, leading to a panic.\n\nThis patch fixes the issue by calling f2fs_in_warm_node_list() before\ndecrementing sbi->nr_pages[F2FS_WB_CP_DATA], thus preventing the\nuse-after-free condition.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://git.kernel.org/stable/c/7be222de96c0f9eee6e65eeb017ef855ee185cfa",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/963d2e24d9d92a31e6773b0f642214f10013ebf7",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/188bb65f247a7a7c62f287c9a263aee3cad96fa5",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/2d9c4a4ed4eef1f82c5b16b037aee8bad819fd53",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "fs/f2fs/data.c"
-          ],
-          "versions": [
-            {
-              "version": "50fa53eccf9f911a5b435248a2b0bd484fd82e5e",
-              "lessThan": "7be222de96c0f9eee6e65eeb017ef855ee185cfa",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "50fa53eccf9f911a5b435248a2b0bd484fd82e5e",
-              "lessThan": "963d2e24d9d92a31e6773b0f642214f10013ebf7",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "50fa53eccf9f911a5b435248a2b0bd484fd82e5e",
-              "lessThan": "188bb65f247a7a7c62f287c9a263aee3cad96fa5",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "50fa53eccf9f911a5b435248a2b0bd484fd82e5e",
-              "lessThan": "2d9c4a4ed4eef1f82c5b16b037aee8bad819fd53",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "fs/f2fs/data.c"
-          ],
-          "versions": [
-            {
-              "version": "4.19",
-              "status": "affected"
-            },
-            {
-              "version": "0",
-              "lessThan": "4.19",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.12.86",
-              "lessThanOrEqual": "6.12.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.18.25",
-              "lessThanOrEqual": "6.18.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.0.2",
-              "lessThanOrEqual": "7.0.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.1-rc1",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
       "fix_suggestion": "无法生成修复建议"
     }
   ]
