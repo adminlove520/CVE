@@ -2,443 +2,208 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 24,
-    "last_updated": "2026-05-11T20:21:29.454116",
+    "total_count": 16,
+    "last_updated": "2026-05-11T21:48:31.987539",
     "severity_distribution": {
-      "critical": 2,
-      "high": 2,
-      "medium": 9,
+      "critical": 0,
+      "high": 3,
+      "medium": 10,
       "low": 0,
-      "none": 11
+      "none": 3
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-42864",
-      "publishedDate": "2026-05-11T18:19:13.416Z",
-      "lastModifiedDate": "2026-05-11T19:34:12.513Z",
-      "description": "FireFighter is an incident management application. Prior to 0.0.54, the POST /api/v2/firefighter/raid/jira_bot endpoint (CreateJiraBotView) is reachable without authentication (permission_classes = [permissions.AllowAny]). Its attachments payload is fetched server-side via httpx.get() with no URL validation, then uploaded as an attachment on the Jira ticket that gets created. An unauthenticated caller able to reach the ingress can coerce the pod into fetching arbitrary URLs and exfiltrate the response as a Jira attachment. On EC2/EKS deployments that do not enforce IMDSv2, this allows theft of the temporary AWS credentials attached to the pod's IAM role. The docstring on the view claims a Bearer token is required, but the code does not enforce it. This vulnerability is fixed in 0.0.54.",
-      "severity": 9.9,
+      "id": "CVE-2026-43893",
+      "publishedDate": "2026-05-11T20:59:14.560Z",
+      "lastModifiedDate": "2026-05-11T20:59:14.560Z",
+      "description": "exiftool-vendored provides cross-platform Node.js access to ExifTool. Prior to 35.19.0, exiftool-vendored starts ExifTool in -stay_open True -@ - mode, where arguments are read from stdin one per line. In affected versions, several caller-supplied strings were interpolated into ExifTool arguments without rejecting line delimiters. A newline or carriage return inside one of those strings could split a single intended argument into multiple ExifTool arguments, allowing argument injection. The fix also rejects NUL bytes as unsafe control characters. Applications that pass attacker-controlled strings to affected APIs may allow an attacker to make ExifTool read files accessible to the ExifTool process, or write output to attacker-chosen file system paths accessible to that process. No remote code execution has been demonstrated. This vulnerability is fixed in 35.19.0.",
+      "severity": 8.2,
       "references": [
         {
-          "url": "https://github.com/ManoManoTech/firefighter-incident/security/advisories/GHSA-fqvv-jvhr-g5jc",
+          "url": "https://github.com/photostructure/exiftool-vendored.js/security/advisories/GHSA-cw26-7653-2rp5",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "ManoManoTech",
-          "product": "firefighter-incident",
+          "vendor": "photostructure",
+          "product": "exiftool-vendored.js",
           "versions": [
             {
-              "version": "< 0.0.54",
+              "version": "< 35.19.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-306: Missing Authentication for Critical Function",
+        "CWE-88: Improper Neutralization of Argument Delimiters in a Command ('Argument Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-43884",
+      "publishedDate": "2026-05-11T20:44:08.261Z",
+      "lastModifiedDate": "2026-05-11T20:44:08.261Z",
+      "description": "WWBN AVideo is an open source video platform. In versions up to and including 29.0, two endpoints (plugin/AI/receiveAsync.json.php and objects/EpgParser.php) in AVideo call isSSRFSafeURL() to validate user-supplied URLs, then fetch them using bare file_get_contents() without disabling PHP's automatic redirect following. An attacker can supply a URL pointing to a server they control that returns a 302 redirect to an internal/cloud-metadata address (e.g., http://169.254.169.254/latest/meta-data/). Since isSSRFSafeURL() only validates the initial URL, the redirect target bypasses all SSRF protections. Commit 603e7bf77a835584387327e35560262feb075db3 contains an updated fix.",
+      "severity": 7.7,
+      "references": [
+        {
+          "url": "https://github.com/WWBN/AVideo/security/advisories/GHSA-2hch-c97c-g99x",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/WWBN/AVideo/commit/603e7bf77a835584387327e35560262feb075db3",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "WWBN",
+          "product": "AVideo",
+          "versions": [
+            {
+              "version": "<= 29.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
         "CWE-918: Server-Side Request Forgery (SSRF)"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-42882",
-      "publishedDate": "2026-05-11T19:26:44.897Z",
-      "lastModifiedDate": "2026-05-11T19:26:44.897Z",
-      "description": "oxyno-zeta/s3-proxy is an aws s3 proxy written in go. Prior to 5.0.0, s3-proxy contains an authentication bypass caused by inconsistent URL path interpretation between the authentication middleware and the bucket handler. The authentication middleware evaluates resource path patterns against the percent-encoded request URI (r.URL.RequestURI()), while the bucket handler constructs S3 object keys from the decoded path (r.URL.Path). This mismatch, combined with the glob library being invoked without a path separator (causing * to match across / boundaries), allows unauthenticated attackers to write to, read from, or delete objects in protected S3 namespaces. Exploitation is possible via three techniques: (1) using * patterns\nthat match across path separators to reach protected routes via path traversal (e.g., /open/foo/drafts/../restricted/), (2) using percent-encoded slashes (%2F) to collapse multiple path segments into a single token at the auth layer while the decoded form resolves to a protected namespace at the storage layer, and (3) using dot-dot segments (../) under ** prefix patterns, where the raw path matches an open route while Go's URL parser resolves the traversal to a protected path before the bucket handler runs. An unauthenticated attacker with network access can perform unauthorized PUT, GET, or DELETE operations on objects in authentication-protected S3 namespaces. This vulnerability is fixed in 5.0.0.",
-      "severity": 9.4,
+      "id": "CVE-2026-43873",
+      "publishedDate": "2026-05-11T20:31:06.454Z",
+      "lastModifiedDate": "2026-05-11T20:31:06.454Z",
+      "description": "WWBN AVideo is an open source video platform. In versions up to and including 29.0, plugin/CloneSite/cloneClient.json.php echoes the local CloneSite shared secret ($objClone->myKey, a constant md5($global['systemRootPath'] . $global['salt'])) into the HTTP response body on every unauthenticated request. The unauthenticated error branch was intended to reject non-admin callers without a valid key, but the rejection message interpolates the expected key before die(). When the victim has CloneSite configured with a remote cloneSiteURL (standard federation/backup setup), the leaked myKey is exactly the credential that authenticates the victim to that remote server's cloneServer.json.php, allowing the attacker to impersonate the victim and trigger a full mysqldump of the remote's database to the remote's public videos/clones/ directory Commit e6566f56a28f4556b2a0a09d03717a719dcb49da contains an updated fix.",
+      "severity": 7.5,
       "references": [
         {
-          "url": "https://github.com/oxyno-zeta/s3-proxy/security/advisories/GHSA-rfgq-wgg8-662p",
+          "url": "https://github.com/WWBN/AVideo/security/advisories/GHSA-qm9p-p5pw-jrx2",
           "type": "reference"
         },
         {
-          "url": "https://github.com/oxyno-zeta/s3-proxy/commit/1320e4abd46ad18c2851fedde50dbb79df8b7a51",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/oxyno-zeta/s3-proxy/commit/af5ff57d8c6022459495b8fb50130073bca7b48a",
+          "url": "https://github.com/WWBN/AVideo/commit/e6566f56a28f4556b2a0a09d03717a719dcb49da",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "oxyno-zeta",
-          "product": "s3-proxy",
+          "vendor": "WWBN",
+          "product": "AVideo",
           "versions": [
             {
-              "version": "< 5.0.0",
+              "version": "<= 29.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')",
-        "CWE-863: Incorrect Authorization"
+        "CWE-209: Generation of Error Message Containing Sensitive Information"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-43639",
-      "publishedDate": "2026-05-11T17:14:04.552Z",
-      "lastModifiedDate": "2026-05-11T19:14:22.085Z",
-      "description": "Bitwarden Server prior to v2026.4.0 contains a missing authorization vulnerability that allows a provider service user to add an arbitrary organization to their provider via `POST /providers/{providerId}/clients/existing`, resulting in takeover of the target organization; self-hosted installations are unaffected as this endpoint is restricted to Cloud via SelfHosted(NotSelfHostedOnly = true).",
-      "severity": 8,
+      "id": "CVE-2026-43875",
+      "publishedDate": "2026-05-11T20:32:05.504Z",
+      "lastModifiedDate": "2026-05-11T20:32:05.504Z",
+      "description": "WWBN AVideo is an open source video platform. In versions up to and including 29.0, plugin/MobileManager/oauth2.php completes an OAuth login by sending an HTTP 302 Location: oauth2Success.php?user=<email>&pass=<HASH> where <HASH> is the victim's stored password hash (md5(hash(\"whirlpool\", sha1(password)))) read directly from the users table. AVideo's own login endpoint (objects/login.json.php) accepts an encodedPass=1 flag that bypasses hashing and performs a direct string comparison between the supplied value and the stored hash. Anyone who captures the redirect URL — via server logs, referrer leakage, or browser history — therefore obtains a credential equivalent to the plaintext password and can fully take over the account, including admin accounts. Commit 977cd6930a97571a26da4239e25c8096dd4ecbc1 contains an updated fix.",
+      "severity": 6.8,
       "references": [
         {
-          "url": "https://sanjokkarki.com.np/blog/bitwarden-provider-takeover",
-          "type": "poc"
-        },
-        {
-          "url": "https://github.com/bitwarden/server/releases/tag/v2026.4.0",
+          "url": "https://github.com/WWBN/AVideo/security/advisories/GHSA-5w8w-26ch-v5cw",
           "type": "reference"
         },
         {
-          "url": "https://github.com/bitwarden/server/pull/7372",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/bitwarden/server/commit/0918bfdda6f5eec391c69bd9074f6aef4eac0b1d",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/bitwarden-server-missing-authorization-via-provider-clients",
+          "url": "https://github.com/WWBN/AVideo/commit/977cd6930a97571a26da4239e25c8096dd4ecbc1",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "affected",
-          "vendor": "bitwarden",
-          "product": "server",
+          "vendor": "WWBN",
+          "product": "AVideo",
           "versions": [
             {
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver",
-              "lessThan": "2026.4.0"
-            }
-          ],
-          "repo": "https://github.com/bitwarden/server"
-        }
-      ],
-      "problemType": [
-        "Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-8321",
-      "publishedDate": "2026-05-11T19:45:08.634Z",
-      "lastModifiedDate": "2026-05-11T19:45:08.634Z",
-      "description": "A vulnerability was detected in inkeep agents 0.58.14. This vulnerability affects the function createDevContext of the file agents-api/src/middleware/runAuth.ts of the component runAuth Middleware. Performing a manipulation results in authentication bypass using alternate channel. The attack is possible to be carried out remotely. The exploit is now public and may be used. The project was informed of the problem early through an issue report but has not responded yet.",
-      "severity": 7.3,
-      "references": [
-        {
-          "url": "https://vuldb.com/vuln/362608",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/vuln/362608/cti",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/submit/811314",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/inkeep/agents/issues/3024",
-          "type": "poc"
-        },
-        {
-          "url": "https://github.com/inkeep/agents/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "inkeep",
-          "product": "agents",
-          "versions": [
-            {
-              "version": "0.58.14",
+              "version": "<= 29.0",
               "status": "affected"
             }
-          ],
-          "modules": [
-            "runAuth Middleware"
           ]
         }
       ],
       "problemType": [
-        "Authentication Bypass Using Alternate Channel",
-        "Improper Authentication"
+        "CWE-598: Use of GET Request Method With Sensitive Query Strings"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-42883",
-      "publishedDate": "2026-05-11T19:51:43.211Z",
-      "lastModifiedDate": "2026-05-11T19:51:43.211Z",
-      "description": "Audiobookshelf is a self-hosted audiobook and podcast server. Prior to 2.32.2, the GET /api/libraries/:id/download endpoint validates that the requesting user has access to the library specified in the URL path, but fetches downloadable items solely by attacker-provided IDs without constraining them to that library. An authenticated user with download permission and access to any one library can exfiltrate the full file contents of items belonging to any other library, including libraries they are explicitly denied access to. This vulnerability is fixed in 2.32.2.",
+      "id": "CVE-2026-34960",
+      "publishedDate": "2026-05-11T20:49:01.966Z",
+      "lastModifiedDate": "2026-05-11T20:49:01.966Z",
+      "description": "barebox prior to version 2026.04.0 contains an out-of-bounds read vulnerability in DHCP option parsing within the dhcp_message_type() function that fails to verify the options pointer remains within received packet bounds. An attacker on the same broadcast domain can send a crafted DHCP Offer or ACK packet without a proper 0xff end marker to cause the parser to read past valid packet data and potentially crash the system.",
       "severity": 6.5,
       "references": [
         {
-          "url": "https://github.com/advplyr/audiobookshelf/security/advisories/GHSA-6rvg-w3f5-9gq5",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "advplyr",
-          "product": "audiobookshelf",
-          "versions": [
-            {
-              "version": "< 2.32.2",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-863: Incorrect Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-42872",
-      "publishedDate": "2026-05-11T18:32:45.697Z",
-      "lastModifiedDate": "2026-05-11T19:43:33.708Z",
-      "description": "WeGIA is a web manager for charitable institutions. In versions prior to 3.7.0, a reflected Cross-Site Scripting (XSS) vulnerability exists in lista_arquivos_etapa.php due to improper handling of user-supplied input. The id_processo parameter is directly embedded into the HTML without sanitization, allowing attackers to inject arbitrary JavaScript. This can lead to session hijacking, credential theft, or execution of malicious actions in the context of the victim's browser. This vulnerability is fixed in 3.7.0.",
-      "severity": 6.1,
-      "references": [
-        {
-          "url": "https://github.com/LabRedesCefetRJ/WeGIA/security/advisories/GHSA-gp6v-f6q5-wq62",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "LabRedesCefetRJ",
-          "product": "WeGIA",
-          "versions": [
-            {
-              "version": "< 3.7.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-45222",
-      "publishedDate": "2026-05-11T18:00:26.205Z",
-      "lastModifiedDate": "2026-05-11T19:17:42.927Z",
-      "description": "Summarize versions through 0.14.1, fixed in commit 0cfb0fb, creates the daemon configuration directory and file with default filesystem permissions that may be world-readable on Unix-like systems, allowing local attackers to read bearer tokens and API credentials stored in ~/.summarize/daemon.json. A local attacker can exploit these permissive permissions to read the daemon bearer token and persisted provider credentials, enabling unauthorized access to the daemon or recovery of sensitive API keys.",
-      "severity": 6.1,
-      "references": [
-        {
-          "url": "https://github.com/steipete/summarize/pull/214",
+          "url": "https://github.com/barebox/barebox",
           "type": "reference"
         },
         {
-          "url": "https://github.com/steipete/summarize/commit/0cfb0fb99777a87a7b02082b5e4bd449f8dd6175",
+          "url": "https://github.com/barebox/barebox/releases/tag/v2026.04.0",
           "type": "reference"
         },
         {
-          "url": "https://www.vulncheck.com/advisories/summarize-insecure-daemon-configuration-file-permissions",
+          "url": "https://www.vulncheck.com/advisories/barebox-out-of-bounds-read-in-dhcp-option-parsing",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "affected",
-          "vendor": "steipete",
-          "product": "summarize",
-          "repo": "https://github.com/steipete/summarize",
+          "vendor": "barebox",
+          "product": "barebox",
           "versions": [
             {
               "status": "affected",
               "version": "0",
-              "versionType": "semver",
-              "lessThanOrEqual": "0.14.1"
-            },
-            {
-              "status": "unaffected",
-              "version": "0cfb0fb99777a87a7b02082b5e4bd449f8dd6175",
+              "lessThanOrEqual": "2026.04.0",
               "versionType": "git"
             }
-          ]
-        }
-      ],
-      "problemType": [
-        "Incorrect Permission Assignment for Critical Resource"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-42050",
-      "publishedDate": "2026-05-11T19:46:50.770Z",
-      "lastModifiedDate": "2026-05-11T19:46:50.770Z",
-      "description": "ImageMagick is free and open-source software used for editing and manipulating digital images. Prior to 7.1.2-21 and 6.9.13-46, a malicious MIFF file could trigger an overflow when a user opens it in the display tool and right-clicks a tile to invoke the Load / Update menu item. This vulnerability is fixed in 7.1.2-21 and 6.9.13-46.",
-      "severity": 5.5,
-      "references": [
-        {
-          "url": "https://github.com/ImageMagick/ImageMagick/security/advisories/GHSA-7mxf-ff4f-jj7p",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "ImageMagick",
-          "product": "ImageMagick",
-          "versions": [
-            {
-              "version": "< 6.9.13-46",
-              "status": "affected"
-            },
-            {
-              "version": ">= 7.0.0, < 7.1.2-20",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-121: Stack-based Buffer Overflow"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-42886",
-      "publishedDate": "2026-05-11T19:54:10.876Z",
-      "lastModifiedDate": "2026-05-11T19:54:10.876Z",
-      "description": "Audiobookshelf is a self-hosted audiobook and podcast server. Prior to 2.32.2, the POST /api/backups/upload endpoint decompresses the details entry from an uploaded .audiobookshelf ZIP file entirely into memory using zip.entryData(), with no limit on the decompressed size. The upload middleware also has no file size limit. An admin user can upload a crafted ZIP containing a highly compressed details entry that, when decompressed, consumes hundreds of megabytes or gigabytes of memory, crashing the server process via out-of-memory. This vulnerability is fixed in 2.32.2.",
-      "severity": 4.9,
-      "references": [
-        {
-          "url": "https://github.com/advplyr/audiobookshelf/security/advisories/GHSA-4jq4-rvq8-j26h",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "advplyr",
-          "product": "audiobookshelf",
-          "versions": [
-            {
-              "version": "< 2.33.2",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-409: Improper Handling of Highly Compressed Data (Data Amplification)"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-8320",
-      "publishedDate": "2026-05-11T19:30:11.376Z",
-      "lastModifiedDate": "2026-05-11T19:30:11.376Z",
-      "description": "A security vulnerability has been detected in jishenghua jshERP up to 3.6. This affects the function getUserByWeixinCode of the file jshERP-boot/src/main/java/com/jsh/erp/service/UserService.java of the component updatePlatformConfigByKey Endpoint. Such manipulation of the argument weixinUrl leads to server-side request forgery. The attack can be executed remotely. The exploit has been disclosed publicly and may be used. The project was informed of the problem early through an issue report but has not responded yet.",
-      "severity": 4.7,
-      "references": [
-        {
-          "url": "https://vuldb.com/vuln/362607",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/vuln/362607/cti",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/submit/811303",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/jishenghua/jshERP/issues/152",
-          "type": "poc"
-        },
-        {
-          "url": "https://github.com/jishenghua/jshERP/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "jishenghua",
-          "product": "jshERP",
-          "versions": [
-            {
-              "version": "3.0",
-              "status": "affected"
-            },
-            {
-              "version": "3.1",
-              "status": "affected"
-            },
-            {
-              "version": "3.2",
-              "status": "affected"
-            },
-            {
-              "version": "3.3",
-              "status": "affected"
-            },
-            {
-              "version": "3.4",
-              "status": "affected"
-            },
-            {
-              "version": "3.5",
-              "status": "affected"
-            },
-            {
-              "version": "3.6",
-              "status": "affected"
-            }
           ],
-          "cpes": [
-            "cpe:2.3:a:jishenghua:jsherp:*:*:*:*:*:*:*:*"
-          ],
-          "modules": [
-            "updatePlatformConfigByKey Endpoint"
-          ]
+          "defaultStatus": "unaffected"
         }
       ],
       "problemType": [
-        "Server-Side Request Forgery"
+        "CWE-125 Out-of-bounds Read"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-42887",
-      "publishedDate": "2026-05-11T19:55:32.090Z",
-      "lastModifiedDate": "2026-05-11T19:55:32.090Z",
-      "description": "Audiobookshelf is a self-hosted audiobook and podcast server. Prior to 2.33.0, a stored cross-site scripting (XSS) vulnerability exists in the Login Page due to improper sanitization of the authLoginCustomMessage field of the /api/auth-settings endpoint. An attacker with administrative privileges can inject arbitrary HTML/JavaScript that will be rendered on the login page for all users. This vulnerability is fixed in 2.33.0.",
-      "severity": 4.5,
+      "id": "CVE-2026-43876",
+      "publishedDate": "2026-05-11T20:33:26.198Z",
+      "lastModifiedDate": "2026-05-11T20:33:26.198Z",
+      "description": "WWBN AVideo is an open source video platform. In versions up to and including 29.0, objects/notifySubscribers.json.php takes the raw message POST parameter and passes it into sendSiteEmail(), which substitutes it directly into an HTML email template (via str_replace on the {message} placeholder) and renders it with PHPMailer::msgHTML(). There is no HTML sanitization, character escaping, or output encoding on the attacker-controlled message between $_POST['message'] and the rendered email. Any authenticated user with upload permission can therefore broadcast arbitrary HTML — phishing links, tracking pixels, CSS/UI spoofing — to every subscriber on their channel (up to 10,000 recipients per invocation). The email is sent From: the platform's configured contact address and wrapped in the site's official logo and title, so attacker-supplied HTML arrives with the appearance of an official platform communication. Commit https://github.com/WWBN/AVideo/commit/ contains an updated fix.",
+      "severity": 6.4,
       "references": [
         {
-          "url": "https://github.com/advplyr/audiobookshelf/security/advisories/GHSA-cx29-ghq2-9cm4",
+          "url": "https://github.com/WWBN/AVideo/security/advisories/GHSA-g9cm-rxp7-6gv5",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/WWBN/AVideo/commit/078c4342eb9969a70425a9cdca3eefa7f8a86d53",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "advplyr",
-          "product": "audiobookshelf",
+          "vendor": "WWBN",
+          "product": "AVideo",
           "versions": [
             {
-              "version": "< 2.33.0",
+              "version": "<= 29.0",
               "status": "affected"
             }
           ]
@@ -450,24 +215,255 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-42885",
-      "publishedDate": "2026-05-11T19:52:58.149Z",
-      "lastModifiedDate": "2026-05-11T19:52:58.149Z",
-      "description": "Audiobookshelf is a self-hosted audiobook and podcast server. Prior to 2.32.2, the POST /api/filesystem/pathexists endpoint uses String.startsWith() to validate that a resolved file path is within a library folder. This check fails for sibling directories whose names share a common prefix (e.g., /audiobooks vs /audiobooks-private), allowing authenticated users with upload permission to probe file existence outside their authorized library folder boundaries. This vulnerability is fixed in 2.32.2.",
-      "severity": 4.3,
+      "id": "CVE-2026-43878",
+      "publishedDate": "2026-05-11T20:35:26.542Z",
+      "lastModifiedDate": "2026-05-11T20:35:26.542Z",
+      "description": "WWBN AVideo is an open source video platform. In versions up to and including 29.0, plugin/Meet/iframe.php echoes the attacker-controlled user and pass query parameters unescaped into a JavaScript double-quoted string literal inside a <script> block. An attacker who sends a victim to a crafted URL can break out of the string and execute arbitrary JavaScript in the victim's browser in the context of the AVideo origin. No authentication is required if a public Meet schedule exists on the target. Commit 3298ced2bcf92e4f3acff6ce9bde14edf42ecb5b contains an updated fix.",
+      "severity": 6.1,
       "references": [
         {
-          "url": "https://github.com/advplyr/audiobookshelf/security/advisories/GHSA-rhjg-p6cm-38w2",
+          "url": "https://github.com/WWBN/AVideo/security/advisories/GHSA-mm5f-8q57-4fc4",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/WWBN/AVideo/commit/3298ced2bcf92e4f3acff6ce9bde14edf42ecb5b",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "advplyr",
-          "product": "audiobookshelf",
+          "vendor": "WWBN",
+          "product": "AVideo",
           "versions": [
             {
-              "version": "< 2.33.2",
+              "version": "<= 29.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-43879",
+      "publishedDate": "2026-05-11T20:36:34.210Z",
+      "lastModifiedDate": "2026-05-11T20:36:34.210Z",
+      "description": "WWBN AVideo is an open source video platform. In versions up to and including 29.0, an authenticated user can configure their own donation-notification webhook URL to point at internal/loopback/metadata hosts (e.g. http://127.0.0.1:8080/..., http://169.254.169.254/latest/..., RFC1918 addresses). When any other user (including a second account owned by the same attacker) donates even a trivial amount via plugin/CustomizeUser/donate.json.php, the AVideo server issues a curl POST to the attacker-supplied URL, resulting in a blind SSRF. The handler uses only isValidURL() (which is a format check) and does not call the codebase's own isSSRFSafeURL() helper. Additionally, CURLOPT_FOLLOWLOCATION is enabled with no per-hop revalidation, so even if the stored URL were validated, an HTTP 307 from an attacker-controlled host could redirect the POST to internal targets. Commit aaacd48f29f1ff71d1eb5fc81d37605f593cefa9 contains an updated fix.",
+      "severity": 5.4,
+      "references": [
+        {
+          "url": "https://github.com/WWBN/AVideo/security/advisories/GHSA-wp38-whx3-xffh",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/WWBN/AVideo/commit/aaacd48f29f1ff71d1eb5fc81d37605f593cefa9",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "WWBN",
+          "product": "AVideo",
+          "versions": [
+            {
+              "version": "<= 29.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-918: Server-Side Request Forgery (SSRF)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-43877",
+      "publishedDate": "2026-05-11T20:34:43.371Z",
+      "lastModifiedDate": "2026-05-11T20:34:43.371Z",
+      "description": "WWBN AVideo is an open source video platform. In versions up to and including 29.0, objects/userSavePhoto.php is a legacy profile-photo endpoint that accepts a base64 POST parameter and writes the decoded bytes to videos/userPhoto/photo<users_id>.png. Its only access control is User::isLogged(). It does not end in .json.php, so it is excluded from the project's global autoCSRFGuard (which is suffix-scoped in objects/include_config.php). There is no CSRF token, no Origin/Referer check, and no MIME validation of the decoded bytes. Because AVideo's default cookie policy is SameSite=None; Secure on HTTPS (objects/functionsPHP.php:227), an attacker who lures a logged-in user to a malicious page can overwrite that user's profile photo with arbitrary bytes and also triggers a site-wide clearCache(true) on every forged request. Commit 9c38468041505e637101c5943c5370c68f48e3ac contains an updated fix.",
+      "severity": 5.4,
+      "references": [
+        {
+          "url": "https://github.com/WWBN/AVideo/security/advisories/GHSA-jw8g-5j46-44rp",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/WWBN/AVideo/commit/9c38468041505e637101c5943c5370c68f48e3ac",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "WWBN",
+          "product": "AVideo",
+          "versions": [
+            {
+              "version": "<= 29.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-352: Cross-Site Request Forgery (CSRF)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-43881",
+      "publishedDate": "2026-05-11T20:38:06.930Z",
+      "lastModifiedDate": "2026-05-11T20:38:06.930Z",
+      "description": "WWBN AVideo is an open source video platform. In versions up to and including 29.0, objects/users.json.php exposes two unauthenticated paths that disclose the full set of registered user accounts. The isCompany request parameter causes the handler to set $ignoreAdmin = true for any non-admin caller (including unauthenticated visitors), which defeats the admin-only guard inside User::getAllUsers()/User::getTotalUsers(). A second path accepts users_id and calls User::getUserFromID() directly with no permission check, producing a single-user oracle. Both paths return id, identification (display name), channel URL, photo, background, and status, plus the total account count. Commit d9cdc702481a626b15f814f6093f1e2a9c20d375 contains an updated fix.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://github.com/WWBN/AVideo/security/advisories/GHSA-6rvw-7p8v-mjfq",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/WWBN/AVideo/commit/d9cdc702481a626b15f814f6093f1e2a9c20d375",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "WWBN",
+          "product": "AVideo",
+          "versions": [
+            {
+              "version": "<= 29.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-306: Missing Authentication for Critical Function"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-43880",
+      "publishedDate": "2026-05-11T20:37:15.967Z",
+      "lastModifiedDate": "2026-05-11T20:37:15.967Z",
+      "description": "WWBN AVideo is an open source video platform. In versions up to and including 29.0, objects/sendEmail.json.php exposes two branches depending on whether contactForm=1 is submitted. When the parameter is omitted, the endpoint sets $sendTo to an attacker-supplied email and, for unauthenticated callers, uses the site's own contact email as the message From:/Reply-To:. The endpoint is explicitly allow-listed as a \"public write action\" in objects/functionsSecurity.php (line 885), so it requires no authentication or CSRF token. An unauthenticated attacker (solving a captcha) can force the site's own SMTP infrastructure to send attacker-composed emails to arbitrary recipients with the site's legitimate sender address, passing SPF/DKIM/DMARC for the site's domain — ideal for targeted phishing and brand impersonation. Commit 4e3709895857a5857f0edb46b0ee984de0d9e1a2 contains an updated fix.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://github.com/WWBN/AVideo/security/advisories/GHSA-5hgj-7gm9-cff5",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/WWBN/AVideo/commit/4e3709895857a5857f0edb46b0ee984de0d9e1a2",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "WWBN",
+          "product": "AVideo",
+          "versions": [
+            {
+              "version": "<= 29.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-940: Improper Verification of Source of a Communication Channel"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-43882",
+      "publishedDate": "2026-05-11T20:40:53.428Z",
+      "lastModifiedDate": "2026-05-11T20:40:53.428Z",
+      "description": "WWBN AVideo is an open source video platform. In versions up to and including 29.0, the unauthenticated plugin/Scheduler/downloadICS.php endpoint passes attacker-controlled title, description, and joinURL parameters into Scheduler::downloadICS(), which builds an ICS calendar file via the ICS helper class. ICS::escape_string() (objects/ICS.php:167-169) only escapes , and ; and does NOT neutralize CR/LF, so attacker CRLF bytes inside a property value break out and inject arbitrary ICS lines — including END:VEVENT / BEGIN:VEVENT pairs that add entire attacker-controlled calendar events. Because the malicious .ics file is served from the victim's trusted AVideo origin, this enables high-credibility calendar phishing: forged meetings with attacker-chosen SUMMARY, URL, LOCATION, and DESCRIPTION landing in the victim's calendar after import. Commit 764db592f99e545aa86bb9a4ad664ffd14c38ba5 contains an updated fix.",
+      "severity": 4.3,
+      "references": [
+        {
+          "url": "https://github.com/WWBN/AVideo/security/advisories/GHSA-mwgh-92m2-wvhv",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/WWBN/AVideo/commit/764db592f99e545aa86bb9a4ad664ffd14c38ba5",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "WWBN",
+          "product": "AVideo",
+          "versions": [
+            {
+              "version": "<= 29.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-93: Improper Neutralization of CRLF Sequences ('CRLF Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-43883",
+      "publishedDate": "2026-05-11T20:41:40.877Z",
+      "lastModifiedDate": "2026-05-11T20:41:40.877Z",
+      "description": "WWBN AVideo is an open source video platform. In versions up to and including 29.0, plugin/PayPalYPT/agreementCancel.json.php cancels a PayPal billing agreement using an attacker-supplied agreement parameter without verifying that the authenticated user owns the agreement. A low-privilege authenticated user who learns or obtains another user's PayPal billing agreement ID can silently suspend the victim's recurring subscription, causing revenue loss to the platform and loss of paid service to the victim. Commit 0da3dcff1eda2f497694bf82b559829471c292c2 contains an updated fix.",
+      "severity": 4.2,
+      "references": [
+        {
+          "url": "https://github.com/WWBN/AVideo/security/advisories/GHSA-958h-qp3x-q4gj",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/WWBN/AVideo/commit/0da3dcff1eda2f497694bf82b559829471c292c2",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "WWBN",
+          "product": "AVideo",
+          "versions": [
+            {
+              "version": "<= 29.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-639: Authorization Bypass Through User-Controlled Key"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-42600",
+      "publishedDate": "2026-05-11T20:53:10.885Z",
+      "lastModifiedDate": "2026-05-11T20:53:10.885Z",
+      "description": "MinIO is a high-performance object storage system. From RELEASE.2022-07-24T01-54-52Z to before RELEASE.2026-04-14T21-32-45Z, A path traversal vulnerability in MinIO's ReadMultiple internode storage-REST endpoint allows a caller holding the cluster root JWT to read files from outside the configured drive roots, bounded only by the MinIO process UID. The attacker sends POST minio/storage/{drivePath}/v63/rmpl with a msgpack-encoded body carrying ../ sequences in the Bucket field. The server opens the resulting path via os.OpenFile with O_RDONLY|O_NOATIME and returns its contents in the msgpack response stream. This vulnerability is fixed in RELEASE.2026-04-14T21-32-45Z.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/minio/minio/security/advisories/GHSA-xh8f-g2qw-gcm7",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "minio",
+          "product": "minio",
+          "versions": [
+            {
+              "version": ">= RELEASE.2022-07-24T01-54-52Z, < RELEASE.2026-04-14T21-32-45Z",
               "status": "affected"
             }
           ]
@@ -479,71 +475,43 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-42884",
-      "publishedDate": "2026-05-11T19:52:23.339Z",
-      "lastModifiedDate": "2026-05-11T19:52:23.339Z",
-      "description": "Audiobookshelf is a self-hosted audiobook and podcast server. Prior to 2.32.2, the GET /api/collections and GET /api/collections/:id endpoints return collections from all libraries without checking whether the requesting user has access to each collection's library. An authenticated user with access to any library can enumerate and read collections (including full book metadata) from libraries they are explicitly restricted from accessing. This vulnerability is fixed in 2.32.2.",
-      "severity": 4.3,
-      "references": [
-        {
-          "url": "https://github.com/advplyr/audiobookshelf/security/advisories/GHSA-rxw2-h55w-ffmh",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "advplyr",
-          "product": "audiobookshelf",
-          "versions": [
-            {
-              "version": "< 2.33.2",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-863: Incorrect Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-42865",
-      "publishedDate": "2026-05-11T17:53:08.330Z",
-      "lastModifiedDate": "2026-05-11T19:25:16.428Z",
-      "description": "Inbox Zero is an AI personal assistant for email. Prior to 2.29.3, the cleaner email stream endpoint used a shared Redis subscription listener, which could deliver thread events for one authenticated account to another authenticated account using the cleaner feature at the same time. This vulnerability is fixed in 2.29.3.",
+      "id": "CVE-2026-43885",
+      "publishedDate": "2026-05-11T20:45:21.425Z",
+      "lastModifiedDate": "2026-05-11T20:45:21.425Z",
+      "description": "WWBN AVideo is an open source video platform. In versions up to and including 29.0, an unauthenticated user can read APISecret from objects/plugins.json.php and use it to call protected API endpoints (e.g. users_list) without logging in. Commit 1c36f229d0a103528fb9f64d0a1cc0e1e8f5999b contains an updated fix.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/elie222/inbox-zero/security/advisories/GHSA-f3gp-v7cj-2569",
+          "url": "https://github.com/WWBN/AVideo/security/advisories/GHSA-xr49-f4rh-qcjf",
           "type": "reference"
         },
         {
-          "url": "https://github.com/elie222/inbox-zero/commit/02341923b5460ce9630c4681a9b6461ba466688a",
+          "url": "https://github.com/WWBN/AVideo/commit/1c36f229d0a103528fb9f64d0a1cc0e1e8f5999b",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "elie222",
-          "product": "inbox-zero",
+          "vendor": "WWBN",
+          "product": "AVideo",
           "versions": [
             {
-              "version": "< 2.29.3",
+              "version": "<= 29.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor"
+        "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor",
+        "CWE-862: Missing Authorization"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
       "id": "CVE-2026-7210",
       "publishedDate": "2026-05-11T17:19:09.784Z",
-      "lastModifiedDate": "2026-05-11T19:33:10.482Z",
+      "lastModifiedDate": "2026-05-11T20:34:17.811Z",
       "description": "`xml.parsers.expat` and `xml.etree.ElementTree` use insufficient entropy for Expat hash-flooding protection, which allows a crafted XML document to trigger hash flooding.\\r\\n\\r\\nFully mitigating this vulnerability requires both updating libexpat to 2.8.0 or later and applying this patch.",
       "severity": "N/A",
       "references": [
@@ -582,330 +550,6 @@
       ],
       "problemType": [
         "CWE-331 Insufficient entropy"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41257",
-      "publishedDate": "2026-05-11T17:14:32.579Z",
-      "lastModifiedDate": "2026-05-11T19:25:59.800Z",
-      "description": "jq is a command-line JSON processor. In 1.8.1 and earlier, the jq bytecode VM's data stack tracks its allocation size in a signed int. When the stack grows beyond ≈1 GiB (via deeply nested generator forks), the doubling arithmetic overflows. The wrapped value is passed to realloc and then used for a memmove with attacker-influenced offsets.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/jqlang/jq/security/advisories/GHSA-4jm8-m363-4539",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "jqlang",
-          "product": "jq",
-          "versions": [
-            {
-              "version": "<= 1.8.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-190: Integer Overflow or Wraparound",
-        "CWE-787: Out-of-bounds Write"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-6093",
-      "publishedDate": "2026-05-11T14:03:05.663Z",
-      "lastModifiedDate": "2026-05-11T19:26:53.093Z",
-      "description": "Corteza contains a SQL injection vulnerability in its Microsoft SQL Server (MSSQL) backend when filtering Compose records by the meta field.This issue affects corteza: 2024.9.8.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://fluidattacks.com/es/advisories/motley",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/cortezaproject/corteza",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "platforms": [
-            "Windows",
-            "MacOS",
-            "Linux"
-          ],
-          "product": "corteza",
-          "vendor": "cortezaproject",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "2024.9.8"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-36734",
-      "publishedDate": "2026-05-11T00:00:00.000Z",
-      "lastModifiedDate": "2026-05-11T19:31:27.344Z",
-      "description": "EDIMAX BR-6428nS V3 1.15 is vulnerable to Command Injection. An authenticated attacker with access to the network can submit crafted input to the WLAN configuration functionality. Due to insufficient input validation, the attacker is able to execute arbitrary system commands on the device.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "http://edimax.com",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/theShinigami/CVE-Disclosures/tree/main/CVE-2026-36734",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n/a",
-          "product": "n/a",
-          "versions": [
-            {
-              "version": "n/a",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "n/a"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-61311",
-      "publishedDate": "2026-05-11T00:00:00.000Z",
-      "lastModifiedDate": "2026-05-11T19:33:11.172Z",
-      "description": "A reflected cross-site scripted (XSS) vulnerability in the dfm-menu_alerts.php component of GmbH Mecury Managed Print Services (docuForm) v11.11c allows attackers to execute arbitrary Javascript in the context of a user's browser via injecting a crafted payload into an unfiltered variable value.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://www.docuform.de/",
-          "type": "reference"
-        },
-        {
-          "url": "https://ZeroBreach.de",
-          "type": "reference"
-        },
-        {
-          "url": "https://gist.github.com/ZeroBreach-GmbH/424005738e819e14c724feb9c7c5f40b",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n/a",
-          "product": "n/a",
-          "versions": [
-            {
-              "version": "n/a",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "n/a"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-61312",
-      "publishedDate": "2026-05-11T00:00:00.000Z",
-      "lastModifiedDate": "2026-05-11T19:32:13.404Z",
-      "description": "A reflected cross-site scripted (XSS) vulnerability in the acc-menu_pricess.php component of GmbH Mecury Managed Print Services (docuForm) v11.11c allows attackers to execute arbitrary Javascript in the context of a user's browser via injecting a crafted payload into an unfiltered variable value.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://www.docuform.de/",
-          "type": "reference"
-        },
-        {
-          "url": "https://ZeroBreach.de",
-          "type": "reference"
-        },
-        {
-          "url": "https://gist.github.com/ZeroBreach-GmbH/c970fab734432e6f9bc39b2d20f96e5c",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n/a",
-          "product": "n/a",
-          "versions": [
-            {
-              "version": "n/a",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "n/a"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-61313",
-      "publishedDate": "2026-05-11T00:00:00.000Z",
-      "lastModifiedDate": "2026-05-11T19:31:06.642Z",
-      "description": "A reflected cross-site scripted (XSS) vulnerability in the dfm-menu_markeralerts.php component of GmbH Mecury Managed Print Services (docuForm) v11.11c allows attackers to execute arbitrary Javascript in the context of a user's browser via injecting a crafted payload into an unfiltered variable value.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://www.docuform.de/",
-          "type": "reference"
-        },
-        {
-          "url": "https://ZeroBreach.de",
-          "type": "reference"
-        },
-        {
-          "url": "https://gist.github.com/ZeroBreach-GmbH/be236a28ffa81c06b915c2a642bff0a5",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n/a",
-          "product": "n/a",
-          "versions": [
-            {
-              "version": "n/a",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "n/a"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-65415",
-      "publishedDate": "2026-05-11T00:00:00.000Z",
-      "lastModifiedDate": "2026-05-11T19:29:08.336Z",
-      "description": "docuFORM Managed Print Service Client 11.11c is vulnerable to a session fixation attack via the login page of the application.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://www.docuform.de/",
-          "type": "reference"
-        },
-        {
-          "url": "https://ZeroBreach.de",
-          "type": "reference"
-        },
-        {
-          "url": "https://gist.github.com/ZeroBreach-GmbH/459cad8e01fe99c6998bea556ac0dcb8",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n/a",
-          "product": "n/a",
-          "versions": [
-            {
-              "version": "n/a",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "n/a"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-61314",
-      "publishedDate": "2026-05-11T00:00:00.000Z",
-      "lastModifiedDate": "2026-05-11T19:30:19.521Z",
-      "description": "A reflected cross-site scripted (XSS) vulnerability in the dfm-menu_orderopt.php component of GmbH Mecury Managed Print Services (docuForm) v11.11c allows attackers to execute arbitrary Javascript in the context of a user's browser via injecting a crafted payload into an unfiltered variable value.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://www.docuform.de/",
-          "type": "reference"
-        },
-        {
-          "url": "https://ZeroBreach.de",
-          "type": "reference"
-        },
-        {
-          "url": "https://gist.github.com/ZeroBreach-GmbH/4386b61523d784d2ffc674299ed02d51",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n/a",
-          "product": "n/a",
-          "versions": [
-            {
-              "version": "n/a",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "n/a"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-65416",
-      "publishedDate": "2026-05-11T00:00:00.000Z",
-      "lastModifiedDate": "2026-05-11T19:28:05.535Z",
-      "description": "docuFORM Managed Print Service Client 11.11c is vulnerable to arbitrary file upload via pmupdate.php.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://www.docuform.de/",
-          "type": "reference"
-        },
-        {
-          "url": "https://ZeroBreach.de",
-          "type": "reference"
-        },
-        {
-          "url": "https://gist.github.com/ZeroBreach-GmbH/f94cad5b37f718d1b1cfee6ca0fe666b",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n/a",
-          "product": "n/a",
-          "versions": [
-            {
-              "version": "n/a",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "n/a"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
