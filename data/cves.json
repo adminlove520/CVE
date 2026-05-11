@@ -2,355 +2,89 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 56,
-    "last_updated": "2026-05-11T18:29:08.845910",
+    "total_count": 24,
+    "last_updated": "2026-05-11T20:21:29.454116",
     "severity_distribution": {
-      "critical": 3,
-      "high": 9,
-      "medium": 21,
-      "low": 5,
-      "none": 18
+      "critical": 2,
+      "high": 2,
+      "medium": 9,
+      "low": 0,
+      "none": 11
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-7813",
-      "publishedDate": "2026-05-11T14:35:48.717Z",
-      "lastModifiedDate": "2026-05-11T17:32:49.824Z",
-      "description": "Authorization vulnerability in pgAdmin 4 server mode affecting Server Groups, Servers, Shared Servers, Background Processes, and Debugger modules.\n\nMultiple endpoints fetched user-owned objects without filtering by the requesting user's identity. An authenticated user could access another user's private servers, server groups, background processes, and debugger function arguments by guessing object IDs.\n\nAdditionally, the Shared Servers feature contained multiple issues including credential leakage (passexec_cmd, passfile, SSL keys), privilege escalation via writable passexec_cmd (a shell command executed when establishing the connection) allowing arbitrary command execution in the owner's process context, and owner-data corruption via SQLAlchemy session mutations. Several owner-only fields (passexec_cmd, passexec_expiration, db_res, db_res_type) were writable by non-owners through the API, and additional fields (kerberos_conn, tags, post_connection_sql) lacked per-user persistence so non-owner edits mutated the owner's record.\n\nFix centralises access control via a new server_access module, scopes all user-owned models with a UserScopedMixin, returns HTTP 410 from connection_manager when access is denied in server mode, suppresses owner-only fields for non-owners across the merge / API response / ServerManager paths, and adds an explicit owner-only write guard. The remediation landed in two pull requests; both are referenced.\n\nThis issue affects pgAdmin 4: before 9.15.",
+      "id": "CVE-2026-42864",
+      "publishedDate": "2026-05-11T18:19:13.416Z",
+      "lastModifiedDate": "2026-05-11T19:34:12.513Z",
+      "description": "FireFighter is an incident management application. Prior to 0.0.54, the POST /api/v2/firefighter/raid/jira_bot endpoint (CreateJiraBotView) is reachable without authentication (permission_classes = [permissions.AllowAny]). Its attachments payload is fetched server-side via httpx.get() with no URL validation, then uploaded as an attachment on the Jira ticket that gets created. An unauthenticated caller able to reach the ingress can coerce the pod into fetching arbitrary URLs and exfiltrate the response as a Jira attachment. On EC2/EKS deployments that do not enforce IMDSv2, this allows theft of the temporary AWS credentials attached to the pod's IAM role. The docstring on the view claims a Bearer token is required, but the code does not enforce it. This vulnerability is fixed in 0.0.54.",
       "severity": 9.9,
       "references": [
         {
-          "url": "https://github.com/pgadmin-org/pgadmin4/pull/9830",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/pgadmin-org/pgadmin4/pull/9835",
+          "url": "https://github.com/ManoManoTech/firefighter-incident/security/advisories/GHSA-fqvv-jvhr-g5jc",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "pgadmin.org",
-          "product": "pgAdmin 4",
-          "repo": "https://github.com/pgadmin-org/pgadmin4",
-          "modules": [
-            "Server Mode",
-            "Shared Servers",
-            "Background Processes",
-            "Debugger"
-          ],
-          "programFiles": [
-            "https://github.com/pgadmin-org/pgadmin4/blob/master/web/pgadmin/browser/server_groups/servers/__init__.py",
-            "https://github.com/pgadmin-org/pgadmin4/blob/master/web/pgadmin/utils/driver/psycopg3/__init__.py",
-            "https://github.com/pgadmin-org/pgadmin4/blob/master/web/pgadmin/model/__init__.py"
-          ],
+          "vendor": "ManoManoTech",
+          "product": "firefighter-incident",
           "versions": [
             {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "9.15",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "affected"
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-42560",
-      "publishedDate": "2026-05-09T04:15:01.408Z",
-      "lastModifiedDate": "2026-05-11T17:31:32.968Z",
-      "description": "auth provides authentication via oauth2, direct and email. From versions 1.18.0 to before 1.25.2 and 2.0.0 to before 2.1.2, the Patreon OAuth provider maps every authenticated Patreon account to the same local user.ID, instead of deriving a unique ID from the Patreon account returned by Patreon. In practice, this means all Patreon-authenticated users of an application using this library are collapsed into a single local identity. Any application that trusts token.User.ID as the stable account key can end up mixing or fully merging unrelated Patreon users, which can lead to cross-account access, privilege confusion, and subscription-state leakage. This issue has been patched in versions 1.25.2 and 2.1.2.",
-      "severity": 9.1,
-      "references": [
-        {
-          "url": "https://github.com/go-pkgz/auth/security/advisories/GHSA-f6qq-3m3h-4g42",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/go-pkgz/auth/commit/c0b15ee72a8401da83c01781c16636c521f42698",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/go-pkgz/auth/releases/tag/v1.25.2",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/go-pkgz/auth/releases/tag/v2.1.2",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "go-pkgz",
-          "product": "auth",
-          "versions": [
-            {
-              "version": ">= 1.18.0, < 1.25.2",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.0.0, < 2.1.2",
+              "version": "< 0.0.54",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-287: Improper Authentication"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-44313",
-      "publishedDate": "2026-05-08T23:08:42.424Z",
-      "lastModifiedDate": "2026-05-11T17:50:54.360Z",
-      "description": "Linkwarden is a self-hosted, open-source collaborative bookmark manager to collect, organize and archive webpages. Prior to version 2.13.0, a Server-Side Request Forgery (SSRF) vulnerability in the fetchTitleAndHeaders function allows authenticated users to make arbitrary HTTP requests to internal services due to insufficient URL validation that only checks for \"http://\" or \"https://\" prefixes. This issue has been patched in version 2.13.0.",
-      "severity": 9.1,
-      "references": [
-        {
-          "url": "https://github.com/linkwarden/linkwarden/security/advisories/GHSA-5qpc-x7rv-hvmp",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "linkwarden",
-          "product": "linkwarden",
-          "versions": [
-            {
-              "version": "< 2.13.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
+        "CWE-306: Missing Authentication for Critical Function",
         "CWE-918: Server-Side Request Forgery (SSRF)"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-42603",
-      "publishedDate": "2026-05-11T16:11:55.297Z",
-      "lastModifiedDate": "2026-05-11T17:27:55.699Z",
-      "description": "OWASP BLT is a QA testing and vulnerability disclosure platform that encompasses websites, apps, git repositories, and more. Prior to 2.1.2, .github/workflows/pre-commit-fix.yaml uses pull_request_target (privileged trigger) but checks out and executes code directly from the attacker's fork, enabling RCE with write permissions. This vulnerability is fixed in 2.1.2.",
-      "severity": 8.8,
+      "id": "CVE-2026-42882",
+      "publishedDate": "2026-05-11T19:26:44.897Z",
+      "lastModifiedDate": "2026-05-11T19:26:44.897Z",
+      "description": "oxyno-zeta/s3-proxy is an aws s3 proxy written in go. Prior to 5.0.0, s3-proxy contains an authentication bypass caused by inconsistent URL path interpretation between the authentication middleware and the bucket handler. The authentication middleware evaluates resource path patterns against the percent-encoded request URI (r.URL.RequestURI()), while the bucket handler constructs S3 object keys from the decoded path (r.URL.Path). This mismatch, combined with the glob library being invoked without a path separator (causing * to match across / boundaries), allows unauthenticated attackers to write to, read from, or delete objects in protected S3 namespaces. Exploitation is possible via three techniques: (1) using * patterns\nthat match across path separators to reach protected routes via path traversal (e.g., /open/foo/drafts/../restricted/), (2) using percent-encoded slashes (%2F) to collapse multiple path segments into a single token at the auth layer while the decoded form resolves to a protected namespace at the storage layer, and (3) using dot-dot segments (../) under ** prefix patterns, where the raw path matches an open route while Go's URL parser resolves the traversal to a protected path before the bucket handler runs. An unauthenticated attacker with network access can perform unauthorized PUT, GET, or DELETE operations on objects in authentication-protected S3 namespaces. This vulnerability is fixed in 5.0.0.",
+      "severity": 9.4,
       "references": [
         {
-          "url": "https://github.com/OWASP-BLT/BLT/security/advisories/GHSA-cgvj-qg2h-cqfh",
+          "url": "https://github.com/oxyno-zeta/s3-proxy/security/advisories/GHSA-rfgq-wgg8-662p",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/oxyno-zeta/s3-proxy/commit/1320e4abd46ad18c2851fedde50dbb79df8b7a51",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/oxyno-zeta/s3-proxy/commit/af5ff57d8c6022459495b8fb50130073bca7b48a",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "OWASP-BLT",
-          "product": "BLT",
+          "vendor": "oxyno-zeta",
+          "product": "s3-proxy",
           "versions": [
             {
-              "version": "< 2.1.2",
+              "version": "< 5.0.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-94: Improper Control of Generation of Code ('Code Injection')",
-        "CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-42352",
-      "publishedDate": "2026-05-08T22:31:50.110Z",
-      "lastModifiedDate": "2026-05-11T17:56:10.795Z",
-      "description": "pygeoapi is a Python server implementation of the OGC API suite of standards. From version 0.23.0 to before version 0.23.3, OGC API  process execution requests can use the subscriber object to requests to internal HTTP services. This issue has been patched in version 0.23.3.",
-      "severity": 8.6,
-      "references": [
-        {
-          "url": "https://github.com/geopython/pygeoapi/security/advisories/GHSA-jgvc-94c8-3chc",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/geopython/pygeoapi/commit/3a63f5b0cc6275e3ae0edb47726b13a43cdd90ef",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/geopython/pygeoapi/releases/tag/0.23.3",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "geopython",
-          "product": "pygeoapi",
-          "versions": [
-            {
-              "version": ">= 0.23.0, < 0.23.3",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-918: Server-Side Request Forgery (SSRF)"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-42860",
-      "publishedDate": "2026-05-11T17:40:09.858Z",
-      "lastModifiedDate": "2026-05-11T17:40:09.858Z",
-      "description": "The Open edx Enterprise Service app provides enterprise features to the Open edX platform. From 7.0.2 to 7.0.4, the sync_provider_data endpoint in SAMLProviderDataViewSet fetches SAML metadata from a URL stored in SAMLProviderConfig.metadata_source. An authenticated user with the Enterprise Admin role can set this field to an arbitrary URL via the SAMLProviderConfigViewSet PATCH endpoint, then trigger a server-side HTTP request by calling sync_provider_data. The fetch in fetch_metadata_xml() passes the URL directly to requests.get() with no scheme enforcement, IP filtering, or timeout. This vulnerability is fixed in 7.0.5.",
-      "severity": 8.5,
-      "references": [
-        {
-          "url": "https://github.com/openedx/edx-enterprise/security/advisories/GHSA-64cv-vxpr-j6vc",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "openedx",
-          "product": "edx-enterprise",
-          "versions": [
-            {
-              "version": ">= 7.0.2, < 7.0.5",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-918: Server-Side Request Forgery (SSRF)"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-42858",
-      "publishedDate": "2026-05-11T17:30:59.724Z",
-      "lastModifiedDate": "2026-05-11T17:30:59.724Z",
-      "description": "Open edX Platform enables the authoring and delivery of online learning at any scale. The sync_provider_data endpoint in SAMLProviderDataViewSet allows authenticated Enterprise Admin users to supply an arbitrary URL via the metadata_url POST parameter. This URL is passed directly to requests.get() in fetch_metadata_xml() without any URL validation, IP filtering, or scheme enforcement. An attacker with Enterprise Admin privileges can force the server to make HTTP requests to internal network services, cloud metadata endpoints (e.g., AWS 169.254.169.254), or other attacker-controlled destinations. This vulnerability is fixed by commit 6fda1f120ff5a590d120ae1180185525f399c6d0 and 70a56246dd9c9df57c596e64bdd8a11b1d9da054.",
-      "severity": 8.5,
-      "references": [
-        {
-          "url": "https://github.com/openedx/openedx-platform/security/advisories/GHSA-328g-7h4g-r2m9",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openedx/openedx-platform/commit/6fda1f120ff5a590d120ae1180185525f399c6d0",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openedx/openedx-platform/commit/70a56246dd9c9df57c596e64bdd8a11b1d9da054",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "openedx",
-          "product": "openedx-platform",
-          "versions": [
-            {
-              "version": "< 6fda1f120ff5a590d120ae1180185525f399c6d0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-918: Server-Side Request Forgery (SSRF)"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-44413",
-      "publishedDate": "2026-05-11T17:42:06.164Z",
-      "lastModifiedDate": "2026-05-11T17:42:06.164Z",
-      "description": "In JetBrains TeamCity before 2026.1\n2025.11.5 authenticated users could expose server API to unauthorised access",
-      "severity": 8.2,
-      "references": [
-        {
-          "url": "https://www.jetbrains.com/privacy-security/issues-fixed/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "JetBrains",
-          "product": "TeamCity",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "lessThan": "2026.1\n2025.11.5",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-306"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-43640",
-      "publishedDate": "2026-05-11T17:14:37.931Z",
-      "lastModifiedDate": "2026-05-11T17:14:37.931Z",
-      "description": "Bitwarden Server prior to v2026.4.1 does not require master-password re-authentication when retrieving or rotating an organization's SCIM API key, allowing an authenticated user with SCIM management privileges to obtain the key using only a valid session.",
-      "severity": 8.1,
-      "references": [
-        {
-          "url": "https://sanjokkarki.com.np/blog/bitwarden-scim-key-bypass",
-          "type": "poc"
-        },
-        {
-          "url": "https://github.com/bitwarden/server/releases/tag/v2026.4.1",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/bitwarden/server/pull/7403",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/bitwarden/server/commit/eb251d9bf80724c87b187661783b9354d1784083",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/bitwarden-server-authentication-bypass-via-scim-api-key",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "affected",
-          "vendor": "bitwarden",
-          "product": "server",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver",
-              "lessThan": "2026.4.1"
-            }
-          ],
-          "repo": "https://github.com/bitwarden/server"
-        }
-      ],
-      "problemType": [
-        "Incorrect Implementation of Authentication Algorithm"
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')",
+        "CWE-863: Incorrect Authorization"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
       "id": "CVE-2026-43639",
       "publishedDate": "2026-05-11T17:14:04.552Z",
-      "lastModifiedDate": "2026-05-11T17:14:04.552Z",
+      "lastModifiedDate": "2026-05-11T19:14:22.085Z",
       "description": "Bitwarden Server prior to v2026.4.0 contains a missing authorization vulnerability that allows a provider service user to add an arbitrary organization to their provider via `POST /providers/{providerId}/clients/existing`, resulting in takeover of the target organization; self-hosted installations are unaffected as this endpoint is restricted to Cloud via SelfHosted(NotSelfHostedOnly = true).",
       "severity": 8,
       "references": [
@@ -397,333 +131,102 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-42301",
-      "publishedDate": "2026-05-09T03:59:34.741Z",
-      "lastModifiedDate": "2026-05-11T17:34:43.929Z",
-      "description": "pyp2spec generates working Fedora RPM spec file for Python projects. Prior to version 0.14.1, pyp2spec was writing PyPI package metadata (e.g. the summary field) into the generated spec file without escaping RPM macro directives. When a packager then runs rpmbuild, those directives get evaluated, so a malicious package can execute arbitrary commands on the build machine. This issue has been patched in version 0.14.1.",
-      "severity": 7.8,
+      "id": "CVE-2026-8321",
+      "publishedDate": "2026-05-11T19:45:08.634Z",
+      "lastModifiedDate": "2026-05-11T19:45:08.634Z",
+      "description": "A vulnerability was detected in inkeep agents 0.58.14. This vulnerability affects the function createDevContext of the file agents-api/src/middleware/runAuth.ts of the component runAuth Middleware. Performing a manipulation results in authentication bypass using alternate channel. The attack is possible to be carried out remotely. The exploit is now public and may be used. The project was informed of the problem early through an issue report but has not responded yet.",
+      "severity": 7.3,
       "references": [
         {
-          "url": "https://github.com/befeleme/pyp2spec/security/advisories/GHSA-r35x-v8p8-xvhw",
+          "url": "https://vuldb.com/vuln/362608",
           "type": "reference"
         },
         {
-          "url": "https://github.com/befeleme/pyp2spec/releases/tag/v0.14.1",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "befeleme",
-          "product": "pyp2spec",
-          "versions": [
-            {
-              "version": "< 0.14.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-20: Improper Input Validation",
-        "CWE-94: Improper Control of Generation of Code ('Code Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-45001",
-      "publishedDate": "2026-05-11T16:46:39.888Z",
-      "lastModifiedDate": "2026-05-11T17:51:23.651Z",
-      "description": "OpenClaw before 2026.4.20 contains a guard bypass vulnerability in the agent-facing gateway config.patch and config.apply endpoints that fails to protect operator-trusted settings including sandbox policy, plugin enablement, gateway auth/TLS, hook routing, MCP server configuration, SSRF policy, and filesystem hardening. A prompt-injected model with access to the owner-only gateway tool can persist unauthorized changes to protected operator settings.",
-      "severity": 7.1,
-      "references": [
-        {
-          "url": "https://github.com/openclaw/openclaw/security/advisories/GHSA-7jm2-g593-4qrc",
+          "url": "https://vuldb.com/vuln/362608/cti",
           "type": "reference"
         },
         {
-          "url": "https://github.com/openclaw/openclaw/commit/fe30b31a97a917ecc6e92f6c85378b6b20352422",
+          "url": "https://vuldb.com/submit/811314",
           "type": "reference"
         },
         {
-          "url": "https://www.vulncheck.com/advisories/openclaw-gateway-config-mutation-guard-bypass-via-agent-tool-access",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "OpenClaw",
-          "product": "OpenClaw",
-          "defaultStatus": "unaffected",
-          "packageURL": "pkg:npm/openclaw",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "versionType": "semver",
-              "lessThan": "2026.4.20"
-            },
-            {
-              "version": "2026.4.20",
-              "status": "unaffected",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-8231",
-      "publishedDate": "2026-05-10T05:00:14.951Z",
-      "lastModifiedDate": "2026-05-11T17:31:45.858Z",
-      "description": "A vulnerability has been found in CodeAstro Online Catering Ordering System 1.0. This affects an unknown function of the file /deleteorder.php. The manipulation of the argument ID leads to sql injection. The attack is possible to be carried out remotely. The exploit has been disclosed to the public and may be used.",
-      "severity": 6.3,
-      "references": [
-        {
-          "url": "https://vuldb.com/vuln/362448",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/vuln/362448/cti",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/submit/808783",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/yihaofuweng/cve/issues/63",
+          "url": "https://github.com/inkeep/agents/issues/3024",
           "type": "poc"
         },
         {
-          "url": "https://codeastro.com/",
+          "url": "https://github.com/inkeep/agents/",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "CodeAstro",
-          "product": "Online Catering Ordering System",
+          "vendor": "inkeep",
+          "product": "agents",
           "versions": [
             {
-              "version": "1.0",
+              "version": "0.58.14",
+              "status": "affected"
+            }
+          ],
+          "modules": [
+            "runAuth Middleware"
+          ]
+        }
+      ],
+      "problemType": [
+        "Authentication Bypass Using Alternate Channel",
+        "Improper Authentication"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-42883",
+      "publishedDate": "2026-05-11T19:51:43.211Z",
+      "lastModifiedDate": "2026-05-11T19:51:43.211Z",
+      "description": "Audiobookshelf is a self-hosted audiobook and podcast server. Prior to 2.32.2, the GET /api/libraries/:id/download endpoint validates that the requesting user has access to the library specified in the URL path, but fetches downloadable items solely by attacker-provided IDs without constraining them to that library. An authenticated user with download permission and access to any one library can exfiltrate the full file contents of items belonging to any other library, including libraries they are explicitly denied access to. This vulnerability is fixed in 2.32.2.",
+      "severity": 6.5,
+      "references": [
+        {
+          "url": "https://github.com/advplyr/audiobookshelf/security/advisories/GHSA-6rvg-w3f5-9gq5",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "advplyr",
+          "product": "audiobookshelf",
+          "versions": [
+            {
+              "version": "< 2.32.2",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "SQL Injection",
-        "Injection"
+        "CWE-863: Incorrect Authorization"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-8190",
-      "publishedDate": "2026-05-09T17:15:08.656Z",
-      "lastModifiedDate": "2026-05-11T17:21:24.425Z",
-      "description": "A vulnerability was determined in Wavlink NU516U1 M16U1_V240425. Affected by this issue is the function wan of the file /cgi-bin/adm.cgi. This manipulation of the argument ppp_username/ppp_passwd/rwan_ip/rwan_mask/rwan_gateway is directly passed by the attacker/so we can control the ppp_username/ppp_passwd/rwan_ip/rwan_mask/rwan_gateway causes os command injection. The attack can be initiated remotely. The exploit has been publicly disclosed and may be utilized. The vendor was contacted early about this disclosure.",
-      "severity": 6.3,
+      "id": "CVE-2026-42872",
+      "publishedDate": "2026-05-11T18:32:45.697Z",
+      "lastModifiedDate": "2026-05-11T19:43:33.708Z",
+      "description": "WeGIA is a web manager for charitable institutions. In versions prior to 3.7.0, a reflected Cross-Site Scripting (XSS) vulnerability exists in lista_arquivos_etapa.php due to improper handling of user-supplied input. The id_processo parameter is directly embedded into the HTML without sanitization, allowing attackers to inject arbitrary JavaScript. This can lead to session hijacking, credential theft, or execution of malicious actions in the context of the victim's browser. This vulnerability is fixed in 3.7.0.",
+      "severity": 6.1,
       "references": [
         {
-          "url": "https://vuldb.com/vuln/362342",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/vuln/362342/cti",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/submit/800729",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/wudipjq/my_vuln/blob/main/Wavlink/vuln_3/3.md",
-          "type": "poc"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Wavlink",
-          "product": "NU516U1",
-          "versions": [
-            {
-              "version": "M16U1_V240425",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "OS Command Injection",
-        "Command Injection"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-8188",
-      "publishedDate": "2026-05-09T15:15:09.621Z",
-      "lastModifiedDate": "2026-05-11T17:32:10.946Z",
-      "description": "A vulnerability has been found in Wavlink NU516U1 M16U1_V240425. Affected is the function change_wifi_password of the file /cgi-bin/adm.cgi. The manipulation of the argument wl_channel/wl_Pass/EncrypType leads to os command injection. It is possible to initiate the attack remotely. The exploit has been disclosed to the public and may be used. The vendor was contacted early about this disclosure.",
-      "severity": 6.3,
-      "references": [
-        {
-          "url": "https://vuldb.com/vuln/362340",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/vuln/362340/cti",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/submit/800727",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/wudipjq/my_vuln/blob/main/Wavlink/vuln_1/1.md",
-          "type": "poc"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Wavlink",
-          "product": "NU516U1",
-          "versions": [
-            {
-              "version": "M16U1_V240425",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "OS Command Injection",
-        "Command Injection"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-43896",
-      "publishedDate": "2026-05-11T17:24:48.149Z",
-      "lastModifiedDate": "2026-05-11T17:24:48.149Z",
-      "description": "jq is a command-line JSON processor. In 1.8.1 and earlier, unbounded recursion in jv_object_merge_recursive() allows a crafted jq program to crash the process with a segfault. The function is reachable through the * operator when both operands are objects.",
-      "severity": 6.2,
-      "references": [
-        {
-          "url": "https://github.com/jqlang/jq/security/advisories/GHSA-mg96-6h3q-g846",
+          "url": "https://github.com/LabRedesCefetRJ/WeGIA/security/advisories/GHSA-gp6v-f6q5-wq62",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "jqlang",
-          "product": "jq",
+          "vendor": "LabRedesCefetRJ",
+          "product": "WeGIA",
           "versions": [
             {
-              "version": "<= 1.8.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-674: Uncontrolled Recursion"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-43894",
-      "publishedDate": "2026-05-11T17:20:06.055Z",
-      "lastModifiedDate": "2026-05-11T17:20:06.055Z",
-      "description": "jq is a command-line JSON processor. In 1.8.1 and earlier, when decNumberFromString is given a number literal of INT_MAX-1 (2147483646) digits, the D2U() macro overflows during signed-int arithmetic. The wrapped negative value bypasses the heap-allocation size check, causes the function to use a 30-byte stack buffer, and then writes ≈715 million 16-bit units (≈1.4 GiB) at an offset 1.43 GiB below the stack frame. The written content is fully attacker-controlled (the parsed decimal digits, packed 3-per-unit).",
-      "severity": 6.2,
-      "references": [
-        {
-          "url": "https://github.com/jqlang/jq/security/advisories/GHSA-5v7p-2r57-2g4g",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "jqlang",
-          "product": "jq",
-          "versions": [
-            {
-              "version": "<= 1.8.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-190: Integer Overflow or Wraparound"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-42316",
-      "publishedDate": "2026-05-11T16:41:07.091Z",
-      "lastModifiedDate": "2026-05-11T17:27:23.704Z",
-      "description": "kafka-sink-azure-kusto Kafka Connect plugin is the official Microsoft sink for Azure Data Explorer (Kusto). Prior to 5.2.3, kafka-sink-azure-kusto did not sanitize user-controlled values inside the kusto.tables.topics.mapping configuration. The db, table, mapping, and format fields of each mapping entry were interpolated directly into KQL management/query commands via String.formatted(...) (e.g., FETCH_TABLE_COMMAND.formatted(table) → \"<table> | count\", FETCH_TABLE_MAPPING_COMMAND.formatted(table, format, mapping) → \".show table <table> ingestion <format> mapping '<mapping>'\"). An actor able to influence the connector configuration (for example, someone with permissions to submit or edit Kafka Connect connector configs) could embed KQL metacharacters (;, |, ') to execute arbitrary management commands in the context of the connector's service principal — enabling schema enumeration/modification, ingestion-mapping tampering, or changes to streaming/retention policies on the target Azure Data Explorer database. This is a tampering vulnerability. Exploitation requires privileged access to the connector configuration; no end-user interaction or Kafka record payload is involved. This vulnerability is fixed in 5.2.3.",
-      "severity": 5.9,
-      "references": [
-        {
-          "url": "https://github.com/Azure/kafka-sink-azure-kusto/security/advisories/GHSA-c9mr-mqvh-6wgj",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/Azure/kafka-sink-azure-kusto/pull/155",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/Azure/kafka-sink-azure-kusto/releases/tag/v5.2.3",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Azure",
-          "product": "kafka-sink-azure-kusto",
-          "versions": [
-            {
-              "version": "< 5.2.3",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-943: Improper Neutralization of Special Elements in Data Query Logic"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41250",
-      "publishedDate": "2026-05-11T16:50:02.657Z",
-      "lastModifiedDate": "2026-05-11T17:24:32.718Z",
-      "description": "Taiga is a project management platform for startups and agile developers. Prior 6.9.1, Taiga front is vulnerable to stored XSS. This vulnerability is fixed in 6.9.1.",
-      "severity": 5.7,
-      "references": [
-        {
-          "url": "https://github.com/taigaio/taiga-front/security/advisories/GHSA-fpm6-3pvx-3c46",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/taigaio/taiga-front/commit/a9ab31a2f184a2f5da3644829f0caa7ac6f22a4a",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "taigaio",
-          "product": "taiga-front",
-          "versions": [
-            {
-              "version": "< 6.9.1",
+              "version": "< 3.7.0",
               "status": "affected"
             }
           ]
@@ -735,301 +238,207 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-41256",
-      "publishedDate": "2026-05-11T17:18:30.975Z",
-      "lastModifiedDate": "2026-05-11T17:18:30.975Z",
-      "description": "jq is a command-line JSON processor. In 1.8.1 and earlier, Top-level jq programs loaded from a file with -f are truncated at the first embedded NUL byte on current upstream HEAD. A crafted filter file such as . followed by \\x00 and arbitrary suffix compiles and executes as only the prefix before the NUL. This leaves jq with a post-CVE-2026-33948 prefix/full-buffer mismatch on the compilation path even though the JSON parser path has already been fixed.",
+      "id": "CVE-2026-45222",
+      "publishedDate": "2026-05-11T18:00:26.205Z",
+      "lastModifiedDate": "2026-05-11T19:17:42.927Z",
+      "description": "Summarize versions through 0.14.1, fixed in commit 0cfb0fb, creates the daemon configuration directory and file with default filesystem permissions that may be world-readable on Unix-like systems, allowing local attackers to read bearer tokens and API credentials stored in ~/.summarize/daemon.json. A local attacker can exploit these permissive permissions to read the daemon bearer token and persisted provider credentials, enabling unauthorized access to the daemon or recovery of sensitive API keys.",
+      "severity": 6.1,
+      "references": [
+        {
+          "url": "https://github.com/steipete/summarize/pull/214",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/steipete/summarize/commit/0cfb0fb99777a87a7b02082b5e4bd449f8dd6175",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/summarize-insecure-daemon-configuration-file-permissions",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "affected",
+          "vendor": "steipete",
+          "product": "summarize",
+          "repo": "https://github.com/steipete/summarize",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver",
+              "lessThanOrEqual": "0.14.1"
+            },
+            {
+              "status": "unaffected",
+              "version": "0cfb0fb99777a87a7b02082b5e4bd449f8dd6175",
+              "versionType": "git"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Incorrect Permission Assignment for Critical Resource"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-42050",
+      "publishedDate": "2026-05-11T19:46:50.770Z",
+      "lastModifiedDate": "2026-05-11T19:46:50.770Z",
+      "description": "ImageMagick is free and open-source software used for editing and manipulating digital images. Prior to 7.1.2-21 and 6.9.13-46, a malicious MIFF file could trigger an overflow when a user opens it in the display tool and right-clicks a tile to invoke the Load / Update menu item. This vulnerability is fixed in 7.1.2-21 and 6.9.13-46.",
       "severity": 5.5,
       "references": [
         {
-          "url": "https://github.com/jqlang/jq/security/advisories/GHSA-vf2h-chrj-q3fg",
+          "url": "https://github.com/ImageMagick/ImageMagick/security/advisories/GHSA-7mxf-ff4f-jj7p",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "jqlang",
-          "product": "jq",
+          "vendor": "ImageMagick",
+          "product": "ImageMagick",
           "versions": [
             {
-              "version": "<= 1.8.1",
+              "version": "< 6.9.13-46",
+              "status": "affected"
+            },
+            {
+              "version": ">= 7.0.0, < 7.1.2-20",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-158: Improper Neutralization of Null Byte or NUL Character"
+        "CWE-121: Stack-based Buffer Overflow"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-8213",
-      "publishedDate": "2026-05-09T23:00:17.283Z",
-      "lastModifiedDate": "2026-05-11T17:31:56.891Z",
-      "description": "A vulnerability has been found in OSGeo gdal up to 3.13.0dev-4. Affected by this issue is the function GDSDfldsrch of the file frmts/hdf4/hdf-eos/GDapi.c of the component Grid File Handler. The manipulation leads to heap-based buffer overflow. An attack has to be approached locally. The exploit has been disclosed to the public and may be used. Upgrading to version 3.13.0RC1 can resolve this issue. The identifier of the patch is 3e04c0385630e4d42517046d9a4967dfccfeb7fd. It is suggested to upgrade the affected component.",
-      "severity": 5.3,
+      "id": "CVE-2026-42886",
+      "publishedDate": "2026-05-11T19:54:10.876Z",
+      "lastModifiedDate": "2026-05-11T19:54:10.876Z",
+      "description": "Audiobookshelf is a self-hosted audiobook and podcast server. Prior to 2.32.2, the POST /api/backups/upload endpoint decompresses the details entry from an uploaded .audiobookshelf ZIP file entirely into memory using zip.entryData(), with no limit on the decompressed size. The upload middleware also has no file size limit. An admin user can upload a crafted ZIP containing a highly compressed details entry that, when decompressed, consumes hundreds of megabytes or gigabytes of memory, crashing the server process via out-of-memory. This vulnerability is fixed in 2.32.2.",
+      "severity": 4.9,
       "references": [
         {
-          "url": "https://vuldb.com/vuln/362430",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/vuln/362430/cti",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/submit/808128",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/OSGeo/gdal/issues/14399",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/biniamf/pocs/tree/main/gdal-gdsdfldsrch_oob-read",
-          "type": "poc"
-        },
-        {
-          "url": "https://github.com/OSGeo/gdal/commit/3e04c0385630e4d42517046d9a4967dfccfeb7fd",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/OSGeo/gdal/releases/tag/v3.13.0RC1",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/OSGeo/gdal/",
+          "url": "https://github.com/advplyr/audiobookshelf/security/advisories/GHSA-4jq4-rvq8-j26h",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "OSGeo",
-          "product": "gdal",
+          "vendor": "advplyr",
+          "product": "audiobookshelf",
           "versions": [
             {
-              "version": "3.13.0dev-4",
+              "version": "< 2.33.2",
               "status": "affected"
-            },
-            {
-              "version": "3.13.0RC1",
-              "status": "unaffected"
-            }
-          ],
-          "cpes": [
-            "cpe:2.3:a:osgeo:gdal:*:*:*:*:*:*:*:*"
-          ],
-          "modules": [
-            "Grid File Handler"
-          ]
-        }
-      ],
-      "problemType": [
-        "Heap-based Buffer Overflow",
-        "Memory Corruption"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-32683",
-      "publishedDate": "2026-05-09T08:29:09.821Z",
-      "lastModifiedDate": "2026-05-11T17:29:30.017Z",
-      "description": "Some EZVIZ products utilize older versions of cloud feature modules with legacy API interfaces, which pose a data transmission risk. Attackers can exploit this by eavesdropping on network requests to obtain data.Users are advised to upgrade the app to the latest version and enable the video encryption feature.",
-      "severity": 5.3,
-      "references": [
-        {
-          "url": "https://www.ezviz.com/inter/trust-center/security/security-notice/2026.05.08",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.hikvision.com/en/support/cybersecurity/security-advisory/security-vulnerability-in-cloud-function-modules-of-some-hikvisi/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "EZVIZ",
-          "product": "EZVIZ APP",
-          "versions": [
-            {
-              "version": "iOS: Versions prior to 7.3.1",
-              "status": "affected"
-            },
-            {
-              "version": "Android: Versions prior to 7.3.0.0210",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-45003",
-      "publishedDate": "2026-05-11T16:46:41.355Z",
-      "lastModifiedDate": "2026-05-11T17:25:09.458Z",
-      "description": "OpenClaw before 2026.4.22 allows workspace dotenv files to override connector endpoint hosts for Matrix, Mattermost, IRC, and Synology connectors. Attackers with workspace access can redirect runtime traffic to malicious endpoints by setting endpoint variables in dotenv files.",
-      "severity": 5,
-      "references": [
-        {
-          "url": "https://github.com/openclaw/openclaw/security/advisories/GHSA-55cf-xx38-4p9p",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openclaw/openclaw/commit/0623079e98abf7202591f1b04a89755eb7ec9272",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/openclaw-connector-endpoint-host-override-via-workspace-dotenv-files",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "OpenClaw",
-          "product": "OpenClaw",
-          "defaultStatus": "unaffected",
-          "packageURL": "pkg:npm/openclaw",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "versionType": "semver",
-              "lessThan": "2026.4.22"
-            },
-            {
-              "version": "2026.4.22",
-              "status": "unaffected",
-              "versionType": "semver"
             }
           ]
         }
       ],
       "problemType": [
-        "Unintended Proxy or Intermediary ('Confused Deputy')"
+        "CWE-409: Improper Handling of Highly Compressed Data (Data Amplification)"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-7814",
-      "publishedDate": "2026-05-11T14:35:49.411Z",
-      "lastModifiedDate": "2026-05-11T17:31:37.625Z",
-      "description": "Stored cross-site scripting (XSS) vulnerability in pgAdmin 4 Browser Tree and Explain Visualizer modules.\n\nUser-controlled PostgreSQL object names (database, schema, table, column, etc.) were assigned to DOM elements via innerHTML, allowing crafted object names containing HTML markup to execute attacker-supplied JavaScript in the browser of any pgAdmin user who navigated to or executed EXPLAIN over the malicious object.\n\nFix replaces innerHTML with textContent.\n\nThis issue affects pgAdmin 4: before 9.15.",
-      "severity": 4.8,
-      "references": [
-        {
-          "url": "https://github.com/pgadmin-org/pgadmin4/pull/9865",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "pgadmin.org",
-          "product": "pgAdmin 4",
-          "repo": "https://github.com/pgadmin-org/pgadmin4",
-          "modules": [
-            "Browser Tree",
-            "Explain Visualizer"
-          ],
-          "programFiles": [
-            "https://github.com/pgadmin-org/pgadmin4/blob/master/web/pgadmin/static/js/Explain/Graphical.jsx",
-            "https://github.com/pgadmin-org/pgadmin4/blob/master/web/pgadmin/static/js/components/PgTree/FileTreeX/index.tsx"
-          ],
-          "versions": [
-            {
-              "status": "affected",
-              "version": "6.9",
-              "lessThan": "9.15",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "affected"
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-8263",
-      "publishedDate": "2026-05-11T02:00:16.521Z",
-      "lastModifiedDate": "2026-05-11T17:31:16.800Z",
-      "description": "A security flaw has been discovered in Tenda AC6 15.03.06.49_multi_TDE01. Affected is the function fromSetWirelessRepeat of the file /goform/WifiExtraSet of the component httpd. Performing a manipulation of the argument mac/ssid results in os command injection. It is possible to initiate the attack remotely. The exploit has been released to the public and may be used for attacks.",
+      "id": "CVE-2026-8320",
+      "publishedDate": "2026-05-11T19:30:11.376Z",
+      "lastModifiedDate": "2026-05-11T19:30:11.376Z",
+      "description": "A security vulnerability has been detected in jishenghua jshERP up to 3.6. This affects the function getUserByWeixinCode of the file jshERP-boot/src/main/java/com/jsh/erp/service/UserService.java of the component updatePlatformConfigByKey Endpoint. Such manipulation of the argument weixinUrl leads to server-side request forgery. The attack can be executed remotely. The exploit has been disclosed publicly and may be used. The project was informed of the problem early through an issue report but has not responded yet.",
       "severity": 4.7,
       "references": [
         {
-          "url": "https://vuldb.com/vuln/362560",
+          "url": "https://vuldb.com/vuln/362607",
           "type": "reference"
         },
         {
-          "url": "https://vuldb.com/vuln/362560/cti",
+          "url": "https://vuldb.com/vuln/362607/cti",
           "type": "reference"
         },
         {
-          "url": "https://vuldb.com/submit/810074",
+          "url": "https://vuldb.com/submit/811303",
           "type": "reference"
         },
         {
-          "url": "https://github.com/yaoyue123/iot/blob/main/Tenda/AC10U/fromSetWirelessRepeat.md",
+          "url": "https://github.com/jishenghua/jshERP/issues/152",
           "type": "poc"
         },
         {
-          "url": "https://www.tenda.com.cn/",
+          "url": "https://github.com/jishenghua/jshERP/",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Tenda",
-          "product": "AC6",
+          "vendor": "jishenghua",
+          "product": "jshERP",
           "versions": [
             {
-              "version": "15.03.06.49_multi_TDE01",
+              "version": "3.0",
+              "status": "affected"
+            },
+            {
+              "version": "3.1",
+              "status": "affected"
+            },
+            {
+              "version": "3.2",
+              "status": "affected"
+            },
+            {
+              "version": "3.3",
+              "status": "affected"
+            },
+            {
+              "version": "3.4",
+              "status": "affected"
+            },
+            {
+              "version": "3.5",
+              "status": "affected"
+            },
+            {
+              "version": "3.6",
               "status": "affected"
             }
           ],
           "cpes": [
-            "cpe:2.3:o:tenda:ac6_firmware:*:*:*:*:*:*:*:*"
+            "cpe:2.3:a:jishenghua:jsherp:*:*:*:*:*:*:*:*"
           ],
           "modules": [
-            "httpd"
+            "updatePlatformConfigByKey Endpoint"
           ]
         }
       ],
       "problemType": [
-        "OS Command Injection",
-        "Command Injection"
+        "Server-Side Request Forgery"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-42857",
-      "publishedDate": "2026-05-11T17:32:40.940Z",
-      "lastModifiedDate": "2026-05-11T17:32:40.940Z",
-      "description": "Open edX Platform enables the authoring and delivery of online learning at any scale. The HTML sanitizer clean_thread_html_body() used for discussion notification emails fails to remove <style> tags from user-generated discussion post content. This content is rendered with Django's |safe template filter in email notification templates, allowing any enrolled student to inject arbitrary CSS into email notifications sent to other users. This enables email tracking (IP address disclosure), content spoofing, and phishing attacks. This vulnerability is fixed with commit cddc25cd791bb78f76833896e4778f668861df12.",
-      "severity": 4.6,
+      "id": "CVE-2026-42887",
+      "publishedDate": "2026-05-11T19:55:32.090Z",
+      "lastModifiedDate": "2026-05-11T19:55:32.090Z",
+      "description": "Audiobookshelf is a self-hosted audiobook and podcast server. Prior to 2.33.0, a stored cross-site scripting (XSS) vulnerability exists in the Login Page due to improper sanitization of the authLoginCustomMessage field of the /api/auth-settings endpoint. An attacker with administrative privileges can inject arbitrary HTML/JavaScript that will be rendered on the login page for all users. This vulnerability is fixed in 2.33.0.",
+      "severity": 4.5,
       "references": [
         {
-          "url": "https://github.com/openedx/openedx-platform/security/advisories/GHSA-4xv3-5j4x-q8g4",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openedx/openedx-platform/commit/cddc25cd791bb78f76833896e4778f668861df12",
+          "url": "https://github.com/advplyr/audiobookshelf/security/advisories/GHSA-cx29-ghq2-9cm4",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "openedx",
-          "product": "openedx-platform",
+          "vendor": "advplyr",
+          "product": "audiobookshelf",
           "versions": [
             {
-              "version": "< cddc25cd791bb78f76833896e4778f668861df12",
-              "status": "affected"
-            },
-            {
-              "version": ">= sumac, < ulmo",
+              "version": "< 2.33.0",
               "status": "affected"
             }
           ]
@@ -1041,707 +450,67 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-43895",
-      "publishedDate": "2026-05-11T17:24:02.880Z",
-      "lastModifiedDate": "2026-05-11T17:24:02.880Z",
-      "description": "jq is a command-line JSON processor. In 1.8.1 and earlier, jq accepts embedded NUL bytes in import paths at the jq-language level, but later resolves those paths through C string operations during module and data-file lookup. This creates a mismatch between the logical import string that policy or audit code may validate and the on-disk path that jq actually opens.",
-      "severity": 4.4,
-      "references": [
-        {
-          "url": "https://github.com/jqlang/jq/security/advisories/GHSA-7q7g-mrq3-phxr",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "jqlang",
-          "product": "jq",
-          "versions": [
-            {
-              "version": "<= 1.8.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-20: Improper Input Validation",
-        "CWE-158: Improper Neutralization of Null Byte or NUL Character"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-44997",
-      "publishedDate": "2026-05-11T16:46:36.591Z",
-      "lastModifiedDate": "2026-05-11T17:25:42.338Z",
-      "description": "OpenClaw before 2026.4.22 contains a security envelope constraint bypass vulnerability allowing restricted subagents to spawn ACP child sessions that fail to inherit depth, child-count limits, control scope, or target-agent restrictions. Attackers can exploit this by spawning child sessions that bypass subagent-only constraints, potentially escalating privileges or accessing restricted resources.",
+      "id": "CVE-2026-42885",
+      "publishedDate": "2026-05-11T19:52:58.149Z",
+      "lastModifiedDate": "2026-05-11T19:52:58.149Z",
+      "description": "Audiobookshelf is a self-hosted audiobook and podcast server. Prior to 2.32.2, the POST /api/filesystem/pathexists endpoint uses String.startsWith() to validate that a resolved file path is within a library folder. This check fails for sibling directories whose names share a common prefix (e.g., /audiobooks vs /audiobooks-private), allowing authenticated users with upload permission to probe file existence outside their authorized library folder boundaries. This vulnerability is fixed in 2.32.2.",
       "severity": 4.3,
       "references": [
         {
-          "url": "https://github.com/openclaw/openclaw/security/advisories/GHSA-q3jj-46pq-826r",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openclaw/openclaw/commit/31160dc069b7cc5d833b39c53736a41ad3befda2",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/openclaw-security-envelope-constraint-bypass-in-acp-child-sessions",
+          "url": "https://github.com/advplyr/audiobookshelf/security/advisories/GHSA-rhjg-p6cm-38w2",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "OpenClaw",
-          "product": "OpenClaw",
-          "defaultStatus": "unaffected",
-          "packageURL": "pkg:npm/openclaw",
+          "vendor": "advplyr",
+          "product": "audiobookshelf",
           "versions": [
             {
-              "version": "0",
-              "status": "affected",
-              "versionType": "semver",
-              "lessThan": "2026.4.22"
-            },
-            {
-              "version": "2026.4.22",
-              "status": "unaffected",
-              "versionType": "semver"
+              "version": "< 2.33.2",
+              "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "Incorrect Privilege Assignment"
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-8292",
-      "publishedDate": "2026-05-11T15:00:13.341Z",
-      "lastModifiedDate": "2026-05-11T17:30:56.099Z",
-      "description": "A security vulnerability has been detected in Open5GS up to 2.7.7. The affected element is the function yuarel_parse in the library /lib/sbi/conv.c of the component NRF. Such manipulation of the argument hnrf-uri leads to denial of service. The attack may be performed from remote. The exploit has been disclosed publicly and may be used. The project was informed of the problem early through an issue report but has not responded yet.",
+      "id": "CVE-2026-42884",
+      "publishedDate": "2026-05-11T19:52:23.339Z",
+      "lastModifiedDate": "2026-05-11T19:52:23.339Z",
+      "description": "Audiobookshelf is a self-hosted audiobook and podcast server. Prior to 2.32.2, the GET /api/collections and GET /api/collections/:id endpoints return collections from all libraries without checking whether the requesting user has access to each collection's library. An authenticated user with access to any library can enumerate and read collections (including full book metadata) from libraries they are explicitly restricted from accessing. This vulnerability is fixed in 2.32.2.",
       "severity": 4.3,
       "references": [
         {
-          "url": "https://vuldb.com/vuln/362589",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/vuln/362589/cti",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/submit/808509",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/open5gs/open5gs/issues/4457",
-          "type": "poc"
-        },
-        {
-          "url": "https://github.com/open5gs/open5gs/",
+          "url": "https://github.com/advplyr/audiobookshelf/security/advisories/GHSA-rxw2-h55w-ffmh",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "n/a",
-          "product": "Open5GS",
+          "vendor": "advplyr",
+          "product": "audiobookshelf",
           "versions": [
             {
-              "version": "2.7.0",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.1",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.2",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.3",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.4",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.5",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.6",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.7",
-              "status": "affected"
-            }
-          ],
-          "cpes": [
-            "cpe:2.3:a:open5gs:open5gs:*:*:*:*:*:*:*:*"
-          ],
-          "modules": [
-            "NRF"
-          ]
-        }
-      ],
-      "problemType": [
-        "Denial of Service"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-8269",
-      "publishedDate": "2026-05-11T03:30:09.172Z",
-      "lastModifiedDate": "2026-05-11T17:31:09.244Z",
-      "description": "A vulnerability was found in Open5GS up to 2.7.7. Impacted is the function smf_nsmf_handle_create_sm_context of the component SMF. Performing a manipulation results in denial of service. Remote exploitation of the attack is possible. The exploit has been made public and could be used. The project was informed of the problem early through an issue report but has not responded yet.",
-      "severity": 4.3,
-      "references": [
-        {
-          "url": "https://vuldb.com/vuln/362566",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/vuln/362566/cti",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/submit/808486",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/open5gs/open5gs/issues/4450",
-          "type": "poc"
-        },
-        {
-          "url": "https://github.com/open5gs/open5gs/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n/a",
-          "product": "Open5GS",
-          "versions": [
-            {
-              "version": "2.7.0",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.1",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.2",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.3",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.4",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.5",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.6",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.7",
-              "status": "affected"
-            }
-          ],
-          "cpes": [
-            "cpe:2.3:a:open5gs:open5gs:*:*:*:*:*:*:*:*"
-          ],
-          "modules": [
-            "SMF"
-          ]
-        }
-      ],
-      "problemType": [
-        "Denial of Service"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-8251",
-      "publishedDate": "2026-05-10T23:00:21.455Z",
-      "lastModifiedDate": "2026-05-11T17:31:31.213Z",
-      "description": "A vulnerability was found in Open5GS up to 2.7.7. This impacts the function update_authorized_pcc_rule_and_qos of the file /src/smf/npcf-handler.c of the component SMF. Performing a manipulation results in denial of service. The attack is possible to be carried out remotely. The exploit has been made public and could be used. The project was informed of the problem early through an issue report but has not responded yet.",
-      "severity": 4.3,
-      "references": [
-        {
-          "url": "https://vuldb.com/vuln/362548",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/vuln/362548/cti",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/submit/808480",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/open5gs/open5gs/issues/4445",
-          "type": "poc"
-        },
-        {
-          "url": "https://github.com/open5gs/open5gs/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n/a",
-          "product": "Open5GS",
-          "versions": [
-            {
-              "version": "2.7.0",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.1",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.2",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.3",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.4",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.5",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.6",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.7",
-              "status": "affected"
-            }
-          ],
-          "cpes": [
-            "cpe:2.3:a:open5gs:open5gs:*:*:*:*:*:*:*:*"
-          ],
-          "modules": [
-            "SMF"
-          ]
-        }
-      ],
-      "problemType": [
-        "Denial of Service"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-8194",
-      "publishedDate": "2026-05-09T19:30:09.900Z",
-      "lastModifiedDate": "2026-05-11T17:32:03.972Z",
-      "description": "A security vulnerability has been detected in osTicket up to 1.18.3. Impacted is an unknown function of the file include/class.dispatcher.php of the component Dispatcher. The manipulation of the argument _method leads to cross-site request forgery. Remote exploitation of the attack is possible. The exploit has been disclosed publicly and may be used. The project was informed of the problem early through a pull request but has not reacted yet.",
-      "severity": 4.3,
-      "references": [
-        {
-          "url": "https://vuldb.com/vuln/362346",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/vuln/362346/cti",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/submit/802755",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/osTicket/osTicket/pull/6945",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/az10b/security-advisories/blob/main/csrf_bypass_osTicket.md",
-          "type": "poc"
-        },
-        {
-          "url": "https://github.com/osTicket/osTicket/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n/a",
-          "product": "osTicket",
-          "versions": [
-            {
-              "version": "1.18.0",
-              "status": "affected"
-            },
-            {
-              "version": "1.18.1",
-              "status": "affected"
-            },
-            {
-              "version": "1.18.2",
-              "status": "affected"
-            },
-            {
-              "version": "1.18.3",
-              "status": "affected"
-            }
-          ],
-          "cpes": [
-            "cpe:2.3:a:osticket:osticket:*:*:*:*:*:*:*:*"
-          ],
-          "modules": [
-            "Dispatcher"
-          ]
-        }
-      ],
-      "problemType": [
-        "Cross-Site Request Forgery",
-        "Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-44991",
-      "publishedDate": "2026-05-11T16:46:31.670Z",
-      "lastModifiedDate": "2026-05-11T17:26:35.853Z",
-      "description": "OpenClaw before 2026.4.21 contains an authorization bypass vulnerability in command-auth.ts that allows non-owner senders to execute owner-enforced slash commands when wildcard inbound senders are configured without explicit owner allowFrom settings. Attackers can exploit this by sending commands like /send, /config, or /debug on affected channels to bypass owner-only command authorization checks.",
-      "severity": 4.2,
-      "references": [
-        {
-          "url": "https://github.com/openclaw/openclaw/security/advisories/GHSA-c28g-vh7m-fm7v",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openclaw/openclaw/commit/2aa93d44a1b2c7058c371f261fda2b5d4de4a882",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/openclaw/openclaw/commit/995febb7b1e811ff6a1df5b18c22de94103f4c9f",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/openclaw-authorization-bypass-in-owner-enforced-commands-via-wildcard-channel-senders",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "OpenClaw",
-          "product": "OpenClaw",
-          "defaultStatus": "unaffected",
-          "packageURL": "pkg:npm/openclaw",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "versionType": "semver",
-              "lessThan": "2026.4.21"
-            },
-            {
-              "version": "2026.4.21",
-              "status": "unaffected",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Incorrect Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-8275",
-      "publishedDate": "2026-05-11T05:00:19.083Z",
-      "lastModifiedDate": "2026-05-11T17:31:02.040Z",
-      "description": "A vulnerability was detected in bettercap up to 2.41.5. Affected by this vulnerability is the function ippReadChunkedBody of the file modules/zerogod/zerogod_ipp_primitives.go of the component zerogod IPP Service. Performing a manipulation results in integer coercion error. The attack can be initiated remotely. The attack is considered to have high complexity. The exploitation appears to be difficult. The exploit is now public and may be used. The patch is named 3731d5576cffae9eefe3721cd46a40933304129f. To fix this issue, it is recommended to deploy a patch.",
-      "severity": 3.7,
-      "references": [
-        {
-          "url": "https://vuldb.com/vuln/362572",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/vuln/362572/cti",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/submit/811145",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/bettercap/bettercap/issues/1263",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/bettercap/bettercap/pull/1264",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/user-attachments/files/26852847/poc.py",
-          "type": "poc"
-        },
-        {
-          "url": "https://github.com/bettercap/bettercap/commit/3731d5576cffae9eefe3721cd46a40933304129f",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/bettercap/bettercap/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n/a",
-          "product": "bettercap",
-          "versions": [
-            {
-              "version": "2.41.0",
-              "status": "affected"
-            },
-            {
-              "version": "2.41.1",
-              "status": "affected"
-            },
-            {
-              "version": "2.41.2",
-              "status": "affected"
-            },
-            {
-              "version": "2.41.3",
-              "status": "affected"
-            },
-            {
-              "version": "2.41.4",
-              "status": "affected"
-            },
-            {
-              "version": "2.41.5",
-              "status": "affected"
-            }
-          ],
-          "modules": [
-            "zerogod IPP Service"
-          ]
-        }
-      ],
-      "problemType": [
-        "Integer Coercion Error",
-        "Numeric Error"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-8242",
-      "publishedDate": "2026-05-10T08:15:08.901Z",
-      "lastModifiedDate": "2026-05-11T17:31:39.315Z",
-      "description": "A vulnerability was found in Industrial Application Software IAS Canias ERP 8.03. The impacted element is the function doAction of the component Login RMI Interface. Performing a manipulation results in observable response discrepancy. The attack is possible to be carried out remotely. A high degree of complexity is needed for the attack. The exploitability is regarded as difficult. The exploit has been made public and could be used. The vendor was contacted early about this disclosure but did not respond in any way.",
-      "severity": 3.7,
-      "references": [
-        {
-          "url": "https://vuldb.com/vuln/362458",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/vuln/362458/cti",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/submit/808295",
-          "type": "reference"
-        },
-        {
-          "url": "https://hawktrace.com/blog/caniaserp",
-          "type": "reference"
-        },
-        {
-          "url": "https://gist.github.com/0xb1lal/85422a63c10a001c75a22365457de624",
-          "type": "poc"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Industrial Application Software IAS",
-          "product": "Canias ERP",
-          "versions": [
-            {
-              "version": "8.03",
-              "status": "affected"
-            }
-          ],
-          "modules": [
-            "Login RMI Interface"
-          ]
-        }
-      ],
-      "problemType": [
-        "Observable Response Discrepancy",
-        "Information Exposure Through Discrepancy"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-8257",
-      "publishedDate": "2026-05-11T00:30:13.661Z",
-      "lastModifiedDate": "2026-05-11T17:31:23.327Z",
-      "description": "A vulnerability was detected in WebAssembly Binaryen up to 117. This issue affects the function IRBuilder::makeBrOn of the file src/wasm/wasm-ir-builder.cpp of the component BrOn Parser. Performing a manipulation results in reachable assertion. The attack needs to be approached locally. The exploit is now public and may be used. The patch is named 1251efbc1ea471c1311d2726b2bbe061ff2a291c. It is suggested to install a patch to address this issue.",
-      "severity": 3.3,
-      "references": [
-        {
-          "url": "https://vuldb.com/vuln/362554",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/vuln/362554/cti",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/submit/809552",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/WebAssembly/binaryen/issues/8633",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/WebAssembly/binaryen/pull/8635",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/HackC0der/CVE-Repos/blob/main/wasm-binaryen/Assertion_Failure_isRef_wasm_Type_getHeapType_commit_3ef8d19",
-          "type": "poc"
-        },
-        {
-          "url": "https://github.com/WebAssembly/binaryen/commit/1251efbc1ea471c1311d2726b2bbe061ff2a291c",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/WebAssembly/binaryen/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "WebAssembly",
-          "product": "Binaryen",
-          "versions": [
-            {
-              "version": "117",
-              "status": "affected"
-            }
-          ],
-          "cpes": [
-            "cpe:2.3:a:webassembly:binaryen:*:*:*:*:*:*:*:*"
-          ],
-          "modules": [
-            "BrOn Parser"
-          ]
-        }
-      ],
-      "problemType": [
-        "Reachable Assertion"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-44916",
-      "publishedDate": "2026-05-08T06:38:37.279Z",
-      "lastModifiedDate": "2026-05-11T17:40:03.179Z",
-      "description": "In OpenStack Ironic through 35.x, instance_info['ks_template'] is rendered without sandboxing.",
-      "severity": 3,
-      "references": [
-        {
-          "url": "https://bugs.launchpad.net/ironic/+bug/2148307",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unknown",
-          "product": "Ironic",
-          "vendor": "OpenStack",
-          "versions": [
-            {
-              "lessThanOrEqual": "35.0.1",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-1336 Improper Neutralization of Special Elements Used in a Template Engine"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-8219",
-      "publishedDate": "2026-05-10T01:45:09.308Z",
-      "lastModifiedDate": "2026-05-11T17:31:51.390Z",
-      "description": "A security vulnerability has been detected in Devs Palace ERP Online up to 4.0.0. The impacted element is an unknown function of the file /inventory/supplier-save. The manipulation leads to cross site scripting. Remote exploitation of the attack is possible. The exploit has been disclosed publicly and may be used. The vendor was contacted early about this disclosure but did not respond in any way.",
-      "severity": 2.4,
-      "references": [
-        {
-          "url": "https://vuldb.com/vuln/362436",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/vuln/362436/cti",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/submit/808257",
-          "type": "reference"
-        },
-        {
-          "url": "https://olografix.org/acme/_poc/ERP_Online-POC1.gif",
-          "type": "poc"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Devs Palace",
-          "product": "ERP Online",
-          "versions": [
-            {
-              "version": "4.0",
+              "version": "< 2.33.2",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "Cross Site Scripting",
-        "Code Injection"
+        "CWE-863: Incorrect Authorization"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
       "id": "CVE-2026-42865",
       "publishedDate": "2026-05-11T17:53:08.330Z",
-      "lastModifiedDate": "2026-05-11T17:53:08.330Z",
+      "lastModifiedDate": "2026-05-11T19:25:16.428Z",
       "description": "Inbox Zero is an AI personal assistant for email. Prior to 2.29.3, the cleaner email stream endpoint used a shared Redis subscription listener, which could deliver thread events for one authenticated account to another authenticated account using the cleaner feature at the same time. This vulnerability is fixed in 2.29.3.",
       "severity": "N/A",
       "references": [
@@ -1772,129 +541,9 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-43995",
-      "publishedDate": "2026-05-11T17:49:42.189Z",
-      "lastModifiedDate": "2026-05-11T17:49:42.189Z",
-      "description": "Flowise is a drag & drop user interface to build a customized large language model flow. Prior to 3.1.0, multiple tool implementations directly import and invoke raw HTTP clients (node-fetch, axios) instead of using the secured wrapper. These tools include (1) OpenAPIToolkit/OpenAPIToolkit.ts, (2) WebScraperTool/WebScraperTool.ts, (3) MCP/core.ts, and (4) Arxiv/core.ts. This vulnerability is fixed in 3.1.0.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/FlowiseAI/Flowise/security/advisories/GHSA-qqvm-66q4-vf5c",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "FlowiseAI",
-          "product": "Flowise",
-          "versions": [
-            {
-              "version": "< 3.1.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-918: Server-Side Request Forgery (SSRF)"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-42856",
-      "publishedDate": "2026-05-11T17:42:35.260Z",
-      "lastModifiedDate": "2026-05-11T17:42:35.260Z",
-      "description": "Network-AI is a TypeScript/Node.js multi-agent orchestrator. Prior to 5.1.3, the MCP HTTP transport accepts JSON-RPC tools/call requests with no authentication, session, origin, or token check, and dispatches them directly to the orchestrator's tool registry. The default bind address is 0.0.0.0. As a result, any party with network reachability to the service can enumerate and invoke privileged management tools. This vulnerability is fixed in 5.1.3.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/Jovancoding/Network-AI/security/advisories/GHSA-fj4g-2p96-q6m3",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Jovancoding",
-          "product": "Network-AI",
-          "versions": [
-            {
-              "version": "< 5.1.3",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-306: Missing Authentication for Critical Function"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-42859",
-      "publishedDate": "2026-05-11T17:36:08.143Z",
-      "lastModifiedDate": "2026-05-11T17:36:08.143Z",
-      "description": "Neat VNC is a VNC server library. Prior to 0.9.6, a pre-authentication stack buffer overflow exists in neatvnc in the RSA-AES security type handler. An unauthenticated remote attacker who can reach the VNC listening socket can send a crafted security type 5 (RSA-AES) or security type 129 (RSA-AES-256) handshake with an oversized client RSA public key, causing rsa_aes_send_challenge in src/auth/rsa-aes.c to overflow a 1024-byte on-stack buffer when encrypting the server challenge. This results in at least a denial of service via server crash. This vulnerability is fixed in 0.9.6.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/any1/neatvnc/security/advisories/GHSA-567c-gpv8-qh9h",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/any1/neatvnc/commit/1f6cd6b75cc167fed3a19a9d1552a1f662f6b337",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "any1",
-          "product": "neatvnc",
-          "versions": [
-            {
-              "version": "< 0.9.6",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-120: Buffer Copy without Checking Size of Input ('Classic Buffer Overflow')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-44777",
-      "publishedDate": "2026-05-11T17:23:20.228Z",
-      "lastModifiedDate": "2026-05-11T17:23:20.228Z",
-      "description": "jq is a command-line JSON processor. In 1.8.2rc1 and earlier, the ordinary module loader recurses without cycle detection when two\notherwise valid modules include each other.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/jqlang/jq/security/advisories/GHSA-rmpv-jgvr-wpr9",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "jqlang",
-          "product": "jq",
-          "versions": [
-            {
-              "version": "<= 1.8.2rc1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-674: Uncontrolled Recursion"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
       "id": "CVE-2026-7210",
       "publishedDate": "2026-05-11T17:19:09.784Z",
-      "lastModifiedDate": "2026-05-11T17:19:09.784Z",
+      "lastModifiedDate": "2026-05-11T19:33:10.482Z",
       "description": "`xml.parsers.expat` and `xml.etree.ElementTree` use insufficient entropy for Expat hash-flooding protection, which allows a crafted XML document to trigger hash flooding.\\r\\n\\r\\nFully mitigating this vulnerability requires both updating libexpat to 2.8.0 or later and applying this patch.",
       "severity": "N/A",
       "references": [
@@ -1937,234 +586,9 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-7308",
-      "publishedDate": "2026-05-11T17:17:04.376Z",
-      "lastModifiedDate": "2026-05-11T17:17:04.376Z",
-      "description": "An authenticated user with upload permission to a hosted repository can store content that causes arbitrary JavaScript to execute in the browser of any user who browses that repository directory via the HTML index page in Sonatype Nexus Repository versions 3.6.0 through versions before 3.92.0. This could allow the attacker to perform actions in the context of the victim's session.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://help.sonatype.com/en/sonatype-nexus-repository-3-92-0-release-notes.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://support.sonatype.com/hc/en-us/articles/51592065985939",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Sonatype",
-          "product": "Nexus Repository",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "3.6.0",
-              "lessThan": "3.92.0",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected",
-          "cpes": [
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.0.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.0.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.0.2:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.1.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.2.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.2.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.3.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.3.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.3.2:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.4.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.5.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.5.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.5.2:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.6.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.6.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.6.2:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.7.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.7.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.8.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.9.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.10.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.11.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.12.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.12.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.13.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.14.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.15.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.15.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.15.2:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.16.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.16.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.16.2:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.17.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.18.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.18.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.19.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.19.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.20.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.20.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.21.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.21.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.21.2:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.22.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.22.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.23.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.24.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.25.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.25.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.26.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.26.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.27.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.28.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.28.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.29.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.29.2:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.30.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.30.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.31.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.31.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.32.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.32.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.33.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.33.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.34.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.34.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.35.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.36.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.37.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.37.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.37.2:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.37.3:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.38.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.38.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.39.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.40.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.40.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.41.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.41.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.42.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.43.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.44.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.45.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.45.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.46.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.47.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.47.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.48.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.49.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.50.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.51.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.52.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.53.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.53.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.54.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.54.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.55.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.56.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.57.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.57.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.58.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.58.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.59.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.60.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.61.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.62.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.63.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.64.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.65.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.66.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.67.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.67.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.68.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.68.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.69.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.70.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.70.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.70.2:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.70.3:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.70.4:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.70.5:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.71.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.72.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.73.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.74.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.75.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.75.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.76.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.76.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.77.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.78.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.78.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.79.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.80.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.81.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.82.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.83.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.83.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.83.2:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.84.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.84.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.84.2:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.85.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.85.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.86.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.86.2:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.86.3:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.87.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.87.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.87.2:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.88.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.89.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.89.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.90.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.90.1:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.90.2:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.90.3:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.91.0:*:*:*:*:*:*:*",
-            "cpe:2.3:a:sonatype:nexus_repository_manager:3.91.1:*:*:*:*:*:*:*"
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation (XSS or 'Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-40612",
-      "publishedDate": "2026-05-11T17:16:25.453Z",
-      "lastModifiedDate": "2026-05-11T17:16:25.453Z",
-      "description": "jq is a command-line JSON processor. In 1.8.1 and earlier, jv_contains recurses into nested arrays/objects with no depth limit. With a sufficiently nested input structure (built programmatically with reduce, since the JSON parser caps at depth 10000), the C stack is exhausted.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/jqlang/jq/security/advisories/GHSA-r7m6-x9c7-h69j",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "jqlang",
-          "product": "jq",
-          "versions": [
-            {
-              "version": "<= 1.8.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-674: Uncontrolled Recursion"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
       "id": "CVE-2026-41257",
       "publishedDate": "2026-05-11T17:14:32.579Z",
-      "lastModifiedDate": "2026-05-11T17:14:32.579Z",
+      "lastModifiedDate": "2026-05-11T19:25:59.800Z",
       "description": "jq is a command-line JSON processor. In 1.8.1 and earlier, the jq bytecode VM's data stack tracks its allocation size in a signed int. When the stack grows beyond ≈1 GiB (via deeply nested generator forks), the doubling arithmetic overflows. The wrapped value is passed to realloc and then used for a memmove with attacker-influenced offsets.",
       "severity": "N/A",
       "references": [
@@ -2192,107 +616,57 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-34086",
-      "publishedDate": "2026-05-11T14:35:15.143Z",
-      "lastModifiedDate": "2026-05-11T17:33:27.011Z",
-      "description": "Vulnerability in Wikimedia Foundation AbuseFilter.\n\nThis issue affects AbuseFilter: from * before 1.43.7, 1.44.4, 1.45.2.",
+      "id": "CVE-2026-6093",
+      "publishedDate": "2026-05-11T14:03:05.663Z",
+      "lastModifiedDate": "2026-05-11T19:26:53.093Z",
+      "description": "Corteza contains a SQL injection vulnerability in its Microsoft SQL Server (MSSQL) backend when filtering Compose records by the meta field.This issue affects corteza: 2024.9.8.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://phabricator.wikimedia.org/T415584",
+          "url": "https://fluidattacks.com/es/advisories/motley",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/cortezaproject/corteza",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Wikimedia Foundation",
-          "product": "AbuseFilter",
-          "repo": "https://gerrit.wikimedia.org/g/mediawiki/extensions/AbuseFilter/+/refs/heads/master",
+          "defaultStatus": "unaffected",
+          "platforms": [
+            "Windows",
+            "MacOS",
+            "Linux"
+          ],
+          "product": "corteza",
+          "vendor": "cortezaproject",
           "versions": [
             {
               "status": "affected",
-              "version": "*",
-              "lessThan": "1.43.7, 1.44.4, 1.45.2",
-              "versionType": "semver"
+              "version": "2024.9.8"
             }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-3320",
-      "publishedDate": "2026-05-11T14:27:08.899Z",
-      "lastModifiedDate": "2026-05-11T17:33:57.767Z",
-      "description": "Reflected Cross-Site Scripting (XSS) in the latest demo version of the Cradle eCommerce platform. User-controlled input is insecurely reflected in the HTML output in the endpoint /product/. Exploitation of this vulnerability would allow an attacker to execute arbitrary JavaScript code.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-cradle-e-commerce",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "e-commerce",
-          "product": "Cradle",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "latest demo version",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
+          ]
         }
       ],
       "problemType": [
-        "CWE-79 Improper neutralization of input during web page generation ('cross-site scripting')"
+        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-3319",
-      "publishedDate": "2026-05-11T14:26:28.229Z",
-      "lastModifiedDate": "2026-05-11T17:34:22.293Z",
-      "description": "Reflected Cross-Site Scripting (XSS) in the latest demo version of the Cradle eCommerce platform. User-controlled input is insecurely reflected in the HTML output in the endpoint /collection/. Exploitation of this vulnerability would allow an attacker to execute arbitrary JavaScript code.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-cradle-e-commerce",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "e-commerce",
-          "product": "Cradle",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "latest demo version",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-79 Improper neutralization of input during web page generation ('cross-site scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-30635",
+      "id": "CVE-2026-36734",
       "publishedDate": "2026-05-11T00:00:00.000Z",
-      "lastModifiedDate": "2026-05-11T17:32:48.127Z",
-      "description": "Command injection vulnerability in automagik-genie 2.5.27 MCP Server allows attackers to execute arbitrary commands via the view_task (aka view) in the readTranscriptFromCommit function in dist/mcp/server.js when a user reads from an external FORGE_BASE_URL.",
+      "lastModifiedDate": "2026-05-11T19:31:27.344Z",
+      "description": "EDIMAX BR-6428nS V3 1.15 is vulnerable to Command Injection. An authenticated attacker with access to the network can submit crafted input to the WLAN configuration functionality. Due to insufficient input validation, the attacker is able to execute arbitrary system commands on the device.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://gist.github.com/spdc-elm/3ddecd10ffa85c5963ab7fe531619875",
+          "url": "http://edimax.com",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/theShinigami/CVE-Disclosures/tree/main/CVE-2026-36734",
           "type": "reference"
         }
       ],
@@ -2314,178 +688,224 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-15633",
-      "publishedDate": "2026-05-09T04:58:55.241Z",
-      "lastModifiedDate": "2026-05-11T17:30:11.814Z",
-      "description": "An improper authorization vulnerability in HCL BigFix WebUI allows an authenticated user without Master Operator privileges to access internal data (site names, versions, and configuration variables) and bypass privilege requirements via unprotected endpoints lacking adequate security headers.",
+      "id": "CVE-2025-61311",
+      "publishedDate": "2026-05-11T00:00:00.000Z",
+      "lastModifiedDate": "2026-05-11T19:33:11.172Z",
+      "description": "A reflected cross-site scripted (XSS) vulnerability in the dfm-menu_alerts.php component of GmbH Mecury Managed Print Services (docuForm) v11.11c allows attackers to execute arbitrary Javascript in the context of a user's browser via injecting a crafted payload into an unfiltered variable value.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://support.hcl-software.com/csm?id=kb_article&sysparm_article=KB0130587",
+          "url": "https://www.docuform.de/",
+          "type": "reference"
+        },
+        {
+          "url": "https://ZeroBreach.de",
+          "type": "reference"
+        },
+        {
+          "url": "https://gist.github.com/ZeroBreach-GmbH/424005738e819e14c724feb9c7c5f40b",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "HCLSoftware",
-          "product": "BigFix WebUI",
+          "vendor": "n/a",
+          "product": "n/a",
           "versions": [
             {
-              "status": "affected",
-              "version": "all versions"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-863 Incorrect Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-42174",
-      "publishedDate": "2026-05-09T03:39:06.016Z",
-      "lastModifiedDate": "2026-05-11T17:41:44.554Z",
-      "description": "Kirby is an open-source content management system. Prior to versions 4.9.0 and 5.4.0, user avatar creation, replacement and deletion are not gated by user update permissions. This issue has been patched in versions 4.9.0 and 5.4.0.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/getkirby/kirby/security/advisories/GHSA-39cp-6679-8xv2",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/getkirby/kirby/releases/tag/4.9.0",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/getkirby/kirby/releases/tag/5.4.0",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "getkirby",
-          "product": "kirby",
-          "versions": [
-            {
-              "version": "< 4.9.0",
-              "status": "affected"
-            },
-            {
-              "version": ">= 5.0.0, < 5.4.0",
+              "version": "n/a",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-862: Missing Authorization"
+        "n/a"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-8209",
-      "publishedDate": "2026-05-09T03:19:27.757Z",
-      "lastModifiedDate": "2026-05-11T17:45:44.538Z",
-      "description": "Gibbon versions before v30.0.01 are affected by a path traversal vulnerability resulting in DOS by attempting extraction of web application PHP files, failed .zip extraction results in deletion of the file and a DOS condition. Successful exploitation requires Teacher or higher privileges. Exploitation could result in loss of availability of the web application.",
+      "id": "CVE-2025-61312",
+      "publishedDate": "2026-05-11T00:00:00.000Z",
+      "lastModifiedDate": "2026-05-11T19:32:13.404Z",
+      "description": "A reflected cross-site scripted (XSS) vulnerability in the acc-menu_pricess.php component of GmbH Mecury Managed Print Services (docuForm) v11.11c allows attackers to execute arbitrary Javascript in the context of a user's browser via injecting a crafted payload into an unfiltered variable value.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/GibbonEdu/core/releases/tag/v30.0.01",
+          "url": "https://www.docuform.de/",
           "type": "reference"
         },
         {
-          "url": "https://projectblack.io/blog/gibbon-v30-authenticated-sql-injection-and-rce/#denial-of-service-via-path-traversal",
-          "type": "poc"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "gibbonedu",
-          "product": "gibbon",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "30.0.01",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-23 Relative path traversal"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-8208",
-      "publishedDate": "2026-05-09T02:58:43.887Z",
-      "lastModifiedDate": "2026-05-11T17:47:19.046Z",
-      "description": "Gibbon versions before v30.0.01 are affected by a local file inclusion vulnerability resulting in RCE by changing the report archive directory and forcing interpretation of a user provided .zip as PHP. Successful exploitation requires Teacher or higher privileges. Exploitation could result in compromise of the underlying web server.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://projectblack.io/blog/gibbon-v30-authenticated-sql-injection-and-rce/#local-file-inclusionthe-next-shiny-new-thing",
-          "type": "poc"
+          "url": "https://ZeroBreach.de",
+          "type": "reference"
         },
         {
-          "url": "https://github.com/GibbonEdu/core/releases/tag/v30.0.01",
+          "url": "https://gist.github.com/ZeroBreach-GmbH/c970fab734432e6f9bc39b2d20f96e5c",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "gibbonedu",
-          "product": "gibbon",
+          "vendor": "n/a",
+          "product": "n/a",
           "versions": [
             {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "30.0.01",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "affected"
-        }
-      ],
-      "problemType": [
-        "CWE-98 Improper control of filename for Include/Require statement in PHP program ('PHP remote file inclusion')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-42453",
-      "publishedDate": "2026-05-08T22:55:30.242Z",
-      "lastModifiedDate": "2026-05-11T17:53:41.702Z",
-      "description": "Termix is a web-based server management platform with SSH terminal, tunneling, and file editing capabilities. Prior to version 2.1.0, the extractArchive and compressFiles endpoints in file-manager.ts use double-quoted strings for shell command construction, unlike all other file manager operations which use single-quote escaping. Double quotes allow $(command) substitution, enabling command injection on the remote SSH host. This issue has been patched in version 2.1.0.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/Termix-SSH/Termix/security/advisories/GHSA-rvg4-7vvq-9c2w",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/Termix-SSH/Termix/releases/tag/release-2.1.0-tag",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Termix-SSH",
-          "product": "Termix",
-          "versions": [
-            {
-              "version": "< 2.1.0",
+              "version": "n/a",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-77: Improper Neutralization of Special Elements used in a Command ('Command Injection')"
+        "n/a"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-61313",
+      "publishedDate": "2026-05-11T00:00:00.000Z",
+      "lastModifiedDate": "2026-05-11T19:31:06.642Z",
+      "description": "A reflected cross-site scripted (XSS) vulnerability in the dfm-menu_markeralerts.php component of GmbH Mecury Managed Print Services (docuForm) v11.11c allows attackers to execute arbitrary Javascript in the context of a user's browser via injecting a crafted payload into an unfiltered variable value.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.docuform.de/",
+          "type": "reference"
+        },
+        {
+          "url": "https://ZeroBreach.de",
+          "type": "reference"
+        },
+        {
+          "url": "https://gist.github.com/ZeroBreach-GmbH/be236a28ffa81c06b915c2a642bff0a5",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "n/a",
+          "versions": [
+            {
+              "version": "n/a",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "n/a"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-65415",
+      "publishedDate": "2026-05-11T00:00:00.000Z",
+      "lastModifiedDate": "2026-05-11T19:29:08.336Z",
+      "description": "docuFORM Managed Print Service Client 11.11c is vulnerable to a session fixation attack via the login page of the application.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.docuform.de/",
+          "type": "reference"
+        },
+        {
+          "url": "https://ZeroBreach.de",
+          "type": "reference"
+        },
+        {
+          "url": "https://gist.github.com/ZeroBreach-GmbH/459cad8e01fe99c6998bea556ac0dcb8",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "n/a",
+          "versions": [
+            {
+              "version": "n/a",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "n/a"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-61314",
+      "publishedDate": "2026-05-11T00:00:00.000Z",
+      "lastModifiedDate": "2026-05-11T19:30:19.521Z",
+      "description": "A reflected cross-site scripted (XSS) vulnerability in the dfm-menu_orderopt.php component of GmbH Mecury Managed Print Services (docuForm) v11.11c allows attackers to execute arbitrary Javascript in the context of a user's browser via injecting a crafted payload into an unfiltered variable value.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.docuform.de/",
+          "type": "reference"
+        },
+        {
+          "url": "https://ZeroBreach.de",
+          "type": "reference"
+        },
+        {
+          "url": "https://gist.github.com/ZeroBreach-GmbH/4386b61523d784d2ffc674299ed02d51",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "n/a",
+          "versions": [
+            {
+              "version": "n/a",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "n/a"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-65416",
+      "publishedDate": "2026-05-11T00:00:00.000Z",
+      "lastModifiedDate": "2026-05-11T19:28:05.535Z",
+      "description": "docuFORM Managed Print Service Client 11.11c is vulnerable to arbitrary file upload via pmupdate.php.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.docuform.de/",
+          "type": "reference"
+        },
+        {
+          "url": "https://ZeroBreach.de",
+          "type": "reference"
+        },
+        {
+          "url": "https://gist.github.com/ZeroBreach-GmbH/f94cad5b37f718d1b1cfee6ca0fe666b",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "n/a",
+          "product": "n/a",
+          "versions": [
+            {
+              "version": "n/a",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "n/a"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
