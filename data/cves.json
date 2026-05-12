@@ -2,308 +2,188 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 8,
-    "last_updated": "2026-05-12T22:19:09.630319",
+    "total_count": 6,
+    "last_updated": "2026-05-12T23:33:12.258326",
     "severity_distribution": {
-      "critical": 2,
-      "high": 4,
-      "medium": 1,
+      "critical": 0,
+      "high": 0,
+      "medium": 2,
       "low": 0,
-      "none": 1
+      "none": 4
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-42854",
-      "publishedDate": "2026-05-12T21:56:33.437Z",
-      "lastModifiedDate": "2026-05-12T21:56:33.437Z",
-      "description": "arduino-esp32 is an Arduino core for the ESP32, ESP32-S2, ESP32-S3, ESP32-C3, ESP32-C6 and ESP32-H2 microcontrollers. Prior to 3.3.8, the WebServer multipart form parser in arduino-esp32 allocates a Variable Length Array (VLA) on the stack whose size is derived from an attacker-controlled HTTP header field (Content-Type: multipart/form-data; boundary=...) without enforcing any length limit. Sending a boundary string longer than ~8000 characters overflows the 8192-byte task stack of the loopTask, causing a crash and potential remote code execution. This vulnerability is fixed in 3.3.8.",
-      "severity": 9.8,
+      "id": "CVE-2026-44245",
+      "publishedDate": "2026-05-12T22:46:59.776Z",
+      "lastModifiedDate": "2026-05-12T22:46:59.776Z",
+      "description": "Kyverno is a policy engine designed for cloud native platform engineering teams. Prior to 2.5.2, Vue 3's v-html directive is the framework-documented mechanism for injecting raw HTML, and it intentionally disables the auto-escaping that {{ }} interpolation provides. The PropertyCard.vue component uses v-html for the else branch of the URL check, meaning any non-URL string value flows directly into the DOM as HTML. The isURL() guard only filters values that parse as http: or https: URLs, so any HTML payload not starting with those schemes bypasses it entirely. The data originates from Kubernetes PolicyReport .results[].properties fields, which are arbitrary string maps populated by policy engines and potentially by any principal with write access to PolicyReport objects in the cluster. This vulnerability is fixed in 2.5.2.",
+      "severity": 6.1,
       "references": [
         {
-          "url": "https://github.com/espressif/arduino-esp32/security/advisories/GHSA-8cmm-3887-r32j",
+          "url": "https://github.com/kyverno/kyverno/security/advisories/GHSA-q98m-7w8c-w388",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "espressif",
-          "product": "arduino-esp32",
+          "vendor": "kyverno",
+          "product": "kyverno",
           "versions": [
             {
-              "version": "< 3.3.8",
+              "version": "< 2.5.2",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-121: Stack-based Buffer Overflow"
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-29204",
-      "publishedDate": "2026-05-12T17:46:55.152Z",
-      "lastModifiedDate": "2026-05-12T21:57:08.277Z",
-      "description": "Insufficient ownership check in `clientarea.php` allows an authenticated client area user to submit requests using another user’s `addonId` without any ownership validation leading to unauthorized access to the victim's account.",
-      "severity": 9.1,
+      "id": "CVE-2026-44347",
+      "publishedDate": "2026-05-12T22:44:17.831Z",
+      "lastModifiedDate": "2026-05-12T22:44:17.831Z",
+      "description": "Warpgate is an open source SSH, HTTPS and MySQL bastion host for Linux. Prior to 0.23.3, the SSO flow does not validate the state parameter, which makes it possible for an attacker to trick a user into logging into the attacker's account, possibly convincing them to perform sensitive actions on the attacker's account (such as writing sensitive data to the attacker's SSH target, or logging into an HTTP target that the attacker set up). This vulnerability is fixed in 0.23.3.",
+      "severity": 5.8,
       "references": [
         {
-          "url": "https://help.whmcs.com/m/125386/l/2073908-cve-2026-29204",
+          "url": "https://github.com/warp-tech/warpgate/security/advisories/GHSA-rj86-hm3r-c275",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "unaffected",
-          "vendor": "WebPros",
-          "product": "WHMCS",
+          "vendor": "warp-tech",
+          "product": "warpgate",
           "versions": [
             {
-              "version": "7.4.0",
-              "status": "affected",
-              "lessThanOrEqual": "18.12.2",
-              "versionType": "semver"
-            },
-            {
-              "version": "18.13.0",
-              "status": "affected",
-              "lessThan": "18.13.3",
-              "versionType": "semver"
-            },
-            {
-              "version": "9.0.0",
-              "status": "affected",
-              "lessThan": "9.0.4",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-639 Insecure Direct Object Reference (IDOR)"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-40863",
-      "publishedDate": "2026-05-12T22:04:29.510Z",
-      "lastModifiedDate": "2026-05-12T22:04:29.510Z",
-      "description": "PhpSpreadsheet is a pure PHP library for reading and writing spreadsheet files. Prior to 1.30.4, 2.1.16, 2.4.5, 3.10.5, and 5.7.0, the SpreadsheetML XML reader (Reader\\Xml) does not validate the ss:Index row attribute against the maximum allowed row count (AddressRange::MAX_ROW = 1,048,576). An attacker can craft a SpreadsheetML XML file with ss:Index=\"999999999\" on a <Row> element, which inflates the internal cachedHighestRow to ~1 billion. Any subsequent call to getRowIterator() without an explicit end row will attempt to iterate ~1 billion rows, causing CPU exhaustion and denial of service. This vulnerability is fixed in 1.30.4, 2.1.16, 2.4.5, 3.10.5, and 5.7.0.",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://github.com/PHPOffice/PhpSpreadsheet/security/advisories/GHSA-84wq-86v6-x5j6",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "PHPOffice",
-          "product": "PhpSpreadsheet",
-          "versions": [
-            {
-              "version": "< 1.30.4",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.0.0, < 2.1.16",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.2.0, < 2.4.5",
-              "status": "affected"
-            },
-            {
-              "version": ">= 3.3.0, < 3.10.5",
-              "status": "affected"
-            },
-            {
-              "version": ">= 4.0.0, < 5.7.0",
+              "version": "< 0.23.3",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-770: Allocation of Resources Without Limits or Throttling"
+        "CWE-352: Cross-Site Request Forgery (CSRF)"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-40902",
-      "publishedDate": "2026-05-12T22:02:39.802Z",
-      "lastModifiedDate": "2026-05-12T22:02:39.802Z",
-      "description": "PhpSpreadsheet is a pure PHP library for reading and writing spreadsheet files. Prior to 1.30.4, 2.1.16, 2.4.5, 3.10.5, and 5.7.0, the XLSX reader's ColumnAndRowAttributes::readRowAttributes() method reads row numbers from XML attributes without validating them against the spreadsheet maximum row limit (AddressRange::MAX_ROW = 1,048,576). An attacker can craft a minimal XLSX file (~1.6KB) containing a <row r=\"999999999\"/> element that inflates cachedHighestRow to 999,999,999, causing any subsequent row iteration to attempt ~1 billion loop cycles and exhaust CPU resources. This vulnerability is fixed in 1.30.4, 2.1.16, 2.4.5, 3.10.5, and 5.7.0.",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://github.com/PHPOffice/PhpSpreadsheet/security/advisories/GHSA-7c6m-4442-2x6m",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "PHPOffice",
-          "product": "PhpSpreadsheet",
-          "versions": [
-            {
-              "version": "< 1.30.4",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.0.0, < 2.1.16",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.2.0, < 2.4.5",
-              "status": "affected"
-            },
-            {
-              "version": ">= 3.3.0, < 3.10.5",
-              "status": "affected"
-            },
-            {
-              "version": ">= 4.0.0, < 5.7.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-770: Allocation of Resources Without Limits or Throttling"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-42855",
-      "publishedDate": "2026-05-12T21:56:08.490Z",
-      "lastModifiedDate": "2026-05-12T21:56:08.490Z",
-      "description": "arduino-esp32 is an Arduino core for the ESP32, ESP32-S2, ESP32-S3, ESP32-C3, ESP32-C6 and ESP32-H2 microcontrollers. Prior to 3.3.8, the WebServer Digest authentication implementation in arduino-esp32 computes the authentication hash using the URI field from the client's Authorization header, without verifying that it matches the actual requested URI. This allows an attacker who possesses any valid digest response (computed for URI-A) to authenticate requests to a completely different protected URI (URI-B), bypassing per-resource access control. This vulnerability is fixed in 3.3.8.",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://github.com/espressif/arduino-esp32/security/advisories/GHSA-28hv-fwm3-rpcq",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "espressif",
-          "product": "arduino-esp32",
-          "versions": [
-            {
-              "version": "< 3.3.8",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-287: Improper Authentication"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-42544",
-      "publishedDate": "2026-05-12T21:46:19.734Z",
-      "lastModifiedDate": "2026-05-12T21:46:19.734Z",
-      "description": "Granian is a Rust HTTP server for Python applications. From 1.2.0 to 2.7.4, Granian aborts a worker process when an unauthenticated client sends a WebSocket upgrade request whose Sec-WebSocket-Protocol header contains non-ASCII bytes. The crash happens in Granian's WebSocket scope construction path, before the ASGI application is invoked. This vulnerability is fixed in 2.7.4.",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://github.com/emmett-framework/granian/security/advisories/GHSA-vrg7-482j-p6f6",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "emmett-framework",
-          "product": "granian",
-          "versions": [
-            {
-              "version": ">= 1.2.0, < 2.7.4",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-20: Improper Input Validation",
-        "CWE-248: Uncaught Exception",
-        "CWE-400: Uncontrolled Resource Consumption"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-42545",
-      "publishedDate": "2026-05-12T21:51:47.473Z",
-      "lastModifiedDate": "2026-05-12T21:51:47.473Z",
-      "description": "Granian is a Rust HTTP server for Python applications. From 0.2.0 to 2.7.4, Granian aborts a worker process if a WSGI application returns an invalid HTTP response header name or value. The WSGI response conversion path uses .unwrap() on both the header name and header value constructors, so malformed output from the application becomes a process abort instead of a handled error. This vulnerability is fixed in 2.7.4.",
-      "severity": 5.9,
-      "references": [
-        {
-          "url": "https://github.com/emmett-framework/granian/security/advisories/GHSA-f5p7-9fr5-8jmj",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "emmett-framework",
-          "product": "granian",
-          "versions": [
-            {
-              "version": ">= 0.2.0, < 2.7.4",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-248: Uncaught Exception",
-        "CWE-755: Improper Handling of Exceptional Conditions"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-44307",
-      "publishedDate": "2026-05-12T21:53:52.826Z",
-      "lastModifiedDate": "2026-05-12T21:53:52.826Z",
-      "description": "Mako is a template library written in Python. Prior to 1.3.12, on Windows, a URI using backslash traversal (e.g. \\..\\..\\ secret.txt) bypasses the directory traversal check in Template.__init__ and the posixpath-based normalization in TemplateLookup.get_template(), allowing reads of files outside the configured template directory. This vulnerability is fixed in 1.3.12.",
+      "id": "CVE-2026-42158",
+      "publishedDate": "2026-05-12T23:01:23.174Z",
+      "lastModifiedDate": "2026-05-12T23:01:23.174Z",
+      "description": "Flowsint is an open-source OSINT graph exploration tool designed for cybersecurity investigation, transparency, and verification. Prior to 1.2.3, an adversary with knowledge of an investigation ID, could update the metadata of an investigation of another user. This vulnerability is fixed in 1.2.3.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/sqlalchemy/mako/security/advisories/GHSA-2h4p-vjrc-8xpq",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/sqlalchemy/mako/issues/435",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/sqlalchemy/mako/commit/72e10c573ca0fbcbddd4455abca8ce92a61780d7",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/sqlalchemy/mako/releases/tag/rel_1_3_12",
+          "url": "https://github.com/reconurge/flowsint/security/advisories/GHSA-5h6v-5hv3-3jjw",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "sqlalchemy",
-          "product": "mako",
+          "vendor": "reconurge",
+          "product": "flowsint",
           "versions": [
             {
-              "version": "< 1.3.12",
+              "version": "< 1.2.3",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+        "CWE-284: Improper Access Control"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-42156",
+      "publishedDate": "2026-05-12T23:00:03.440Z",
+      "lastModifiedDate": "2026-05-12T23:00:03.440Z",
+      "description": "Flowsint is an open-source OSINT graph exploration tool designed for cybersecurity investigation, transparency, and verification. Prior to 1.2.3, a remote attacker can create a node with a malicious type that can escape an existing Cypher query and an adversary can execute an arbitrary Cypher query. This vulnerability is fixed in 1.2.3.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/reconurge/flowsint/security/advisories/GHSA-h5m2-c2c5-968p",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "reconurge",
+          "product": "flowsint",
+          "versions": [
+            {
+              "version": "< 1.2.3",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-943: Improper Neutralization of Special Elements in Data Query Logic"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-42157",
+      "publishedDate": "2026-05-12T22:58:26.279Z",
+      "lastModifiedDate": "2026-05-12T22:58:26.279Z",
+      "description": "Flowsint is an open-source OSINT graph exploration tool designed for cybersecurity investigation, transparency, and verification. Prior to 1.2.3, a remote attacker can create a map node with a malicious label that contains arbitrary HTML. When the map tab is selected and a map node marker is selected, it will render the arbitrary HTML, potentially triggering stored XSS. This vulnerability is fixed in 1.2.3.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/reconurge/flowsint/security/advisories/GHSA-gj93-2vcq-729w",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "reconurge",
+          "product": "flowsint",
+          "versions": [
+            {
+              "version": "< 1.2.3",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-44352",
+      "publishedDate": "2026-05-12T22:55:12.947Z",
+      "lastModifiedDate": "2026-05-12T22:55:12.947Z",
+      "description": "Flowsint is an open-source OSINT graph exploration tool designed for cybersecurity investigation, transparency, and verification. Prior to 1.2.3, Broken Access Control allows reading of sketch logs from any user. This vulnerability is fixed in 1.2.3.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/reconurge/flowsint/security/advisories/GHSA-9r98-g8q5-cpq5",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "reconurge",
+          "product": "flowsint",
+          "versions": [
+            {
+              "version": "< 1.2.3",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-284: Improper Access Control"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
