@@ -2,67 +2,65 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 45,
-    "last_updated": "2026-05-13T20:13:12.441488",
+    "total_count": 16,
+    "last_updated": "2026-05-13T21:47:34.208206",
     "severity_distribution": {
       "critical": 1,
-      "high": 13,
-      "medium": 15,
-      "low": 1,
-      "none": 15
+      "high": 3,
+      "medium": 7,
+      "low": 0,
+      "none": 5
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-44351",
-      "publishedDate": "2026-05-13T19:12:33.347Z",
-      "lastModifiedDate": "2026-05-13T19:12:33.347Z",
-      "description": "fast-jwt provides fast JSON Web Token (JWT) implementation. Prior to 6.2.4, a critical authentication-bypass vulnerability in fast-jwt's async key-resolver flow allows any unauthenticated attacker to forge arbitrary JWTs that are accepted as authentic. When the application's key resolver returns an empty string (''), for example via the common keys[decoded.header.kid] || '' JWKS-style fallback, fast-jwt converts it to a zero-length Buffer, hands it to crypto.createSecretKey, derives allowedAlgorithms = ['HS256','HS384','HS512'] from it, and then verifies the token's signature against an empty-key HMAC. The attacker simply computes HMAC-SHA256(key='', input='${header}.${payload}'), which Node accepts without complaint — and the verifier returns the attacker-chosen payload (sub, admin, scopes, etc.) as authentic. This vulnerability is fixed in 6.2.4.",
-      "severity": 9.1,
+      "id": "CVE-2026-44442",
+      "publishedDate": "2026-05-13T21:11:14.186Z",
+      "lastModifiedDate": "2026-05-13T21:11:14.186Z",
+      "description": "ERPNext is a free and open source Enterprise Resource Planning tool. Prior to 16.9.1, certain endpoints failed to enforce proper authorization checks, allowing users to modify data beyond their permitted role. This vulnerability is fixed in 16.9.1.",
+      "severity": 9.9,
       "references": [
         {
-          "url": "https://github.com/nearform/fast-jwt/security/advisories/GHSA-gmvf-9v4p-v8jc",
+          "url": "https://github.com/frappe/erpnext/security/advisories/GHSA-cg5w-7g26-p3w9",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "nearform",
-          "product": "fast-jwt",
+          "vendor": "frappe",
+          "product": "erpnext",
           "versions": [
             {
-              "version": "< 6.2.4",
+              "version": "< 16.9.1",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-287: Improper Authentication",
-        "CWE-326: Inadequate Encryption Strength",
-        "CWE-1391: Use of Weak Credentials"
+        "CWE-862: Missing Authorization"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-42550",
-      "publishedDate": "2026-05-13T19:22:53.297Z",
-      "lastModifiedDate": "2026-05-13T19:22:53.297Z",
-      "description": "Flight is an extensible micro-framework for PHP. Prior to 3.18.1, SimplePdo::insert(), SimplePdo::update(), and SimplePdo::delete() build SQL statements by concatenating the $table argument and the keys of the $data array directly into the query, with no identifier quoting and no validation. When an application forwards user-controlled data shapes to these helpers — a common and documented pattern, e.g. $db->insert('users', $request->data->getData()) — an attacker can inject arbitrary SQL by crafting malicious array keys. This vulnerability is fixed in 3.18.1.",
+      "id": "CVE-2026-44447",
+      "publishedDate": "2026-05-13T21:19:07.916Z",
+      "lastModifiedDate": "2026-05-13T21:19:07.916Z",
+      "description": "ERPNext is a free and open source Enterprise Resource Planning tool. Prior to 16.9.0, some endpoints were vulnerable to SQL injection through specially crafted requests, which would allow a malicious actor to extract sensitive information. This vulnerability is fixed in 16.9.0.",
       "severity": 8.8,
       "references": [
         {
-          "url": "https://github.com/flightphp/core/security/advisories/GHSA-xwqr-rcqg-22mr",
+          "url": "https://github.com/frappe/erpnext/security/advisories/GHSA-q65v-fm9p-9vh3",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "flightphp",
-          "product": "core",
+          "vendor": "frappe",
+          "product": "erpnext",
           "versions": [
             {
-              "version": "< 3.18.1",
+              "version": "< 16.9.0",
               "status": "affected"
             }
           ]
@@ -74,1860 +72,90 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-43284",
-      "publishedDate": "2026-05-08T07:21:47.524Z",
-      "lastModifiedDate": "2026-05-13T19:33:51.034Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nxfrm: esp: avoid in-place decrypt on shared skb frags\n\nMSG_SPLICE_PAGES can attach pages from a pipe directly to an skb. TCP\nmarks such skbs with SKBFL_SHARED_FRAG after skb_splice_from_iter(),\nso later paths that may modify packet data can first make a private\ncopy. The IPv4/IPv6 datagram append paths did not set this flag when\nsplicing pages into UDP skbs.\n\nThat leaves an ESP-in-UDP packet made from shared pipe pages looking\nlike an ordinary uncloned nonlinear skb. ESP input then takes the no-COW\nfast path for uncloned skbs without a frag_list and decrypts in place\nover data that is not owned privately by the skb.\n\nMark IPv4/IPv6 datagram splice frags with SKBFL_SHARED_FRAG, matching\nTCP. Also make ESP input fall back to skb_cow_data() when the flag is\npresent, so ESP does not decrypt externally backed frags in place.\nPrivate nonlinear skb frags still use the existing fast path.\n\nThis intentionally does not change ESP output. In esp_output_head(),\nthe path that appends the ESP trailer to existing skb tailroom without\ncalling skb_cow_data() is not reachable for nonlinear skbs:\nskb_tailroom() returns zero when skb->data_len is nonzero, while ESP\ntailen is positive. Thus ESP output will either use the separate\ndestination-frag path or fall back to skb_cow_data().",
+      "id": "CVE-2026-44446",
+      "publishedDate": "2026-05-13T21:18:17.477Z",
+      "lastModifiedDate": "2026-05-13T21:18:17.477Z",
+      "description": "ERPNext is a free and open source Enterprise Resource Planning tool. Prior to 15.104.3 and 16.14.0, some endpoints were vulnerable to SQL injection through specially crafted requests, which would allow a malicious actor to extract sensitive information. This vulnerability is fixed in 15.104.3 and 16.14.0.",
       "severity": 8.8,
       "references": [
         {
-          "url": "https://git.kernel.org/stable/c/a6cb440f274a22456ef3e86b457344f1678f38f9",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/ab8b995323e5237041472d07e5055f5f7dcdf15b",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/fe785bb3a8096dffcc4048a85cd0c83337eeecad",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/5d55c7336f8032d434adcc5fab987ccc93a44aec",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/8253aab4659ca16116b522203c2a6b18dccacea7",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/50ed1e7873100f77abad20fd31c51029bc49cd03",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/b54edf1e9a3fd3491bdcb82a21f8d21315271e0d",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/71a1d9d985d26716f74d21f18ee8cac821b06e97",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/52646cbd00e765a6db9c3afe9535f26218276034",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/f4c50a4034e62ab75f1d5cdd191dd5f9c77fdff4",
+          "url": "https://github.com/frappe/erpnext/security/advisories/GHSA-6fm9-g88m-hxr7",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "net/ipv4/esp4.c",
-            "net/ipv4/ip_output.c",
-            "net/ipv6/esp6.c",
-            "net/ipv6/ip6_output.c"
-          ],
+          "vendor": "frappe",
+          "product": "erpnext",
           "versions": [
             {
-              "version": "cac2661c53f35cbe651bef9b07026a5a05ab8ce0",
-              "lessThan": "a6cb440f274a22456ef3e86b457344f1678f38f9",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "cac2661c53f35cbe651bef9b07026a5a05ab8ce0",
-              "lessThan": "ab8b995323e5237041472d07e5055f5f7dcdf15b",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "cac2661c53f35cbe651bef9b07026a5a05ab8ce0",
-              "lessThan": "fe785bb3a8096dffcc4048a85cd0c83337eeecad",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "cac2661c53f35cbe651bef9b07026a5a05ab8ce0",
-              "lessThan": "5d55c7336f8032d434adcc5fab987ccc93a44aec",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "cac2661c53f35cbe651bef9b07026a5a05ab8ce0",
-              "lessThan": "8253aab4659ca16116b522203c2a6b18dccacea7",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "cac2661c53f35cbe651bef9b07026a5a05ab8ce0",
-              "lessThan": "50ed1e7873100f77abad20fd31c51029bc49cd03",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "cac2661c53f35cbe651bef9b07026a5a05ab8ce0",
-              "lessThan": "b54edf1e9a3fd3491bdcb82a21f8d21315271e0d",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "cac2661c53f35cbe651bef9b07026a5a05ab8ce0",
-              "lessThan": "71a1d9d985d26716f74d21f18ee8cac821b06e97",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "cac2661c53f35cbe651bef9b07026a5a05ab8ce0",
-              "lessThan": "52646cbd00e765a6db9c3afe9535f26218276034",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "cac2661c53f35cbe651bef9b07026a5a05ab8ce0",
-              "lessThan": "f4c50a4034e62ab75f1d5cdd191dd5f9c77fdff4",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "net/ipv4/esp4.c",
-            "net/ipv4/ip_output.c",
-            "net/ipv6/esp6.c",
-            "net/ipv6/ip6_output.c"
-          ],
-          "versions": [
-            {
-              "version": "4.11",
+              "version": ">= 16.0.0-beta.1, < 16.14.0",
               "status": "affected"
             },
             {
-              "version": "0",
-              "lessThan": "4.11",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "5.10.255",
-              "lessThanOrEqual": "5.10.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "5.15.205",
-              "lessThanOrEqual": "5.15.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "5.15.206",
-              "lessThanOrEqual": "5.15.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.1.171",
-              "lessThanOrEqual": "6.1.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.1.172",
-              "lessThanOrEqual": "6.1.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.6.138",
-              "lessThanOrEqual": "6.6.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.12.87",
-              "lessThanOrEqual": "6.12.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.18.28",
-              "lessThanOrEqual": "6.18.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.0.5",
-              "lessThanOrEqual": "7.0.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.1-rc3",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41520",
-      "publishedDate": "2026-05-08T22:01:08.394Z",
-      "lastModifiedDate": "2026-05-13T19:33:28.377Z",
-      "description": "Cilium is a networking, observability, and security solution with an eBPF-based dataplane. Prior to versions 1.17.15, 1.18.9, and 1.19.3, the output of cilium-bugtool can contain sensitive data when the tool is run against Cilium deployments with WireGuard encryption enabled. This issue has been patched in versions 1.17.15, 1.18.9, and 1.19.3.",
-      "severity": 7.9,
-      "references": [
-        {
-          "url": "https://github.com/cilium/cilium/security/advisories/GHSA-gj49-89wh-h4gj",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/cilium/cilium/releases/tag/v1.17.15",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/cilium/cilium/releases/tag/v1.18.9",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/cilium/cilium/releases/tag/v1.19.3",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "cilium",
-          "product": "cilium",
-          "versions": [
-            {
-              "version": "< 1.17.15",
-              "status": "affected"
-            },
-            {
-              "version": ">= 1.18.0, < 1.18.9",
-              "status": "affected"
-            },
-            {
-              "version": ">= 1.19.0, < 1.19.3",
+              "version": "< 15.104.3",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor",
-        "CWE-312: Cleartext Storage of Sensitive Information"
+        "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-34684",
-      "publishedDate": "2026-05-12T18:13:57.038Z",
-      "lastModifiedDate": "2026-05-13T19:10:52.866Z",
-      "description": "Substance3D - Designer versions 15.1.0 and earlier are affected by an out-of-bounds write vulnerability that could result in arbitrary code execution in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file.",
+      "id": "CVE-2026-44471",
+      "publishedDate": "2026-05-13T21:36:44.007Z",
+      "lastModifiedDate": "2026-05-13T21:36:44.007Z",
+      "description": "gitoxide is an implementation of git written in Rust. Prior to 0.21.1, a malicious tree can be constructed that will, when checked out with gitoxide, permit writing an attacker-controlled symlink into any existing directory the user has write access to. During checkout, all symlink index entries are deferred and created after regular files using a single shared gix_worktree::Stack. Internally, this uses a gix_fs::Stack. gix_fs::Stack::make_relative_path_current() caches validated path prefixes: when the previously-processed leaf component exactly matches the leading component(s) of the next path, the leaf-to-directory transition at gix-fs/src/stack.rs invokes only delegate.push_directory(), never delegate.push(). In gix_worktree::stack::delegate::StackDelegate, when the state member is State::CreateDirectoryAndAttributesStack, Attributes::push_directory() only loads attributes (from the ODB, in the clone case), and does not perform any other checks. The on-disk symlink_metadata() check and unlink-on-collision live in StackDelegate::push()'s invocation of create_leading_directory(), which is therefore bypassed for the cached prefix. The final symlink is created with plain std::os::unix::fs::symlink, which follows symlinks in parent directories. Therefore, it's possible to provide a tree with duplicate symlink and directory entries that exploits this. This vulnerability is fixed in 0.21.1.",
       "severity": 7.8,
       "references": [
         {
-          "url": "https://helpx.adobe.com/security/products/substance3d_designer/apsb26-52.html",
+          "url": "https://github.com/GitoxideLabs/gitoxide/security/advisories/GHSA-f89h-2fjh-2r9q",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "affected",
-          "product": "Substance3D - Designer",
-          "vendor": "Adobe",
+          "vendor": "GitoxideLabs",
+          "product": "gitoxide",
           "versions": [
             {
-              "lessThanOrEqual": "15.1.0",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Out-of-bounds Write (CWE-787)"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-34683",
-      "publishedDate": "2026-05-12T18:13:56.154Z",
-      "lastModifiedDate": "2026-05-13T19:10:37.825Z",
-      "description": "Substance3D - Designer versions 15.1.0 and earlier are affected by an out-of-bounds write vulnerability that could result in arbitrary code execution in the context of the current user. Exploitation of this issue requires user interaction in that a victim must open a malicious file.",
-      "severity": 7.8,
-      "references": [
-        {
-          "url": "https://helpx.adobe.com/security/products/substance3d_designer/apsb26-52.html",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "affected",
-          "product": "Substance3D - Designer",
-          "vendor": "Adobe",
-          "versions": [
-            {
-              "lessThanOrEqual": "15.1.0",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Out-of-bounds Write (CWE-787)"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-42552",
-      "publishedDate": "2026-05-13T19:24:15.132Z",
-      "lastModifiedDate": "2026-05-13T19:24:15.132Z",
-      "description": "Flight is an extensible micro-framework for PHP. Prior to 3.18.1, the default error handler Engine::_error() writes the full exception message, exception code, and stack trace (including absolute filesystem paths) directly into the HTTP 500 response, with no debug gating. Production deployments leak internal paths, any secret interpolated into an exception message, and full module structure — giving attackers primitives for chaining other weaknesses (LFI, path traversal). This vulnerability is fixed in 3.18.1.",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://github.com/flightphp/core/security/advisories/GHSA-qrch-52m5-vv85",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "flightphp",
-          "product": "core",
-          "versions": [
-            {
-              "version": "< 3.18.1",
+              "version": "< 0.21.1",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-209: Generation of Error Message Containing Sensitive Information"
+        "CWE-59: Improper Link Resolution Before File Access ('Link Following')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-42551",
-      "publishedDate": "2026-05-13T19:23:27.314Z",
-      "lastModifiedDate": "2026-05-13T19:23:27.314Z",
-      "description": "Flight is an extensible micro-framework for PHP. Prior to 3.18.1, Request::getMethod() unconditionally honors the X-HTTP-Method-Override header and the $_REQUEST['_method'] parameter on any HTTP verb (including safe verbs such as GET), with no opt-in and no whitelist of permitted target methods. A GET request can silently become a DELETE or PUT, enabling CSRF escalation against destructive endpoints, bypass of middleware gated on unsafe verbs, and cache poisoning between CDN and origin. This vulnerability is fixed in 3.18.1.",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://github.com/flightphp/core/security/advisories/GHSA-vxrr-w42w-w76g",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "flightphp",
-          "product": "core",
-          "versions": [
-            {
-              "version": "< 3.18.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-436: Interpretation Conflict"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-42582",
-      "publishedDate": "2026-05-13T18:06:55.559Z",
-      "lastModifiedDate": "2026-05-13T19:35:35.549Z",
-      "description": "Netty is an asynchronous, event-driven network application framework. Prior to 4.2.13.Final, when decoding header blocks, the non-Huffman branch of io.netty.handler.codec.http3.QpackDecoder#decodeHuffmanEncodedLiteral may execute new byte[length] for a string literal before verifying that length bytes are actually present in the compressed field section. The wire encoding allows a very large length to be expressed in few bytes. There is no check that length <= in.readableBytes() before new byte[length]. This vulnerability is fixed in 4.2.13.Final.",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://github.com/netty/netty/security/advisories/GHSA-2c5c-chwr-9hqw",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "netty",
-          "product": "netty",
-          "versions": [
-            {
-              "version": ">= 4.2.0.Alpha1, < 4.2.13.Final",
-              "status": "affected"
-            }
-          ]
-        },
-        {
-          "vendor": "io.netty",
-          "product": "netty-codec-http3",
-          "versions": [
-            {
-              "version": ">= 4.2.0.Alpha1, < 4.2.13.Final",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-770: Allocation of Resources Without Limits or Throttling",
-        "CWE-789: Memory Allocation with Excessive Size Value"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-40406",
-      "publishedDate": "2026-05-12T16:58:43.279Z",
-      "lastModifiedDate": "2026-05-13T19:32:59.371Z",
-      "description": "Use after free in Windows TCP/IP allows an unauthorized attacker to disclose information over a network.",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-40406",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Microsoft",
-          "product": "Windows 10 Version 1607",
-          "platforms": [
-            "32-bit Systems",
-            "x64-based Systems"
-          ],
-          "versions": [
-            {
-              "version": "10.0.14393.0",
-              "lessThan": "10.0.14393.9140",
-              "versionType": "custom",
-              "status": "affected"
-            }
-          ]
-        },
-        {
-          "vendor": "Microsoft",
-          "product": "Windows 10 Version 1809",
-          "platforms": [
-            "32-bit Systems",
-            "x64-based Systems"
-          ],
-          "versions": [
-            {
-              "version": "10.0.17763.0",
-              "lessThan": "10.0.17763.8755",
-              "versionType": "custom",
-              "status": "affected"
-            }
-          ]
-        },
-        {
-          "vendor": "Microsoft",
-          "product": "Windows 10 Version 21H2",
-          "platforms": [
-            "32-bit Systems",
-            "ARM64-based Systems",
-            "x64-based Systems"
-          ],
-          "versions": [
-            {
-              "version": "10.0.19044.0",
-              "lessThan": "10.0.19044.7291",
-              "versionType": "custom",
-              "status": "affected"
-            }
-          ]
-        },
-        {
-          "vendor": "Microsoft",
-          "product": "Windows 10 Version 22H2",
-          "platforms": [
-            "32-bit Systems",
-            "ARM64-based Systems",
-            "x64-based Systems"
-          ],
-          "versions": [
-            {
-              "version": "10.0.19045.0",
-              "lessThan": "10.0.19045.7291",
-              "versionType": "custom",
-              "status": "affected"
-            }
-          ]
-        },
-        {
-          "vendor": "Microsoft",
-          "product": "Windows 11 version 22H3",
-          "platforms": [
-            "ARM64-based Systems"
-          ],
-          "versions": [
-            {
-              "version": "10.0.22631.0",
-              "lessThan": "10.0.22631.7079",
-              "versionType": "custom",
-              "status": "affected"
-            }
-          ]
-        },
-        {
-          "vendor": "Microsoft",
-          "product": "Windows 11 Version 23H2",
-          "platforms": [
-            "x64-based Systems"
-          ],
-          "versions": [
-            {
-              "version": "10.0.22631.0",
-              "lessThan": "10.0.22631.7079",
-              "versionType": "custom",
-              "status": "affected"
-            }
-          ]
-        },
-        {
-          "vendor": "Microsoft",
-          "product": "Windows 11 Version 24H2",
-          "platforms": [
-            "ARM64-based Systems",
-            "x64-based Systems"
-          ],
-          "versions": [
-            {
-              "version": "10.0.26100.0",
-              "lessThan": "10.0.26100.8457",
-              "versionType": "custom",
-              "status": "affected"
-            }
-          ]
-        },
-        {
-          "vendor": "Microsoft",
-          "product": "Windows 11 Version 25H2",
-          "platforms": [
-            "ARM64-based Systems",
-            "x64-based Systems"
-          ],
-          "versions": [
-            {
-              "version": "10.0.26200.0",
-              "lessThan": "10.0.26200.8457",
-              "versionType": "custom",
-              "status": "affected"
-            }
-          ]
-        },
-        {
-          "vendor": "Microsoft",
-          "product": "Windows 11 version 26H1",
-          "platforms": [
-            "ARM64-based Systems",
-            "x64-based Systems"
-          ],
-          "versions": [
-            {
-              "version": "10.0.28000.0",
-              "lessThan": "10.0.28000.2113",
-              "versionType": "custom",
-              "status": "affected"
-            }
-          ]
-        },
-        {
-          "vendor": "Microsoft",
-          "product": "Windows Server 2012",
-          "platforms": [
-            "x64-based Systems"
-          ],
-          "versions": [
-            {
-              "version": "6.2.9200.0",
-              "lessThan": "6.2.9200.26079",
-              "versionType": "custom",
-              "status": "affected"
-            }
-          ]
-        },
-        {
-          "vendor": "Microsoft",
-          "product": "Windows Server 2012 (Server Core installation)",
-          "platforms": [
-            "x64-based Systems"
-          ],
-          "versions": [
-            {
-              "version": "6.2.9200.0",
-              "lessThan": "6.2.9200.26079",
-              "versionType": "custom",
-              "status": "affected"
-            }
-          ]
-        },
-        {
-          "vendor": "Microsoft",
-          "product": "Windows Server 2012 R2",
-          "platforms": [
-            "x64-based Systems"
-          ],
-          "versions": [
-            {
-              "version": "6.3.9600.0",
-              "lessThan": "6.3.9600.23181",
-              "versionType": "custom",
-              "status": "affected"
-            }
-          ]
-        },
-        {
-          "vendor": "Microsoft",
-          "product": "Windows Server 2012 R2 (Server Core installation)",
-          "platforms": [
-            "x64-based Systems"
-          ],
-          "versions": [
-            {
-              "version": "6.3.9600.0",
-              "lessThan": "6.3.9600.23181",
-              "versionType": "custom",
-              "status": "affected"
-            }
-          ]
-        },
-        {
-          "vendor": "Microsoft",
-          "product": "Windows Server 2016",
-          "platforms": [
-            "x64-based Systems"
-          ],
-          "versions": [
-            {
-              "version": "10.0.14393.0",
-              "lessThan": "10.0.14393.9140",
-              "versionType": "custom",
-              "status": "affected"
-            }
-          ]
-        },
-        {
-          "vendor": "Microsoft",
-          "product": "Windows Server 2016 (Server Core installation)",
-          "platforms": [
-            "x64-based Systems"
-          ],
-          "versions": [
-            {
-              "version": "10.0.14393.0",
-              "lessThan": "10.0.14393.9140",
-              "versionType": "custom",
-              "status": "affected"
-            }
-          ]
-        },
-        {
-          "vendor": "Microsoft",
-          "product": "Windows Server 2019",
-          "platforms": [
-            "x64-based Systems"
-          ],
-          "versions": [
-            {
-              "version": "10.0.17763.0",
-              "lessThan": "10.0.17763.8755",
-              "versionType": "custom",
-              "status": "affected"
-            }
-          ]
-        },
-        {
-          "vendor": "Microsoft",
-          "product": "Windows Server 2019 (Server Core installation)",
-          "platforms": [
-            "x64-based Systems"
-          ],
-          "versions": [
-            {
-              "version": "10.0.17763.0",
-              "lessThan": "10.0.17763.8755",
-              "versionType": "custom",
-              "status": "affected"
-            }
-          ]
-        },
-        {
-          "vendor": "Microsoft",
-          "product": "Windows Server 2022",
-          "platforms": [
-            "x64-based Systems"
-          ],
-          "versions": [
-            {
-              "version": "10.0.20348.0",
-              "lessThan": "10.0.20348.5139",
-              "versionType": "custom",
-              "status": "affected"
-            }
-          ]
-        },
-        {
-          "vendor": "Microsoft",
-          "product": "Windows Server 2022, 23H2 Edition (Server Core installation)",
-          "platforms": [
-            "x64-based Systems"
-          ],
-          "versions": [
-            {
-              "version": "10.0.25398.0",
-              "lessThan": "10.0.25398.2330",
-              "versionType": "custom",
-              "status": "affected"
-            }
-          ]
-        },
-        {
-          "vendor": "Microsoft",
-          "product": "Windows Server 2025",
-          "platforms": [
-            "x64-based Systems"
-          ],
-          "versions": [
-            {
-              "version": "10.0.26100.0",
-              "lessThan": "10.0.26100.32860",
-              "versionType": "custom",
-              "status": "affected"
-            }
-          ]
-        },
-        {
-          "vendor": "Microsoft",
-          "product": "Windows Server 2025 (Server Core installation)",
-          "platforms": [
-            "x64-based Systems"
-          ],
-          "versions": [
-            {
-              "version": "10.0.26100.0",
-              "lessThan": "10.0.26100.32860",
-              "versionType": "custom",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-416: Use After Free"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-33376",
-      "publishedDate": "2026-05-13T19:28:34.473Z",
-      "lastModifiedDate": "2026-05-13T19:35:08.211Z",
-      "description": "When using an IPv6 allow-list for the Auth Proxy feature, it defaults to /32 addresses. Addresses specifying a mask explicitly are not affected; to mitigate easily, add the desired mask (usually /128) to the addresses. Only auth proxy is affected; Okta, SAML, LDAP, etc are unaffected here.",
-      "severity": 7.4,
-      "references": [
-        {
-          "url": "https://grafana.com/security/security-advisories/cve-2026-33376",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "platforms": [
-            "OnPrem"
-          ],
-          "product": "Grafana OSS",
-          "vendor": "Grafana",
-          "versions": [
-            {
-              "lessThanOrEqual": "11.6.14",
-              "status": "affected",
-              "version": "9.4.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "11.6.14+security-04",
-              "status": "affected",
-              "version": "11.6.14",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "12.2.8",
-              "status": "affected",
-              "version": "12.0.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "12.2.8+security-04",
-              "status": "affected",
-              "version": "12.2.8",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "12.3.6",
-              "status": "affected",
-              "version": "12.3.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "12.3.6+security-04",
-              "status": "affected",
-              "version": "12.3.6",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "12.4.3",
-              "status": "affected",
-              "version": "12.4.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "12.4.3+security-02",
-              "status": "affected",
-              "version": "12.4.3",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "13.0.1",
-              "status": "affected",
-              "version": "13.0.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "13.0.1+security-01",
-              "status": "affected",
-              "version": "13.0.1",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-6177",
-      "publishedDate": "2026-05-13T12:29:53.119Z",
-      "lastModifiedDate": "2026-05-13T19:31:57.701Z",
-      "description": "The Custom Twitter Feeds plugin for WordPress is vulnerable to Stored Cross-Site Scripting in versions up to and including 2.5.4. This is due to insufficient output escaping in the CTF_Display_Elements::get_post_text() function when rendering cached tweet text. The plugin's ctf_get_more_posts AJAX action is available to unauthenticated users and directly outputs cached tweet data through nl2br() without HTML escaping. When an attacker can get malicious content into cached tweet data (either by tweeting content that gets cached by the site's feed configuration, or through other vulnerabilities), the malicious HTML/JavaScript is executed when the unauthenticated endpoint is accessed. This makes it possible for unauthenticated attackers to inject arbitrary web scripts in pages that will execute whenever a user accesses the affected endpoint.",
-      "severity": 7.2,
-      "references": [
-        {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/e4b2178f-e4da-4bfb-9c27-8c1884499769?source=cve",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/custom-twitter-feeds/tags/2.5.4/custom-twitter-feed.php#L447",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/custom-twitter-feeds/trunk/inc/CTF_Display_Elements.php#L505",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/custom-twitter-feeds/tags/2.5.4/inc/CTF_Display_Elements.php#L505",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/custom-twitter-feeds/trunk/custom-twitter-feed.php#L447",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/custom-twitter-feeds/trunk/inc/CTF_Display_Elements.php#L521",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/custom-twitter-feeds/tags/2.5.4/inc/CTF_Display_Elements.php#L521",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/custom-twitter-feeds/trunk/templates/item.php#L36",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/custom-twitter-feeds/tags/2.5.4/templates/item.php#L36",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&new=3519584%40custom-twitter-feeds&old=3481416%40custom-twitter-feeds",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "smub",
-          "product": "Custom Twitter Feeds – A Tweets Widget or X Feed Widget",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "lessThanOrEqual": "2.5.4",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-33377",
-      "publishedDate": "2026-05-13T19:28:28.154Z",
-      "lastModifiedDate": "2026-05-13T19:35:08.443Z",
-      "description": "An Editor can overwrite a dashboard not owned by them to acquire admin on that specific dashboard. The user must have write access to the dashboard to escalate privilege.",
-      "severity": 7.1,
-      "references": [
-        {
-          "url": "https://grafana.com/security/security-advisories/cve-2026-33377",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "platforms": [
-            "OnPrem"
-          ],
-          "product": "Grafana OSS",
-          "vendor": "Grafana",
-          "versions": [
-            {
-              "lessThanOrEqual": "11.6.14",
-              "status": "affected",
-              "version": "8.5.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "11.6.14+security-04",
-              "status": "affected",
-              "version": "11.6.14",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "12.2.8",
-              "status": "affected",
-              "version": "12.0.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "12.2.8+security-04",
-              "status": "affected",
-              "version": "12.2.8",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "12.3.6",
-              "status": "affected",
-              "version": "12.3.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "12.3.6+security-04",
-              "status": "affected",
-              "version": "12.3.6",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "12.4.3",
-              "status": "affected",
-              "version": "12.4.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "12.4.3+security-02",
-              "status": "affected",
-              "version": "12.4.3",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "13.0.1",
-              "status": "affected",
-              "version": "13.0.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "13.0.1+security-01",
-              "status": "affected",
-              "version": "13.0.1",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-4609",
-      "publishedDate": "2026-05-13T13:27:54.907Z",
-      "lastModifiedDate": "2026-05-13T19:31:44.270Z",
-      "description": "The ProfileGrid – User Profiles, Groups and Communities plugin for WordPress is vulnerable to unauthorized access due to a missing capability check on the pm_invite_user function in all versions up to, and including, 5.9.8.4. This makes it possible for authenticated attackers, with Subscriber-level access and above, to add themselves or any registered user to any ProfileGrid group, including closed and paid groups, bypassing all authorization and payment gates.",
-      "severity": 7.1,
-      "references": [
-        {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/c3678b4d-0cd0-4873-8cf3-90c557931f4c?source=cve",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/profilegrid-user-profiles-groups-and-communities/trunk/public/class-profile-magic-public.php#L3280",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/profilegrid-user-profiles-groups-and-communities/trunk/public/class-profile-magic-public.php#L3319",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/changeset/3491679/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "metagauss",
-          "product": "ProfileGrid – User Profiles, Groups and Communities",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "lessThanOrEqual": "5.9.8.4",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-862 Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-33378",
-      "publishedDate": "2026-05-13T19:28:37.606Z",
-      "lastModifiedDate": "2026-05-13T19:35:08.707Z",
-      "description": "Using the $__timeGroup macro, one can achieve an OOM by overloading the server. This requires a SQL datasource. If the server is set up to auto-restart, the impact is minimal or non-existent, as the attack can take upwards of half an hour to crash the server.",
+      "id": "CVE-2026-44440",
+      "publishedDate": "2026-05-13T21:12:52.940Z",
+      "lastModifiedDate": "2026-05-13T21:12:52.940Z",
+      "description": "ERPNext is a free and open source Enterprise Resource Planning tool. Prior to 15.101.1 and 16.10.0, an Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability on an endpoint allows an authenticated adjacent attacker to read arbitrary files. This vulnerability is fixed in 15.101.1 and 16.10.0.",
       "severity": 6.5,
       "references": [
         {
-          "url": "https://grafana.com/security/security-advisories/cve-2026-33378",
+          "url": "https://github.com/frappe/erpnext/security/advisories/GHSA-6ffr-92hr-3394",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "unaffected",
-          "platforms": [
-            "OnPrem"
-          ],
-          "product": "Grafana OSS",
-          "vendor": "Grafana",
+          "vendor": "frappe",
+          "product": "erpnext",
           "versions": [
             {
-              "lessThanOrEqual": "11.6.14",
-              "status": "affected",
-              "version": "8.0.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "11.6.14+security-04",
-              "status": "affected",
-              "version": "11.6.14",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "12.2.8",
-              "status": "affected",
-              "version": "12.0.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "12.2.8+security-04",
-              "status": "affected",
-              "version": "12.2.8",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "12.3.6",
-              "status": "affected",
-              "version": "12.3.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "12.3.6+security-04",
-              "status": "affected",
-              "version": "12.3.6",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "12.4.3",
-              "status": "affected",
-              "version": "12.4.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "12.4.3+security-02",
-              "status": "affected",
-              "version": "12.4.3",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "13.0.1",
-              "status": "affected",
-              "version": "13.0.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "13.0.1+security-01",
-              "status": "affected",
-              "version": "13.0.1",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-28383",
-      "publishedDate": "2026-05-13T19:28:36.952Z",
-      "lastModifiedDate": "2026-05-13T19:35:07.915Z",
-      "description": "A request to the Grafana plugin resources endpoint can cause unbounded memory allocation by reading the entire request body into memory. An authenticated user can exploit this to trigger an out-of-memory condition, potentially causing a denial of service.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://grafana.com/security/security-advisories/cve-2026-28383",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "platforms": [
-            "OnPrem"
-          ],
-          "product": "Grafana OSS",
-          "vendor": "Grafana",
-          "versions": [
-            {
-              "lessThanOrEqual": "11.6.14",
-              "status": "affected",
-              "version": "6.7.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "11.6.14+security-04",
-              "status": "affected",
-              "version": "11.6.14",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "12.2.8",
-              "status": "affected",
-              "version": "12.0.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "12.2.8+security-04",
-              "status": "affected",
-              "version": "12.2.8",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "12.3.6",
-              "status": "affected",
-              "version": "12.3.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "12.3.6+security-04",
-              "status": "affected",
-              "version": "12.3.6",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "12.4.3",
-              "status": "affected",
-              "version": "12.4.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "12.4.3+security-02",
-              "status": "affected",
-              "version": "12.4.3",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "13.0.1",
-              "status": "affected",
-              "version": "13.0.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "13.0.1+security-01",
-              "status": "affected",
-              "version": "13.0.1",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-28380",
-      "publishedDate": "2026-05-13T19:28:32.257Z",
-      "lastModifiedDate": "2026-05-13T19:35:07.725Z",
-      "description": "Any Editor could delete any snapshot, even if they have no access to read or write them.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://grafana.com/security/security-advisories/cve-2026-28380",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "platforms": [
-            "OnPrem"
-          ],
-          "product": "Grafana OSS",
-          "vendor": "Grafana",
-          "versions": [
-            {
-              "lessThanOrEqual": "11.6.14",
-              "status": "affected",
-              "version": "9.4.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "11.6.14+security-04",
-              "status": "affected",
-              "version": "11.6.14",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "12.2.8",
-              "status": "affected",
-              "version": "12.0.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "12.2.8+security-04",
-              "status": "affected",
-              "version": "12.2.8",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "12.3.6",
-              "status": "affected",
-              "version": "12.3.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "12.3.6+security-04",
-              "status": "affected",
-              "version": "12.3.6",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "12.4.3",
-              "status": "affected",
-              "version": "12.4.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "12.4.3+security-02",
-              "status": "affected",
-              "version": "12.4.3",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "13.0.1",
-              "status": "affected",
-              "version": "13.0.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "13.0.1+security-01",
-              "status": "affected",
-              "version": "13.0.1",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-28376",
-      "publishedDate": "2026-05-13T19:28:26.544Z",
-      "lastModifiedDate": "2026-05-13T19:35:07.723Z",
-      "description": "The Grafana Live push endpoint can be exploited to cause unbounded memory allocation by sending a large or streaming request body, potentially leading to out-of-memory conditions. An authenticated user with access to the Grafana Live API can trigger this issue.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://grafana.com/security/security-advisories/cve-2026-28376",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "platforms": [
-            "OnPrem"
-          ],
-          "product": "Grafana OSS",
-          "vendor": "Grafana",
-          "versions": [
-            {
-              "lessThanOrEqual": "11.6.14",
-              "status": "affected",
-              "version": "8.0.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "11.6.14+security-04",
-              "status": "affected",
-              "version": "11.6.14",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "12.2.8",
-              "status": "affected",
-              "version": "12.0.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "12.2.8+security-04",
-              "status": "affected",
-              "version": "12.2.8",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "12.3.6",
-              "status": "affected",
-              "version": "12.3.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "12.3.6+security-04",
-              "status": "affected",
-              "version": "12.3.6",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "12.4.3",
-              "status": "affected",
-              "version": "12.4.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "12.4.3+security-02",
-              "status": "affected",
-              "version": "12.4.3",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "13.0.1",
-              "status": "affected",
-              "version": "13.0.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "13.0.1+security-01",
-              "status": "affected",
-              "version": "13.0.1",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-28379",
-      "publishedDate": "2026-05-13T19:28:25.836Z",
-      "lastModifiedDate": "2026-05-13T19:35:07.631Z",
-      "description": "A race condition in Grafana Live allows authenticated users with Viewer role to trigger a server crash by sending concurrent requests that cause a fatal map access error. This results in complete service unavailability requiring restart of the Grafana server.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://grafana.com/security/security-advisories/cve-2026-28379",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "platforms": [
-            "OnPrem"
-          ],
-          "product": "Grafana OSS",
-          "vendor": "Grafana",
-          "versions": [
-            {
-              "lessThanOrEqual": "11.6.14",
-              "status": "affected",
-              "version": "8.2.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "11.6.14+security-04",
-              "status": "affected",
-              "version": "11.6.14",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "12.2.8",
-              "status": "affected",
-              "version": "12.0.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "12.2.8+security-04",
-              "status": "affected",
-              "version": "12.2.8",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "12.3.6",
-              "status": "affected",
-              "version": "12.3.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "12.3.6+security-04",
-              "status": "affected",
-              "version": "12.3.6",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "12.4.3",
-              "status": "affected",
-              "version": "12.4.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "12.4.3+security-02",
-              "status": "affected",
-              "version": "12.4.3",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "13.0.1",
-              "status": "affected",
-              "version": "13.0.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "13.0.1+security-01",
-              "status": "affected",
-              "version": "13.0.1",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-33380",
-      "publishedDate": "2026-05-13T19:28:32.915Z",
-      "lastModifiedDate": "2026-05-13T19:35:08.876Z",
-      "description": "A vulnerability in SQL Expressions allows an authenticated attacker to read arbitrary files from the Grafana server's filesystem. Only instances with the sqlExpressions feature toggle enabled are vulnerable.",
-      "severity": 6.3,
-      "references": [
-        {
-          "url": "https://grafana.com/security/security-advisories/cve-2026-33380",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "platforms": [
-            "OnPrem"
-          ],
-          "product": "Grafana OSS",
-          "vendor": "Grafana",
-          "versions": [
-            {
-              "lessThanOrEqual": "11.6.14",
-              "status": "affected",
-              "version": "11.6.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "11.6.14+security-04",
-              "status": "affected",
-              "version": "11.6.14",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "12.2.8",
-              "status": "affected",
-              "version": "12.0.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "12.2.8+security-04",
-              "status": "affected",
-              "version": "12.2.8",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "12.3.6",
-              "status": "affected",
-              "version": "12.3.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "12.3.6+security-04",
-              "status": "affected",
-              "version": "12.3.6",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "12.4.3",
-              "status": "affected",
-              "version": "12.4.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "12.4.3+security-02",
-              "status": "affected",
-              "version": "12.4.3",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "13.0.1",
-              "status": "affected",
-              "version": "13.0.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "13.0.1+security-01",
-              "status": "affected",
-              "version": "13.0.1",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-33381",
-      "publishedDate": "2026-05-13T19:28:31.559Z",
-      "lastModifiedDate": "2026-05-13T19:35:08.982Z",
-      "description": "When a user's access to mint tokens for a service account is revoked, it is sometimes still possible to do so for a few seconds after the event. The user will eventually lose access to do this.",
-      "severity": 5.9,
-      "references": [
-        {
-          "url": "https://grafana.com/security/security-advisories/cve-2026-33381",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "platforms": [
-            "OnPrem"
-          ],
-          "product": "Grafana OSS",
-          "vendor": "Grafana",
-          "versions": [
-            {
-              "lessThanOrEqual": "11.6.14",
-              "status": "affected",
-              "version": "9.2.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "11.6.14+security-04",
-              "status": "affected",
-              "version": "11.6.14",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "12.2.8",
-              "status": "affected",
-              "version": "12.0.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "12.2.8+security-04",
-              "status": "affected",
-              "version": "12.2.8",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "12.3.6",
-              "status": "affected",
-              "version": "12.3.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "12.3.6+security-04",
-              "status": "affected",
-              "version": "12.3.6",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "12.4.3",
-              "status": "affected",
-              "version": "12.4.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "12.4.3+security-02",
-              "status": "affected",
-              "version": "12.4.3",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "13.0.1",
-              "status": "affected",
-              "version": "13.0.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "13.0.1+security-01",
-              "status": "affected",
-              "version": "13.0.1",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-42348",
-      "publishedDate": "2026-05-12T18:01:41.812Z",
-      "lastModifiedDate": "2026-05-13T19:32:28.404Z",
-      "description": "OpenTelemetry.OpAmp.Client is the OpAMP client for OpenTelemetry .NET. Prior to 0.2.0-alpha.1, when receiving responses from the OpAMP server over HTTP, the OpAMP client allocates an unbounded buffer to read all bytes from the server, with no upper-bound on the number of bytes consumed. This could cause memory exhaustion in the consuming application if the configured OpAMP server is attacker-controlled (or a network attacker can MitM the connection) and an extremely large body is returned in the response. This vulnerability is fixed in 0.2.0-alpha.1.",
-      "severity": 5.9,
-      "references": [
-        {
-          "url": "https://github.com/open-telemetry/opentelemetry-dotnet-contrib/security/advisories/GHSA-w2jh-77fq-7gp8",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/open-telemetry/opentelemetry-dotnet-contrib/pull/4116",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "open-telemetry",
-          "product": "opentelemetry-dotnet-contrib",
-          "versions": [
-            {
-              "version": "< 0.2.0-alpha.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-789: Memory Allocation with Excessive Size Value"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-33584",
-      "publishedDate": "2026-05-13T18:30:48.206Z",
-      "lastModifiedDate": "2026-05-13T19:39:01.096Z",
-      "description": "Exposed Keycloak management \nservice in the Arqit Symmetric Key Agreement Platform enables unauthorized access to sensitive debug \ninformation such as metrics and\n health data. This issue affects Symmetric Key Agreement Platform: before 26.03.",
-      "severity": 5.3,
-      "references": [
-        {
-          "url": "https://www.cvcn.gov.it/cvcn/cve/CVE-2026-33584",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Arqit",
-          "product": "Symmetric Key Agreement Platform",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "26.03",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-749 Exposed dangerous method or function"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-44248",
-      "publishedDate": "2026-05-13T18:23:37.563Z",
-      "lastModifiedDate": "2026-05-13T19:16:58.429Z",
-      "description": "Netty is an asynchronous, event-driven network application framework. Prior to 4.2.13.Final and 4.1.133.Final, the MQTT 5 header Properties section is parsed and buffered before any message size limit is applied. Specifically, in MqttDecoder, the decodeVariableHeader() method is called before the bytesRemainingBeforeVariableHeader > maxBytesInMessage check. The decodeVariableHeader() can call other methods which will call decodeProperties(). Effectively, Netty does not apply any limits to the size of the properties being decoded. Additionally, because MqttDecoder extends ReplayingDecoder, Netty will repeatedly re-parse the enormous Properties sections and buffer the bytes in memory, until the entire thing parses to completion. This can cause high resource usage in both CPU and memory. This vulnerability is fixed in 4.2.13.Final and 4.1.133.Final.",
-      "severity": 5.3,
-      "references": [
-        {
-          "url": "https://github.com/netty/netty/security/advisories/GHSA-jfg9-48mv-9qgx",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "netty",
-          "product": "netty",
-          "versions": [
-            {
-              "version": ">= 4.2.0.Alpha1, < 4.2.13.Final",
+              "version": "< 15.101.1",
               "status": "affected"
             },
             {
-              "version": "< 4.1.133.Final",
-              "status": "affected"
-            }
-          ]
-        },
-        {
-          "vendor": "io.netty",
-          "product": "netty-codec-mqtt",
-          "versions": [
-            {
-              "version": ">= 4.2.0.Alpha1, < 4.2.13.Final",
-              "status": "affected"
-            },
-            {
-              "version": "< 4.1.133.Final",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-400: Uncontrolled Resource Consumption"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41051",
-      "publishedDate": "2026-05-13T08:37:38.405Z",
-      "lastModifiedDate": "2026-05-13T19:24:11.916Z",
-      "description": "csync2 uses insecure temporary directories when compiled with C99 or later, allowing for TOCTOU style attacks on the temporary directories.",
-      "severity": 5,
-      "references": [
-        {
-          "url": "https://bugzilla.suse.com/show_bug.cgi?id=CVE-2026-41051",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "SUSE",
-          "product": "openSUSE Tumbleweed",
-          "packageName": "csync2",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "?",
-              "lessThan": "2.0+git.1600444747.83b3644-3.1",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-34655",
-      "publishedDate": "2026-05-12T19:50:25.384Z",
-      "lastModifiedDate": "2026-05-13T19:32:15.121Z",
-      "description": "Adobe Commerce versions 2.4.9-beta1, 2.4.8-p4, 2.4.7-p9, 2.4.6-p14, 2.4.5-p16, 2.4.4-p17 and earlier are affected by a stored Cross-Site Scripting (XSS) vulnerability that could be abused by a high-privileged attacker to inject malicious scripts into vulnerable form fields. Malicious JavaScript may be executed in a victim's browser when they browse to the page containing the vulnerable field. Scope is changed.",
-      "severity": 4.8,
-      "references": [
-        {
-          "url": "https://helpx.adobe.com/security/products/magento/apsb26-49.html",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "affected",
-          "product": "Adobe Commerce",
-          "vendor": "Adobe",
-          "versions": [
-            {
-              "lessThanOrEqual": "2.4.4-p17",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Cross-site Scripting (Stored XSS) (CWE-79)"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-42549",
-      "publishedDate": "2026-05-13T19:22:20.932Z",
-      "lastModifiedDate": "2026-05-13T19:22:20.932Z",
-      "description": "Flight is an extensible micro-framework for PHP. Prior to 3.18.1, the make:controller CLI command calls mkdir(..., recursive: true) on a path built from the user-supplied controller name, before Nette's class-name validation runs. The class-file write is correctly rejected by Nette when the name contains /, but the recursive directory creation side effect is already committed — including directories located outside the project root through ../ traversal. This vulnerability is fixed in 3.18.1.",
-      "severity": 4.4,
-      "references": [
-        {
-          "url": "https://github.com/flightphp/core/security/advisories/GHSA-3xjv-pmf2-gf2q",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "flightphp",
-          "product": "core",
-          "versions": [
-            {
-              "version": "< 3.18.1",
+              "version": ">= 16.0.0-beta.1, < 16.10.0",
               "status": "affected"
             }
           ]
@@ -1939,1949 +167,360 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-28374",
-      "publishedDate": "2026-05-13T19:28:40.053Z",
-      "lastModifiedDate": "2026-05-13T19:35:07.631Z",
-      "description": "Editors could delete any annotation, even those they do not have read access to. The editor user cannot create or read the annotations.",
-      "severity": 4.3,
+      "id": "CVE-2026-44423",
+      "publishedDate": "2026-05-13T21:07:33.174Z",
+      "lastModifiedDate": "2026-05-13T21:07:33.174Z",
+      "description": "ShellHub is a centralized SSH gateway. Prior to 0.24.2, GET /api/sessions/:uid returns the full session object for any authenticated caller, without scoping by the caller's tenant. An authenticated user can read session records (SSH username, device UID, remote IP, terminal type, authenticated flag, timestamps) belonging to any other namespace. This vulnerability is fixed in 0.24.2.",
+      "severity": 6.5,
       "references": [
         {
-          "url": "https://grafana.com/security/security-advisories/cve-2026-28374",
+          "url": "https://github.com/shellhub-io/shellhub/security/advisories/GHSA-9w9c-9w8m-w89q",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "unaffected",
-          "platforms": [
-            "OnPrem"
-          ],
-          "product": "Grafana OSS",
-          "vendor": "Grafana",
+          "vendor": "shellhub-io",
+          "product": "shellhub",
           "versions": [
             {
-              "lessThanOrEqual": "11.6.14",
-              "status": "affected",
-              "version": "8.5.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "11.6.14+security-04",
-              "status": "affected",
-              "version": "11.6.14",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "12.2.8",
-              "status": "affected",
-              "version": "12.0.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "12.2.8+security-04",
-              "status": "affected",
-              "version": "12.2.8",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "12.3.6",
-              "status": "affected",
-              "version": "12.3.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "12.3.6+security-04",
-              "status": "affected",
-              "version": "12.3.6",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "12.4.3",
-              "status": "affected",
-              "version": "12.4.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "12.4.3+security-02",
-              "status": "affected",
-              "version": "12.4.3",
-              "versionType": "custom"
-            },
-            {
-              "lessThanOrEqual": "13.0.1",
-              "status": "affected",
-              "version": "13.0.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "13.0.1+security-01",
-              "status": "affected",
-              "version": "13.0.1",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-40421",
-      "publishedDate": "2026-05-12T16:58:48.710Z",
-      "lastModifiedDate": "2026-05-13T19:32:43.499Z",
-      "description": "External control of file name or path in Microsoft Office Word allows an unauthorized attacker to disclose information over a network.",
-      "severity": 4.3,
-      "references": [
-        {
-          "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-40421",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Microsoft",
-          "product": "Microsoft 365 Apps for Enterprise",
-          "platforms": [
-            "32-bit Systems",
-            "x64-based Systems"
-          ],
-          "versions": [
-            {
-              "version": "16.0.1",
-              "lessThan": "https://aka.ms/OfficeSecurityReleases",
-              "versionType": "custom",
-              "status": "affected"
-            }
-          ]
-        },
-        {
-          "vendor": "Microsoft",
-          "product": "Microsoft Office 2019",
-          "platforms": [
-            "32-bit Systems",
-            "x64-based Systems"
-          ],
-          "versions": [
-            {
-              "version": "19.0.0",
-              "lessThan": "https://aka.ms/OfficeSecurityReleases",
-              "versionType": "custom",
-              "status": "affected"
-            }
-          ]
-        },
-        {
-          "vendor": "Microsoft",
-          "product": "Microsoft Office LTSC 2021",
-          "platforms": [
-            "32-bit Systems",
-            "x64-based Systems"
-          ],
-          "versions": [
-            {
-              "version": "16.0.1",
-              "lessThan": "https://aka.ms/OfficeSecurityReleases",
-              "versionType": "custom",
-              "status": "affected"
-            }
-          ]
-        },
-        {
-          "vendor": "Microsoft",
-          "product": "Microsoft Office LTSC 2024",
-          "platforms": [
-            "32-bit Systems",
-            "x64-based Systems"
-          ],
-          "versions": [
-            {
-              "version": "16.0.0",
-              "lessThan": "https://aka.ms/OfficeSecurityReleases",
-              "versionType": "custom",
-              "status": "affected"
-            }
-          ]
-        },
-        {
-          "vendor": "Microsoft",
-          "product": "Microsoft Word 2016",
-          "platforms": [
-            "32-bit Systems",
-            "x64-based Systems"
-          ],
-          "versions": [
-            {
-              "version": "16.0.1",
-              "lessThan": "16.0.5552.1000",
-              "versionType": "custom",
+              "version": "< 0.24.2",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-73: External Control of File Name or Path"
+        "CWE-639: Authorization Bypass Through User-Controlled Key"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-33585",
-      "publishedDate": "2026-05-13T18:46:13.920Z",
-      "lastModifiedDate": "2026-05-13T19:31:17.058Z",
-      "description": "Improper management of the idle timeout parameter in the Keycloak interface of the Arqit SKA-Platform enables an attacker to impersonate an authenticated tenant user via an unexpired browser session.\n\n\n\nThis issue affects Symmetric Key Agreement Platform: before 26.03.",
-      "severity": 3.8,
+      "id": "CVE-2026-44424",
+      "publishedDate": "2026-05-13T21:06:49.859Z",
+      "lastModifiedDate": "2026-05-13T21:06:49.859Z",
+      "description": "ShellHub is a centralized SSH gateway. Prior to 0.24.2, GET /api/devices/:uid returns the full device object whenever the caller is authenticated, without verifying that the device belongs to the caller's namespace (tenant). Any authenticated user (JWT or API Key) who knows or can guess a device UID can read device metadata from any other namespace. This vulnerability is fixed in 0.24.2.",
+      "severity": 6.5,
       "references": [
         {
-          "url": "https://www.cvcn.gov.it/cvcn/cve/CVE-2026-33585",
+          "url": "https://github.com/shellhub-io/shellhub/security/advisories/GHSA-j72x-xfwg-783f",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Arqit",
-          "product": "Symmetric Key Agreement Platform",
+          "vendor": "shellhub-io",
+          "product": "shellhub",
           "versions": [
             {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "26.03",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-233 Improper handling of parameters"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-42548",
-      "publishedDate": "2026-05-13T19:21:44.125Z",
-      "lastModifiedDate": "2026-05-13T19:21:44.125Z",
-      "description": "Flight is an extensible micro-framework for PHP. Prior to 3.18.1, Flight::jsonp() concatenates the ?jsonp= query parameter directly into an application/javascript response body without validating that the value is a legal JavaScript identifier. An attacker can inject arbitrary JavaScript that executes in the response origin, enabling reflected cross-site scripting. This vulnerability is fixed in 3.18.1.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/flightphp/core/security/advisories/GHSA-fcx8-ph5r-mxr4",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "flightphp",
-          "product": "core",
-          "versions": [
-            {
-              "version": "< 3.18.1",
+              "version": "< 0.24.2",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+        "CWE-639: Authorization Bypass Through User-Controlled Key"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-44363",
-      "publishedDate": "2026-05-13T19:16:59.579Z",
-      "lastModifiedDate": "2026-05-13T19:16:59.579Z",
-      "description": "MISP modules are autonomous modules that can be used to extend MISP for new services. Prior to 3.0.7, an unsafe remote resource fetching vulnerability existed in MISP Modules expansion modules. The html_to_markdown module accepted arbitrary HTTP(S) URLs without sufficient validation, which could allow Server-Side Request Forgery against loopback, private, or link-local network resources. Additionally, the qrcode module disabled TLS certificate verification when retrieving remote images, exposing requests to potential man-in-the-middle interception or response tampering. The issue was fixed by validating URL schemes, blocking local and private address ranges, resolving hostnames before fetching, enforcing request timeouts, and re-enabling TLS certificate verification. This vulnerability is fixed in 3.0.7.",
-      "severity": "N/A",
+      "id": "CVE-2026-44426",
+      "publishedDate": "2026-05-13T21:06:06.222Z",
+      "lastModifiedDate": "2026-05-13T21:06:06.222Z",
+      "description": "ShellHub is a centralized SSH gateway. Prior to 0.24.2, GET /api/namespaces/:tenant returns the full namespace object — including\nthe members list (user IDs, e-mails, roles), settings, and device counts — to any caller authenticated by an API Key, for any tenant, regardless of the API Key's own tenant scope. The handler conditionally skips the membership check when the user ID (X-ID) is absent, which is exactly the case for API Key authentication. This vulnerability is fixed in 0.24.2.",
+      "severity": 6.5,
       "references": [
         {
-          "url": "https://github.com/MISP/misp-modules/security/advisories/GHSA-fhq3-2gf3-8f3j",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/MISP/misp-modules/commit/01a522f2772fc31eeed379ccf23750c8a3d401db",
+          "url": "https://github.com/shellhub-io/shellhub/security/advisories/GHSA-vwx9-7qcf-gg7f",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "MISP",
-          "product": "misp-modules",
+          "vendor": "shellhub-io",
+          "product": "shellhub",
           "versions": [
             {
-              "version": "< 3.0.7",
+              "version": "< 0.24.2",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-295: Improper Certificate Validation",
+        "CWE-639: Authorization Bypass Through User-Controlled Key"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-44448",
+      "publishedDate": "2026-05-13T21:20:20.570Z",
+      "lastModifiedDate": "2026-05-13T21:20:20.570Z",
+      "description": "ERPNext is a free and open source Enterprise Resource Planning tool. Prior to 15.102.0 and 16.11.0, certain endpoints failed to enforce proper authorization checks, allowing users to modify data beyond their permitted role. This vulnerability is fixed in 15.102.0 and 16.11.0.",
+      "severity": 5.9,
+      "references": [
+        {
+          "url": "https://github.com/frappe/erpnext/security/advisories/GHSA-444j-g95x-5pqv",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "frappe",
+          "product": "erpnext",
+          "versions": [
+            {
+              "version": ">= 16.0.0-beta.1, < 16.11.0",
+              "status": "affected"
+            },
+            {
+              "version": "< 15.102.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-862: Missing Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-44425",
+      "publishedDate": "2026-05-13T21:05:07.925Z",
+      "lastModifiedDate": "2026-05-13T21:05:07.925Z",
+      "description": "ShellHub is a centralized SSH gateway. Prior to 0.24.2, the device list endpoint accepts user-controlled identifiers in the the name field of each filter property in the base64-encoded filter query parameter and the sort_by query parameter, which are then passed directly as BSON/SQL keys in the database layer without validation. Any authenticated user can craft payloads that cause the aggregation / query to fail and the API to return HTTP 500 with no body, with no rate limiting applied. This vulnerability is fixed in 0.24.2.",
+      "severity": 5.4,
+      "references": [
+        {
+          "url": "https://github.com/shellhub-io/shellhub/security/advisories/GHSA-47r2-v3x6-wff9",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "shellhub-io",
+          "product": "shellhub",
+          "versions": [
+            {
+              "version": "< 0.24.2",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-20: Improper Input Validation",
+        "CWE-943: Improper Neutralization of Special Elements in Data Query Logic",
+        "CWE-1333: Inefficient Regular Expression Complexity"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-44441",
+      "publishedDate": "2026-05-13T21:14:31.015Z",
+      "lastModifiedDate": "2026-05-13T21:14:31.015Z",
+      "description": "ERPNext is a free and open source Enterprise Resource Planning tool. Prior to 15.106.0 and 16.16.0, a malicious user could send a crafted request to an endpoint, which would lead to the server making an HTTP call to a service of the user's choice. This vulnerability is fixed in 15.106.0 and 16.16.0.",
+      "severity": 5,
+      "references": [
+        {
+          "url": "https://github.com/frappe/erpnext/security/advisories/GHSA-m4m4-j2m2-7fcw",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "frappe",
+          "product": "erpnext",
+          "versions": [
+            {
+              "version": "< 15.106.0",
+              "status": "affected"
+            },
+            {
+              "version": ">= 16.0.0-beta.1, < 16.16.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
         "CWE-918: Server-Side Request Forgery (SSRF)"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-44364",
-      "publishedDate": "2026-05-13T19:15:03.368Z",
-      "lastModifiedDate": "2026-05-13T19:15:03.368Z",
-      "description": "MISP modules are autonomous modules that can be used to extend MISP for new services. In 3.0.7 and earlier, a Cross-Site Request Forgery vulnerability in the MISP Modules website allowed an attacker to cause an authenticated user to submit unintended requests to the home endpoint. The vulnerability was due to the home blueprint being exempted from CSRF protection. This could allow modification of session query data in the context of the authenticated user. The issue was fixed by enabling CSRF protection for the affected blueprint and hardening query parsing.",
+      "id": "CVE-2026-44369",
+      "publishedDate": "2026-05-13T21:32:15.833Z",
+      "lastModifiedDate": "2026-05-13T21:32:15.833Z",
+      "description": "CVAT is an open source interactive video and image annotation tool for computer vision. From 2.5.0 to 2.63.0, an attacker who is able to create or edit an annotation guide on a task is able to add malicious JavaScript code, which will then run in the browser of anyone who opens this annotation guide. This code will be able to make arbitrary requests to CVAT with the victim user's privileges. This vulnerability is fixed in 2.64.0.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/MISP/misp-modules/security/advisories/GHSA-j4rh-7jcr-qm69",
+          "url": "https://github.com/cvat-ai/cvat/security/advisories/GHSA-m2h7-6xqm-p9v5",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/cvat-ai/cvat/commit/ad9e90003d8234ac7602598b109dc11450321dfc",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "MISP",
-          "product": "misp-modules",
+          "vendor": "cvat-ai",
+          "product": "cvat",
           "versions": [
             {
-              "version": "<= 3.0.7",
+              "version": ">= 2.5.0, < 2.64.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-352: Cross-Site Request Forgery (CSRF)"
+        "CWE-80: Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-0243",
-      "publishedDate": "2026-05-13T19:10:53.743Z",
-      "lastModifiedDate": "2026-05-13T19:10:53.743Z",
-      "description": "A denial of service (DoS) vulnerability in Palo Alto Networks Prisma SD-WAN ION devices enables an unauthenticated attacker in a network adjacent to a Prisma SD-WAN ION device to cause a system disruption by sending a specially crafted IPv6 packet.",
+      "id": "CVE-2026-44439",
+      "publishedDate": "2026-05-13T21:29:24.581Z",
+      "lastModifiedDate": "2026-05-13T21:29:24.581Z",
+      "description": "PlaywrightCapture is a simple replacement for splash using playwright. Prior to 1.39.6, PlaywrightCapture did not sufficiently restrict navigations and resource requests initiated by rendered pages. An attacker-controlled page could abuse browser-side redirection mechanisms, such as window.location.href, to make the capture process open file:// URLs or request resources hosted on private, loopback, link-local, or otherwise non-public IP addresses. In deployments where PlaywrightCapture processes untrusted URLs, this could allow a remote attacker to perform server-side request forgery against internal services or attempt to access local files from the capture environment. Depending on what capture artifacts are generated and exposed, responses from those resources could potentially be leaked through screenshots, saved page content, logs, or other capture outputs. This vulnerability is fixed in 1.39.6.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://security.paloaltonetworks.com/CVE-2026-0243",
+          "url": "https://github.com/Lookyloo/PlaywrightCapture/security/advisories/GHSA-687h-xw6f-q2qw",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/Lookyloo/PlaywrightCapture/commit/49e289eba756e4fbac1322c33cfd111411562405",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Palo Alto Networks",
-          "product": "Prisma SD-WAN ION",
+          "vendor": "Lookyloo",
+          "product": "PlaywrightCapture",
           "versions": [
             {
-              "status": "affected",
-              "version": "6.5.0",
-              "lessThan": "25.3.3",
-              "changes": [
-                {
-                  "at": "6.5.3-b15",
-                  "status": "unaffected"
-                }
-              ],
-              "versionType": "custom"
-            },
-            {
-              "status": "affected",
-              "version": "6.4.0",
-              "lessThan": "25.1.8",
-              "changes": [
-                {
-                  "at": "6.4.3-b8",
-                  "status": "unaffected"
-                }
-              ],
-              "versionType": "custom"
-            },
-            {
-              "status": "affected",
-              "version": "6.3.0",
-              "lessThan": "24.3.6",
-              "changes": [
-                {
-                  "at": "6.3.6-b10",
-                  "status": "unaffected"
-                }
-              ],
-              "versionType": "custom"
-            },
-            {
-              "status": "unaffected",
-              "version": "6.1.0",
-              "versionType": "custom"
-            },
-            {
-              "status": "unaffected",
-              "version": "5.6.0",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-606 Unchecked Input for Loop Condition"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-0248",
-      "publishedDate": "2026-05-13T19:05:00.190Z",
-      "lastModifiedDate": "2026-05-13T19:29:24.329Z",
-      "description": "An improper certificate validation vulnerability in the Prisma Access Agent® for Android and Chrome OS enables an attacker to perform a man-in-the-middle (MitM) attack to intercept VPN traffic. By presenting a certificate for any domain issued by a trusted Certificate Authority, the attacker can capture sensitive device information.\n\n\n\nThe Prisma Access Agent on macOS, Windows, Linux and iOS are not affected.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://security.paloaltonetworks.com/CVE-2026-0248",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Palo Alto Networks",
-          "product": "Prisma Access Agent",
-          "platforms": [
-            "Android",
-            "Chrome OS"
-          ],
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "26.2.1",
-              "changes": [
-                {
-                  "at": "26.2.1",
-                  "status": "unaffected"
-                }
-              ],
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        },
-        {
-          "vendor": "Palo Alto Networks",
-          "product": "Prisma Access Agent",
-          "platforms": [
-            "iOS",
-            "Linux",
-            "macOS",
-            "Windows"
-          ],
-          "versions": [
-            {
-              "status": "unaffected",
-              "version": "All",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-295 Improper Certificate Validation"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-0242",
-      "publishedDate": "2026-05-13T19:04:52.841Z",
-      "lastModifiedDate": "2026-05-13T19:29:39.078Z",
-      "description": "A SQL injection vulnerability in Trust Protection Foundation allows an authenticated attacker to execute arbitrary SQL commands against the product database. Successful exploitation could allow an attacker to read sensitive data, modify database contents, and escalate privileges to gain full administrative control of the platform.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://security.paloaltonetworks.com/CVE-2026-0242",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Palo Alto Networks",
-          "product": "Trust Protection Foundation",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "25.3.0",
-              "lessThan": "25.3.3",
-              "changes": [
-                {
-                  "at": "25.3.3",
-                  "status": "unaffected"
-                }
-              ],
-              "versionType": "custom"
-            },
-            {
-              "status": "affected",
-              "version": "25.1.0",
-              "lessThan": "25.1.8",
-              "changes": [
-                {
-                  "at": "25.1.8",
-                  "status": "unaffected"
-                }
-              ],
-              "versionType": "custom"
-            },
-            {
-              "status": "affected",
-              "version": "24.3.0",
-              "lessThan": "24.3.6",
-              "changes": [
-                {
-                  "at": "24.3.6",
-                  "status": "unaffected"
-                }
-              ],
-              "versionType": "custom"
-            },
-            {
-              "status": "affected",
-              "version": "24.1.0",
-              "lessThan": "24.1.13",
-              "changes": [
-                {
-                  "at": "24.1.13",
-                  "status": "unaffected"
-                }
-              ],
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-0244",
-      "publishedDate": "2026-05-13T19:03:09.013Z",
-      "lastModifiedDate": "2026-05-13T19:29:53.580Z",
-      "description": "An improper certificate validation vulnerability in the Palo Alto Networks Prisma SD-WAN ION enables man-in-the-middle (MitM) attacker to impersonate the controller.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://security.paloaltonetworks.com/CVE-2026-0244",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Palo Alto Networks",
-          "product": "Prisma SD-WAN ION",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "6.5.0",
-              "lessThan": "6.5.3-b15",
-              "changes": [
-                {
-                  "at": "6.5.3-b15",
-                  "status": "unaffected"
-                }
-              ],
-              "versionType": "custom"
-            },
-            {
-              "status": "affected",
-              "version": "6.4.0",
-              "lessThan": "6.4.3-b8",
-              "changes": [
-                {
-                  "at": "6.4.3-b8",
-                  "status": "unaffected"
-                }
-              ],
-              "versionType": "custom"
-            },
-            {
-              "status": "affected",
-              "version": "6.3.0",
-              "lessThan": "6.3.6-b10",
-              "changes": [
-                {
-                  "at": "6.3.6-b10",
-                  "status": "unaffected"
-                }
-              ],
-              "versionType": "custom"
-            },
-            {
-              "status": "unaffected",
-              "version": "6.1.0",
-              "versionType": "custom"
-            },
-            {
-              "status": "unaffected",
-              "version": "5.6.0",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-295 Improper Certificate Validation"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-0241",
-      "publishedDate": "2026-05-13T19:01:24.094Z",
-      "lastModifiedDate": "2026-05-13T19:30:09.308Z",
-      "description": "Incorrect Authorization vulnerabilities in Trust Protection Foundation allow attackers to bypass access controls and perform unauthorized actions on restricted resources.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://security.paloaltonetworks.com/CVE-2026-0241",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Palo Alto Networks",
-          "product": "Trust Protection Foundation",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "25.3.0",
-              "lessThan": "25.3.3",
-              "changes": [
-                {
-                  "at": "25.3.3",
-                  "status": "unaffected"
-                }
-              ],
-              "versionType": "custom"
-            },
-            {
-              "status": "affected",
-              "version": "25.1.0",
-              "lessThan": "25.1.8",
-              "changes": [
-                {
-                  "at": "25.1.8",
-                  "status": "unaffected"
-                }
-              ],
-              "versionType": "custom"
-            },
-            {
-              "status": "affected",
-              "version": "24.3.0",
-              "lessThan": "24.3.6",
-              "changes": [
-                {
-                  "at": "24.3.6",
-                  "status": "unaffected"
-                }
-              ],
-              "versionType": "custom"
-            },
-            {
-              "status": "affected",
-              "version": "24.1.0",
-              "lessThan": "24.1.13",
-              "changes": [
-                {
-                  "at": "24.1.13",
-                  "status": "unaffected"
-                }
-              ],
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-754 Improper Check for Unusual or Exceptional Conditions"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-0245",
-      "publishedDate": "2026-05-13T18:54:09.052Z",
-      "lastModifiedDate": "2026-05-13T19:30:22.868Z",
-      "description": "Multiple information disclosure vulnerabilities in Prisma Access Agent® allow a local user to access sensitive configuration data and credentials.\n\n\n\nThe Prisma Access Agent on Linux, ChromeOS, Android, and iOS are not affected.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://security.paloaltonetworks.com/CVE-2026-0245",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Palo Alto Networks",
-          "product": "Prisma Access Agent",
-          "platforms": [
-            "macOS",
-            "Windows"
-          ],
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "26.2.1",
-              "changes": [
-                {
-                  "at": "26.2.1",
-                  "status": "unaffected"
-                }
-              ],
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        },
-        {
-          "vendor": "Palo Alto Networks",
-          "product": "Prisma Access Agent",
-          "platforms": [
-            "Linux",
-            "Android",
-            "ChromeOS",
-            "iOS"
-          ],
-          "versions": [
-            {
-              "status": "unaffected",
-              "version": "All",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-200 Exposure of Sensitive Information to an Unauthorized Actor"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-0240",
-      "publishedDate": "2026-05-13T18:54:07.294Z",
-      "lastModifiedDate": "2026-05-13T19:30:36.864Z",
-      "description": "An information disclosure vulnerability in Trust Protection Foundation enables an authenticated attacker to obtain sensitive information from the server's vault. Successful exploitation of this issue allows the attacker to impersonate any user within the environment and arbitrarily modify configuration settings.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://security.paloaltonetworks.com/CVE-2026-0240",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Palo Alto Networks",
-          "product": "Trust Protection Foundation",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "25.3.0",
-              "lessThan": "25.3.3",
-              "changes": [
-                {
-                  "at": "25.3.3",
-                  "status": "unaffected"
-                }
-              ],
-              "versionType": "custom"
-            },
-            {
-              "status": "affected",
-              "version": "25.1.0",
-              "lessThan": "25.1.8",
-              "changes": [
-                {
-                  "at": "25.1.8",
-                  "status": "unaffected"
-                }
-              ],
-              "versionType": "custom"
-            },
-            {
-              "status": "affected",
-              "version": "24.3.0",
-              "lessThan": "24.3.6",
-              "changes": [
-                {
-                  "at": "24.3.6",
-                  "status": "unaffected"
-                }
-              ],
-              "versionType": "custom"
-            },
-            {
-              "status": "affected",
-              "version": "24.1.0",
-              "lessThan": "24.1.13",
-              "changes": [
-                {
-                  "at": "24.1.13",
-                  "status": "unaffected"
-                }
-              ],
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-497 Exposure of Sensitive System Information to an Unauthorized Control Sphere"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-0246",
-      "publishedDate": "2026-05-13T18:51:06.275Z",
-      "lastModifiedDate": "2026-05-13T19:30:50.538Z",
-      "description": "A vulnerability with a privilege management mechanism in the Palo Alto Networks Prisma Access Agent® enables a locally authenticated non-administrative user to escalate their privileges to root on macOS and Linux or NT AUTHORITY\\SYSTEM on Windows. This allows the user to execute arbitrary code and read sensitive information otherwise accessible only to privileged accounts.\n\n\n\nThe Prisma Access Agent on iOS, Android and Chrome OS are not affected.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://security.paloaltonetworks.com/CVE-2026-0246",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Palo Alto Networks",
-          "product": "Prisma Access Agent",
-          "platforms": [
-            "Linux"
-          ],
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "26.2.1",
-              "changes": [
-                {
-                  "at": "26.2.1",
-                  "status": "unaffected"
-                }
-              ],
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        },
-        {
-          "vendor": "Palo Alto Networks",
-          "product": "Prisma Access Agent",
-          "platforms": [
-            "macOS"
-          ],
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "26.2.1",
-              "changes": [
-                {
-                  "at": "26.2.1",
-                  "status": "unaffected"
-                }
-              ],
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        },
-        {
-          "vendor": "Palo Alto Networks",
-          "product": "Prisma Access Agent",
-          "platforms": [
-            "Windows"
-          ],
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "26.2.1",
-              "changes": [
-                {
-                  "at": "26.2.1",
-                  "status": "unaffected"
-                }
-              ],
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        },
-        {
-          "vendor": "Palo Alto Networks",
-          "product": "Prisma Access Agent",
-          "platforms": [
-            "Android",
-            "ChromeOS",
-            "iOS"
-          ],
-          "versions": [
-            {
-              "status": "unaffected",
-              "version": "All",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-862 Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-0247",
-      "publishedDate": "2026-05-13T18:46:31.633Z",
-      "lastModifiedDate": "2026-05-13T19:31:03.749Z",
-      "description": "Multiple authorization bypass vulnerabilities in the Endpoint DLP component of Prisma Access Agent® allow a local attacker to bypass authentication controls and execute privileged operations.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://security.paloaltonetworks.com/CVE-2026-0247",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Palo Alto Networks",
-          "product": "Prisma Access Agent",
-          "platforms": [
-            "macOS",
-            "Windows"
-          ],
-          "modules": [
-            "Endpoint DLP"
-          ],
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "26.2.1",
-              "changes": [
-                {
-                  "at": "26.2.1",
-                  "status": "unaffected"
-                }
-              ],
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-306 Missing Authentication for Critical Function"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-0249",
-      "publishedDate": "2026-05-13T18:32:12.091Z",
-      "lastModifiedDate": "2026-05-13T19:31:30.865Z",
-      "description": "Multiple improper certificate validation vulnerabilities in the Palo Alto Networks GlobalProtect™ app enables an attacker to intercept encrypted communications and potentially compromise the endpoint. This can enable a local non-administrative operating system user or an attacker on the same subnet to redirect traffic to an unauthorized server and facilitate the installation of malicious software.\n\nThe GlobalProtect app on Linux, Windows, iOS and GlobalProtect UWP app are not affected.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://security.paloaltonetworks.com/CVE-2026-0249",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Palo Alto Networks",
-          "product": "GlobalProtect App",
-          "platforms": [
-            "macOS"
-          ],
-          "versions": [
-            {
-              "status": "affected",
-              "version": "6.3.0",
-              "lessThan": "6.3.3-h9 (6.3.3-999)",
-              "changes": [
-                {
-                  "at": "6.3.3-h9 (6.3.3-999)",
-                  "status": "unaffected"
-                }
-              ],
-              "versionType": "custom"
-            },
-            {
-              "status": "affected",
-              "version": "6.2.0",
-              "lessThan": "6.2.8-h10 (6.2.8-948)",
-              "changes": [
-                {
-                  "at": "6.2.8-h10 (6.2.8-948)",
-                  "status": "unaffected"
-                }
-              ],
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        },
-        {
-          "vendor": "Palo Alto Networks",
-          "product": "GlobalProtect App",
-          "platforms": [
-            "Android",
-            "ChromeOS"
-          ],
-          "versions": [
-            {
-              "status": "affected",
-              "version": "6.1.0",
-              "lessThan": "6.1.13",
-              "changes": [
-                {
-                  "at": "6.1.13",
-                  "status": "unaffected"
-                }
-              ],
-              "versionType": "custom"
-            },
-            {
-              "status": "affected",
-              "version": "6.0.0",
-              "lessThan": "6.0.14",
-              "changes": [
-                {
-                  "at": "6.0.14",
-                  "status": "unaffected"
-                }
-              ],
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        },
-        {
-          "vendor": "Palo Alto Networks",
-          "product": "GlobalProtect App",
-          "platforms": [
-            "macOS"
-          ],
-          "versions": [
-            {
-              "status": "affected",
-              "version": "6.0.0",
-              "lessThan": "6.0.13",
-              "changes": [
-                {
-                  "at": "6.0.13",
-                  "status": "unaffected"
-                }
-              ],
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        },
-        {
-          "vendor": "Palo Alto Networks",
-          "product": "GlobalProtect App",
-          "platforms": [
-            "Windows",
-            "Linux",
-            "iOS",
-            "Windows UWP"
-          ],
-          "versions": [
-            {
-              "status": "unaffected",
-              "version": "All",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-295 Improper Certificate Validation"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-4873",
-      "publishedDate": "2026-05-13T08:27:04.538Z",
-      "lastModifiedDate": "2026-05-13T19:30:04.825Z",
-      "description": "A vulnerability exists where a connection requiring TLS incorrectly reuses an\nexisting unencrypted connection from the same connection pool. If an initial\ntransfer is made in clear-text (via IMAP, SMTP, or POP3), a subsequent request\nto that same host bypasses the TLS requirement and instead transmit data\nunencrypted.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://curl.se/docs/CVE-2026-4873.json",
-          "type": "reference"
-        },
-        {
-          "url": "https://curl.se/docs/CVE-2026-4873.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://hackerone.com/reports/3621851",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "curl",
-          "product": "curl",
-          "versions": [
-            {
-              "version": "8.19.0",
-              "status": "affected",
-              "lessThanOrEqual": "8.19.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "8.18.0",
-              "status": "affected",
-              "lessThanOrEqual": "8.18.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "8.17.0",
-              "status": "affected",
-              "lessThanOrEqual": "8.17.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "8.16.0",
-              "status": "affected",
-              "lessThanOrEqual": "8.16.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "8.15.0",
-              "status": "affected",
-              "lessThanOrEqual": "8.15.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "8.14.1",
-              "status": "affected",
-              "lessThanOrEqual": "8.14.1",
-              "versionType": "semver"
-            },
-            {
-              "version": "8.14.0",
-              "status": "affected",
-              "lessThanOrEqual": "8.14.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "8.13.0",
-              "status": "affected",
-              "lessThanOrEqual": "8.13.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "8.12.1",
-              "status": "affected",
-              "lessThanOrEqual": "8.12.1",
-              "versionType": "semver"
-            },
-            {
-              "version": "8.12.0",
-              "status": "affected",
-              "lessThanOrEqual": "8.12.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "8.11.1",
-              "status": "affected",
-              "lessThanOrEqual": "8.11.1",
-              "versionType": "semver"
-            },
-            {
-              "version": "8.11.0",
-              "status": "affected",
-              "lessThanOrEqual": "8.11.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "8.10.1",
-              "status": "affected",
-              "lessThanOrEqual": "8.10.1",
-              "versionType": "semver"
-            },
-            {
-              "version": "8.10.0",
-              "status": "affected",
-              "lessThanOrEqual": "8.10.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "8.9.1",
-              "status": "affected",
-              "lessThanOrEqual": "8.9.1",
-              "versionType": "semver"
-            },
-            {
-              "version": "8.9.0",
-              "status": "affected",
-              "lessThanOrEqual": "8.9.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "8.8.0",
-              "status": "affected",
-              "lessThanOrEqual": "8.8.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "8.7.1",
-              "status": "affected",
-              "lessThanOrEqual": "8.7.1",
-              "versionType": "semver"
-            },
-            {
-              "version": "8.7.0",
-              "status": "affected",
-              "lessThanOrEqual": "8.7.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "8.6.0",
-              "status": "affected",
-              "lessThanOrEqual": "8.6.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "8.5.0",
-              "status": "affected",
-              "lessThanOrEqual": "8.5.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "8.4.0",
-              "status": "affected",
-              "lessThanOrEqual": "8.4.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "8.3.0",
-              "status": "affected",
-              "lessThanOrEqual": "8.3.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "8.2.1",
-              "status": "affected",
-              "lessThanOrEqual": "8.2.1",
-              "versionType": "semver"
-            },
-            {
-              "version": "8.2.0",
-              "status": "affected",
-              "lessThanOrEqual": "8.2.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "8.1.2",
-              "status": "affected",
-              "lessThanOrEqual": "8.1.2",
-              "versionType": "semver"
-            },
-            {
-              "version": "8.1.1",
-              "status": "affected",
-              "lessThanOrEqual": "8.1.1",
-              "versionType": "semver"
-            },
-            {
-              "version": "8.1.0",
-              "status": "affected",
-              "lessThanOrEqual": "8.1.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "8.0.1",
-              "status": "affected",
-              "lessThanOrEqual": "8.0.1",
-              "versionType": "semver"
-            },
-            {
-              "version": "8.0.0",
-              "status": "affected",
-              "lessThanOrEqual": "8.0.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.88.1",
-              "status": "affected",
-              "lessThanOrEqual": "7.88.1",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.88.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.88.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.87.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.87.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.86.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.86.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.85.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.85.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.84.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.84.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.83.1",
-              "status": "affected",
-              "lessThanOrEqual": "7.83.1",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.83.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.83.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.82.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.82.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.81.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.81.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.80.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.80.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.79.1",
-              "status": "affected",
-              "lessThanOrEqual": "7.79.1",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.79.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.79.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.78.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.78.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.77.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.77.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.76.1",
-              "status": "affected",
-              "lessThanOrEqual": "7.76.1",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.76.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.76.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.75.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.75.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.74.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.74.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.73.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.73.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.72.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.72.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.71.1",
-              "status": "affected",
-              "lessThanOrEqual": "7.71.1",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.71.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.71.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.70.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.70.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.69.1",
-              "status": "affected",
-              "lessThanOrEqual": "7.69.1",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.69.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.69.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.68.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.68.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.67.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.67.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.66.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.66.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.65.3",
-              "status": "affected",
-              "lessThanOrEqual": "7.65.3",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.65.2",
-              "status": "affected",
-              "lessThanOrEqual": "7.65.2",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.65.1",
-              "status": "affected",
-              "lessThanOrEqual": "7.65.1",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.65.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.65.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.64.1",
-              "status": "affected",
-              "lessThanOrEqual": "7.64.1",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.64.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.64.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.63.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.63.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.62.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.62.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.61.1",
-              "status": "affected",
-              "lessThanOrEqual": "7.61.1",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.61.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.61.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.60.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.60.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.59.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.59.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.58.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.58.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.57.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.57.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.56.1",
-              "status": "affected",
-              "lessThanOrEqual": "7.56.1",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.56.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.56.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.55.1",
-              "status": "affected",
-              "lessThanOrEqual": "7.55.1",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.55.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.55.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.54.1",
-              "status": "affected",
-              "lessThanOrEqual": "7.54.1",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.54.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.54.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.53.1",
-              "status": "affected",
-              "lessThanOrEqual": "7.53.1",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.53.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.53.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.52.1",
-              "status": "affected",
-              "lessThanOrEqual": "7.52.1",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.52.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.52.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.51.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.51.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.50.3",
-              "status": "affected",
-              "lessThanOrEqual": "7.50.3",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.50.2",
-              "status": "affected",
-              "lessThanOrEqual": "7.50.2",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.50.1",
-              "status": "affected",
-              "lessThanOrEqual": "7.50.1",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.50.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.50.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.49.1",
-              "status": "affected",
-              "lessThanOrEqual": "7.49.1",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.49.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.49.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.48.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.48.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.47.1",
-              "status": "affected",
-              "lessThanOrEqual": "7.47.1",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.47.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.47.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.46.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.46.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.45.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.45.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.44.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.44.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.43.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.43.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.42.1",
-              "status": "affected",
-              "lessThanOrEqual": "7.42.1",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.42.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.42.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.41.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.41.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.40.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.40.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.39.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.39.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.38.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.38.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.37.1",
-              "status": "affected",
-              "lessThanOrEqual": "7.37.1",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.37.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.37.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.36.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.36.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.35.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.35.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.34.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.34.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.33.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.33.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.32.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.32.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.31.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.31.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.30.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.30.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.29.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.29.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.28.1",
-              "status": "affected",
-              "lessThanOrEqual": "7.28.1",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.28.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.28.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.27.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.27.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.26.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.26.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.25.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.25.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.24.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.24.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.23.1",
-              "status": "affected",
-              "lessThanOrEqual": "7.23.1",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.23.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.23.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.22.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.22.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.21.7",
-              "status": "affected",
-              "lessThanOrEqual": "7.21.7",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.21.6",
-              "status": "affected",
-              "lessThanOrEqual": "7.21.6",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.21.5",
-              "status": "affected",
-              "lessThanOrEqual": "7.21.5",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.21.4",
-              "status": "affected",
-              "lessThanOrEqual": "7.21.4",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.21.3",
-              "status": "affected",
-              "lessThanOrEqual": "7.21.3",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.21.2",
-              "status": "affected",
-              "lessThanOrEqual": "7.21.2",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.21.1",
-              "status": "affected",
-              "lessThanOrEqual": "7.21.1",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.21.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.21.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.20.1",
-              "status": "affected",
-              "lessThanOrEqual": "7.20.1",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.20.0",
-              "status": "affected",
-              "lessThanOrEqual": "7.20.0",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-319 Cleartext Transmission of Sensitive Information"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-42257",
-      "publishedDate": "2026-05-09T19:39:48.398Z",
-      "lastModifiedDate": "2026-05-13T19:33:13.948Z",
-      "description": "Net::IMAP implements Internet Message Access Protocol (IMAP) client functionality in Ruby. Prior to versions 0.4.24, 0.5.14, and 0.6.4, several Net::IMAP commands accept a raw string argument that is sent to the server without validation or escaping. If this string is derived from user-controlled input, it may contain contain CRLF sequences, which an attacker can use to inject arbitrary IMAP commands. This issue has been patched in versions 0.4.24, 0.5.14, and 0.6.4.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/ruby/net-imap/security/advisories/GHSA-hm49-wcqc-g2xg",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/ruby/net-imap/releases/tag/v0.4.24",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/ruby/net-imap/releases/tag/v0.5.14",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/ruby/net-imap/releases/tag/v0.6.4",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "ruby",
-          "product": "net-imap",
-          "versions": [
-            {
-              "version": "< 0.4.24",
-              "status": "affected"
-            },
-            {
-              "version": ">= 0.5.0, < 0.5.14",
-              "status": "affected"
-            },
-            {
-              "version": ">= 0.6.0, < 0.6.4",
+              "version": "< 1.39.6",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-93: Improper Neutralization of CRLF Sequences ('CRLF Injection')",
-        "CWE-77: Improper Neutralization of Special Elements used in a Command ('Command Injection')"
+        "CWE-918: Server-Side Request Forgery (SSRF)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-42463",
+      "publishedDate": "2026-05-13T21:26:27.821Z",
+      "lastModifiedDate": "2026-05-13T21:26:27.821Z",
+      "description": "SQLBot is an intelligent Text-to-SQL system based on large language models and RAG. Prior to 1.8.0, SQLBot contains a Cross-Workspace IDOR (Insecure Direct Object Reference) and Authorization Bypass vulnerability in the /api/v1/datasource/exportDsSchema and /api/v1/datasource/uploadDsSchema endpoints. An attacker can access and modify database schemas and data sources belonging to other tenants/workspaces. This vulnerability is fixed in 1.8.0.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/dataease/SQLBot/security/advisories/GHSA-pq2r-fj48-xfpp",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "dataease",
+          "product": "SQLBot",
+          "versions": [
+            {
+              "version": "< 1.8.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-639: Authorization Bypass Through User-Controlled Key"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-44437",
+      "publishedDate": "2026-05-13T21:23:59.260Z",
+      "lastModifiedDate": "2026-05-13T21:23:59.260Z",
+      "description": "The Angular SSR is a server-rise rendering tool for Angular applications. From 19.0.0-next.0 to before 19.2.25, 20.3.25, 21.2.9, and 22.0.0-next.7, a vulnerability exists in the X-Forwarded-Prefix header processing logic within Angular SSR. The internal validation mechanism fails to properly account for URL-encoded characters, specifically dots (%2e%2e). This allows an attacker to bypass security filters by injecting encoded path traversal sequences that are later decoded and utilized by the application logic.\nWhen an Angular SSR application is configured to trust proxy headers and is deployed behind a proxy that forwards the X-Forwarded-Prefix header without prior sanitization, an attacker can provide a payload such as /%2e%2e/evil. This vulnerability is fixed in19.2.25, 20.3.25, 21.2.9, and 22.0.0-next.7.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/angular/angular-cli/security/advisories/GHSA-69xr-m8h6-h664",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/angular/angular-cli/pull/33031",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "angular",
+          "product": "angular-cli",
+          "versions": [
+            {
+              "version": ">= 22.0.0-next.0, < 22.0.0-next.7",
+              "status": "affected"
+            },
+            {
+              "version": ">= 21.0.0-next.0, < 21.2.9",
+              "status": "affected"
+            },
+            {
+              "version": ">= 20.0.0-next.0, < 20.3.25",
+              "status": "affected"
+            },
+            {
+              "version": ">= 19.0.0-next.0, < 19.2.25",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')",
+        "CWE-601: URL Redirection to Untrusted Site ('Open Redirect')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-44445",
+      "publishedDate": "2026-05-13T21:17:06.551Z",
+      "lastModifiedDate": "2026-05-13T21:17:06.551Z",
+      "description": "ERPNext is a free and open source Enterprise Resource Planning tool. Prior to 15.104.3 and 16.12.0, an improper restriction of XML external entity (XXE) reference vulnerability in the EDI Module enables an authenticated attacker to read files from the local file system, including sensitive configuration files. This vulnerability is fixed in 15.104.3 and 16.12.0.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/frappe/erpnext/security/advisories/GHSA-mhm9-75w7-423r",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "frappe",
+          "product": "erpnext",
+          "versions": [
+            {
+              "version": ">= 16.0.0-beta.1, < 16.12.0",
+              "status": "affected"
+            },
+            {
+              "version": "< 15.104.3",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-611: Improper Restriction of XML External Entity Reference"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
