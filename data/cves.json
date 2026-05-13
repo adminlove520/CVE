@@ -2,525 +2,281 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 16,
-    "last_updated": "2026-05-13T21:47:34.208206",
+    "total_count": 3,
+    "last_updated": "2026-05-13T22:53:15.674291",
     "severity_distribution": {
-      "critical": 1,
-      "high": 3,
-      "medium": 7,
+      "critical": 0,
+      "high": 2,
+      "medium": 0,
       "low": 0,
-      "none": 5
+      "none": 1
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-44442",
-      "publishedDate": "2026-05-13T21:11:14.186Z",
-      "lastModifiedDate": "2026-05-13T21:11:14.186Z",
-      "description": "ERPNext is a free and open source Enterprise Resource Planning tool. Prior to 16.9.1, certain endpoints failed to enforce proper authorization checks, allowing users to modify data beyond their permitted role. This vulnerability is fixed in 16.9.1.",
-      "severity": 9.9,
+      "id": "CVE-2026-29206",
+      "publishedDate": "2026-05-13T22:07:16.256Z",
+      "lastModifiedDate": "2026-05-13T22:07:16.256Z",
+      "description": "Insufficient sanitization of SQL queries in the `sqloptimizer` utility script allows SQL Injections on behalf of the root user if Slow Query logging is enabled.",
+      "severity": 8.1,
       "references": [
         {
-          "url": "https://github.com/frappe/erpnext/security/advisories/GHSA-cg5w-7g26-p3w9",
+          "url": "https://support.cpanel.net/hc/en-us/articles/40437213099159-Security-CVE-2026-29206-cPanel-WHM-WP2-Security-Update-May-13-2026",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "frappe",
-          "product": "erpnext",
+          "defaultStatus": "unaffected",
+          "vendor": "WebPros",
+          "product": "cPanel",
           "versions": [
             {
-              "version": "< 16.9.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-862: Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-44447",
-      "publishedDate": "2026-05-13T21:19:07.916Z",
-      "lastModifiedDate": "2026-05-13T21:19:07.916Z",
-      "description": "ERPNext is a free and open source Enterprise Resource Planning tool. Prior to 16.9.0, some endpoints were vulnerable to SQL injection through specially crafted requests, which would allow a malicious actor to extract sensitive information. This vulnerability is fixed in 16.9.0.",
-      "severity": 8.8,
-      "references": [
-        {
-          "url": "https://github.com/frappe/erpnext/security/advisories/GHSA-q65v-fm9p-9vh3",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "frappe",
-          "product": "erpnext",
-          "versions": [
-            {
-              "version": "< 16.9.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-44446",
-      "publishedDate": "2026-05-13T21:18:17.477Z",
-      "lastModifiedDate": "2026-05-13T21:18:17.477Z",
-      "description": "ERPNext is a free and open source Enterprise Resource Planning tool. Prior to 15.104.3 and 16.14.0, some endpoints were vulnerable to SQL injection through specially crafted requests, which would allow a malicious actor to extract sensitive information. This vulnerability is fixed in 15.104.3 and 16.14.0.",
-      "severity": 8.8,
-      "references": [
-        {
-          "url": "https://github.com/frappe/erpnext/security/advisories/GHSA-6fm9-g88m-hxr7",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "frappe",
-          "product": "erpnext",
-          "versions": [
-            {
-              "version": ">= 16.0.0-beta.1, < 16.14.0",
-              "status": "affected"
+              "version": "11.136.0.0",
+              "status": "affected",
+              "lessThan": "11.136.0.10",
+              "versionType": "semver"
             },
             {
-              "version": "< 15.104.3",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-44471",
-      "publishedDate": "2026-05-13T21:36:44.007Z",
-      "lastModifiedDate": "2026-05-13T21:36:44.007Z",
-      "description": "gitoxide is an implementation of git written in Rust. Prior to 0.21.1, a malicious tree can be constructed that will, when checked out with gitoxide, permit writing an attacker-controlled symlink into any existing directory the user has write access to. During checkout, all symlink index entries are deferred and created after regular files using a single shared gix_worktree::Stack. Internally, this uses a gix_fs::Stack. gix_fs::Stack::make_relative_path_current() caches validated path prefixes: when the previously-processed leaf component exactly matches the leading component(s) of the next path, the leaf-to-directory transition at gix-fs/src/stack.rs invokes only delegate.push_directory(), never delegate.push(). In gix_worktree::stack::delegate::StackDelegate, when the state member is State::CreateDirectoryAndAttributesStack, Attributes::push_directory() only loads attributes (from the ODB, in the clone case), and does not perform any other checks. The on-disk symlink_metadata() check and unlink-on-collision live in StackDelegate::push()'s invocation of create_leading_directory(), which is therefore bypassed for the cached prefix. The final symlink is created with plain std::os::unix::fs::symlink, which follows symlinks in parent directories. Therefore, it's possible to provide a tree with duplicate symlink and directory entries that exploits this. This vulnerability is fixed in 0.21.1.",
-      "severity": 7.8,
-      "references": [
-        {
-          "url": "https://github.com/GitoxideLabs/gitoxide/security/advisories/GHSA-f89h-2fjh-2r9q",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "GitoxideLabs",
-          "product": "gitoxide",
-          "versions": [
-            {
-              "version": "< 0.21.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-59: Improper Link Resolution Before File Access ('Link Following')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-44440",
-      "publishedDate": "2026-05-13T21:12:52.940Z",
-      "lastModifiedDate": "2026-05-13T21:12:52.940Z",
-      "description": "ERPNext is a free and open source Enterprise Resource Planning tool. Prior to 15.101.1 and 16.10.0, an Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability on an endpoint allows an authenticated adjacent attacker to read arbitrary files. This vulnerability is fixed in 15.101.1 and 16.10.0.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://github.com/frappe/erpnext/security/advisories/GHSA-6ffr-92hr-3394",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "frappe",
-          "product": "erpnext",
-          "versions": [
-            {
-              "version": "< 15.101.1",
-              "status": "affected"
+              "version": "11.134.0.0",
+              "status": "affected",
+              "lessThan": "11.134.0.26",
+              "versionType": "semver"
             },
             {
-              "version": ">= 16.0.0-beta.1, < 16.10.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-44423",
-      "publishedDate": "2026-05-13T21:07:33.174Z",
-      "lastModifiedDate": "2026-05-13T21:07:33.174Z",
-      "description": "ShellHub is a centralized SSH gateway. Prior to 0.24.2, GET /api/sessions/:uid returns the full session object for any authenticated caller, without scoping by the caller's tenant. An authenticated user can read session records (SSH username, device UID, remote IP, terminal type, authenticated flag, timestamps) belonging to any other namespace. This vulnerability is fixed in 0.24.2.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://github.com/shellhub-io/shellhub/security/advisories/GHSA-9w9c-9w8m-w89q",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "shellhub-io",
-          "product": "shellhub",
-          "versions": [
-            {
-              "version": "< 0.24.2",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-639: Authorization Bypass Through User-Controlled Key"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-44424",
-      "publishedDate": "2026-05-13T21:06:49.859Z",
-      "lastModifiedDate": "2026-05-13T21:06:49.859Z",
-      "description": "ShellHub is a centralized SSH gateway. Prior to 0.24.2, GET /api/devices/:uid returns the full device object whenever the caller is authenticated, without verifying that the device belongs to the caller's namespace (tenant). Any authenticated user (JWT or API Key) who knows or can guess a device UID can read device metadata from any other namespace. This vulnerability is fixed in 0.24.2.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://github.com/shellhub-io/shellhub/security/advisories/GHSA-j72x-xfwg-783f",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "shellhub-io",
-          "product": "shellhub",
-          "versions": [
-            {
-              "version": "< 0.24.2",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-639: Authorization Bypass Through User-Controlled Key"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-44426",
-      "publishedDate": "2026-05-13T21:06:06.222Z",
-      "lastModifiedDate": "2026-05-13T21:06:06.222Z",
-      "description": "ShellHub is a centralized SSH gateway. Prior to 0.24.2, GET /api/namespaces/:tenant returns the full namespace object — including\nthe members list (user IDs, e-mails, roles), settings, and device counts — to any caller authenticated by an API Key, for any tenant, regardless of the API Key's own tenant scope. The handler conditionally skips the membership check when the user ID (X-ID) is absent, which is exactly the case for API Key authentication. This vulnerability is fixed in 0.24.2.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://github.com/shellhub-io/shellhub/security/advisories/GHSA-vwx9-7qcf-gg7f",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "shellhub-io",
-          "product": "shellhub",
-          "versions": [
-            {
-              "version": "< 0.24.2",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-639: Authorization Bypass Through User-Controlled Key"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-44448",
-      "publishedDate": "2026-05-13T21:20:20.570Z",
-      "lastModifiedDate": "2026-05-13T21:20:20.570Z",
-      "description": "ERPNext is a free and open source Enterprise Resource Planning tool. Prior to 15.102.0 and 16.11.0, certain endpoints failed to enforce proper authorization checks, allowing users to modify data beyond their permitted role. This vulnerability is fixed in 15.102.0 and 16.11.0.",
-      "severity": 5.9,
-      "references": [
-        {
-          "url": "https://github.com/frappe/erpnext/security/advisories/GHSA-444j-g95x-5pqv",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "frappe",
-          "product": "erpnext",
-          "versions": [
-            {
-              "version": ">= 16.0.0-beta.1, < 16.11.0",
-              "status": "affected"
+              "version": "11.132.0.0",
+              "status": "affected",
+              "lessThan": "11.132.0.32",
+              "versionType": "semver"
             },
             {
-              "version": "< 15.102.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-862: Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-44425",
-      "publishedDate": "2026-05-13T21:05:07.925Z",
-      "lastModifiedDate": "2026-05-13T21:05:07.925Z",
-      "description": "ShellHub is a centralized SSH gateway. Prior to 0.24.2, the device list endpoint accepts user-controlled identifiers in the the name field of each filter property in the base64-encoded filter query parameter and the sort_by query parameter, which are then passed directly as BSON/SQL keys in the database layer without validation. Any authenticated user can craft payloads that cause the aggregation / query to fail and the API to return HTTP 500 with no body, with no rate limiting applied. This vulnerability is fixed in 0.24.2.",
-      "severity": 5.4,
-      "references": [
-        {
-          "url": "https://github.com/shellhub-io/shellhub/security/advisories/GHSA-47r2-v3x6-wff9",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "shellhub-io",
-          "product": "shellhub",
-          "versions": [
-            {
-              "version": "< 0.24.2",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-20: Improper Input Validation",
-        "CWE-943: Improper Neutralization of Special Elements in Data Query Logic",
-        "CWE-1333: Inefficient Regular Expression Complexity"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-44441",
-      "publishedDate": "2026-05-13T21:14:31.015Z",
-      "lastModifiedDate": "2026-05-13T21:14:31.015Z",
-      "description": "ERPNext is a free and open source Enterprise Resource Planning tool. Prior to 15.106.0 and 16.16.0, a malicious user could send a crafted request to an endpoint, which would lead to the server making an HTTP call to a service of the user's choice. This vulnerability is fixed in 15.106.0 and 16.16.0.",
-      "severity": 5,
-      "references": [
-        {
-          "url": "https://github.com/frappe/erpnext/security/advisories/GHSA-m4m4-j2m2-7fcw",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "frappe",
-          "product": "erpnext",
-          "versions": [
-            {
-              "version": "< 15.106.0",
-              "status": "affected"
+              "version": "11.130.0.0",
+              "status": "affected",
+              "lessThan": "11.130.0.23",
+              "versionType": "semver"
             },
             {
-              "version": ">= 16.0.0-beta.1, < 16.16.0",
-              "status": "affected"
+              "version": "11.126.0.0",
+              "status": "affected",
+              "lessThan": "11.126.0.59",
+              "versionType": "semver"
+            },
+            {
+              "version": "11.124.0.0",
+              "status": "affected",
+              "lessThan": "11.124.0.38",
+              "versionType": "semver"
+            },
+            {
+              "version": "11.118.0.0",
+              "status": "affected",
+              "lessThan": "11.118.0.67",
+              "versionType": "semver"
+            },
+            {
+              "version": "11.110.0.0",
+              "status": "affected",
+              "lessThan": "11.110.0.119",
+              "versionType": "semver"
+            },
+            {
+              "version": "11.102.0.0",
+              "status": "affected",
+              "lessThan": "11.102.0.42",
+              "versionType": "semver"
+            },
+            {
+              "version": "11.94.0.0",
+              "status": "affected",
+              "lessThan": "11.94.0.31",
+              "versionType": "semver"
+            },
+            {
+              "version": "11.30.0.0",
+              "status": "affected",
+              "lessThan": "11.86.0.44",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "vendor": "WebPros",
+          "product": "WP Squared",
+          "versions": [
+            {
+              "version": "11.136.1.0",
+              "status": "affected",
+              "lessThan": "11.136.1.12",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "vendor": "WebPros",
+          "product": "cPanel (CloudLinux 6, CentOS 6)",
+          "versions": [
+            {
+              "version": "11.110.0.0",
+              "status": "affected",
+              "lessThan": "11.110.0.118",
+              "versionType": "semver"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-918: Server-Side Request Forgery (SSRF)"
+        "CWE-89 SQL Injection"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-44369",
-      "publishedDate": "2026-05-13T21:32:15.833Z",
-      "lastModifiedDate": "2026-05-13T21:32:15.833Z",
-      "description": "CVAT is an open source interactive video and image annotation tool for computer vision. From 2.5.0 to 2.63.0, an attacker who is able to create or edit an annotation guide on a task is able to add malicious JavaScript code, which will then run in the browser of anyone who opens this annotation guide. This code will be able to make arbitrary requests to CVAT with the victim user's privileges. This vulnerability is fixed in 2.64.0.",
+      "id": "CVE-2026-32991",
+      "publishedDate": "2026-05-13T22:07:16.151Z",
+      "lastModifiedDate": "2026-05-13T22:07:16.151Z",
+      "description": "Improper authorization checks of team members privileges allow a team member to escalate privileges to the team owner account.",
+      "severity": 7.1,
+      "references": [
+        {
+          "url": "https://support.cpanel.net/hc/en-us/articles/40437254183959-Security-CVE-2026-32991-cPanel-WHM-WP2-Security-Update-May-13-2026",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "vendor": "WebPros",
+          "product": "cPanel",
+          "versions": [
+            {
+              "version": "11.136.0.0",
+              "status": "affected",
+              "lessThan": "11.136.0.10",
+              "versionType": "semver"
+            },
+            {
+              "version": "11.134.0.0",
+              "status": "affected",
+              "lessThan": "11.134.0.26",
+              "versionType": "semver"
+            },
+            {
+              "version": "11.132.0.0",
+              "status": "affected",
+              "lessThan": "11.132.0.32",
+              "versionType": "semver"
+            },
+            {
+              "version": "11.130.0.0",
+              "status": "affected",
+              "lessThan": "11.130.0.23",
+              "versionType": "semver"
+            },
+            {
+              "version": "11.126.0.0",
+              "status": "affected",
+              "lessThan": "11.126.0.59",
+              "versionType": "semver"
+            },
+            {
+              "version": "11.124.0.0",
+              "status": "affected",
+              "lessThan": "11.124.0.38",
+              "versionType": "semver"
+            },
+            {
+              "version": "11.118.0.0",
+              "status": "affected",
+              "lessThan": "11.118.0.67",
+              "versionType": "semver"
+            },
+            {
+              "version": "11.110.0.0",
+              "status": "affected",
+              "lessThan": "11.110.0.119",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "vendor": "WebPros",
+          "product": "WP Squared",
+          "versions": [
+            {
+              "version": "11.136.1.0",
+              "status": "affected",
+              "lessThan": "11.136.1.12",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "defaultStatus": "unaffected",
+          "vendor": "WebPros",
+          "product": "cPanel (CloudLinux 6, CentOS 6)",
+          "versions": [
+            {
+              "version": "11.110.0.0",
+              "status": "affected",
+              "lessThan": "11.110.0.118",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-863 Incorrect Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-8500",
+      "publishedDate": "2026-05-13T22:24:42.216Z",
+      "lastModifiedDate": "2026-05-13T22:24:42.216Z",
+      "description": "Web::Passwd versions through 0.03 for Perl is vulnerable to RCE.\n\nWeb::Passwd is a small CGI application for managing htpasswd files using the htpasswd command.\n\nThe user parameter is not validated or escaped, and is used as the last argument on the command line, allowing for command injection.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/cvat-ai/cvat/security/advisories/GHSA-m2h7-6xqm-p9v5",
+          "url": "https://metacpan.org/release/EVANK/Web-Passwd-0.03",
           "type": "reference"
         },
         {
-          "url": "https://github.com/cvat-ai/cvat/commit/ad9e90003d8234ac7602598b109dc11450321dfc",
+          "url": "https://httpd.apache.org/docs/current/programs/htpasswd.html",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "cvat-ai",
-          "product": "cvat",
-          "versions": [
+          "collectionURL": "https://cpan.org/modules",
+          "defaultStatus": "unaffected",
+          "packageName": "Web-Passwd",
+          "product": "Web::Passwd",
+          "programFiles": [
+            "lib/Web/Passwd.pm"
+          ],
+          "programRoutines": [
             {
-              "version": ">= 2.5.0, < 2.64.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-80: Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-44439",
-      "publishedDate": "2026-05-13T21:29:24.581Z",
-      "lastModifiedDate": "2026-05-13T21:29:24.581Z",
-      "description": "PlaywrightCapture is a simple replacement for splash using playwright. Prior to 1.39.6, PlaywrightCapture did not sufficiently restrict navigations and resource requests initiated by rendered pages. An attacker-controlled page could abuse browser-side redirection mechanisms, such as window.location.href, to make the capture process open file:// URLs or request resources hosted on private, loopback, link-local, or otherwise non-public IP addresses. In deployments where PlaywrightCapture processes untrusted URLs, this could allow a remote attacker to perform server-side request forgery against internal services or attempt to access local files from the capture environment. Depending on what capture artifacts are generated and exposed, responses from those resources could potentially be leaked through screenshots, saved page content, logs, or other capture outputs. This vulnerability is fixed in 1.39.6.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/Lookyloo/PlaywrightCapture/security/advisories/GHSA-687h-xw6f-q2qw",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/Lookyloo/PlaywrightCapture/commit/49e289eba756e4fbac1322c33cfd111411562405",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Lookyloo",
-          "product": "PlaywrightCapture",
-          "versions": [
-            {
-              "version": "< 1.39.6",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-918: Server-Side Request Forgery (SSRF)"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-42463",
-      "publishedDate": "2026-05-13T21:26:27.821Z",
-      "lastModifiedDate": "2026-05-13T21:26:27.821Z",
-      "description": "SQLBot is an intelligent Text-to-SQL system based on large language models and RAG. Prior to 1.8.0, SQLBot contains a Cross-Workspace IDOR (Insecure Direct Object Reference) and Authorization Bypass vulnerability in the /api/v1/datasource/exportDsSchema and /api/v1/datasource/uploadDsSchema endpoints. An attacker can access and modify database schemas and data sources belonging to other tenants/workspaces. This vulnerability is fixed in 1.8.0.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/dataease/SQLBot/security/advisories/GHSA-pq2r-fj48-xfpp",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "dataease",
-          "product": "SQLBot",
-          "versions": [
-            {
-              "version": "< 1.8.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-639: Authorization Bypass Through User-Controlled Key"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-44437",
-      "publishedDate": "2026-05-13T21:23:59.260Z",
-      "lastModifiedDate": "2026-05-13T21:23:59.260Z",
-      "description": "The Angular SSR is a server-rise rendering tool for Angular applications. From 19.0.0-next.0 to before 19.2.25, 20.3.25, 21.2.9, and 22.0.0-next.7, a vulnerability exists in the X-Forwarded-Prefix header processing logic within Angular SSR. The internal validation mechanism fails to properly account for URL-encoded characters, specifically dots (%2e%2e). This allows an attacker to bypass security filters by injecting encoded path traversal sequences that are later decoded and utilized by the application logic.\nWhen an Angular SSR application is configured to trust proxy headers and is deployed behind a proxy that forwards the X-Forwarded-Prefix header without prior sanitization, an attacker can provide a payload such as /%2e%2e/evil. This vulnerability is fixed in19.2.25, 20.3.25, 21.2.9, and 22.0.0-next.7.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/angular/angular-cli/security/advisories/GHSA-69xr-m8h6-h664",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/angular/angular-cli/pull/33031",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "angular",
-          "product": "angular-cli",
-          "versions": [
-            {
-              "version": ">= 22.0.0-next.0, < 22.0.0-next.7",
-              "status": "affected"
+              "name": "Web::Passwd::htfile_moduser"
             },
             {
-              "version": ">= 21.0.0-next.0, < 21.2.9",
-              "status": "affected"
-            },
-            {
-              "version": ">= 20.0.0-next.0, < 20.3.25",
-              "status": "affected"
-            },
-            {
-              "version": ">= 19.0.0-next.0, < 19.2.25",
-              "status": "affected"
+              "name": "Web::Passwd::htfile_deluser"
             }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')",
-        "CWE-601: URL Redirection to Untrusted Site ('Open Redirect')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-44445",
-      "publishedDate": "2026-05-13T21:17:06.551Z",
-      "lastModifiedDate": "2026-05-13T21:17:06.551Z",
-      "description": "ERPNext is a free and open source Enterprise Resource Planning tool. Prior to 15.104.3 and 16.12.0, an improper restriction of XML external entity (XXE) reference vulnerability in the EDI Module enables an authenticated attacker to read files from the local file system, including sensitive configuration files. This vulnerability is fixed in 15.104.3 and 16.12.0.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/frappe/erpnext/security/advisories/GHSA-mhm9-75w7-423r",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "frappe",
-          "product": "erpnext",
+          ],
+          "vendor": "EVANK",
           "versions": [
             {
-              "version": ">= 16.0.0-beta.1, < 16.12.0",
-              "status": "affected"
-            },
-            {
-              "version": "< 15.104.3",
-              "status": "affected"
+              "lessThanOrEqual": "0.03",
+              "status": "affected",
+              "version": "0",
+              "versionType": "custom"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-611: Improper Restriction of XML External Entity Reference"
+        "CWE-78 Improper Neutralization of Special Elements used in an OS Command"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
