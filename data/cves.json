@@ -2,26 +2,26 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 7,
-    "last_updated": "2026-05-15T21:09:05.062655",
+    "total_count": 11,
+    "last_updated": "2026-05-15T22:11:08.846233",
     "severity_distribution": {
       "critical": 0,
-      "high": 6,
-      "medium": 1,
-      "low": 0,
-      "none": 0
+      "high": 5,
+      "medium": 4,
+      "low": 1,
+      "none": 1
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-45672",
-      "publishedDate": "2026-05-15T20:55:00.802Z",
-      "lastModifiedDate": "2026-05-15T20:55:00.802Z",
-      "description": "Open WebUI is a self-hosted artificial intelligence platform designed to operate entirely offline. Prior to 0.8.12, the /api/v1/utils/code/execute endpoint executes arbitrary Python code via Jupyter for any verified user, even when the admin has set ENABLE_CODE_EXECUTION=false. The feature gate is not enforced on the API endpoint — the configuration says \"disabled\" but code still executes. This vulnerability is fixed in 0.8.12.",
-      "severity": 8.8,
+      "id": "CVE-2026-45315",
+      "publishedDate": "2026-05-15T21:26:54.790Z",
+      "lastModifiedDate": "2026-05-15T21:26:54.790Z",
+      "description": "Open WebUI is a self-hosted artificial intelligence platform designed to operate entirely offline. Prior to 0.9.3, the audio transcription upload endpoint takes the file extension from the user-supplied filename and saves the file under CACHE_DIR/audio/transcriptions/.. The /cache/{path} route serves these files via FileResponse, which sets Content-Type from the on-disk extension and emits no Content-Disposition. A verified user with the default-on chat.stt permission can upload a polyglot WAV+HTML file named pwn.html and trick any other user into opening the resulting URL — the response comes back as text/html and any embedded <script> runs in the Open WebUI origin. This vulnerability is fixed in 0.9.3.",
+      "severity": 8.7,
       "references": [
         {
-          "url": "https://github.com/open-webui/open-webui/security/advisories/GHSA-482j-2pq6-q5w4",
+          "url": "https://github.com/open-webui/open-webui/security/advisories/GHSA-m8f9-9whg-f4xr",
           "type": "reference"
         }
       ],
@@ -31,7 +31,271 @@
           "product": "open-webui",
           "versions": [
             {
-              "version": "< 0.8.12",
+              "version": "< 0.9.3",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
+        "CWE-434: Unrestricted Upload of File with Dangerous Type",
+        "CWE-646: Reliance on File Name or Extension of Externally-Supplied File"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-45665",
+      "publishedDate": "2026-05-15T21:42:34.264Z",
+      "lastModifiedDate": "2026-05-15T21:42:34.264Z",
+      "description": "Open WebUI is a self-hosted artificial intelligence platform designed to operate entirely offline. Prior to 0.8.0, a Stored Cross-Site Scripting (XSS) vulnerability exists in the Banner component due to an improper sanitization order (specifically, DOMPurify is executed before the marked library). This vulnerability allows a compromised or malicious administrator to plant a malicious payload in the global banner. Crucially, this vector enables Privilege Escalation, as the malicious banner is rendered for all users, including the Super Admin (Primary Admin). Consequently, the payload successfully bypasses the existing security mechanism. An attacker can leverage this to steal the Super Admin's session token This vulnerability is fixed in 0.8.0.",
+      "severity": 8.1,
+      "references": [
+        {
+          "url": "https://github.com/open-webui/open-webui/security/advisories/GHSA-cqp4-qqvg-3787",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "open-webui",
+          "product": "open-webui",
+          "versions": [
+            {
+              "version": "< 0.8.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-44565",
+      "publishedDate": "2026-05-15T21:40:50.712Z",
+      "lastModifiedDate": "2026-05-15T21:40:50.712Z",
+      "description": "Open WebUI is a self-hosted artificial intelligence platform designed to operate entirely offline. Prior to 0.6.10, when uploading an audio file, the name of the file is derived from the original HTTP upload request and is not validated or sanitized. This allows for users to upload files with names containing dot-segments in the file path and traverse out of the intended uploads directory. Effectively, users can upload files anywhere on the filesystem the user running the web server has permission. This vulnerability is fixed in 0.6.10.",
+      "severity": 8.1,
+      "references": [
+        {
+          "url": "https://github.com/open-webui/open-webui/security/advisories/GHSA-j3fw-wc48-29g3",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "open-webui",
+          "product": "open-webui",
+          "versions": [
+            {
+              "version": "< 0.6.10",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-45338",
+      "publishedDate": "2026-05-15T21:46:32.132Z",
+      "lastModifiedDate": "2026-05-15T21:46:32.132Z",
+      "description": "Open WebUI is a self-hosted artificial intelligence platform designed to operate entirely offline. Prior to 0.9.0, a Server-Side Request Forgery (SSRF) vulnerability exists in _process_picture_url() in backend/open_webui/utils/oauth.py (line ~1338). The function fetches arbitrary URLs from OAuth picture claims without applying validate_url(), allowing an attacker to force the server to make HTTP requests to internal resources and exfiltrate the full response. This vulnerability is fixed in 0.9.0.",
+      "severity": 7.7,
+      "references": [
+        {
+          "url": "https://github.com/open-webui/open-webui/security/advisories/GHSA-24c9-2m8q-qhmh",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "open-webui",
+          "product": "open-webui",
+          "versions": [
+            {
+              "version": "< 0.9.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-918: Server-Side Request Forgery (SSRF)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-44549",
+      "publishedDate": "2026-05-15T21:45:16.446Z",
+      "lastModifiedDate": "2026-05-15T21:45:16.446Z",
+      "description": "Open WebUI is a self-hosted artificial intelligence platform designed to operate entirely offline. Prior to 0.8.0, Excel file attachments are previewed in an unsafe way. A crafted XLSX file payload can be used to cause the sheetjs function sheet_to_html to embed an XSS payload into the generated HTML. This is subsequently added to the DOM unsanitized via @html causing the payload to trigger. This vulnerability is fixed in 0.8.0.",
+      "severity": 7.3,
+      "references": [
+        {
+          "url": "https://github.com/open-webui/open-webui/security/advisories/GHSA-jwf8-pv5p-vhmc",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "open-webui",
+          "product": "open-webui",
+          "versions": [
+            {
+              "version": "< 0.8.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-45667",
+      "publishedDate": "2026-05-15T21:41:43.155Z",
+      "lastModifiedDate": "2026-05-15T21:41:43.155Z",
+      "description": "Open WebUI is a self-hosted artificial intelligence platform designed to operate entirely offline. Prior to 0.8.0, GET /api/v1/memories/ef is accessible without authentication and executes request.app.state.EMBEDDING_FUNCTION(...). This allows any unauthenticated caller to trigger embedding generation which can lead to direct cost exposure if a paid provider is used. This vulnerability is fixed in 0.8.0.",
+      "severity": 6.5,
+      "references": [
+        {
+          "url": "https://github.com/open-webui/open-webui/security/advisories/GHSA-m69w-p7m4-585j",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "open-webui",
+          "product": "open-webui",
+          "versions": [
+            {
+              "version": "< 0.8.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-862: Missing Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-45299",
+      "publishedDate": "2026-05-15T21:44:17.683Z",
+      "lastModifiedDate": "2026-05-15T21:44:17.683Z",
+      "description": "Open WebUI is a self-hosted artificial intelligence platform designed to operate entirely offline. Prior to 0.8.0, the profile_image_url field on the user profile update form accepted arbitrary data: URI values without MIME-type validation, resulting in a XSS vulnerability. This vulnerability is fixed in 0.8.0.",
+      "severity": 5.4,
+      "references": [
+        {
+          "url": "https://github.com/open-webui/open-webui/security/advisories/GHSA-6gh2-q7cp-9qf6",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "open-webui",
+          "product": "open-webui",
+          "versions": [
+            {
+              "version": "< 0.8.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-45318",
+      "publishedDate": "2026-05-15T21:28:57.266Z",
+      "lastModifiedDate": "2026-05-15T21:28:57.266Z",
+      "description": "Open WebUI is a self-hosted artificial intelligence platform designed to operate entirely offline. Prior to 0.9.3, his advisory tracks a regression of the original Excel-preview XSS (CVE-2026-44549). The same root cause — XLSX.utils.sheet_to_html() output rendered via {@html excelHtml} without DOMPurify — was reintroduced sometime after v0.8.0 and is exploitable again This vulnerability is fixed in 0.9.3.",
+      "severity": 5.4,
+      "references": [
+        {
+          "url": "https://github.com/open-webui/open-webui/security/advisories/GHSA-hcwp-82g6-8wxc",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "open-webui",
+          "product": "open-webui",
+          "versions": [
+            {
+              "version": "< 0.9.3",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-45317",
+      "publishedDate": "2026-05-15T21:29:44.870Z",
+      "lastModifiedDate": "2026-05-15T21:29:44.870Z",
+      "description": "Open WebUI is a self-hosted artificial intelligence platform designed to operate entirely offline. Prior to 0.9.3, an application-wide Cross-Site Request Forgery (CSRF) vulnerability was found Open-WebUl's image uploading functionality. An attacker can set an image URL to a malicious endpoint, allowing them to perform actions on behalf of a victim user. Any authenticated user can exploit this vulnerability, and any user who views the compromised image (e.g., a profile picture) will unknowingly send a GET request to the attacker-controlled URL. This can lead to cookie theft, denial of service (DoS), or other malicious actions. This vulnerability is fixed in 0.9.3.",
+      "severity": 4.6,
+      "references": [
+        {
+          "url": "https://github.com/open-webui/open-webui/security/advisories/GHSA-j6w6-986j-2m2m",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "open-webui",
+          "product": "open-webui",
+          "versions": [
+            {
+              "version": "< 0.9.3",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-20: Improper Input Validation",
+        "CWE-352: Cross-Site Request Forgery (CSRF)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-45316",
+      "publishedDate": "2026-05-15T21:30:36.597Z",
+      "lastModifiedDate": "2026-05-15T21:30:36.597Z",
+      "description": "Open WebUI is a self-hosted artificial intelligence platform designed to operate entirely offline. Prior to 0.9.3, the POST /api/v1/notes/{id}/pin endpoint performs a write operation (toggling the is_pinned field) but only checks for read permission. Users with read-only access to a shared note can pin/unpin it, which is a state-modifying action that should require write permission. This vulnerability is fixed in 0.9.3.",
+      "severity": 3.5,
+      "references": [
+        {
+          "url": "https://github.com/open-webui/open-webui/security/advisories/GHSA-jx2x-j75f-xq3j",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "open-webui",
+          "product": "open-webui",
+          "versions": [
+            {
+              "version": "< 0.9.3",
               "status": "affected"
             }
           ]
@@ -43,14 +307,14 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-45400",
-      "publishedDate": "2026-05-15T20:40:47.752Z",
-      "lastModifiedDate": "2026-05-15T20:40:47.752Z",
-      "description": "Open WebUI is a self-hosted artificial intelligence platform designed to operate entirely offline. Prior to 0.9.5, a parsing difference between the urlparse and requests libraries led to an SSRF bypass vulnerability. This vulnerability is fixed in 0.9.5.",
-      "severity": 8.5,
+      "id": "CVE-2026-45314",
+      "publishedDate": "2026-05-15T21:31:24.526Z",
+      "lastModifiedDate": "2026-05-15T21:31:24.526Z",
+      "description": "Open WebUI is a self-hosted artificial intelligence platform designed to operate entirely offline. Prior to 0.9.3, the channel webhook create/update flow accepts arbitrary profile_image_url values, including data:image/svg+xml;base64,... payloads. The profile image endpoint then decodes and serves this SVG as image/svg+xml without sanitization, allowing attacker-controlled script handlers (for example onload) to execute when the profile-image URL is opened in the browser. This vulnerability is fixed in 0.9.3.",
+      "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/open-webui/open-webui/security/advisories/GHSA-8w7q-q5jp-jvgx",
+          "url": "https://github.com/open-webui/open-webui/security/advisories/GHSA-3856-3vxq-m6fc",
           "type": "reference"
         }
       ],
@@ -60,182 +324,14 @@
           "product": "open-webui",
           "versions": [
             {
-              "version": "< 0.9.5",
+              "version": "< 0.9.3",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-918: Server-Side Request Forgery (SSRF)"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-45401",
-      "publishedDate": "2026-05-15T20:37:29.248Z",
-      "lastModifiedDate": "2026-05-15T20:37:29.248Z",
-      "description": "Open WebUI is a self-hosted artificial intelligence platform designed to operate entirely offline. Prior to 0.9.5, the validate_url() function in backend/open_webui/retrieval/web/utils.py only validates the initial URL submitted by the caller. The HTTP clients used downstream (sync requests, async aiohttp, langchain's WebBaseLoader) follow HTTP 3xx redirects by default and do not re-validate the redirect target against the private-IP / metadata-IP block list. Any authenticated user can therefore submit a public URL that 302-redirects to an internal address (e.g. 127.0.0.1, 169.254.169.254, RFC1918) and read the internal response body via the /api/v1/retrieval/process/web endpoint, the /api/v1/images/... endpoints, the /api/chat/completions endpoint with an image_url content part, and any other route that calls these helpers. This vulnerability is fixed in 0.9.5.",
-      "severity": 8.5,
-      "references": [
-        {
-          "url": "https://github.com/open-webui/open-webui/security/advisories/GHSA-rh5x-h6pp-cjj6",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "open-webui",
-          "product": "open-webui",
-          "versions": [
-            {
-              "version": "< 0.9.5",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-918: Server-Side Request Forgery (SSRF)"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-45402",
-      "publishedDate": "2026-05-15T20:40:04.617Z",
-      "lastModifiedDate": "2026-05-15T20:40:04.617Z",
-      "description": "Open WebUI is a self-hosted artificial intelligence platform designed to operate entirely offline. Prior to 0.9.5, multiple endpoints accept a user-supplied file_id and attach the referenced file to a resource the caller controls (folder knowledge, knowledge-base contents) without verifying that the caller owns or has been granted access to the file. The file's content then becomes reachable through the downstream RAG / file-content paths, allowing any authenticated user to exfiltrate any other user's private file — and on the knowledge-base path, also to overwrite it — given knowledge of the file's UUID. This affects backend/open_webui/routers/folders.py (POST /api/v1/folders/{id}/update), backend/open_webui/routers/knowledge.py (add_file_to_knowledge_by_id), and backend/open_webui/routers/knowledge.py (add_files_to_knowledge_by_id_batch). This vulnerability is fixed in 0.9.5.",
-      "severity": 8.1,
-      "references": [
-        {
-          "url": "https://github.com/open-webui/open-webui/security/advisories/GHSA-r472-mw7m-967f",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "open-webui",
-          "product": "open-webui",
-          "versions": [
-            {
-              "version": "< 0.9.5",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-639: Authorization Bypass Through User-Controlled Key"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-8696",
-      "publishedDate": "2026-05-15T20:52:32.575Z",
-      "lastModifiedDate": "2026-05-15T20:52:32.575Z",
-      "description": "radare2 6.1.5 contains a use-after-free vulnerability in the gdbr_pids_list() function within the GDB client core that allows remote attackers to cause a denial of service or potentially execute arbitrary code by sending malformed thread information responses. Attackers can trigger the vulnerability by causing qsThreadInfo to fail after qfThreadInfo successfully allocates RDebugPid structures, resulting in double-free memory corruption when the error path attempts to clean up the list.",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://github.com/radareorg/radare2/issues/25836",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/radareorg/radare2/commit/c213ad6894a1eb9086ac8bf5fae35757e9e1683c",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/radare2-use-after-free-via-gdbr-pids-list",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "radare2",
-          "product": "radare2",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "6.1.5",
-              "versionType": "semver"
-            },
-            {
-              "status": "unaffected",
-              "version": "c213ad6894a1eb9086ac8bf5fae35757e9e1683c",
-              "versionType": "git"
-            }
-          ],
-          "defaultStatus": "affected"
-        }
-      ],
-      "problemType": [
-        "CWE-416 Use After Free"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-45398",
-      "publishedDate": "2026-05-15T20:35:35.482Z",
-      "lastModifiedDate": "2026-05-15T20:35:35.482Z",
-      "description": "Open WebUI is a self-hosted artificial intelligence platform designed to operate entirely offline. Prior to 0.9.5, _validate_collection_access() checks the user-memory-* and file-* collection name prefixes but does not check knowledge base collections, which use raw UUIDs as collection names. Any authenticated user who knows a private knowledge base UUID can read its content through the retrieval query endpoints, even though the knowledge API correctly denies that user access. The same gap affects the retrieval write endpoints (/process/text, /process/file, /process/files/batch, /process/web, /process/youtube), allowing an attacker to inject content into or overwrite another user's knowledge base. This vulnerability is fixed in 0.9.5.",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://github.com/open-webui/open-webui/security/advisories/GHSA-4g37-7p2c-38r9",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/open-webui/open-webui/pull/22109",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/open-webui/open-webui/releases/tag/v0.9.5",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "open-webui",
-          "product": "open-webui",
-          "versions": [
-            {
-              "version": "< 0.9.5",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-639: Authorization Bypass Through User-Controlled Key"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-45386",
-      "publishedDate": "2026-05-15T20:36:21.773Z",
-      "lastModifiedDate": "2026-05-15T20:36:21.773Z",
-      "description": "Open WebUI is a self-hosted artificial intelligence platform designed to operate entirely offline. Prior to 0.9.5, Pin/Unpin is a write operation (modifies the message's is_pinned , pinned_by, pinned_at fields), but in standard channels it only checks read permission, allowing users with read-only access to pin/unpin any message. This vulnerability is fixed in 0.9.5.",
-      "severity": 4.3,
-      "references": [
-        {
-          "url": "https://github.com/open-webui/open-webui/security/advisories/GHSA-5gc6-xhv4-2wg6",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "open-webui",
-          "product": "open-webui",
-          "versions": [
-            {
-              "version": "< 0.9.5",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-639: Authorization Bypass Through User-Controlled Key"
+        "CWE-87: Improper Neutralization of Alternate XSS Syntax"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
