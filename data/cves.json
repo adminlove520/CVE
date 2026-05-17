@@ -2,323 +2,63 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 2,
-    "last_updated": "2026-05-17T17:16:30.869554",
+    "total_count": 1,
+    "last_updated": "2026-05-17T18:15:03.002986",
     "severity_distribution": {
       "critical": 0,
       "high": 0,
       "medium": 0,
       "low": 0,
-      "none": 2
+      "none": 1
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-46333",
-      "publishedDate": "2026-05-15T12:58:44.599Z",
-      "lastModifiedDate": "2026-05-17T15:21:40.832Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nptrace: slightly saner 'get_dumpable()' logic\n\nThe 'dumpability' of a task is fundamentally about the memory image of\nthe task - the concept comes from whether it can core dump or not - and\nmakes no sense when you don't have an associated mm.\n\nAnd almost all users do in fact use it only for the case where the task\nhas a mm pointer.\n\nBut we have one odd special case: ptrace_may_access() uses 'dumpable' to\ncheck various other things entirely independently of the MM (typically\nexplicitly using flags like PTRACE_MODE_READ_FSCREDS).  Including for\nthreads that no longer have a VM (and maybe never did, like most kernel\nthreads).\n\nIt's not what this flag was designed for, but it is what it is.\n\nThe ptrace code does check that the uid/gid matches, so you do have to\nbe uid-0 to see kernel thread details, but this means that the\ntraditional \"drop capabilities\" model doesn't make any difference for\nthis all.\n\nMake it all make a *bit* more sense by saying that if you don't have a\nMM pointer, we'll use a cached \"last dumpability\" flag if the thread\never had a MM (it will be zero for kernel threads since it is never\nset), and require a proper CAP_SYS_PTRACE capability to override.",
+      "id": "CVE-2026-46720",
+      "publishedDate": "2026-05-17T17:51:41.133Z",
+      "lastModifiedDate": "2026-05-17T17:51:41.133Z",
+      "description": "Net::Statsd::Tiny versions before 0.3.8 for Perl allowed metric injections.\n\nThe metric names and set values were not checked for newlines, colons or pipes. Metrics generated from untrusted sources could inject additional statsd metrics.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://git.kernel.org/stable/c/93d4ba49d18e3d7fb41a9927c2d0cca5e9dfefd6",
+          "url": "https://metacpan.org/release/RRWO/Net-Statsd-Tiny-v0.3.8/changes",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/15b828a46f305ae9f05a7c16914b3ce273474205",
+          "url": "https://github.com/robrwo/Net-Statsd-Tiny/commit/06f814f52fbcc0b2afddf7a2d6f8137fd3cede13.patch",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/4709234fd1b95136ceb789f639b1e7ea5de1b181",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/8f907d345bae8f4b3f004c5abc56bf2dfb851ea7",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/6e5b51e74a40d377bcd3081dd33fbaa0e1aa7e3d",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/2a93a4fac7b6051d3be7cd1b015fe7320cd0404d",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/01363cb3fbd0238ffdeb09f53e9039c9edf8a730",
+          "url": "https://www.cve.org/CVERecord?id=CVE-2026-46719",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "product": "Linux",
-          "vendor": "Linux",
+          "collectionURL": "https://cpan.org/modules",
           "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "include/linux/sched.h",
-            "kernel/exit.c",
-            "kernel/ptrace.c"
-          ],
-          "versions": [
+          "packageName": "Net-Statsd-Tiny",
+          "product": "Net::Statsd::Tiny",
+          "programRoutines": [
             {
-              "version": "bfedb589252c01fa505ac9f6f2a3d5d68d707ef4",
-              "lessThan": "93d4ba49d18e3d7fb41a9927c2d0cca5e9dfefd6",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "bfedb589252c01fa505ac9f6f2a3d5d68d707ef4",
-              "lessThan": "15b828a46f305ae9f05a7c16914b3ce273474205",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "bfedb589252c01fa505ac9f6f2a3d5d68d707ef4",
-              "lessThan": "4709234fd1b95136ceb789f639b1e7ea5de1b181",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "bfedb589252c01fa505ac9f6f2a3d5d68d707ef4",
-              "lessThan": "8f907d345bae8f4b3f004c5abc56bf2dfb851ea7",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "bfedb589252c01fa505ac9f6f2a3d5d68d707ef4",
-              "lessThan": "6e5b51e74a40d377bcd3081dd33fbaa0e1aa7e3d",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "bfedb589252c01fa505ac9f6f2a3d5d68d707ef4",
-              "lessThan": "2a93a4fac7b6051d3be7cd1b015fe7320cd0404d",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "bfedb589252c01fa505ac9f6f2a3d5d68d707ef4",
-              "lessThan": "01363cb3fbd0238ffdeb09f53e9039c9edf8a730",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "d5b3e840dbf6dd2c0f30b5982b6f5ecd49e46b12",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "03eed7afbc09e061f66b448daf7863174c3dc3f3",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "e45692fa1aea06676449b63ef3c2b6e1e72b7578",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "694a95fa6dae4991f16cda333d897ea063021fed",
-              "status": "affected",
-              "versionType": "git"
+              "name": "Net::Statsd::Tiny::_record"
             }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "include/linux/sched.h",
-            "kernel/exit.c",
-            "kernel/ptrace.c"
           ],
+          "repo": "https://github.com/robrwo/Net-Statsd-Tiny",
+          "vendor": "RRWO",
           "versions": [
             {
-              "version": "4.10",
-              "status": "affected"
-            },
-            {
+              "lessThan": "0.3.8",
+              "status": "affected",
               "version": "0",
-              "lessThan": "4.10",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "5.10.256",
-              "lessThanOrEqual": "5.10.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "5.15.207",
-              "lessThanOrEqual": "5.15.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.1.173",
-              "lessThanOrEqual": "6.1.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.6.139",
-              "lessThanOrEqual": "6.6.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.12.89",
-              "lessThanOrEqual": "6.12.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.18.31",
-              "lessThanOrEqual": "6.18.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.0.8",
-              "lessThanOrEqual": "7.0.*",
-              "status": "unaffected",
-              "versionType": "semver"
+              "versionType": "custom"
             }
           ]
         }
       ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-43500",
-      "publishedDate": "2026-05-11T06:26:45.838Z",
-      "lastModifiedDate": "2026-05-17T15:21:39.755Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nrxrpc: Also unshare DATA/RESPONSE packets when paged frags are present\n\nThe DATA-packet handler in rxrpc_input_call_event() and the RESPONSE\nhandler in rxrpc_verify_response() copy the skb to a linear one before\ncalling into the security ops only when skb_cloned() is true.  An skb\nthat is not cloned but still carries externally-owned paged fragments\n(e.g. SKBFL_SHARED_FRAG set by splice() into a UDP socket via\n__ip_append_data, or a chained skb_has_frag_list()) falls through to\nthe in-place decryption path, which binds the frag pages directly into\nthe AEAD/skcipher SGL via skb_to_sgvec().\n\nExtend the gate to also unshare when skb_has_frag_list() or\nskb_has_shared_frag() is true.  This catches the splice-loopback vector\nand other externally-shared frag sources while preserving the\nzero-copy fast path for skbs whose frags are kernel-private (e.g. NIC\npage_pool RX, GRO).  The OOM/trace handling already in place is reused.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://git.kernel.org/stable/c/7c504ffab3efce8f7e4f463b314ae31030bdf18b",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/3711382a77342a9a1c3d2e7330dcfc7ea927f568",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/3eae0f4f9f7206a4801efa5e0235c25bbd5a412c",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/d45179f8795222ce858770dc619abe51f9d24411",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/aa54b1d27fe0c2b78e664a34fd0fdf7cd1960d71",
-          "type": "reference"
-        }
+      "problemType": [
+        "CWE-93 Improper Neutralization of CRLF Sequences"
       ],
-      "affected": [
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "net/rxrpc/call_event.c",
-            "net/rxrpc/conn_event.c"
-          ],
-          "versions": [
-            {
-              "version": "d0d5c0cd1e711c98703f3544c1e6fc1372898de5",
-              "lessThan": "7c504ffab3efce8f7e4f463b314ae31030bdf18b",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "d0d5c0cd1e711c98703f3544c1e6fc1372898de5",
-              "lessThan": "3711382a77342a9a1c3d2e7330dcfc7ea927f568",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "d0d5c0cd1e711c98703f3544c1e6fc1372898de5",
-              "lessThan": "3eae0f4f9f7206a4801efa5e0235c25bbd5a412c",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "d0d5c0cd1e711c98703f3544c1e6fc1372898de5",
-              "lessThan": "d45179f8795222ce858770dc619abe51f9d24411",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "d0d5c0cd1e711c98703f3544c1e6fc1372898de5",
-              "lessThan": "aa54b1d27fe0c2b78e664a34fd0fdf7cd1960d71",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "net/rxrpc/call_event.c",
-            "net/rxrpc/conn_event.c"
-          ],
-          "versions": [
-            {
-              "version": "5.3",
-              "status": "affected"
-            },
-            {
-              "version": "0",
-              "lessThan": "5.3",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.6.140",
-              "lessThanOrEqual": "6.6.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.12.88",
-              "lessThanOrEqual": "6.12.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.18.29",
-              "lessThanOrEqual": "6.18.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.0.6",
-              "lessThanOrEqual": "7.0.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.1-rc3",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
       "fix_suggestion": "无法生成修复建议"
     }
   ]
