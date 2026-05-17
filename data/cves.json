@@ -2,34 +2,26 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 1,
-    "last_updated": "2026-05-17T18:15:03.002986",
+    "total_count": 2,
+    "last_updated": "2026-05-17T19:40:26.075583",
     "severity_distribution": {
       "critical": 0,
       "high": 0,
       "medium": 0,
       "low": 0,
-      "none": 1
+      "none": 2
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-46720",
-      "publishedDate": "2026-05-17T17:51:41.133Z",
-      "lastModifiedDate": "2026-05-17T17:51:41.133Z",
-      "description": "Net::Statsd::Tiny versions before 0.3.8 for Perl allowed metric injections.\n\nThe metric names and set values were not checked for newlines, colons or pipes. Metrics generated from untrusted sources could inject additional statsd metrics.",
+      "id": "CVE-2026-8721",
+      "publishedDate": "2026-05-17T18:51:41.420Z",
+      "lastModifiedDate": "2026-05-17T18:51:41.420Z",
+      "description": "Crypt::OpenSSL::PKCS12 versions through 1.94 for Perl truncates passwords with embedded NULLs.\n\nPassword parameters in PKCS12.xs are declared char *, which routes through Perl's default typemap to SvPV_nolen.  The Perl length is discarded.\n\nThe C code (or OpenSSL internally) calls strlen() on the buffer.  Any password byte at or after the first NULL is silently dropped. Binary / KDF-derived / HMAC-derived passwords lose entropy without any warnings.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://metacpan.org/release/RRWO/Net-Statsd-Tiny-v0.3.8/changes",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/robrwo/Net-Statsd-Tiny/commit/06f814f52fbcc0b2afddf7a2d6f8137fd3cede13.patch",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.cve.org/CVERecord?id=CVE-2026-46719",
+          "url": "https://metacpan.org/release/JONASBN/Crypt-OpenSSL-PKCS12-1.95/view/Changes.md",
           "type": "reference"
         }
       ],
@@ -37,18 +29,45 @@
         {
           "collectionURL": "https://cpan.org/modules",
           "defaultStatus": "unaffected",
-          "packageName": "Net-Statsd-Tiny",
-          "product": "Net::Statsd::Tiny",
+          "packageName": "Crypt-OpenSSL-PKCS12",
+          "product": "Crypt::OpenSSL::PKCS12",
+          "programFiles": [
+            "PKCS12.xs"
+          ],
           "programRoutines": [
             {
-              "name": "Net::Statsd::Tiny::_record"
+              "name": "Crypt::OpenSSL::PKCS12::mac_ok"
+            },
+            {
+              "name": "Crypt::OpenSSL::PKCS12::changepass"
+            },
+            {
+              "name": "Crypt::OpenSSL::PKCS12::create"
+            },
+            {
+              "name": "Crypt::OpenSSL::PKCS12::create_as_string"
+            },
+            {
+              "name": "Crypt::OpenSSL::PKCS12::certificate"
+            },
+            {
+              "name": "Crypt::OpenSSL::PKCS12::ca_certificate"
+            },
+            {
+              "name": "Crypt::OpenSSL::PKCS12::private_key"
+            },
+            {
+              "name": "Crypt::OpenSSL::PKCS12::info_as_hash"
+            },
+            {
+              "name": "Crypt::OpenSSL::PKCS12::info"
             }
           ],
-          "repo": "https://github.com/robrwo/Net-Statsd-Tiny",
-          "vendor": "RRWO",
+          "repo": "https://github.com/dsully/perl-crypt-openssl-pkcs12",
+          "vendor": "JONASBN",
           "versions": [
             {
-              "lessThan": "0.3.8",
+              "lessThanOrEqual": "1.94",
               "status": "affected",
               "version": "0",
               "versionType": "custom"
@@ -57,7 +76,65 @@
         }
       ],
       "problemType": [
-        "CWE-93 Improper Neutralization of CRLF Sequences"
+        "CWE-170 Improper Null Termination"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-8507",
+      "publishedDate": "2026-05-17T18:43:05.863Z",
+      "lastModifiedDate": "2026-05-17T18:43:05.863Z",
+      "description": "Crypt::OpenSSL::PKCS12 versions through 1.94 for Perl have out of bound (OOB) write flaws.\n\nWhen parsing a PKCS12 file, with a >= 1 GiB OCTET STRING (or BIT STRING) attribute on a SAFEBAG, via info() or info_as_hash(), a heap-OOB-WRITE would be triggered which could have Remote Code Execution (RCE) potential.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://metacpan.org/release/JONASBN/Crypt-OpenSSL-PKCS12-1.95/view/Changes.md",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/dsully/perl-crypt-openssl-pkcs12/issues/55",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/dsully/perl-crypt-openssl-pkcs12/issues/56",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/dsully/perl-crypt-openssl-pkcs12/commit/b9d0469c6d8f5b5c6c2a45a3d0647a532b749397.patch",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://cpan.org/modules",
+          "defaultStatus": "unaffected",
+          "packageName": "Crypt-OpenSSL-PKCS12",
+          "product": "Crypt::OpenSSL::PKCS12",
+          "programFiles": [
+            "PKCS12.xs"
+          ],
+          "programRoutines": [
+            {
+              "name": "Crypt::OpenSSL::PKCS12::info"
+            },
+            {
+              "name": "Crypt::OpenSSL::PKCS12::info_as_hash"
+            }
+          ],
+          "repo": "https://github.com/dsully/perl-crypt-openssl-pkcs12",
+          "vendor": "JONASBN",
+          "versions": [
+            {
+              "lessThanOrEqual": "1.94",
+              "status": "affected",
+              "version": "0",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-787 Out-of-bounds Write"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
