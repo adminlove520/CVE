@@ -2,158 +2,143 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 25,
-    "last_updated": "2026-05-18T20:43:12.098999",
+    "total_count": 7,
+    "last_updated": "2026-05-18T21:54:06.867983",
     "severity_distribution": {
-      "critical": 0,
-      "high": 11,
-      "medium": 10,
-      "low": 2,
-      "none": 2
+      "critical": 1,
+      "high": 1,
+      "medium": 2,
+      "low": 0,
+      "none": 3
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-8776",
-      "publishedDate": "2026-05-18T00:45:09.768Z",
-      "lastModifiedDate": "2026-05-18T19:50:24.635Z",
-      "description": "A vulnerability has been found in Edimax BR-6428NS 1.10. This vulnerability affects the function formPPTPSetup of the file /goform/formPPTPSetup of the component POST Request Handler. Such manipulation of the argument pptpUserName leads to buffer overflow. It is possible to launch the attack remotely. The exploit has been disclosed to the public and may be used. The vendor was contacted early about this disclosure but did not respond in any way.",
-      "severity": 8.8,
+      "id": "CVE-2026-45230",
+      "publishedDate": "2026-05-18T18:06:56.344Z",
+      "lastModifiedDate": "2026-05-18T21:28:45.184Z",
+      "description": "DumbAssets through 1.0.11 contains a path traversal vulnerability in the POST /api/delete-file endpoint and filesToDelete array parameters that allows unauthenticated attackers to delete arbitrary files by supplying ../ sequences that bypass directory boundary validation. Attackers can exploit the optional and disabled-by-default authentication control to traverse outside the intended application directory and delete critical files such as server.js or package.json, causing complete denial of service.",
+      "severity": 9.1,
       "references": [
         {
-          "url": "https://vuldb.com/vuln/364401",
+          "url": "https://github.com/DumbWareio/DumbAssets/pull/136",
           "type": "reference"
         },
         {
-          "url": "https://vuldb.com/vuln/364401/cti",
+          "url": "https://www.vulncheck.com/advisories/dumbassets-path-traversal-file-deletion-via-api-delete-file",
           "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/submit/811531",
-          "type": "reference"
-        },
-        {
-          "url": "https://lavender-bicycle-a5a.notion.site/EDIMAX-BR-6428NS-formPPTPSetup-34b53a41781f8074a88af068842b599e?source=copy_link",
-          "type": "poc"
         }
       ],
       "affected": [
         {
-          "vendor": "Edimax",
-          "product": "BR-6428NS",
+          "defaultStatus": "affected",
+          "vendor": "DumbWareio",
+          "product": "DumbAssets",
+          "repo": "https://github.com/DumbWareio/DumbAssets",
           "versions": [
             {
-              "version": "1.10",
-              "status": "affected"
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver",
+              "lessThanOrEqual": "1.0.11"
             }
-          ],
-          "cpes": [
-            "cpe:2.3:o:edimax:br-6428ns_firmware:*:*:*:*:*:*:*:*"
-          ],
-          "modules": [
-            "POST Request Handler"
           ]
         }
       ],
       "problemType": [
-        "Buffer Overflow",
-        "Memory Corruption"
+        "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-45672",
-      "publishedDate": "2026-05-15T20:55:00.802Z",
-      "lastModifiedDate": "2026-05-18T19:38:29.940Z",
-      "description": "Open WebUI is a self-hosted artificial intelligence platform designed to operate entirely offline. Prior to 0.8.12, the /api/v1/utils/code/execute endpoint executes arbitrary Python code via Jupyter for any verified user, even when the admin has set ENABLE_CODE_EXECUTION=false. The feature gate is not enforced on the API endpoint — the configuration says \"disabled\" but code still executes. This vulnerability is fixed in 0.8.12.",
-      "severity": 8.8,
+      "id": "CVE-2026-27891",
+      "publishedDate": "2026-05-18T21:16:15.240Z",
+      "lastModifiedDate": "2026-05-18T21:16:15.240Z",
+      "description": "FacturaScripts is an open source accounting and invoicing software. Versions 2026 and below contain a critical vulnerability in the Plugins::add() function. The system fails to properly validate the file paths within uploaded ZIP archives. This allows an attacker to perform a Zip Slip attack, leading to Arbitrary File Write and Remote Code Execution (RCE) by overwriting sensitive .php files outside the designated plugins directory. The vulnerability is located in Plugins.php. While the testZipFile function attempts to validate that the ZIP contains only one root folder, it does not sanitize or validate the individual file paths within that folder. An attacker can bypass this check by naming a file ValidPluginName/../../shell.php. The explode function will see ValidPluginName as the root folder, satisfying the count($folders) != 1 check. However, during extraction, the ../../ sequence triggers a path traversal, allowing the file to be written anywhere the web server has permissions the root directory. This issue is fixed in version 2026.1.",
+      "severity": 7.2,
       "references": [
         {
-          "url": "https://github.com/open-webui/open-webui/security/advisories/GHSA-482j-2pq6-q5w4",
+          "url": "https://github.com/NeoRazorX/facturascripts/security/advisories/GHSA-3pgc-xqg9-cfr6",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/NeoRazorX/facturascripts/commit/2dda7c6f3b241fa84a0629166783720b882725fd",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "open-webui",
-          "product": "open-webui",
+          "vendor": "NeoRazorX",
+          "product": "facturascripts",
           "versions": [
             {
-              "version": "< 0.8.12",
+              "version": "< 2026.1",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-863: Incorrect Authorization"
+        "CWE-20: Improper Input Validation",
+        "CWE-434: Unrestricted Upload of File with Dangerous Type"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2020-37243",
-      "publishedDate": "2026-05-16T15:25:58.571Z",
-      "lastModifiedDate": "2026-05-18T19:54:15.132Z",
-      "description": "Supsystic Pricing Table 1.8.7 contains an SQL injection vulnerability in the 'sidx' GET parameter that allows unauthenticated attackers to execute arbitrary SQL queries through the getListForTbl action. The plugin also contains stored cross-site scripting vulnerabilities in the 'Edit name' and 'Edit HTML' fields that execute malicious scripts when viewing pricing tables.",
-      "severity": 8.2,
+      "id": "CVE-2026-27737",
+      "publishedDate": "2026-05-18T21:11:17.611Z",
+      "lastModifiedDate": "2026-05-18T21:11:17.611Z",
+      "description": "BigBlueButton is an open-source virtual classroom. In versions prior to 3.0.19, the recording playback (presentation format) was not sanitizing user's input in public chat. This allowed for a malicious actor to craft and carry out a targeted XSS attack, activated on anyone replaying the recording. This issue has been fixed 3.0.19.",
+      "severity": 6.5,
       "references": [
         {
-          "url": "https://www.exploit-db.com/exploits/49533",
-          "type": "poc"
-        },
-        {
-          "url": "https://supsystic.com/",
+          "url": "https://github.com/bigbluebutton/bigbluebutton/security/advisories/GHSA-8vv7-vj94-q2pv",
           "type": "reference"
         },
         {
-          "url": "https://downloads.wordpress.org/plugin/pricing-table-by-supsystic.1.8.7.zip",
+          "url": "https://github.com/bigbluebutton/bbb-playback/commit/09e89bfe4ff8488b68c3ff040d3081e419dc89b1",
           "type": "reference"
         },
         {
-          "url": "https://www.vulncheck.com/advisories/wordpress-plugin-supsystic-pricing-table-sql-injection-xss",
+          "url": "https://github.com/bigbluebutton/bigbluebutton/commit/69f45aa1b963dc7d80179d0155acc670aec5c4fc",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/bigbluebutton/bigbluebutton/releases/tag/v3.0.19",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/blindsidenetworks/scalelite/releases/tag/v1.7.0",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Supsystic",
-          "product": "Pricing Table",
+          "vendor": "bigbluebutton",
+          "product": "bigbluebutton",
           "versions": [
             {
-              "version": "1.8.6",
-              "status": "affected"
-            },
-            {
-              "version": "1.8.7",
+              "version": "< 3.0.19",
               "status": "affected"
             }
           ]
-        }
-      ],
-      "problemType": [
-        "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-45665",
-      "publishedDate": "2026-05-15T21:42:34.264Z",
-      "lastModifiedDate": "2026-05-18T19:47:28.613Z",
-      "description": "Open WebUI is a self-hosted artificial intelligence platform designed to operate entirely offline. Prior to 0.8.0, a Stored Cross-Site Scripting (XSS) vulnerability exists in the Banner component due to an improper sanitization order (specifically, DOMPurify is executed before the marked library). This vulnerability allows a compromised or malicious administrator to plant a malicious payload in the global banner. Crucially, this vector enables Privilege Escalation, as the malicious banner is rendered for all users, including the Super Admin (Primary Admin). Consequently, the payload successfully bypasses the existing security mechanism. An attacker can leverage this to steal the Super Admin's session token This vulnerability is fixed in 0.8.0.",
-      "severity": 8.1,
-      "references": [
+        },
         {
-          "url": "https://github.com/open-webui/open-webui/security/advisories/GHSA-cqp4-qqvg-3787",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "open-webui",
-          "product": "open-webui",
+          "vendor": "blindsidenetworks",
+          "product": "scalite",
           "versions": [
             {
-              "version": "< 0.8.0",
+              "version": "< 1.7.0",
+              "status": "affected"
+            }
+          ]
+        },
+        {
+          "vendor": "bigbluebutton",
+          "product": "bbb-playback",
+          "versions": [
+            {
+              "version": "< 5.4.3",
               "status": "affected"
             }
           ]
@@ -165,1322 +150,167 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-45301",
-      "publishedDate": "2026-05-15T21:19:46.004Z",
-      "lastModifiedDate": "2026-05-18T19:41:24.338Z",
-      "description": "Open WebUI is a self-hosted artificial intelligence platform designed to operate entirely offline. Prior to 0.3.16, a missing permission check in all files related API endpoints allows any authenticated user to list, access and delete every file uploaded by every user to the platform. This vulnerability is fixed in 0.3.16.",
-      "severity": 8.1,
+      "id": "CVE-2026-45246",
+      "publishedDate": "2026-05-18T19:03:34.753Z",
+      "lastModifiedDate": "2026-05-18T21:28:41.957Z",
+      "description": "Summarize prior to 0.15.1 contains an insecure file permission vulnerability in the refresh-free configuration rewrite path that allows local users to read sensitive credentials by exploiting default filesystem permissions. When the refresh-free path rewrites the configuration file, it creates the replacement with default process umask permissions instead of preserving the original file permissions, exposing the config file containing API keys and provider credentials to other local users on shared Unix-like systems.",
+      "severity": 5.5,
       "references": [
         {
-          "url": "https://github.com/open-webui/open-webui/security/advisories/GHSA-r8wh-8m7r-fh33",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "open-webui",
-          "product": "open-webui",
-          "versions": [
-            {
-              "version": "< 0.3.16",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-284: Improper Access Control"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-47092",
-      "publishedDate": "2026-05-18T19:46:48.302Z",
-      "lastModifiedDate": "2026-05-18T19:46:48.302Z",
-      "description": "Claude HUD through 0.0.12, patched in commit 234d9aa, contains a command injection vulnerability that allows local attackers to execute arbitrary commands by manipulating the COMSPEC environment variable. Attackers can set COMSPEC to an arbitrary binary path before claude-hud performs its version check, causing execFile() to execute the attacker-supplied executable with cmd.exe arguments, resulting in arbitrary code execution on Windows systems.",
-      "severity": 7.8,
-      "references": [
-        {
-          "url": "https://github.com/jarrodwatts/claude-hud/issues/485",
+          "url": "https://github.com/steipete/summarize/releases/tag/v0.15.2",
           "type": "reference"
         },
         {
-          "url": "https://github.com/jarrodwatts/claude-hud/pull/487",
+          "url": "https://github.com/steipete/summarize/pull/217",
           "type": "reference"
         },
         {
-          "url": "https://github.com/jarrodwatts/claude-hud/commit/234d9aad919b51326a43bcf90b45ae35c23afc30",
+          "url": "https://github.com/steipete/summarize/commit/9e990193650a23dab73f37d5e1964d574a44098b",
           "type": "reference"
         },
         {
-          "url": "https://www.vulncheck.com/advisories/claude-hud-arbitrary-command-execution-via-comspec-environment-variable",
+          "url": "https://www.vulncheck.com/advisories/summarize-insecure-file-permissions-information-disclosure",
           "type": "reference"
         }
       ],
       "affected": [
         {
           "defaultStatus": "affected",
-          "vendor": "jarrodwatts",
-          "product": "claude-hud",
-          "repo": "https://github.com/jarrodwatts/claude-hud",
+          "vendor": "steipete",
+          "product": "summarize",
+          "repo": "https://github.com/steipete/summarize",
           "versions": [
             {
               "status": "affected",
               "version": "0",
               "versionType": "semver",
-              "lessThanOrEqual": "0.0.12"
+              "lessThan": "0.15.1"
             },
             {
               "status": "unaffected",
-              "version": "234d9aad919b51326a43bcf90b45ae35c23afc30",
+              "version": "9e990193650a23dab73f37d5e1964d574a44098b",
               "versionType": "git"
             }
           ]
         }
       ],
       "problemType": [
-        "Uncontrolled Search Path Element"
+        "Incorrect Permission Assignment for Critical Resource"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2020-37231",
-      "publishedDate": "2026-05-16T15:25:48.969Z",
-      "lastModifiedDate": "2026-05-18T19:48:23.810Z",
-      "description": "Privacy Drive 3.17.0 contains an unquoted service path vulnerability in the pdsvc.exe service binary that allows local attackers to escalate privileges by exploiting the service startup process. Attackers can place malicious executables in the unquoted path directories to execute arbitrary code with LocalSystem privileges during service startup or system reboot.",
-      "severity": 7.8,
+      "id": "CVE-2026-26978",
+      "publishedDate": "2026-05-18T20:49:04.364Z",
+      "lastModifiedDate": "2026-05-18T21:28:38.708Z",
+      "description": "FreePBX is an open source IP PBX. In versions below 16.0.71 and 17.0.6, the backup module does not properly sanitize data during restore operations, potentially leading to compromise if the backup contains carefully crafted hostile data. During backup restore operations, FreePBX extracts selected files from a user-supplied tar archive. If a malicious file exists in the archive, it is read and passed directly to unserialize() without validation, class restrictions, or integrity checks. This issue allows Remote Code Execution during restoration of the backup as the web server user (typically asterisk or www-data). The attack does not require shell access, CLI access, or filesystem write permissions beyond the normal restore workflow. Authentication with a known username that has sufficient access permissions and/or write access to backup files is required. This issue has been fixed in versions 16.0.71 and 17.0.6.",
+      "severity": "N/A",
       "references": [
         {
-          "url": "https://www.exploit-db.com/exploits/49023",
-          "type": "poc"
-        },
-        {
-          "url": "https://www.cybertronsoft.com/",
+          "url": "https://github.com/FreePBX/security-reporting/security/advisories/GHSA-5v7h-49gr-jcwr",
           "type": "reference"
         },
         {
-          "url": "https://www.cybertronsoft.com/download/privacy-drive-setup.exe",
+          "url": "https://github.com/FreePBX/backup/commit/45c57e1207cbf9fd1c5f76f8a3e72d204a69a472",
           "type": "reference"
         },
         {
-          "url": "https://www.vulncheck.com/advisories/privacy-drive-unquoted-service-path-privilege-escalation",
+          "url": "https://github.com/FreePBX/backup/commit/64781af5c80cce0cff21a981be4d8e6a7a71f2c4",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Cybertronsoft",
-          "product": "Privacy Drive",
+          "vendor": "FreePBX",
+          "product": "security-reporting",
           "versions": [
             {
-              "version": "3.17.0 Build 1456",
+              "version": "< 16.0.71",
+              "status": "affected"
+            },
+            {
+              "version": ">= 17.0.0, < 17.0.6",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "Unquoted Search Path or Element"
+        "CWE-502: Deserialization of Untrusted Data"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2021-47942",
-      "publishedDate": "2026-05-16T15:28:07.743Z",
-      "lastModifiedDate": "2026-05-18T19:59:01.009Z",
-      "description": "Home Assistant Community Store (HACS) 1.10.0 contains a path traversal vulnerability that allows unauthenticated attackers to read sensitive files by traversing directories via the /hacsfiles/ endpoint. Attackers can retrieve the .storage/auth file containing user credentials and refresh tokens, then craft valid JWT tokens to gain administrative access to Home Assistant instances.",
-      "severity": 7.5,
+      "id": "CVE-2026-29964",
+      "publishedDate": "2026-05-18T00:00:00.000Z",
+      "lastModifiedDate": "2026-05-18T21:28:51.998Z",
+      "description": "HSC MailInspector v5.3.3-7 contains a Cross-Site Scripting (XSS) vulnerability in the /tap/tap.php endpoint due to improper neutralization of user-controlled input using alternate or obfuscated JavaScript syntax. The endpoint reflects unsanitized user input in HTTP responses without adequate output encoding, allowing a remote attacker to execute arbitrary JavaScript code in the context of a victim's browser.",
+      "severity": "N/A",
       "references": [
         {
-          "url": "https://www.exploit-db.com/exploits/49495",
-          "type": "poc"
-        },
-        {
-          "url": "https://www.home-assistant.io/",
+          "url": "https://hsclabs.com/pt-br/mailinspector/",
           "type": "reference"
         },
         {
-          "url": "https://github.com/hacs/integration",
+          "url": "https://github.com/sql3t0/cve-disclosures",
           "type": "reference"
         },
         {
-          "url": "https://www.vulncheck.com/advisories/home-assistant-community-store-path-traversal-account-takeover",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Home-Assistant",
-          "product": "Home Assistant Community Store (HACS)",
-          "versions": [
-            {
-              "status": "affected",
-              "lessThan": "1.10.0",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2021-47969",
-      "publishedDate": "2026-05-16T15:26:10.282Z",
-      "lastModifiedDate": "2026-05-18T19:55:22.515Z",
-      "description": "Color Notes 1.4 contains a denial of service vulnerability that allows attackers to crash the application by pasting excessively long character strings into note fields. Attackers can generate a payload containing 350,000 repeated characters and paste it twice into a new note to cause the application to stop responding.",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://www.exploit-db.com/exploits/49952",
-          "type": "poc"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/color-notes-denial-of-service-via-long-character-string",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "color-notes",
-          "product": "Color Notes",
-          "versions": [
-            {
-              "version": "1.4",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Memory Allocation with Excessive Size Value"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-8764",
-      "publishedDate": "2026-05-17T21:30:11.744Z",
-      "lastModifiedDate": "2026-05-18T19:55:52.152Z",
-      "description": "A security vulnerability has been detected in H3C Magic B3 up to 100R002. This affects the function UpdateWanParams of the file /goform/aspForm. Such manipulation of the argument param leads to buffer overflow. The attack may be performed from remote. The exploit has been disclosed publicly and may be used. The vendor was contacted early about this disclosure but did not respond in any way.",
-      "severity": 7.2,
-      "references": [
-        {
-          "url": "https://vuldb.com/vuln/364389",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/vuln/364389/cti",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/submit/811373",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/yyyy0031/CVE/issues/1",
-          "type": "poc"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "H3C",
-          "product": "Magic B3",
-          "versions": [
-            {
-              "version": "100R002",
-              "status": "affected"
-            }
-          ],
-          "cpes": [
-            "cpe:2.3:a:h3c:magic_b3:*:*:*:*:*:*:*:*"
-          ]
-        }
-      ],
-      "problemType": [
-        "Buffer Overflow",
-        "Memory Corruption"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2021-47975",
-      "publishedDate": "2026-05-16T15:26:15.528Z",
-      "lastModifiedDate": "2026-05-18T19:56:03.076Z",
-      "description": "WP Learn Manager 1.1.2 contains a stored cross-site scripting vulnerability that allows unauthenticated attackers to inject malicious scripts through the fieldtitle parameter. Attackers can submit POST requests to the jslm_fieldordering page with XSS payloads in the fieldtitle field to execute arbitrary JavaScript when administrators view the field ordering interface.",
-      "severity": 7.2,
-      "references": [
-        {
-          "url": "https://www.exploit-db.com/exploits/50086",
-          "type": "poc"
-        },
-        {
-          "url": "https://wplearnmanager.com/",
-          "type": "reference"
-        },
-        {
-          "url": "https://wordpress.org/plugins/learn-manager/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/wordpress-plugin-wp-learn-manager-stored-xss",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Wplearnmanager",
-          "product": "WP Learn Manager",
-          "versions": [
-            {
-              "version": "1.1.2",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-8738",
-      "publishedDate": "2026-05-17T07:30:10.474Z",
-      "lastModifiedDate": "2026-05-18T20:01:46.458Z",
-      "description": "A security vulnerability has been detected in Sanluan PublicCMS 5.202506.d. Impacted is the function TradeOrderController.pay/TradePaymentController.pay/AccountGatewayComponent.pay of the file publiccms-trade/src/main/java/com/publiccms/controller/web/trade/TradeOrderController.java of the component Trade Payment Flow. The manipulation leads to business logic errors. Remote exploitation of the attack is possible. The exploit has been disclosed publicly and may be used. The vendor was contacted early about this disclosure but did not respond in any way.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://vuldb.com/vuln/364326",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/vuln/364326/cti",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/submit/809905",
-          "type": "reference"
-        },
-        {
-          "url": "https://vulnplus-note.wetolink.com/share/ayeMf4xWK0ZZ",
-          "type": "poc"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Sanluan",
-          "product": "PublicCMS",
-          "versions": [
-            {
-              "version": "5.202506.d",
-              "status": "affected"
-            }
-          ],
-          "cpes": [
-            "cpe:2.3:a:publiccms:publiccms:*:*:*:*:*:*:*:*"
-          ],
-          "modules": [
-            "Trade Payment Flow"
-          ]
-        }
-      ],
-      "problemType": [
-        "Business Logic Errors"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-45351",
-      "publishedDate": "2026-05-15T21:09:41.689Z",
-      "lastModifiedDate": "2026-05-18T19:39:46.217Z",
-      "description": "Open WebUI is a self-hosted artificial intelligence platform designed to operate entirely offline. Prior to 0.8.9, when a regular user [non-admin] logs into the application, a http://IP:8080/api/models? web request is initiated by the application and in response, it reveals the system prompt of available models set by admin on models pages in workspace affecting the confidentiality of application. This vulnerability is fixed in 0.8.9.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://github.com/open-webui/open-webui/security/advisories/GHSA-jh9g-8jqw-m2qx",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "open-webui",
-          "product": "open-webui",
-          "versions": [
-            {
-              "version": "< 0.8.9",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2020-37237",
-      "publishedDate": "2026-05-16T15:25:53.839Z",
-      "lastModifiedDate": "2026-05-18T19:52:48.880Z",
-      "description": "Composr CMS 10.0.34 contains a persistent cross-site scripting vulnerability that allows authenticated administrators to inject malicious scripts through the banner management interface. Attackers with admin credentials can inject XSS payloads in the Description field of the Add banner functionality, which execute for all website visitors when they access the home page.",
-      "severity": 6.4,
-      "references": [
-        {
-          "url": "https://www.exploit-db.com/exploits/49190",
-          "type": "poc"
-        },
-        {
-          "url": "https://compo.sr/",
-          "type": "reference"
-        },
-        {
-          "url": "https://compo.sr/download.htm",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/composr-cms-persistent-cross-site-scripting-via-banners",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Compo",
-          "product": "Composr CMS",
-          "versions": [
-            {
-              "version": "10.0.34",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-8754",
-      "publishedDate": "2026-05-17T12:15:09.708Z",
-      "lastModifiedDate": "2026-05-18T20:05:27.494Z",
-      "description": "A vulnerability was detected in AstrBotDevs AstrBot up to 4.23.5. Impacted is the function post_file of the file astrbot/dashboard/routes/chat.py of the component File Upload Handler. The manipulation of the argument filename results in path traversal. It is possible to launch the attack remotely. The exploit is now public and may be used. Upgrading to version 4.23.6 is recommended to address this issue. The patch is identified as aaec41e5054569ceaa1113593a34da7568e2d211. You should upgrade the affected component.",
-      "severity": 6.3,
-      "references": [
-        {
-          "url": "https://vuldb.com/vuln/364381",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/vuln/364381/cti",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/submit/811172",
-          "type": "reference"
-        },
-        {
-          "url": "https://gist.github.com/YLChen-007/054415c2b63e58813328bc879a90c504",
-          "type": "poc"
-        },
-        {
-          "url": "https://github.com/AstrBotDevs/AstrBot/commit/aaec41e5054569ceaa1113593a34da7568e2d211",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/AstrBotDevs/AstrBot/releases/tag/v4.23.6",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/AstrBotDevs/AstrBot/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "AstrBotDevs",
-          "product": "AstrBot",
-          "versions": [
-            {
-              "version": "4.23.0",
-              "status": "affected"
-            },
-            {
-              "version": "4.23.1",
-              "status": "affected"
-            },
-            {
-              "version": "4.23.2",
-              "status": "affected"
-            },
-            {
-              "version": "4.23.3",
-              "status": "affected"
-            },
-            {
-              "version": "4.23.4",
-              "status": "affected"
-            },
-            {
-              "version": "4.23.5",
-              "status": "affected"
-            },
-            {
-              "version": "4.23.6",
-              "status": "unaffected"
-            }
-          ],
-          "cpes": [
-            "cpe:2.3:a:astrbot:astrbot:*:*:*:*:*:*:*:*"
-          ],
-          "modules": [
-            "File Upload Handler"
-          ]
-        }
-      ],
-      "problemType": [
-        "Path Traversal"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-8753",
-      "publishedDate": "2026-05-17T12:00:14.089Z",
-      "lastModifiedDate": "2026-05-18T20:05:05.620Z",
-      "description": "A security vulnerability has been detected in kalcaddle Kodbox up to 1.64. This issue affects the function parseVideoInfo of the file /workspace/source-code/plugins/fileThumb/lib/VideoResize.class.php of the component fileThumb Plugin. The manipulation of the argument ffmpegBin leads to command injection. It is possible to initiate the attack remotely. The exploit has been disclosed publicly and may be used. The vendor was contacted early about this disclosure but did not respond in any way.",
-      "severity": 6.3,
-      "references": [
-        {
-          "url": "https://vuldb.com/vuln/364380",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/vuln/364380/cti",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/submit/810109",
-          "type": "reference"
-        },
-        {
-          "url": "https://vulnplus-note.wetolink.com/share/R0hHqwMywhsm",
-          "type": "poc"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "kalcaddle",
-          "product": "Kodbox",
-          "versions": [
-            {
-              "version": "1.0",
-              "status": "affected"
-            },
-            {
-              "version": "1.1",
-              "status": "affected"
-            },
-            {
-              "version": "1.2",
-              "status": "affected"
-            },
-            {
-              "version": "1.3",
-              "status": "affected"
-            },
-            {
-              "version": "1.4",
-              "status": "affected"
-            },
-            {
-              "version": "1.5",
-              "status": "affected"
-            },
-            {
-              "version": "1.6",
-              "status": "affected"
-            },
-            {
-              "version": "1.7",
-              "status": "affected"
-            },
-            {
-              "version": "1.8",
-              "status": "affected"
-            },
-            {
-              "version": "1.9",
-              "status": "affected"
-            },
-            {
-              "version": "1.10",
-              "status": "affected"
-            },
-            {
-              "version": "1.11",
-              "status": "affected"
-            },
-            {
-              "version": "1.12",
-              "status": "affected"
-            },
-            {
-              "version": "1.13",
-              "status": "affected"
-            },
-            {
-              "version": "1.14",
-              "status": "affected"
-            },
-            {
-              "version": "1.15",
-              "status": "affected"
-            },
-            {
-              "version": "1.16",
-              "status": "affected"
-            },
-            {
-              "version": "1.17",
-              "status": "affected"
-            },
-            {
-              "version": "1.18",
-              "status": "affected"
-            },
-            {
-              "version": "1.19",
-              "status": "affected"
-            },
-            {
-              "version": "1.20",
-              "status": "affected"
-            },
-            {
-              "version": "1.21",
-              "status": "affected"
-            },
-            {
-              "version": "1.22",
-              "status": "affected"
-            },
-            {
-              "version": "1.23",
-              "status": "affected"
-            },
-            {
-              "version": "1.24",
-              "status": "affected"
-            },
-            {
-              "version": "1.25",
-              "status": "affected"
-            },
-            {
-              "version": "1.26",
-              "status": "affected"
-            },
-            {
-              "version": "1.27",
-              "status": "affected"
-            },
-            {
-              "version": "1.28",
-              "status": "affected"
-            },
-            {
-              "version": "1.29",
-              "status": "affected"
-            },
-            {
-              "version": "1.30",
-              "status": "affected"
-            },
-            {
-              "version": "1.31",
-              "status": "affected"
-            },
-            {
-              "version": "1.32",
-              "status": "affected"
-            },
-            {
-              "version": "1.33",
-              "status": "affected"
-            },
-            {
-              "version": "1.34",
-              "status": "affected"
-            },
-            {
-              "version": "1.35",
-              "status": "affected"
-            },
-            {
-              "version": "1.36",
-              "status": "affected"
-            },
-            {
-              "version": "1.37",
-              "status": "affected"
-            },
-            {
-              "version": "1.38",
-              "status": "affected"
-            },
-            {
-              "version": "1.39",
-              "status": "affected"
-            },
-            {
-              "version": "1.40",
-              "status": "affected"
-            },
-            {
-              "version": "1.41",
-              "status": "affected"
-            },
-            {
-              "version": "1.42",
-              "status": "affected"
-            },
-            {
-              "version": "1.43",
-              "status": "affected"
-            },
-            {
-              "version": "1.44",
-              "status": "affected"
-            },
-            {
-              "version": "1.45",
-              "status": "affected"
-            },
-            {
-              "version": "1.46",
-              "status": "affected"
-            },
-            {
-              "version": "1.47",
-              "status": "affected"
-            },
-            {
-              "version": "1.48",
-              "status": "affected"
-            },
-            {
-              "version": "1.49",
-              "status": "affected"
-            },
-            {
-              "version": "1.50",
-              "status": "affected"
-            },
-            {
-              "version": "1.51",
-              "status": "affected"
-            },
-            {
-              "version": "1.52",
-              "status": "affected"
-            },
-            {
-              "version": "1.53",
-              "status": "affected"
-            },
-            {
-              "version": "1.54",
-              "status": "affected"
-            },
-            {
-              "version": "1.55",
-              "status": "affected"
-            },
-            {
-              "version": "1.56",
-              "status": "affected"
-            },
-            {
-              "version": "1.57",
-              "status": "affected"
-            },
-            {
-              "version": "1.58",
-              "status": "affected"
-            },
-            {
-              "version": "1.59",
-              "status": "affected"
-            },
-            {
-              "version": "1.60",
-              "status": "affected"
-            },
-            {
-              "version": "1.61",
-              "status": "affected"
-            },
-            {
-              "version": "1.62",
-              "status": "affected"
-            },
-            {
-              "version": "1.63",
-              "status": "affected"
-            },
-            {
-              "version": "1.64",
-              "status": "affected"
-            }
-          ],
-          "cpes": [
-            "cpe:2.3:a:kalcaddle:kodbox:*:*:*:*:*:*:*:*"
-          ],
-          "modules": [
-            "fileThumb Plugin"
-          ]
-        }
-      ],
-      "problemType": [
-        "Command Injection",
-        "Injection"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2021-47981",
-      "publishedDate": "2026-05-16T15:26:20.799Z",
-      "lastModifiedDate": "2026-05-18T19:58:14.010Z",
-      "description": "Quick.CMS 6.7 contains a cross-site scripting vulnerability in the sliders form that allows authenticated attackers to inject malicious scripts by submitting XSS payloads through the sDescription parameter. Attackers can craft CSRF forms targeting the admin.php?p=sliders-form endpoint to execute arbitrary JavaScript in victim browsers when the form is submitted.",
-      "severity": 5.4,
-      "references": [
-        {
-          "url": "https://www.exploit-db.com/exploits/50530",
-          "type": "poc"
-        },
-        {
-          "url": "https://opensolution.org/",
-          "type": "reference"
-        },
-        {
-          "url": "https://opensolution.org/download/home.html?sFile=Quick.Cms_v6.7-en.zip",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/quick-cms-cross-site-scripting-via-csrf-to-sliders-form",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Opensolution",
-          "product": "Quick.CMS",
-          "versions": [
-            {
-              "version": "6.7",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-47090",
-      "publishedDate": "2026-05-18T19:31:33.193Z",
-      "lastModifiedDate": "2026-05-18T19:44:17.786Z",
-      "description": "Claude HUD through 0.0.12, patched in commit 234d9aa, constructs OSC 8 terminal hyperlink escape sequences using raw cwd and branchUrl values without stripping control characters or encoding embedded values, allowing attackers to inject arbitrary ANSI codes into terminal sessions. Attackers can embed ESC+backslash sequences in the current working directory or branch URL to execute malicious ANSI codes including text color changes, forged prompts, and OSC 52 clipboard writes, or trigger outbound HTTP requests to attacker-controlled remotes when hyperlinks are clicked.",
-      "severity": 4.6,
-      "references": [
-        {
-          "url": "https://github.com/jarrodwatts/claude-hud/issues/485",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/jarrodwatts/claude-hud/pull/487",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/jarrodwatts/claude-hud/commit/234d9aad919b51326a43bcf90b45ae35c23afc30",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/claude-hud-terminal-injection-via-osc-8-hyperlinks",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "affected",
-          "vendor": "jarrodwatts",
-          "product": "claude-hud",
-          "repo": "https://github.com/jarrodwatts/claude-hud",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver",
-              "lessThanOrEqual": "0.0.12"
-            },
-            {
-              "status": "unaffected",
-              "version": "234d9aad919b51326a43bcf90b45ae35c23afc30",
-              "versionType": "git"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Improper Neutralization of Escape, Meta, or Control Sequences"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-21789",
-      "publishedDate": "2026-05-18T19:17:18.844Z",
-      "lastModifiedDate": "2026-05-18T19:54:06.181Z",
-      "description": "HCL Connections contains a broken access control vulnerability that may allow unauthorized user to update data in certain scenarios.",
-      "severity": 4.6,
-      "references": [
-        {
-          "url": "https://support.hcl-software.com/csm?id=kb_article&sysparm_article=KB0129719",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "HCLSoftware",
-          "product": "Connections",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "8.0"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-863 Incorrect Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-8745",
-      "publishedDate": "2026-05-17T09:45:07.635Z",
-      "lastModifiedDate": "2026-05-18T20:03:58.716Z",
-      "description": "A vulnerability was identified in Open5GS up to 2.7.7. Affected by this vulnerability is the function ogs_timer_add in the library /src/ausf/nausf-handler.c of the component AUSF. The manipulation leads to denial of service. The attack can be initiated remotely. The exploit is publicly available and might be used. The project was informed of the problem early through an issue report but has not responded yet.",
-      "severity": 4.3,
-      "references": [
-        {
-          "url": "https://vuldb.com/vuln/364332",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/vuln/364332/cti",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/submit/817031",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/open5gs/open5gs/issues/4472",
-          "type": "poc"
-        },
-        {
-          "url": "https://github.com/open5gs/open5gs/",
+          "url": "https://github.com/sql3t0/cve-disclosures/blob/main/03_-_CVE-2026-29964_XSS.md",
           "type": "reference"
         }
       ],
       "affected": [
         {
           "vendor": "n/a",
-          "product": "Open5GS",
+          "product": "n/a",
           "versions": [
             {
-              "version": "2.7.0",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.1",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.2",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.3",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.4",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.5",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.6",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.7",
+              "version": "n/a",
               "status": "affected"
             }
-          ],
-          "cpes": [
-            "cpe:2.3:a:open5gs:open5gs:*:*:*:*:*:*:*:*"
-          ],
-          "modules": [
-            "AUSF"
           ]
         }
       ],
       "problemType": [
-        "Denial of Service"
+        "n/a"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-8731",
-      "publishedDate": "2026-05-17T04:15:09.207Z",
-      "lastModifiedDate": "2026-05-18T20:00:19.031Z",
-      "description": "A vulnerability has been found in Open5GS up to 2.7.7. Affected is the function ogs_sbi_client_add in the library /lib/sbi/client.c of the component NRF. The manipulation of the argument client_pool leads to denial of service. It is possible to initiate the attack remotely. The exploit has been disclosed to the public and may be used. The project was informed of the problem early through an issue report but has not responded yet.",
-      "severity": 4.3,
+      "id": "CVE-2026-29965",
+      "publishedDate": "2026-05-18T00:00:00.000Z",
+      "lastModifiedDate": "2026-05-18T21:28:48.808Z",
+      "description": "HSC MailInspector 5.3.3-7 is vulnerable to Cross Site Scripting (XSS) in the /police/WarningUrlPage.php endpoint due to improper neutralization of user-supplied input that uses alternate or obfuscated JavaScript syntax.",
+      "severity": "N/A",
       "references": [
         {
-          "url": "https://vuldb.com/vuln/364320",
+          "url": "https://hsclabs.com/pt-br/mailinspector/",
           "type": "reference"
         },
         {
-          "url": "https://vuldb.com/vuln/364320/cti",
+          "url": "https://github.com/sql3t0/cve-disclosures",
           "type": "reference"
         },
         {
-          "url": "https://vuldb.com/submit/808516",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/open5gs/open5gs/issues/4464",
-          "type": "poc"
-        },
-        {
-          "url": "https://github.com/open5gs/open5gs/",
+          "url": "https://github.com/sql3t0/cve-disclosures/blob/main/04_-_CVE-2026-29965_XSS.md",
           "type": "reference"
         }
       ],
       "affected": [
         {
           "vendor": "n/a",
-          "product": "Open5GS",
+          "product": "n/a",
           "versions": [
             {
-              "version": "2.7.0",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.1",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.2",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.3",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.4",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.5",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.6",
-              "status": "affected"
-            },
-            {
-              "version": "2.7.7",
-              "status": "affected"
-            }
-          ],
-          "cpes": [
-            "cpe:2.3:a:open5gs:open5gs:*:*:*:*:*:*:*:*"
-          ],
-          "modules": [
-            "NRF"
-          ]
-        }
-      ],
-      "problemType": [
-        "Denial of Service"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-47091",
-      "publishedDate": "2026-05-18T19:45:55.216Z",
-      "lastModifiedDate": "2026-05-18T19:48:16.829Z",
-      "description": "Claude HUD through 0.0.12, patched in commit 234d9aa, contains a path traversal vulnerability that allows attackers to read arbitrary files by supplying an unvalidated transcript_path value via stdin JSON. Attackers can access any file readable by the process and the file metadata is written to a persistent cache file with insufficient permissions, creating a forensic record of accessed paths that survives process exit.",
-      "severity": 3.3,
-      "references": [
-        {
-          "url": "https://github.com/jarrodwatts/claude-hud/issues/485",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/jarrodwatts/claude-hud/pull/487",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/jarrodwatts/claude-hud/commit/234d9aad919b51326a43bcf90b45ae35c23afc30",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/claude-hud-path-traversal-via-transcript-path",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "affected",
-          "vendor": "jarrodwatts",
-          "product": "claude-hud",
-          "repo": "https://github.com/jarrodwatts/claude-hud",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver",
-              "lessThanOrEqual": "0.0.12"
-            },
-            {
-              "status": "unaffected",
-              "version": "234d9aad919b51326a43bcf90b45ae35c23afc30",
-              "versionType": "git"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-8770",
-      "publishedDate": "2026-05-17T23:15:15.257Z",
-      "lastModifiedDate": "2026-05-18T19:53:49.716Z",
-      "description": "A vulnerability was identified in continuedev continue up to 1.2.22. This affects the function lsTool of the file core/tools/implementations/lsTool.ts of the component JSON-RPC Server. Such manipulation of the argument dirPath leads to path traversal. An attack has to be approached locally. The exploit is publicly available and might be used. The vendor was contacted early about this disclosure but did not respond in any way.",
-      "severity": 3.3,
-      "references": [
-        {
-          "url": "https://vuldb.com/vuln/364395",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/vuln/364395/cti",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/submit/811428",
-          "type": "reference"
-        },
-        {
-          "url": "https://gist.github.com/YLChen-007/da04e032993a4b2324df915f9ecf9831",
-          "type": "poc"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "continuedev",
-          "product": "continue",
-          "versions": [
-            {
-              "version": "1.2.0",
-              "status": "affected"
-            },
-            {
-              "version": "1.2.1",
-              "status": "affected"
-            },
-            {
-              "version": "1.2.2",
-              "status": "affected"
-            },
-            {
-              "version": "1.2.3",
-              "status": "affected"
-            },
-            {
-              "version": "1.2.4",
-              "status": "affected"
-            },
-            {
-              "version": "1.2.5",
-              "status": "affected"
-            },
-            {
-              "version": "1.2.6",
-              "status": "affected"
-            },
-            {
-              "version": "1.2.7",
-              "status": "affected"
-            },
-            {
-              "version": "1.2.8",
-              "status": "affected"
-            },
-            {
-              "version": "1.2.9",
-              "status": "affected"
-            },
-            {
-              "version": "1.2.10",
-              "status": "affected"
-            },
-            {
-              "version": "1.2.11",
-              "status": "affected"
-            },
-            {
-              "version": "1.2.12",
-              "status": "affected"
-            },
-            {
-              "version": "1.2.13",
-              "status": "affected"
-            },
-            {
-              "version": "1.2.14",
-              "status": "affected"
-            },
-            {
-              "version": "1.2.15",
-              "status": "affected"
-            },
-            {
-              "version": "1.2.16",
-              "status": "affected"
-            },
-            {
-              "version": "1.2.17",
-              "status": "affected"
-            },
-            {
-              "version": "1.2.18",
-              "status": "affected"
-            },
-            {
-              "version": "1.2.19",
-              "status": "affected"
-            },
-            {
-              "version": "1.2.20",
-              "status": "affected"
-            },
-            {
-              "version": "1.2.21",
-              "status": "affected"
-            },
-            {
-              "version": "1.2.22",
-              "status": "affected"
-            }
-          ],
-          "cpes": [
-            "cpe:2.3:a:continuedev:continue:*:*:*:*:*:*:*:*"
-          ],
-          "modules": [
-            "JSON-RPC Server"
-          ]
-        }
-      ],
-      "problemType": [
-        "Path Traversal"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-65954",
-      "publishedDate": "2026-05-18T19:57:07.228Z",
-      "lastModifiedDate": "2026-05-18T19:57:07.228Z",
-      "description": "SimpleSAMLphp-casserver is a CAS 1.0 and 2.0 compliant CAS server in the form of a SimpleSAMLphp module. In versions below 6.3.1 and 7.0.0, the logout endpoint accepts a url query parameter to redirect to. casserver treats that url as trusted, and either (depending on configuration) redirects the browser there, or shows a \"you've been logged out\" page with a link to continue to that url. Impacted configs include 'enable_logout' => true, and 'skip_logout_page' -> true. This issue has been resolved in versions 6.3.1 and 7.0.0.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/simplesamlphp/simplesamlphp-module-casserver/security/advisories/GHSA-cvrm-5hp6-h523",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/simplesamlphp/simplesamlphp-module-casserver/commit/0462f50f00b3bb300d83067d11b74146a57bb8e0",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/simplesamlphp/simplesamlphp-module-casserver/commit/fb6c6f1c7b9e757c93c5c306e1d36405e64f6dc5",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "simplesamlphp",
-          "product": "simplesamlphp-module-casserver",
-          "versions": [
-            {
-              "version": "< 6.3.1",
-              "status": "affected"
-            },
-            {
-              "version": ">= 7.0.0-rc1,  < 7.0.0",
+              "version": "n/a",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-601: URL Redirection to Untrusted Site ('Open Redirect')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-45314",
-      "publishedDate": "2026-05-15T21:31:24.526Z",
-      "lastModifiedDate": "2026-05-18T19:44:49.427Z",
-      "description": "Open WebUI is a self-hosted artificial intelligence platform designed to operate entirely offline. Prior to 0.9.3, the channel webhook create/update flow accepts arbitrary profile_image_url values, including data:image/svg+xml;base64,... payloads. The profile image endpoint then decodes and serves this SVG as image/svg+xml without sanitization, allowing attacker-controlled script handlers (for example onload) to execute when the profile-image URL is opened in the browser. This vulnerability is fixed in 0.9.3.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/open-webui/open-webui/security/advisories/GHSA-3856-3vxq-m6fc",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "open-webui",
-          "product": "open-webui",
-          "versions": [
-            {
-              "version": "< 0.9.3",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-87: Improper Neutralization of Alternate XSS Syntax"
+        "n/a"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
