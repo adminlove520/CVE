@@ -2,315 +2,47 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 7,
-    "last_updated": "2026-05-18T21:54:06.867983",
+    "total_count": 1,
+    "last_updated": "2026-05-18T23:04:27.242446",
     "severity_distribution": {
-      "critical": 1,
+      "critical": 0,
       "high": 1,
-      "medium": 2,
+      "medium": 0,
       "low": 0,
-      "none": 3
+      "none": 0
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-45230",
-      "publishedDate": "2026-05-18T18:06:56.344Z",
-      "lastModifiedDate": "2026-05-18T21:28:45.184Z",
-      "description": "DumbAssets through 1.0.11 contains a path traversal vulnerability in the POST /api/delete-file endpoint and filesToDelete array parameters that allows unauthenticated attackers to delete arbitrary files by supplying ../ sequences that bypass directory boundary validation. Attackers can exploit the optional and disabled-by-default authentication control to traverse outside the intended application directory and delete critical files such as server.js or package.json, causing complete denial of service.",
-      "severity": 9.1,
+      "id": "CVE-2026-30950",
+      "publishedDate": "2026-05-18T22:28:10.683Z",
+      "lastModifiedDate": "2026-05-18T22:28:10.683Z",
+      "description": "AutoGPT is a workflow automation platform for creating, deploying, and managing continuous artificial intelligence agents. Versions 0.6.36 through 0.6.50 are vulnerable to Authenticated Session Hijacking via IDOR. If an authenticated attacker can determine the session_id of another user's session, they can take it over, reading any messages in it and locking the legitimate user out. The PATCH /sessions/{session_id}/assign-user endpoint authenticates the caller but never verifies session ownership: the service layer invokes the session lookup with user_id=None, which the data access layer interprets as a privileged/system call that bypasses the ownership filter, allowing any authenticated user to reassign an arbitrary session to themselves. This issue has been patched in version 0.6.51.",
+      "severity": 7.1,
       "references": [
         {
-          "url": "https://github.com/DumbWareio/DumbAssets/pull/136",
+          "url": "https://github.com/Significant-Gravitas/AutoGPT/security/advisories/GHSA-q58p-v9r9-7gqj",
           "type": "reference"
         },
         {
-          "url": "https://www.vulncheck.com/advisories/dumbassets-path-traversal-file-deletion-via-api-delete-file",
+          "url": "https://github.com/Significant-Gravitas/AutoGPT/commit/eca7b5e79370c34ed75e80badb824023d7d8629d",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "affected",
-          "vendor": "DumbWareio",
-          "product": "DumbAssets",
-          "repo": "https://github.com/DumbWareio/DumbAssets",
+          "vendor": "Significant-Gravitas",
+          "product": "AutoGPT",
           "versions": [
             {
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver",
-              "lessThanOrEqual": "1.0.11"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-27891",
-      "publishedDate": "2026-05-18T21:16:15.240Z",
-      "lastModifiedDate": "2026-05-18T21:16:15.240Z",
-      "description": "FacturaScripts is an open source accounting and invoicing software. Versions 2026 and below contain a critical vulnerability in the Plugins::add() function. The system fails to properly validate the file paths within uploaded ZIP archives. This allows an attacker to perform a Zip Slip attack, leading to Arbitrary File Write and Remote Code Execution (RCE) by overwriting sensitive .php files outside the designated plugins directory. The vulnerability is located in Plugins.php. While the testZipFile function attempts to validate that the ZIP contains only one root folder, it does not sanitize or validate the individual file paths within that folder. An attacker can bypass this check by naming a file ValidPluginName/../../shell.php. The explode function will see ValidPluginName as the root folder, satisfying the count($folders) != 1 check. However, during extraction, the ../../ sequence triggers a path traversal, allowing the file to be written anywhere the web server has permissions the root directory. This issue is fixed in version 2026.1.",
-      "severity": 7.2,
-      "references": [
-        {
-          "url": "https://github.com/NeoRazorX/facturascripts/security/advisories/GHSA-3pgc-xqg9-cfr6",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/NeoRazorX/facturascripts/commit/2dda7c6f3b241fa84a0629166783720b882725fd",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "NeoRazorX",
-          "product": "facturascripts",
-          "versions": [
-            {
-              "version": "< 2026.1",
+              "version": ">= 0.6.36, < 0.6.51",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-20: Improper Input Validation",
-        "CWE-434: Unrestricted Upload of File with Dangerous Type"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-27737",
-      "publishedDate": "2026-05-18T21:11:17.611Z",
-      "lastModifiedDate": "2026-05-18T21:11:17.611Z",
-      "description": "BigBlueButton is an open-source virtual classroom. In versions prior to 3.0.19, the recording playback (presentation format) was not sanitizing user's input in public chat. This allowed for a malicious actor to craft and carry out a targeted XSS attack, activated on anyone replaying the recording. This issue has been fixed 3.0.19.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://github.com/bigbluebutton/bigbluebutton/security/advisories/GHSA-8vv7-vj94-q2pv",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/bigbluebutton/bbb-playback/commit/09e89bfe4ff8488b68c3ff040d3081e419dc89b1",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/bigbluebutton/bigbluebutton/commit/69f45aa1b963dc7d80179d0155acc670aec5c4fc",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/bigbluebutton/bigbluebutton/releases/tag/v3.0.19",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/blindsidenetworks/scalelite/releases/tag/v1.7.0",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "bigbluebutton",
-          "product": "bigbluebutton",
-          "versions": [
-            {
-              "version": "< 3.0.19",
-              "status": "affected"
-            }
-          ]
-        },
-        {
-          "vendor": "blindsidenetworks",
-          "product": "scalite",
-          "versions": [
-            {
-              "version": "< 1.7.0",
-              "status": "affected"
-            }
-          ]
-        },
-        {
-          "vendor": "bigbluebutton",
-          "product": "bbb-playback",
-          "versions": [
-            {
-              "version": "< 5.4.3",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-45246",
-      "publishedDate": "2026-05-18T19:03:34.753Z",
-      "lastModifiedDate": "2026-05-18T21:28:41.957Z",
-      "description": "Summarize prior to 0.15.1 contains an insecure file permission vulnerability in the refresh-free configuration rewrite path that allows local users to read sensitive credentials by exploiting default filesystem permissions. When the refresh-free path rewrites the configuration file, it creates the replacement with default process umask permissions instead of preserving the original file permissions, exposing the config file containing API keys and provider credentials to other local users on shared Unix-like systems.",
-      "severity": 5.5,
-      "references": [
-        {
-          "url": "https://github.com/steipete/summarize/releases/tag/v0.15.2",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/steipete/summarize/pull/217",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/steipete/summarize/commit/9e990193650a23dab73f37d5e1964d574a44098b",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/summarize-insecure-file-permissions-information-disclosure",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "affected",
-          "vendor": "steipete",
-          "product": "summarize",
-          "repo": "https://github.com/steipete/summarize",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver",
-              "lessThan": "0.15.1"
-            },
-            {
-              "status": "unaffected",
-              "version": "9e990193650a23dab73f37d5e1964d574a44098b",
-              "versionType": "git"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Incorrect Permission Assignment for Critical Resource"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-26978",
-      "publishedDate": "2026-05-18T20:49:04.364Z",
-      "lastModifiedDate": "2026-05-18T21:28:38.708Z",
-      "description": "FreePBX is an open source IP PBX. In versions below 16.0.71 and 17.0.6, the backup module does not properly sanitize data during restore operations, potentially leading to compromise if the backup contains carefully crafted hostile data. During backup restore operations, FreePBX extracts selected files from a user-supplied tar archive. If a malicious file exists in the archive, it is read and passed directly to unserialize() without validation, class restrictions, or integrity checks. This issue allows Remote Code Execution during restoration of the backup as the web server user (typically asterisk or www-data). The attack does not require shell access, CLI access, or filesystem write permissions beyond the normal restore workflow. Authentication with a known username that has sufficient access permissions and/or write access to backup files is required. This issue has been fixed in versions 16.0.71 and 17.0.6.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/FreePBX/security-reporting/security/advisories/GHSA-5v7h-49gr-jcwr",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreePBX/backup/commit/45c57e1207cbf9fd1c5f76f8a3e72d204a69a472",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FreePBX/backup/commit/64781af5c80cce0cff21a981be4d8e6a7a71f2c4",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "FreePBX",
-          "product": "security-reporting",
-          "versions": [
-            {
-              "version": "< 16.0.71",
-              "status": "affected"
-            },
-            {
-              "version": ">= 17.0.0, < 17.0.6",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-502: Deserialization of Untrusted Data"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-29964",
-      "publishedDate": "2026-05-18T00:00:00.000Z",
-      "lastModifiedDate": "2026-05-18T21:28:51.998Z",
-      "description": "HSC MailInspector v5.3.3-7 contains a Cross-Site Scripting (XSS) vulnerability in the /tap/tap.php endpoint due to improper neutralization of user-controlled input using alternate or obfuscated JavaScript syntax. The endpoint reflects unsanitized user input in HTTP responses without adequate output encoding, allowing a remote attacker to execute arbitrary JavaScript code in the context of a victim's browser.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://hsclabs.com/pt-br/mailinspector/",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/sql3t0/cve-disclosures",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/sql3t0/cve-disclosures/blob/main/03_-_CVE-2026-29964_XSS.md",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n/a",
-          "product": "n/a",
-          "versions": [
-            {
-              "version": "n/a",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "n/a"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-29965",
-      "publishedDate": "2026-05-18T00:00:00.000Z",
-      "lastModifiedDate": "2026-05-18T21:28:48.808Z",
-      "description": "HSC MailInspector 5.3.3-7 is vulnerable to Cross Site Scripting (XSS) in the /police/WarningUrlPage.php endpoint due to improper neutralization of user-supplied input that uses alternate or obfuscated JavaScript syntax.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://hsclabs.com/pt-br/mailinspector/",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/sql3t0/cve-disclosures",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/sql3t0/cve-disclosures/blob/main/04_-_CVE-2026-29965_XSS.md",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n/a",
-          "product": "n/a",
-          "versions": [
-            {
-              "version": "n/a",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "n/a"
+        "CWE-862: Missing Authorization"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
