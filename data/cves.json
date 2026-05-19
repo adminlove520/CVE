@@ -2,947 +2,114 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 27,
-    "last_updated": "2026-05-19T19:23:07.619207",
+    "total_count": 3,
+    "last_updated": "2026-05-19T20:59:52.517948",
     "severity_distribution": {
-      "critical": 1,
-      "high": 1,
+      "critical": 0,
+      "high": 0,
       "medium": 3,
       "low": 0,
-      "none": 22
+      "none": 0
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-47107",
-      "publishedDate": "2026-05-19T16:42:55.144Z",
-      "lastModifiedDate": "2026-05-19T18:36:27.927Z",
-      "description": "Windmill prior to 1.703.2 contains an incorrect default permissions vulnerability in nsjail sandbox configuration files where /etc is bind-mounted without read-write restrictions, allowing authenticated users to write arbitrary entries to /etc/hosts, /etc/resolv.conf, and /etc/ssl/certs/ca-certificates.crt from within script execution sandboxes. Attackers can exploit persistent poisoned entries across all subsequent script executions on the same worker pod to redirect hostnames, intercept DNS queries, perform transparent HTTPS man-in-the-middle attacks, and intercept WM_TOKEN JWTs to gain workspace-admin access to victim workspaces across tenants.",
-      "severity": 9.6,
+      "id": "CVE-2026-34216",
+      "publishedDate": "2026-05-19T20:31:16.162Z",
+      "lastModifiedDate": "2026-05-19T20:31:16.162Z",
+      "description": "CtrlPanel is open-source billing software for hosting providers. In versions 1.1.1 and prior, the admin settings update endpoint accepted a fully qualified class name directly from user-supplied request input and used it for dynamic static method calls and object instantiation without any allowlist validation, allowing for authenticated Remote Code Execution. An authenticated admin-level user could supply an arbitrary class name available in the Composer autoloader, potentially triggering unintended constructor or magic method execution. The update() method reads settings_class directly from the HTTP request and passed it to new $settings_class() and $settings_class::getValidations() without verifying that the provided value corresponds to a legitimate settings class: Because PHP resolves class names against the Composer autoloader at runtime, any autoloadable class in the application or its dependencies could be instantiated. Depending on the classes available in the dependency tree, this can trigger unintended side effects through constructors or magic methods (__construct, __toString, __wakeup), following a PHP object injection / gadget chain pattern. This issue has been fixed in version 1.2.0.",
+      "severity": 6.6,
       "references": [
         {
-          "url": "https://github.com/windmill-labs/windmill/releases/tag/v1.703.2",
+          "url": "https://github.com/Ctrlpanel-gg/panel/security/advisories/GHSA-vcg3-fjrx-rg5q",
           "type": "reference"
         },
         {
-          "url": "https://github.com/windmill-labs/windmill/pull/9194",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/windmill-labs/windmill/commit/f8467f38c8a053117ce62f96684cfb15ef792f08",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/windmill-incorrect-default-permissions-in-nsjail-configuration",
+          "url": "https://github.com/Ctrlpanel-gg/panel/releases/tag/1.2.0",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "affected",
-          "vendor": "windmill-labs",
-          "product": "windmill",
-          "repo": "https://github.com/windmill-labs/windmill",
+          "vendor": "Ctrlpanel-gg",
+          "product": "panel",
           "versions": [
             {
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver",
-              "lessThan": "1.703.2"
-            },
-            {
-              "status": "unaffected",
-              "version": "f8467f38c8a053117ce62f96684cfb15ef792f08",
-              "versionType": "git"
+              "version": "< 1.2.0",
+              "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "Incorrect Default Permissions"
+        "CWE-470: Use of Externally-Controlled Input to Select Classes or Code ('Unsafe Reflection')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-8073",
-      "publishedDate": "2026-05-19T18:33:52.658Z",
-      "lastModifiedDate": "2026-05-19T18:33:52.658Z",
-      "description": "The Kirki – Freeform Page Builder, Website Builder & Customizer plugin for WordPress is vulnerable to arbitrary file deletion due to insufficient file path validation and missing capability check in the 'downloadZIP' function in all versions up to, and including, 6.0.6. This makes it possible for unauthenticated attackers to read and delete arbitrary files limited in the WordPress uploads base directory.",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/b073edd0-3f40-423e-976e-996b29caf66e?source=cve",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/kirki/tags/6.0.1/includes/API.php#L60",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/changeset/3535640/kirki/trunk/includes/API.php",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "themeum",
-          "product": "Kirki – Freeform Page Builder, Website Builder & Customizer",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "lessThanOrEqual": "6.0.6",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-23 Relative Path Traversal"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-32738",
-      "publishedDate": "2026-05-19T19:03:48.553Z",
-      "lastModifiedDate": "2026-05-19T19:03:48.553Z",
-      "description": "libheif is a HEIF and AVIF file format decoder and encoder. In versions 1.21.2 and below, a crafted 792-byte HEIF sequence file with samples_per_chunk=0 in the stsc box causes an unsigned integer underflow in the Chunk constructor (m_last_sample = 0 + 0 - 1 = UINT32_MAX), mapping all samples to an empty chunk and resulting in a denial of service. When any sample is accessed, the library reads from index 0 of an empty std::vector, causing a guaranteed SEGV (null-page read). The file parses successfully without producing an error; the crash occurs on the first frame access. This issue has been fixed in version 1.22.0.",
+      "id": "CVE-2026-34233",
+      "publishedDate": "2026-05-19T20:38:41.302Z",
+      "lastModifiedDate": "2026-05-19T20:38:41.302Z",
+      "description": "CtrlPanel is open-source billing software for hosting providers. In versions 1.1.1 and prior, multiple admin controllers expose DataTable endpoints without authorization checks, allowing any authenticated user to access sensitive administrative data that should be restricted to administrators only. The affected admin controllers define datatable() methods that are reachable via GET requests but lack any permission or role verification. Because the routes fall under the /admin/ prefix, operators may assume they are protected - however, the middleware applied to this route group does not enforce admin-level authorization on these specific endpoints. As a result, any authenticated user (regardless of role) can query these endpoints and receive paginated JSON responses containing sensitive records. Exploitation can result in enumeration of user PII, payment and transaction records, active voucher and coupon codes, role and permission structure, server ownership mappings and support ticket contents. This issue has been fixed in version 1.2.0.",
       "severity": 6.5,
       "references": [
         {
-          "url": "https://github.com/strukturag/libheif/security/advisories/GHSA-7f2h-cmpf-v9ww",
+          "url": "https://github.com/Ctrlpanel-gg/panel/security/advisories/GHSA-mj5g-j7fq-7hc4",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/Ctrlpanel-gg/panel/releases/tag/1.2.0",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "strukturag",
-          "product": "libheif",
+          "vendor": "Ctrlpanel-gg",
+          "product": "panel",
           "versions": [
             {
-              "version": "< 1.22.0",
+              "version": "< 1.2.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-125: Out-of-bounds Read",
-        "CWE-476: NULL Pointer Dereference"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-8096",
-      "publishedDate": "2026-05-19T18:33:51.799Z",
-      "lastModifiedDate": "2026-05-19T18:33:51.799Z",
-      "description": "The Kirki – Freeform Page Builder, Website Builder & Customizer plugin for WordPress is vulnerable to authorization bypass in all versions up to, and including, 6.0.6. This is due to the plugin not properly verifying that a user is authorized to perform an action. This makes it possible for authenticated attackers, with subscriber-level access and above, to view all Kirki frontend forms and read stored visitor form submission data, including contact details, messages, and any other visitor-provided information submitted through site forms.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/1a4414b1-6a49-42f8-9927-93763d1502ce?source=cve",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/kirki/tags/6.0.4/includes/Ajax.php#L675",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/changeset/3535640/kirki",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "themeum",
-          "product": "Kirki – Freeform Page Builder, Website Builder & Customizer",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "lessThanOrEqual": "6.0.6",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-862 Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41470",
-      "publishedDate": "2026-05-19T18:43:49.652Z",
-      "lastModifiedDate": "2026-05-19T18:43:49.652Z",
-      "description": "LIVE555 before 2026.04.22 contains an authorization bypass vulnerability in RTSP session command handling that allows attackers to replay valid Session tokens from unauthenticated connections. Attackers who obtain a valid Session token can issue PLAY and TEARDOWN commands from a second TCP connection without authentication, causing server crashes through virtual function call errors or disrupting active streams by terminating victim sessions.",
-      "severity": 5.9,
-      "references": [
-        {
-          "url": "https://gist.github.com/yhcho0405/ee9b67a96808ef19f22e8a4ee88c795f",
-          "type": "poc"
-        },
-        {
-          "url": "https://download.live555.com/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/live555-rtsp-server-authorization-bypass-via-session-token",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "affected",
-          "vendor": "Live Networks, Inc.",
-          "product": "LIVE555",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "versionType": "custom",
-              "lessThan": "2026.04.22"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Incorrect Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-8370",
-      "publishedDate": "2026-05-19T18:42:00.155Z",
-      "lastModifiedDate": "2026-05-19T18:42:00.155Z",
-      "description": "Execution with unnecessary privileges vulnerability in Broadcom Automic Automation Agent Unix on Linux x64, Linux Power 64 BE, Linux Power 64 LE, zLinux (zSeries), AIX, Solaris x64, Solaris Sparc 64 allows Privilege Escalation, Target Programs with Elevated Privileges.\n\nThis issue affects Automic Automation: < 24.4.4 HF1.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/37512",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Broadcom",
-          "product": "Automic Automation",
-          "platforms": [
-            "Linux x64",
-            "Linux Power 64 BE",
-            "Linux Power 64 LE",
-            "zLinux (zSeries)",
-            "AIX",
-            "Solaris x64",
-            "Solaris Sparc 64"
-          ],
-          "packageName": "Agent Unix",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "< 24.4.4 HF1",
-              "versionType": "custom"
-            },
-            {
-              "status": "unaffected",
-              "version": "24.4.4 HF1 or later"
-            },
-            {
-              "status": "unaffected",
-              "version": "26.0.0"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-250 Execution with unnecessary privileges"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-34154",
-      "publishedDate": "2026-05-19T18:41:55.643Z",
-      "lastModifiedDate": "2026-05-19T18:41:55.643Z",
-      "description": "Discourse is an open-source discussion platform. In versions prior to 2026.1.4, 2026.3.1, 2026.4.1 and 2026.5.0-latest.1, a  vulnerability in the discourse-subscriptions plugin allows users to gain access to subscription-gated groups without completing payment. This issue has been fixed in versions 2026.1.4, 2026.3.1, 2026.4.1 and 2026.5.0-latest.1.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/discourse/discourse/security/advisories/GHSA-pjgj-7mjq-6j7g",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "discourse",
-          "product": "discourse",
-          "versions": [
-            {
-              "version": "< 2026.1.4",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2026.3.0-latest, < 2026.3.1",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2026.4.0-latest, < 2026.4.1",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2026.5.0-latest, < 2026.5.0-latest.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
+        "CWE-284: Improper Access Control",
         "CWE-862: Missing Authorization"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-33637",
-      "publishedDate": "2026-05-19T17:44:42.557Z",
-      "lastModifiedDate": "2026-05-19T18:37:22.100Z",
-      "description": "Faraday is an HTTP client library abstraction layer that provides a common interface over many adapters. Versions 2.0.0 through 2.14.1 still allow protocol-relative host override when the request target is passed as a URI object (rather than a String) to Faraday::Connection#build_exclusive_url. This bypasses the February 2026 fix for GHSA-33mh-2634-fwr2 and enables off-host request forgery: a request built from a fixed-base Faraday::Connection can be redirected to an attacker-controlled host, forwarding connection-scoped values such as Authorization headers and default query parameters. This issue has been fixed in version 2.14.3.",
-      "severity": 0,
+      "id": "CVE-2025-57798",
+      "publishedDate": "2026-05-19T20:24:35.088Z",
+      "lastModifiedDate": "2026-05-19T20:24:35.088Z",
+      "description": "Joplin is an open source note-taking and to-do application that organises notes and lists into notebooks. Versions 3.6.14 and prior contain a Denial of Service (DoS) vulnerability in the title input functionality due to a lack of proper length validation. This flaw allows an attacker to cause an Out Of Memory (OOM) error and subsequent program termination by inserting an excessively long string into a note's title. This can be triggered either through direct user interface (UI) input or programmatically via the local web service API after compromising an authentication token. There are 2 primary methods of exploitation: via User Interface (UI) Input, and the Local Web Service API. A local user can directly type or paste an extremely long string into the title field when creating or editing a note Joplin runs a local web service (typically on port 41184) that allows programmatic interaction, such as creating or editing notes via HTTP API calls. If an attacker manages to exfiltrate or compromise the user's authentication token (e.g., through malware on the local system, or other local vulnerabilities), they can then send a crafted HTTP POST request to this local API. By including an excessively long string in the title parameter of this request, the application will attempt to allocate an unbounded amount of memory. This issue has been patched in version 3.7.1.",
+      "severity": 5.5,
       "references": [
         {
-          "url": "https://github.com/lostisland/faraday/security/advisories/GHSA-5rv5-xj5j-3484",
+          "url": "https://github.com/laurent22/joplin/security/advisories/GHSA-6jm8-gr87-q69x",
           "type": "reference"
         },
         {
-          "url": "https://github.com/advisories/GHSA-33mh-2634-fwr2",
+          "url": "https://github.com/laurent22/joplin/commit/5b8795da446a5a40c9e212c98b35e368ffce628e",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "lostisland",
-          "product": "faraday",
+          "vendor": "laurent22",
+          "product": "joplin",
           "versions": [
             {
-              "version": ">= 2.0.0, <= 2.14.2",
+              "version": "< 3.7.1",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-918: Server-Side Request Forgery (SSRF)"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-8602",
-      "publishedDate": "2026-05-19T17:00:38.723Z",
-      "lastModifiedDate": "2026-05-19T18:35:34.662Z",
-      "description": "In ScadaBR version 1.2.0, a Missing Authentication for Critical Function vulnerability could allow an unauthenticated attacker to send a HTTP GET requests to the SCADA system and inject arbitrary sensor readings.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://www.cisa.gov/news-events/ics-advisories/icsa-26-139-03",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "ScadaBR",
-          "product": "ScadaBR",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "1.2.0"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-306 Missing authentication for critical function"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-46586",
-      "publishedDate": "2026-05-19T09:41:39.546Z",
-      "lastModifiedDate": "2026-05-19T18:37:25.145Z",
-      "description": "Improper Control of Generation of Code ('Code Injection'), Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection') vulnerability in Apache OFBiz.\n\nThis issue affects Apache OFBiz: before 24.09.06.\n\nUsers are recommended to upgrade to version 24.09.06, which fixes the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://lists.apache.org/thread/7mgjl81nrpxqtfcg6h5qtrx7wztbl4js",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Apache OFBiz",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThan": "24.09.06",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-94 Improper Control of Generation of Code ('Code Injection')",
-        "CWE-95 Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-45434",
-      "publishedDate": "2026-05-19T09:40:26.892Z",
-      "lastModifiedDate": "2026-05-19T18:37:24.201Z",
-      "description": "Improper Authentication vulnerability in Apache OFBiz via Password-Change Logic Flaw Leading to Remote Code Execution\n\nThis issue affects Apache OFBiz: before 24.09.06.\n\nUsers are recommended to upgrade to version 24.09.06, which fixes the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://lists.apache.org/thread/yw4owrzl0yho1yx7oqxvr6xjkmln9tq8",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Apache OFBiz",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThan": "24.09.06",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-287 Improper Authentication"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-45187",
-      "publishedDate": "2026-05-19T09:39:27.294Z",
-      "lastModifiedDate": "2026-05-19T18:37:23.236Z",
-      "description": "Improper Authorization vulnerability in Apache OFBiz Webtools.\n\nThis issue affects Apache OFBiz: before 24.09.06.\n\nUsers are recommended to upgrade to version 24.09.06, which fixes the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://lists.apache.org/thread/pcmfyxjyk7dg0btxqg9h7cr30yg8mr7k",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Apache OFBiz",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThan": "24.09.06",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-285 Improper Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41919",
-      "publishedDate": "2026-05-19T09:36:55.524Z",
-      "lastModifiedDate": "2026-05-19T18:37:22.296Z",
-      "description": "Improper Neutralization of Special Elements used in an LDAP Query ('LDAP Injection') vulnerability in Apache OFBiz.\n\nThis issue affects Apache OFBiz: before 24.09.06.\n\nUsers are recommended to upgrade to version 24.09.06, which fixes the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://lists.apache.org/thread/592czh9o69n74c036vy30fnqknocw74p",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Apache OFBiz",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThan": "24.09.06",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-90 Improper Neutralization of Special Elements used in an LDAP Query ('LDAP Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-35086",
-      "publishedDate": "2026-05-19T09:36:00.229Z",
-      "lastModifiedDate": "2026-05-19T18:37:21.200Z",
-      "description": "Improper Control of Generation of Code ('Code Injection') vulnerability in email services of Apache OFBiz.\n\nThis issue affects Apache OFBiz: before 24.09.06.\n\nUsers are recommended to upgrade to version 24.09.06, which fixes the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://lists.apache.org/thread/g0s37yhnh2xwfts400crb2w8s337hgjx",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Apache OFBiz",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThan": "24.09.06",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-94 Improper Control of Generation of Code ('Code Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-31986",
-      "publishedDate": "2026-05-19T09:34:38.426Z",
-      "lastModifiedDate": "2026-05-19T18:37:20.230Z",
-      "description": "Use of Hard-coded Cryptographic Key vulnerability in Apache OFBiz.\n\nThis issue affects Apache OFBiz: before 24.09.06.\n\nUsers are recommended to upgrade to version 24.09.06, which fixes the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://lists.apache.org/thread/2hl9xoqm8tq8b22x6vnmtp7tg3opcqgc",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Apache OFBiz",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThan": "24.09.06",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-321 Use of Hard-coded Cryptographic Key"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-31910",
-      "publishedDate": "2026-05-19T09:33:38.681Z",
-      "lastModifiedDate": "2026-05-19T18:37:19.274Z",
-      "description": "Server-Side Request Forgery (SSRF) vulnerability in Apache OFBiz.\n\nThis issue affects Apache OFBiz: before 24.09.06.\n\nUsers are recommended to upgrade to version 24.09.06, which fixes the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://lists.apache.org/thread/2smc4c4o056ovd2hoq1l29593y5y29vh",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Apache OFBiz",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThan": "24.09.06",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-918 Server-Side Request Forgery (SSRF)"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-31909",
-      "publishedDate": "2026-05-19T09:32:47.268Z",
-      "lastModifiedDate": "2026-05-19T18:37:18.308Z",
-      "description": "Exposure of Sensitive Information to an Unauthorized Actor vulnerability in Apache OFBiz.\n\nThis issue affects Apache OFBiz: before 24.09.06.\n\nUsers are recommended to upgrade to version 24.09.06, which fixes the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://lists.apache.org/thread/0hpopzz1qrhkzsbt3ncofs6qo0545r2h",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Apache OFBiz",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThan": "24.09.06",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-200 Exposure of Sensitive Information to an Unauthorized Actor"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-31906",
-      "publishedDate": "2026-05-19T09:30:19.719Z",
-      "lastModifiedDate": "2026-05-19T18:37:17.349Z",
-      "description": "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') vulnerability in Apache OFBiz.\n\nThis issue affects Apache OFBiz: before 24.09.06.\n\nUsers are recommended to upgrade to version 24.09.06, which fixes the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://lists.apache.org/thread/1fblqdo89d3ps8kgtcnkcq8sh7gwkcpn",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Apache OFBiz",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThan": "24.09.06",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-31388",
-      "publishedDate": "2026-05-19T09:28:29.273Z",
-      "lastModifiedDate": "2026-05-19T18:37:16.419Z",
-      "description": "Improper Access Control vulnerability in Apache OFBiz in multi-tenant deployments.\n\nThis issue affects Apache OFBiz: before 24.09.06.\n\nUsers are recommended to upgrade to version 24.09.06, which fixes the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://lists.apache.org/thread/npjchvnpnosoqpto46s2om12jd9s7py7",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Apache OFBiz",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThan": "24.09.06",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-284 Improper Access Control"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-31387",
-      "publishedDate": "2026-05-19T09:27:05.898Z",
-      "lastModifiedDate": "2026-05-19T18:37:15.451Z",
-      "description": "Improper Authentication vulnerability in Apache OFBiz.\n\nThis issue affects Apache OFBiz: before 24.09.06.\n\nUsers are recommended to upgrade to version 24.09.06, which fixes the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://lists.apache.org/thread/3wgybgdvmbfvly24zm4sb4y53fc1pqcf",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Apache OFBiz",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThan": "24.09.06",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-287 Improper Authentication"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-31380",
-      "publishedDate": "2026-05-19T09:24:39.139Z",
-      "lastModifiedDate": "2026-05-19T18:37:14.491Z",
-      "description": "Improper Neutralization of Special Elements used in an Expression Language Statement ('Expression Language Injection') vulnerability in Apache OFBiz.\n\nThis issue affects Apache OFBiz: before 24.09.06.\n\nUsers are recommended to upgrade to version 24.09.06, which fixes the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://lists.apache.org/thread/v2brvq1tf4q491obkxv8p7fc5qfshc08",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Apache OFBiz",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThan": "24.09.06",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-917 Improper Neutralization of Special Elements used in an Expression Language Statement ('Expression Language Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-31379",
-      "publishedDate": "2026-05-19T09:22:49.222Z",
-      "lastModifiedDate": "2026-05-19T18:37:13.441Z",
-      "description": "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting'), Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal'), Improper Control of Generation of Code ('Code Injection') vulnerability in Apache OFBiz.\n\nThis issue affects Apache OFBiz: before 24.09.06.\n\nUsers are recommended to upgrade to version 24.09.06, which fixes the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://lists.apache.org/thread/1tcnkxjm0s6n1ohfb21brl25dt0hv9by",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Apache OFBiz",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThan": "24.09.06",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
-        "CWE-22 Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')",
-        "CWE-94 Improper Control of Generation of Code ('Code Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-31378",
-      "publishedDate": "2026-05-19T09:21:18.503Z",
-      "lastModifiedDate": "2026-05-19T18:37:12.423Z",
-      "description": "Improper Input Validation vulnerability in Apache OFBiz.\n\nThis issue affects Apache OFBiz: before 24.09.06.\n\nUsers are recommended to upgrade to version 24.09.06, which fixes the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://lists.apache.org/thread/cbl8qkqtxv90m6ssfwd58bnoh933v38t",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Apache OFBiz",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThan": "24.09.06",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-20 Improper Input Validation"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-29226",
-      "publishedDate": "2026-05-19T09:19:30.626Z",
-      "lastModifiedDate": "2026-05-19T18:37:11.474Z",
-      "description": "Server-Side Request Forgery (SSRF) vulnerability in Apache OFBiz via Content component operations.\n\nThis issue affects Apache OFBiz: before 24.09.06.\n\nUsers are recommended to upgrade to version 24.09.06, which fixes the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://lists.apache.org/thread/6707wys8jxzmowxggn4cmtwwk9ygl2tr",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Apache OFBiz",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThan": "24.09.06",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-918 Server-Side Request Forgery (SSRF)"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-29207",
-      "publishedDate": "2026-05-19T09:18:18.681Z",
-      "lastModifiedDate": "2026-05-19T18:37:09.452Z",
-      "description": "Improper Neutralization of Special Elements Used in a Template Engine vulnerability in Apache OFBiz.\n\nThis issue affects Apache OFBiz: before 24.09.06.\n\nUsers are recommended to upgrade to version 24.09.06, which fixes the issue.\n\nPlease note that in the updated version, \"Data Resource\" records with dataTemplateTypeId = \"FTL\" are no longer supported.\n\nAdditionally, in the updated version, the \"Ecommerce Customer\" security group no longer includes content management grants. Users are advised to remove these permissions from any production site as well.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://lists.apache.org/thread/3rcrp8bh3x6ovrj5xnc0fm1f0nrn52r0",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Apache OFBiz",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThan": "24.09.06",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-1336 Improper Neutralization of Special Elements Used in a Template Engine"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-29220",
-      "publishedDate": "2026-05-19T09:16:59.872Z",
-      "lastModifiedDate": "2026-05-19T18:37:10.485Z",
-      "description": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability in Apache OFBiz.\n\nThis issue affects Apache OFBiz: before 24.09.06.\n\nUsers are recommended to upgrade to version 24.09.06, which fixes the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://lists.apache.org/thread/5hjnmt9no6mmtg8sxq3mhonzff1vkd5m",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Apache OFBiz",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThan": "24.09.06",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-22 Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-36827",
-      "publishedDate": "2026-05-19T00:00:00.000Z",
-      "lastModifiedDate": "2026-05-19T18:35:09.285Z",
-      "description": "A command injection vulnerability exists in Panabit PAP-XM320 up to and including V7.7. The web management interface invokes the backend helper /usr/sbin/pappiw and passes user-controlled parameters to it. The helper performs unsafe argument processing using eval, which allows command injection when attacker-controlled input is included in the arguments. As a result, an authenticated remote attacker with access to the management interface may execute arbitrary shell commands.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://www.panabit.com/",
-          "type": "reference"
-        },
-        {
-          "url": "https://secreu.notion.site/CVE-2026-36827-3652c0ab46158036a888ef4a12b104bf",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n/a",
-          "product": "n/a",
-          "versions": [
-            {
-              "version": "n/a",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "n/a"
+        "CWE-770: Allocation of Resources Without Limits or Throttling"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
