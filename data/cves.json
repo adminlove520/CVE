@@ -2,54 +2,532 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 24,
-    "last_updated": "2026-05-20T18:28:14.613620",
+    "total_count": 47,
+    "last_updated": "2026-05-20T20:36:01.680407",
     "severity_distribution": {
-      "critical": 0,
+      "critical": 2,
       "high": 7,
-      "medium": 9,
-      "low": 1,
-      "none": 7
+      "medium": 15,
+      "low": 0,
+      "none": 23
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-6456",
-      "publishedDate": "2026-05-20T01:25:51.165Z",
-      "lastModifiedDate": "2026-05-20T17:17:37.504Z",
-      "description": "The Account Switcher plugin for WordPress is vulnerable to Privilege Escalation in all versions up to, and including, 1.0.2. This is due to the `rememberLogin` REST API endpoint using a loose comparison (`!=` instead of `!==`) for secret validation at `app/RestAPI.php:111`, combined with no validation that the secret is non-empty. When a target user has never used the \"Remember me\" feature, their `asSecret` user meta does not exist, causing `get_user_meta()` to return an empty string. An attacker can send an empty `secret` parameter, which passes the comparison (`'' != ''` is `false`), and the endpoint then calls `wp_set_auth_cookie()` for the target user. Additionally, all REST routes use `permission_callback => '__return_true'` with no capability checks. This makes it possible for authenticated attackers, with Subscriber-level access and above, to switch to any user account including Administrator, ultimately granting themselves full administrative privileges.",
-      "severity": 8.8,
+      "id": "CVE-2026-9141",
+      "publishedDate": "2026-05-20T19:52:40.322Z",
+      "lastModifiedDate": "2026-05-20T19:52:40.322Z",
+      "description": "Taiko AG1000-01A SMS Alert Gateway Rev 7.3 and Rev 8 contains an authentication bypass vulnerability in the embedded web configuration interface that allows unauthenticated attackers to access internal application pages without any session management or server-side authentication checks. Attackers with network access can directly request internal resources such as index.zhtml, point.zhtml, and log.shtml to gain full administrative read and write access, enabling unauthorized modification of alarm routing, device configuration, and disruption of monitoring and control functions.",
+      "severity": 9.8,
       "references": [
         {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/9e9cfb9b-6951-4246-9cd6-dd64fee3a1bc?source=cve",
+          "url": "https://medium.com/@forgetmen0t/multiple-vulnerabilities-in-taiko-ag1000-01a-sms-alert-gateway-82095b1d633e",
           "type": "reference"
         },
         {
-          "url": "https://plugins.trac.wordpress.org/browser/account-switcher/tags/1.0.2/app/RestAPI.php#L111",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/account-switcher/tags/1.0.2/app/PluginHero/BaseAPI.php#L54",
-          "type": "reference"
-        },
-        {
-          "url": "https://wordpress.org/plugins/account-switcher/",
+          "url": "https://www.vulncheck.com/advisories/taiko-ag1000-01a-rev-8-authentication-bypass-via-web-interface",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "beycanpress",
-          "product": "Account Switcher",
+          "vendor": "Taiko Network Communications Pte Ltd.",
+          "product": "AG1000-01A SMS Alert Gateway",
           "versions": [
             {
-              "version": "0",
               "status": "affected",
-              "lessThanOrEqual": "1.0.2",
-              "versionType": "semver"
+              "version": "Rev 7.3",
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "Rev 8",
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "UM-AG1000_R7.2",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unknown"
+        }
+      ],
+      "problemType": [
+        "CWE-306 Missing Authentication for Critical Function"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9139",
+      "publishedDate": "2026-05-20T19:35:28.538Z",
+      "lastModifiedDate": "2026-05-20T19:35:28.538Z",
+      "description": "Taiko AG1000-01A SMS Alert Gateway Rev 7.3 and Rev 8 contains a hard-coded credential vulnerability in the embedded web configuration interface where authentication is implemented entirely in client-side JavaScript in login.zhtml, exposing static plaintext credentials in the page source. Unauthenticated attackers with network access can recover administrative credentials directly from the client-side validate() function to obtain full administrative access to the device.",
+      "severity": 9.8,
+      "references": [
+        {
+          "url": "https://medium.com/@forgetmen0t/multiple-vulnerabilities-in-taiko-ag1000-01a-sms-alert-gateway-82095b1d633e",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/taiko-ag1000-01a-rev-8-hard-coded-credentials-via-login-zhtml",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Taiko Network Communications Pte Ltd.",
+          "product": "AG1000-01A SMS Alert Gateway",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "Rev 7.3",
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "Rev 8",
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "UM-AG1000_R7.2",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unknown"
+        }
+      ],
+      "problemType": [
+        "CWE-798 Use of Hard-coded Credentials"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-24217",
+      "publishedDate": "2026-05-20T17:47:28.146Z",
+      "lastModifiedDate": "2026-05-20T19:31:19.355Z",
+      "description": "NVIDIA BioNeMo Core for Linux contains a vulnerability where a user could cause a path traversal by loading a malicious file. A successful exploit of this vulnerability might lead to code execution, denial of service, information disclosure, and data tampering.",
+      "severity": 8.8,
+      "references": [
+        {
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-24217",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.cve.org/CVERecord?id=CVE-2026-24217",
+          "type": "reference"
+        },
+        {
+          "url": "https://nvidia.custhelp.com/app/answers/detail/a_id/5831",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "NVIDIA",
+          "product": "BioNeMo Framework",
+          "platforms": [
+            "Linux"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "commit dfd83a7 on main",
+              "versionType": "custom"
             }
           ],
           "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-29 Path Traversal: '\\..\\filename'"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-24188",
+      "publishedDate": "2026-05-20T17:41:11.138Z",
+      "lastModifiedDate": "2026-05-20T19:33:03.277Z",
+      "description": "NVIDIA TensorRT contains a vulnerability where an attacker could cause an out-of-bounds write. A successful exploit of this vulnerability might lead to data tampering.",
+      "severity": 8.2,
+      "references": [
+        {
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-24188",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.cve.org/CVERecord?id=CVE-2026-24188",
+          "type": "reference"
+        },
+        {
+          "url": "https://nvidia.custhelp.com/app/answers/detail/a_id/5836",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "NVIDIA",
+          "product": "TensorRT",
+          "platforms": [
+            "All"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "v10.16.1",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-787 Out-of-bounds Write"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-24218",
+      "publishedDate": "2026-05-20T17:43:16.886Z",
+      "lastModifiedDate": "2026-05-20T19:31:44.008Z",
+      "description": "NVIDIA DGX OS contains a vulnerability in the factory provisioning process, where  the cloning of a base image causes identical SSH host keys to be deployed across multiple systems. The sharing of cryptographic identifiers across all similarly provisioned systems enables host impersonation or attacker-in-the-middle attacks. A successful exploit of this vulnerability might lead to code execution, data tampering, escalation of privileges, information disclosure, and denial of service.",
+      "severity": 8.1,
+      "references": [
+        {
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-24218",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.cve.org/CVERecord?id=CVE-2026-24218",
+          "type": "reference"
+        },
+        {
+          "url": "https://nvidia.custhelp.com/app/answers/detail/a_id/5835",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "NVIDIA",
+          "product": "DGX Spark",
+          "platforms": [
+            "NVIDIA DGX OS"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "OTA0",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-321 Use of Hard-coded Cryptographic Key"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-24216",
+      "publishedDate": "2026-05-20T17:46:12.236Z",
+      "lastModifiedDate": "2026-05-20T19:36:04.890Z",
+      "description": "NVIDIA BioNemo for Linux contains a vulnerability where a user could cause a deserialization of untrusted data. A successful exploit of this vulnerability might lead to code execution, denial of service, information disclosure, and data tampering.",
+      "severity": 7.8,
+      "references": [
+        {
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-24216",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.cve.org/CVERecord?id=CVE-2026-24216",
+          "type": "reference"
+        },
+        {
+          "url": "https://nvidia.custhelp.com/app/answers/detail/a_id/5831",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "NVIDIA",
+          "product": "BioNeMo Framework",
+          "platforms": [
+            "Linux"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "commit dfd83a7 in Main",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-502 Deserialization of Untrusted Data"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9133",
+      "publishedDate": "2026-05-20T19:38:11.897Z",
+      "lastModifiedDate": "2026-05-20T19:40:41.991Z",
+      "description": "Active debug code exists in the ARN resolver of amazon-mq rabbitmq-aws before version 0.2.1. A debug ARN scheme (arn:aws-debug:file) accepted by the PUT /api/aws/arn/validate validation endpoint might allow remote authenticated users to perform arbitrary file reads on any file accessible to the RabbitMQ process. \n\n\n\nTo remediate this issue, customers should upgrade to version 0.2.1 of rabbitmq-aws. If RabbitMQ is configured to use TLS for connections, we also recommend rotating any associated private certificate keys.",
+      "severity": 7.7,
+      "references": [
+        {
+          "url": "https://github.com/amazon-mq/rabbitmq-aws/releases/tag/0.2.1",
+          "type": "reference"
+        },
+        {
+          "url": "https://aws.amazon.com/security/security-bulletins/2026-034-aws/",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/amazon-mq/rabbitmq-aws/security/advisories/GHSA-8554-wg4r-7hxm",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "AWS",
+          "product": "RabbitMQ AWS",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0.1.0",
+              "lessThanOrEqual": "0.2.0",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-489 Active debug code"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9144",
+      "publishedDate": "2026-05-20T20:07:27.017Z",
+      "lastModifiedDate": "2026-05-20T20:07:27.017Z",
+      "description": "Taiko AG1000-01A SMS Alert Gateway Rev 7.3 and Rev 8 contains a stored cross-site scripting vulnerability in the embedded web configuration interface that allows authenticated attackers to execute persistent JavaScript by fragmenting malicious payloads across multiple administrative form fields. Attackers can bypass front-end length restrictions using JavaScript comments and template literals to concatenate executable script fragments that are rendered in administrative dashboard views such as index.zhtml, resulting in persistent script execution within administrative sessions.",
+      "severity": 7.6,
+      "references": [
+        {
+          "url": "https://medium.com/@forgetmen0t/multiple-vulnerabilities-in-taiko-ag1000-01a-sms-alert-gateway-82095b1d633e",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/taiko-ag1000-01a-rev-8-stored-xss-via-web-configuration-interface",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Taiko Network Communications Pte Ltd.",
+          "product": "AG1000-01A SMS Alert Gateway",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "Rev 7.3",
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "Rev 8",
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "UM-AG1000_R7.2",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unknown"
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-39850",
+      "publishedDate": "2026-05-20T19:51:03.769Z",
+      "lastModifiedDate": "2026-05-20T19:51:03.769Z",
+      "description": "Yii 2 is a PHP application framework. Versions 2.0.54 and prior contain flawed logic in the core view rendering method View::renderPhpFile() that leads to Local File Inclusion. The function calls extract($_params_, EXTR_OVERWRITE) before the require statement that loads the view file. As a result, a caller-controlled _file_ key in the $params array overwrites the internal local variable specifying which file to include, potentially enabling RCE if an attacker can write PHP files through a separate primitive, as well as information disclosure. This issue has been fixed in version 2.0.55.",
+      "severity": 7.4,
+      "references": [
+        {
+          "url": "https://github.com/yiisoft/yii2/security/advisories/GHSA-5vpg-rj7q-qpw2",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/yiisoft/yii2/commit/109878b491dbffa541032bc99fb5e26d12cd0375",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "yiisoft",
+          "product": "yii2",
+          "versions": [
+            {
+              "version": "< 2.0.55",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-20: Improper Input Validation",
+        "CWE-98: Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-39311",
+      "publishedDate": "2026-05-20T19:13:00.524Z",
+      "lastModifiedDate": "2026-05-20T19:27:19.364Z",
+      "description": "Trilium Notes is a cross-platform, hierarchical note taking application focused on building large personal knowledge bases. Versions 0.102.1 and prior contain a critical security flaw where lack of SVG sanitization combined with a disabled Content Security Policy (CSP) and a publicly reachable backend execution API results in an unauthenticated Remote Code Execution (RCE). The vulnerability arises from an insecure-by-design architecture: Trilium serves SVG attachments with the image/svg+xml MIME type without any sanitization, and it explicitly disables Helmet's Content Security Policy middleware, removing the primary defense against script execution in served assets. Because the malicious SVG runs under the Same-Origin Policy, it can issue a fetch('/') to extract the csrfToken from the document body. With that token, it can send a signed request to /api/script/exec to execute arbitrary Node.js code on the server. An attacker can compromise the entire server instance simply by tricking an authenticated user into viewing a shared SVG attachment. The issue has been fixed in version 0.102.2.",
+      "severity": 6.8,
+      "references": [
+        {
+          "url": "https://github.com/TriliumNext/Trilium/security/advisories/GHSA-p837-cxw3-m964",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/TriliumNext/Trilium/releases/tag/v0.102.2",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "TriliumNext",
+          "product": "Trilium",
+          "versions": [
+            {
+              "version": "< 0.102.2",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
+        "CWE-94: Improper Control of Generation of Code ('Code Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-26028",
+      "publishedDate": "2026-05-20T18:51:43.643Z",
+      "lastModifiedDate": "2026-05-20T19:33:12.902Z",
+      "description": "CryptPad is an end-to-end encrypted collaborative office suite. In versions prior to 2026.2.0, the HTML sanitizer in Diffmarked.js can be bypassed due to incomplete attribute filtering on restricted tags. The sanitizer validates only the src attribute of <iframe>, <video>, and <audio> elements, leaving all other attributes unchecked. As a result, an attacker can inject arbitrary HTML through srcdoc, completely defeating CryptPad's intended bounce sandboxing and enabling link injection or other interactive content within user-controlled documents. The root cause lies in how the sanitizer classifies and enforces tag restrictions: although it defines both forbidden and restricted tag lists, <iframe> is treated as \"restricted\" rather than \"forbidden.\" Enforcement then inspects only the src attribute, so pairing a benign blob: src with a malicious srcdoc results in unrestricted rendering. This issue has been fixed in version 2026.2.0.",
+      "severity": 6.1,
+      "references": [
+        {
+          "url": "https://github.com/cryptpad/cryptpad/security/advisories/GHSA-g2g4-47gv-p72v",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/cryptpad/cryptpad/releases/tag/2026.2.0",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "cryptpad",
+          "product": "cryptpad",
+          "versions": [
+            {
+              "version": "< 2026.2.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-116: Improper Encoding or Escaping of Output",
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-47099",
+      "publishedDate": "2026-05-20T18:00:44.637Z",
+      "lastModifiedDate": "2026-05-20T19:28:13.563Z",
+      "description": "TeleJSON prior to 6.0.0 contains a DOM-based cross-site scripting vulnerability in the parse() function that allows attackers to execute arbitrary JavaScript by delivering a crafted JSON payload containing a malicious _constructor-name_ property value. The custom reviver passes the constructor name directly to new Function() without sanitization when recreating object prototypes, enabling attackers to inject arbitrary JavaScript through vectors such as postMessage in cross-frame communication contexts to achieve script execution within the application.",
+      "severity": 6.1,
+      "references": [
+        {
+          "url": "https://github.com/storybookjs/telejson/security/advisories/GHSA-ccgf-5rwj-j3hv",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/telejson-dom-based-xss-via-parse-function",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "affected",
+          "vendor": "storybookjs",
+          "product": "telejson",
+          "repo": "https://github.com/storybookjs/telejson",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver",
+              "lessThan": "6.0.0"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-2812",
+      "publishedDate": "2026-05-20T17:47:40.451Z",
+      "lastModifiedDate": "2026-05-20T19:30:36.857Z",
+      "description": "ArcGIS Server contains an improper authentication vulnerability in an undocumented administrative endpoint. An unauthenticated attacker could exploit this issue by sending a crafted request to the endpoint. Successful exploitation may result in disruption of the web-based browsing interface. This issue affects ArcGIS Server 12.0 and earlier.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://www.esri.com/arcgis-blog/products/trust-arcgis/administration/april2026_security_bulletin",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "platforms": [
+            "Windows",
+            "Linux"
+          ],
+          "product": "ArcGIS Server",
+          "vendor": "Esri",
+          "versions": [
+            {
+              "lessThanOrEqual": "12.0",
+              "status": "affected",
+              "version": "11.1",
+              "versionType": "custom"
+            }
+          ]
         }
       ],
       "problemType": [
@@ -58,134 +536,1196 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-41091",
-      "publishedDate": "2026-05-20T13:09:13.634Z",
-      "lastModifiedDate": "2026-05-20T17:13:18.196Z",
-      "description": "Improper link resolution before file access ('link following') in Microsoft Defender allows an authorized attacker to elevate privileges locally.",
-      "severity": 7.8,
+      "id": "CVE-2026-2813",
+      "publishedDate": "2026-05-20T17:51:51.061Z",
+      "lastModifiedDate": "2026-05-20T19:29:23.736Z",
+      "description": "ArcGIS Server contains an input validation weakness in the login redirection workflow. An Authenticated attacker could exploit this issue by sending a specially crafted request, Successful exploitation may result in the application redirecting the browser to an unintended, untrusted site, resulting in a limited confidentiality impact under specific user interaction conditions.\nThe vulnerability affects only the client side navigation logic during authentication and remains confined to the same security boundary. No server side compromise or cross component impact is possible.  This issue affects ArcGIS Server 11.5.",
+      "severity": 4.7,
       "references": [
         {
-          "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-41091",
+          "url": "https://www.esri.com/arcgis-blog/products/trust-arcgis/administration/april2026_security_bulletin",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Microsoft",
-          "product": "Microsoft Malware Protection Engine",
+          "defaultStatus": "unaffected",
+          "platforms": [
+            "Windows",
+            "Linux"
+          ],
+          "product": "ArcGIS Server",
+          "vendor": "Esri",
           "versions": [
             {
-              "version": "-",
+              "status": "affected",
+              "version": "11.5"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE‑601: URL Redirection to Untrusted Site (Open Redirect)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-35016",
+      "publishedDate": "2026-05-20T19:41:35.991Z",
+      "lastModifiedDate": "2026-05-20T19:41:35.991Z",
+      "description": "Open ISES Tickets before 3.44.2 contains a reflected cross-site scripting vulnerability in search.php that allows authenticated attackers to inject arbitrary JavaScript by passing an unsanitized value through the frm_query POST parameter directly into an HTML input field VALUE attribute. Attackers can craft a malicious request containing a JavaScript payload in the frm_query parameter that executes in the victim's browser when submitted.",
+      "severity": 4.6,
+      "references": [
+        {
+          "url": "https://github.com/openises/tickets/releases/tag/v3.44.2",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/openises/tickets/commit/ecfeb406a016766cae81c749e14b5145a9f2dbff",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/open-ises-tickets-reflected-xss-via-search-php-frm-query-parameter",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "affected",
+          "vendor": "openises",
+          "product": "tickets",
+          "repo": "https://github.com/openises/tickets",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver",
+              "lessThan": "3.44.2"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-35015",
+      "publishedDate": "2026-05-20T19:40:55.604Z",
+      "lastModifiedDate": "2026-05-20T19:40:55.604Z",
+      "description": "Open ISES Tickets before 3.44.2 contains a reflected cross-site scripting vulnerability in do_unit_mail.php that allows authenticated attackers to inject arbitrary JavaScript by passing an unsanitized value through the the_ticket GET parameter directly into a JavaScript variable assignment. Attackers can craft a malicious URL containing a JavaScript payload in the the_ticket parameter that executes in the victim's browser when the URL is visited.",
+      "severity": 4.6,
+      "references": [
+        {
+          "url": "https://github.com/openises/tickets/releases/tag/v3.44.2",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/openises/tickets/commit/ecfeb406a016766cae81c749e14b5145a9f2dbff",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/open-ises-tickets-reflected-xss-via-do-unit-mail-php-the-ticket-parameter",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "affected",
+          "vendor": "openises",
+          "product": "tickets",
+          "repo": "https://github.com/openises/tickets",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver",
+              "lessThan": "3.44.2"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-35014",
+      "publishedDate": "2026-05-20T19:40:14.320Z",
+      "lastModifiedDate": "2026-05-20T19:40:14.320Z",
+      "description": "Open ISES Tickets before 3.44.2 contains a reflected cross-site scripting vulnerability in routes_nm.php that allows authenticated attackers to inject arbitrary JavaScript by passing an unsanitized value through the ticket_id GET parameter directly into a hidden input field VALUE attribute. Attackers can craft a malicious URL containing a JavaScript payload in the ticket_id parameter that executes in the victim's browser when the URL is visited.",
+      "severity": 4.6,
+      "references": [
+        {
+          "url": "https://github.com/openises/tickets/releases/tag/v3.44.2",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/openises/tickets/commit/ecfeb406a016766cae81c749e14b5145a9f2dbff",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/open-ises-tickets-reflected-xss-via-routes-nm-php-ticket-id-parameter",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "affected",
+          "vendor": "openises",
+          "product": "tickets",
+          "repo": "https://github.com/openises/tickets",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver",
+              "lessThan": "3.44.2"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-35013",
+      "publishedDate": "2026-05-20T19:39:06.425Z",
+      "lastModifiedDate": "2026-05-20T19:39:06.425Z",
+      "description": "Open ISES Tickets before 3.44.2 contains a reflected cross-site scripting vulnerability in street_view.php that allows authenticated attackers to inject arbitrary JavaScript by passing unsanitized values through the thelat and thelng GET parameters directly into JavaScript variable assignments. Attackers can craft a malicious URL containing a JavaScript payload in either parameter that executes in the victim's browser when the URL is visited.",
+      "severity": 4.6,
+      "references": [
+        {
+          "url": "https://github.com/openises/tickets/releases/tag/v3.44.2",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/openises/tickets/commit/ecfeb406a016766cae81c749e14b5145a9f2dbff",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/open-ises-tickets-reflected-xss-via-street-view-php-thelat-and-thelng-parameters",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "affected",
+          "vendor": "openises",
+          "product": "tickets",
+          "repo": "https://github.com/openises/tickets",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver",
+              "lessThan": "3.44.2"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-35012",
+      "publishedDate": "2026-05-20T19:38:24.634Z",
+      "lastModifiedDate": "2026-05-20T19:38:24.634Z",
+      "description": "Open ISES Tickets before 3.44.2 contains a reflected cross-site scripting vulnerability in add_facnote.php that allows authenticated attackers to inject arbitrary JavaScript by passing an unsanitized value through the ticket_id GET parameter directly into a hidden input field VALUE attribute. Attackers can craft a malicious URL containing a JavaScript payload in the ticket_id parameter that executes in the victim's browser when the URL is visited.",
+      "severity": 4.6,
+      "references": [
+        {
+          "url": "https://github.com/openises/tickets/releases/tag/v3.44.2",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/openises/tickets/commit/ecfeb406a016766cae81c749e14b5145a9f2dbff",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/open-ises-tickets-reflected-xss-via-add-facnote-php-ticket-id-parameter",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "affected",
+          "vendor": "openises",
+          "product": "tickets",
+          "repo": "https://github.com/openises/tickets",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver",
+              "lessThan": "3.44.2"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-35011",
+      "publishedDate": "2026-05-20T19:37:31.799Z",
+      "lastModifiedDate": "2026-05-20T19:37:31.799Z",
+      "description": "Open ISES Tickets before 3.44.2 contains a reflected cross-site scripting vulnerability in opena.php that allows authenticated attackers to inject arbitrary JavaScript by passing an unsanitized value through the frm_call GET parameter directly into page output. Attackers can craft a malicious URL containing a JavaScript payload in the frm_call parameter that executes in the victim's browser when the URL is visited.",
+      "severity": 4.6,
+      "references": [
+        {
+          "url": "https://github.com/openises/tickets/releases/tag/v3.44.2",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/openises/tickets/commit/ecfeb406a016766cae81c749e14b5145a9f2dbff",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/open-ises-tickets-reflected-xss-via-opena-php-frm-call-parameter",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "affected",
+          "vendor": "openises",
+          "product": "tickets",
+          "repo": "https://github.com/openises/tickets",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver",
+              "lessThan": "3.44.2"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-35010",
+      "publishedDate": "2026-05-20T19:36:44.500Z",
+      "lastModifiedDate": "2026-05-20T19:36:44.500Z",
+      "description": "Open ISES Tickets before 3.44.2 contains a reflected cross-site scripting vulnerability in patient_JF.php that allows authenticated attackers to inject arbitrary JavaScript by passing an unsanitized value through the ticket_id GET parameter directly into a JavaScript variable assignment. Attackers can craft a malicious URL containing a JavaScript payload in the ticket_id parameter that executes in the victim's browser when the URL is visited.",
+      "severity": 4.6,
+      "references": [
+        {
+          "url": "https://github.com/openises/tickets/releases/tag/v3.44.2",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/openises/tickets/commit/ecfeb406a016766cae81c749e14b5145a9f2dbff",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/open-ises-tickets-reflected-xss-via-patient-jf-php-ticket-id-parameter",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "affected",
+          "vendor": "openises",
+          "product": "tickets",
+          "repo": "https://github.com/openises/tickets",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver",
+              "lessThan": "3.44.2"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-35009",
+      "publishedDate": "2026-05-20T19:36:05.617Z",
+      "lastModifiedDate": "2026-05-20T19:36:05.617Z",
+      "description": "Open ISES Tickets before 3.44.2 contains a reflected cross-site scripting vulnerability in add_note.php that allows authenticated attackers to inject arbitrary JavaScript by passing an unsanitized value through the ticket_id GET parameter directly into a hidden input field VALUE attribute. Attackers can craft a malicious URL containing a JavaScript payload in the ticket_id parameter that executes in the victim's browser when the URL is visited.",
+      "severity": 4.6,
+      "references": [
+        {
+          "url": "https://github.com/openises/tickets/releases/tag/v3.44.2",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/openises/tickets/commit/ecfeb406a016766cae81c749e14b5145a9f2dbff",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/open-ises-tickets-reflected-xss-via-add-note-php-ticket-id-parameter",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "affected",
+          "vendor": "openises",
+          "product": "tickets",
+          "repo": "https://github.com/openises/tickets",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver",
+              "lessThan": "3.44.2"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-35008",
+      "publishedDate": "2026-05-20T19:34:40.055Z",
+      "lastModifiedDate": "2026-05-20T19:34:40.055Z",
+      "description": "Open ISES Tickets before 3.44.2 contains a reflected cross-site scripting vulnerability in single.php that allows authenticated attackers to inject arbitrary JavaScript by passing an unsanitized value through the ticket_id GET parameter directly into an HTML attribute. Attackers can craft a malicious URL containing a JavaScript payload in the id parameter that executes in the victim's browser when the URL is visited.",
+      "severity": 4.6,
+      "references": [
+        {
+          "url": "https://github.com/openises/tickets/releases/tag/v3.44.2",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/openises/tickets/commit/ecfeb406a016766cae81c749e14b5145a9f2dbff",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/open-ises-tickets-reflected-xss-via-single-php-ticket-id-parameter",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "affected",
+          "vendor": "openises",
+          "product": "tickets",
+          "repo": "https://github.com/openises/tickets",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver",
+              "lessThan": "3.44.2"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-35007",
+      "publishedDate": "2026-05-20T19:31:56.160Z",
+      "lastModifiedDate": "2026-05-20T19:31:56.160Z",
+      "description": "Open ISES Tickets before 3.44.2 contains a reflected cross-site scripting vulnerability in single_unit.php that allows authenticated attackers to inject arbitrary JavaScript by passing an unsanitized value through the id GET parameter directly into an HTML attribute. Attackers can craft a malicious URL containing a JavaScript payload in the id parameter that executes in the victim's browser when the URL is visited.",
+      "severity": 4.6,
+      "references": [
+        {
+          "url": "https://github.com/openises/tickets/releases/tag/v3.44.2",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/openises/tickets/commit/ecfeb406a016766cae81c749e14b5145a9f2dbff",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/open-ises-tickets-reflected-xss-via-single-unit-php-id-parameter",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "affected",
+          "vendor": "openises",
+          "product": "tickets",
+          "repo": "https://github.com/openises/tickets",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver",
+              "lessThan": "3.44.2"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-39405",
+      "publishedDate": "2026-05-20T19:34:17.498Z",
+      "lastModifiedDate": "2026-05-20T19:34:17.498Z",
+      "description": "Frappe Learning Management System (LMS) is a learning system that helps users structure their content. In versions 2.50.0 and below, a user with course editing role could upload a SCORM ZIP package to write files outside the intended directory. This issue has been resolved in version 2.50.1.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/frappe/lms/security/advisories/GHSA-mxh7-g3r7-g96h",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/frappe/lms/releases/tag/v2.50.1",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "frappe",
+          "product": "lms",
+          "versions": [
+            {
+              "version": "< 2.50.1",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-59: Improper Link Resolution Before File Access ('Link Following')"
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-20239",
-      "publishedDate": "2026-05-20T16:32:12.678Z",
-      "lastModifiedDate": "2026-05-20T16:32:12.678Z",
-      "description": "In Splunk Enterprise versions below 10.2.2 and 10.0.5, and Splunk Cloud Platform versions below 10.3.2512.8, 10.2.2510.11, 10.1.2507.21, and 10.0.2503.13, a user with a role that has access to the `_internal` index could view session cookies and response bodies that contain sensitive data.",
-      "severity": 7.5,
+      "id": "CVE-2026-39352",
+      "publishedDate": "2026-05-20T19:27:01.543Z",
+      "lastModifiedDate": "2026-05-20T19:27:01.543Z",
+      "description": "Frappe is a full-stack web application framework. Versions prior to 15.105.0 and 16.15.0 contain a possible Arbitrary File Read vulnerability via Path Traversal. The issue is resolved in versions 16.15.0, 15.105.0 and above.",
+      "severity": "N/A",
       "references": [
         {
-          "url": "https://advisory.splunk.com/advisories/SVD-2026-0503",
+          "url": "https://github.com/frappe/frappe/security/advisories/GHSA-67rf-pxgh-vfqv",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/frappe/frappe/releases/tag/v16.15.0",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "product": "Splunk Enterprise",
-          "vendor": "Splunk",
+          "vendor": "frappe",
+          "product": "frappe",
           "versions": [
             {
-              "version": "10.2",
-              "status": "affected",
-              "versionType": "custom",
-              "lessThan": "10.2.2"
+              "version": "< 15.105.0",
+              "status": "affected"
             },
             {
-              "version": "10.0",
-              "status": "affected",
-              "versionType": "custom",
-              "lessThan": "10.0.5"
-            }
-          ]
-        },
-        {
-          "product": "Splunk Cloud Platform",
-          "vendor": "Splunk",
-          "versions": [
-            {
-              "version": "10.3.2512",
-              "status": "affected",
-              "versionType": "custom",
-              "lessThan": "10.3.2512.8"
-            },
-            {
-              "version": "10.2.2510",
-              "status": "affected",
-              "versionType": "custom",
-              "lessThan": "10.2.2510.11"
-            },
-            {
-              "version": "10.1.2507",
-              "status": "affected",
-              "versionType": "custom",
-              "lessThan": "10.1.2507.21"
-            },
-            {
-              "version": "10.0.2503",
-              "status": "affected",
-              "versionType": "custom",
-              "lessThan": "10.0.2503.13"
+              "version": ">= 15.106.0, < 16.15.0",
+              "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "Information written to log files can be of a sensitive nature and give valuable guidance to an attacker or expose sensitive user information."
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-3985",
-      "publishedDate": "2026-05-20T01:25:47.803Z",
-      "lastModifiedDate": "2026-05-20T17:18:13.721Z",
-      "description": "The Creative Mail – Easier WordPress & WooCommerce Email Marketing plugin for WordPress is vulnerable to SQL Injection via the 'checkout_uuid' parameter in all versions up to, and including, 1.6.9. This is due to insufficient escaping on the user supplied parameter and lack of sufficient preparation on the existing SQL query in the `has_checkout_consent()` method. This makes it possible for unauthenticated attackers to append additional SQL queries into already existing queries that can be used to extract sensitive information from the database.",
-      "severity": 7.5,
+      "id": "CVE-2026-9124",
+      "publishedDate": "2026-05-20T19:12:48.380Z",
+      "lastModifiedDate": "2026-05-20T19:31:27.296Z",
+      "description": "Insufficient validation of untrusted input in Input in Google Chrome on prior to 148.0.7778.179 allowed a remote attacker who had compromised the renderer process to leak cross-origin data via a crafted HTML page. (Chromium security severity: Medium)",
+      "severity": "N/A",
       "references": [
         {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/39c17935-a853-407f-a99d-3828561919e6?source=cve",
+          "url": "https://chromereleases.googleblog.com/2026/05/stable-channel-update-for-desktop_0841193308.html",
           "type": "reference"
         },
         {
-          "url": "https://plugins.trac.wordpress.org/browser/creative-mail-by-constant-contact/tags/1.6.9/src/Managers/DatabaseManager.php#L298",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/creative-mail-by-constant-contact/trunk/src/Managers/DatabaseManager.php#L298",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/creative-mail-by-constant-contact/tags/1.6.9/src/Managers/CheckoutManager.php#L100",
+          "url": "https://issues.chromium.org/issues/496375695",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "constantcontact",
-          "product": "Creative Mail – Easier WordPress & WooCommerce Email Marketing",
+          "vendor": "Google",
+          "product": "Chrome",
           "versions": [
             {
-              "version": "0",
+              "version": "148.0.7778.179",
               "status": "affected",
-              "lessThanOrEqual": "1.6.9",
+              "lessThan": "148.0.7778.179",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Insufficient validation of untrusted input"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9123",
+      "publishedDate": "2026-05-20T19:12:47.894Z",
+      "lastModifiedDate": "2026-05-20T19:32:25.067Z",
+      "description": "Heap buffer overflow in Chromecast in Google Chrome on Android, Linux, ChromeOS prior to 148.0.7778.179 allowed a local attacker to execute arbitrary code inside a sandbox via malicious network traffic. (Chromium security severity: Medium)",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://chromereleases.googleblog.com/2026/05/stable-channel-update-for-desktop_0841193308.html",
+          "type": "reference"
+        },
+        {
+          "url": "https://issues.chromium.org/issues/495988507",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Google",
+          "product": "Chrome",
+          "versions": [
+            {
+              "version": "148.0.7778.179",
+              "status": "affected",
+              "lessThan": "148.0.7778.179",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Heap buffer overflow"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9122",
+      "publishedDate": "2026-05-20T19:12:47.362Z",
+      "lastModifiedDate": "2026-05-20T19:33:13.547Z",
+      "description": "Out of bounds read in GPU in Google Chrome on Mac prior to 148.0.7778.179 allowed a remote attacker to obtain potentially sensitive information from process memory via a crafted HTML page. (Chromium security severity: Medium)",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://chromereleases.googleblog.com/2026/05/stable-channel-update-for-desktop_0841193308.html",
+          "type": "reference"
+        },
+        {
+          "url": "https://issues.chromium.org/issues/489579953",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Google",
+          "product": "Chrome",
+          "versions": [
+            {
+              "version": "148.0.7778.179",
+              "status": "affected",
+              "lessThan": "148.0.7778.179",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Out of bounds read"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9121",
+      "publishedDate": "2026-05-20T19:12:46.867Z",
+      "lastModifiedDate": "2026-05-20T19:34:57.569Z",
+      "description": "Out of bounds read in GPU in Google Chrome on prior to 148.0.7778.179 allowed a remote attacker to potentially exploit heap corruption via a crafted HTML page. (Chromium security severity: Medium)",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://chromereleases.googleblog.com/2026/05/stable-channel-update-for-desktop_0841193308.html",
+          "type": "reference"
+        },
+        {
+          "url": "https://issues.chromium.org/issues/488064108",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Google",
+          "product": "Chrome",
+          "versions": [
+            {
+              "version": "148.0.7778.179",
+              "status": "affected",
+              "lessThan": "148.0.7778.179",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Out of bounds read"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9126",
+      "publishedDate": "2026-05-20T19:12:46.352Z",
+      "lastModifiedDate": "2026-05-20T19:35:27.892Z",
+      "description": "Use after free in DOM in Google Chrome on prior to 148.0.7778.179 allowed a remote attacker to execute arbitrary code inside a sandbox via a crafted HTML page. (Chromium security severity: Medium)",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://chromereleases.googleblog.com/2026/05/stable-channel-update-for-desktop_0841193308.html",
+          "type": "reference"
+        },
+        {
+          "url": "https://issues.chromium.org/issues/496280532",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Google",
+          "product": "Chrome",
+          "versions": [
+            {
+              "version": "148.0.7778.179",
+              "status": "affected",
+              "lessThan": "148.0.7778.179",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Use after free"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9120",
+      "publishedDate": "2026-05-20T19:12:45.816Z",
+      "lastModifiedDate": "2026-05-20T19:35:55.216Z",
+      "description": "Use after free in WebRTC in Google Chrome prior to 148.0.7778.179 allowed a remote attacker to execute arbitrary code via a crafted HTML page. (Chromium security severity: High)",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://chromereleases.googleblog.com/2026/05/stable-channel-update-for-desktop_0841193308.html",
+          "type": "reference"
+        },
+        {
+          "url": "https://issues.chromium.org/issues/504620824",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Google",
+          "product": "Chrome",
+          "versions": [
+            {
+              "version": "148.0.7778.179",
+              "status": "affected",
+              "lessThan": "148.0.7778.179",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Use after free"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9119",
+      "publishedDate": "2026-05-20T19:12:45.223Z",
+      "lastModifiedDate": "2026-05-20T19:36:21.787Z",
+      "description": "Heap buffer overflow in WebRTC in Google Chrome on prior to 148.0.7778.179 allowed a remote attacker to execute arbitrary code inside a sandbox via a crafted HTML page. (Chromium security severity: High)",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://chromereleases.googleblog.com/2026/05/stable-channel-update-for-desktop_0841193308.html",
+          "type": "reference"
+        },
+        {
+          "url": "https://issues.chromium.org/issues/502661101",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Google",
+          "product": "Chrome",
+          "versions": [
+            {
+              "version": "148.0.7778.179",
+              "status": "affected",
+              "lessThan": "148.0.7778.179",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Heap buffer overflow"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9118",
+      "publishedDate": "2026-05-20T19:12:44.651Z",
+      "lastModifiedDate": "2026-05-20T19:36:43.256Z",
+      "description": "Use after free in XR in Google Chrome on Windows prior to 148.0.7778.179 allowed a remote attacker to execute arbitrary code via a crafted HTML page. (Chromium security severity: High)",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://chromereleases.googleblog.com/2026/05/stable-channel-update-for-desktop_0841193308.html",
+          "type": "reference"
+        },
+        {
+          "url": "https://issues.chromium.org/issues/498702233",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Google",
+          "product": "Chrome",
+          "versions": [
+            {
+              "version": "148.0.7778.179",
+              "status": "affected",
+              "lessThan": "148.0.7778.179",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Use after free"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9117",
+      "publishedDate": "2026-05-20T19:12:44.178Z",
+      "lastModifiedDate": "2026-05-20T19:37:06.416Z",
+      "description": "Type Confusion in GFX in Google Chrome on Linux, ChromeOS prior to 148.0.7778.179 allowed a remote attacker who had compromised the renderer process to potentially perform a sandbox escape via a crafted video file. (Chromium security severity: High)",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://chromereleases.googleblog.com/2026/05/stable-channel-update-for-desktop_0841193308.html",
+          "type": "reference"
+        },
+        {
+          "url": "https://issues.chromium.org/issues/497542537",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Google",
+          "product": "Chrome",
+          "versions": [
+            {
+              "version": "148.0.7778.179",
+              "status": "affected",
+              "lessThan": "148.0.7778.179",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Type Confusion"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9116",
+      "publishedDate": "2026-05-20T19:12:43.548Z",
+      "lastModifiedDate": "2026-05-20T19:38:36.913Z",
+      "description": "Insufficient policy enforcement in ServiceWorker in Google Chrome on prior to 148.0.7778.179 allowed a remote attacker to leak cross-origin data via a crafted HTML page. (Chromium security severity: High)",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://chromereleases.googleblog.com/2026/05/stable-channel-update-for-desktop_0841193308.html",
+          "type": "reference"
+        },
+        {
+          "url": "https://issues.chromium.org/issues/497436273",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Google",
+          "product": "Chrome",
+          "versions": [
+            {
+              "version": "148.0.7778.179",
+              "status": "affected",
+              "lessThan": "148.0.7778.179",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Insufficient policy enforcement"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9115",
+      "publishedDate": "2026-05-20T19:12:42.992Z",
+      "lastModifiedDate": "2026-05-20T19:39:08.556Z",
+      "description": "Insufficient policy enforcement in Service Worker in Google Chrome on prior to 148.0.7778.179 allowed a remote attacker to bypass same origin policy via a crafted HTML page. (Chromium security severity: High)",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://chromereleases.googleblog.com/2026/05/stable-channel-update-for-desktop_0841193308.html",
+          "type": "reference"
+        },
+        {
+          "url": "https://issues.chromium.org/issues/495999481",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Google",
+          "product": "Chrome",
+          "versions": [
+            {
+              "version": "148.0.7778.179",
+              "status": "affected",
+              "lessThan": "148.0.7778.179",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Insufficient policy enforcement"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9114",
+      "publishedDate": "2026-05-20T19:12:42.476Z",
+      "lastModifiedDate": "2026-05-20T19:39:30.213Z",
+      "description": "Use after free in QUIC in Google Chrome on prior to 148.0.7778.179 allowed a remote attacker to execute arbitrary code inside a sandbox via malicious network traffic. (Chromium security severity: High)",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://chromereleases.googleblog.com/2026/05/stable-channel-update-for-desktop_0841193308.html",
+          "type": "reference"
+        },
+        {
+          "url": "https://issues.chromium.org/issues/495798630",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Google",
+          "product": "Chrome",
+          "versions": [
+            {
+              "version": "148.0.7778.179",
+              "status": "affected",
+              "lessThan": "148.0.7778.179",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Use after free"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9113",
+      "publishedDate": "2026-05-20T19:12:41.960Z",
+      "lastModifiedDate": "2026-05-20T19:42:20.419Z",
+      "description": "Out of bounds read in GPU in Google Chrome on Mac prior to 148.0.7778.179 allowed a remote attacker to perform an out of bounds memory read via a crafted HTML page. (Chromium security severity: High)",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://chromereleases.googleblog.com/2026/05/stable-channel-update-for-desktop_0841193308.html",
+          "type": "reference"
+        },
+        {
+          "url": "https://issues.chromium.org/issues/489585044",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Google",
+          "product": "Chrome",
+          "versions": [
+            {
+              "version": "148.0.7778.179",
+              "status": "affected",
+              "lessThan": "148.0.7778.179",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Out of bounds read"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9112",
+      "publishedDate": "2026-05-20T19:12:41.334Z",
+      "lastModifiedDate": "2026-05-20T19:42:42.287Z",
+      "description": "Use after free in GPU in Google Chrome on Windows prior to 148.0.7778.179 allowed a remote attacker to execute arbitrary code inside a sandbox via a crafted HTML page. (Chromium security severity: High)",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://chromereleases.googleblog.com/2026/05/stable-channel-update-for-desktop_0841193308.html",
+          "type": "reference"
+        },
+        {
+          "url": "https://issues.chromium.org/issues/489791425",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Google",
+          "product": "Chrome",
+          "versions": [
+            {
+              "version": "148.0.7778.179",
+              "status": "affected",
+              "lessThan": "148.0.7778.179",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Use after free"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9110",
+      "publishedDate": "2026-05-20T19:12:40.781Z",
+      "lastModifiedDate": "2026-05-20T19:43:26.969Z",
+      "description": "Inappropriate implementation in UI in Google Chrome on Windows prior to 148.0.7778.179 allowed a remote attacker who had compromised the renderer process to perform UI spoofing via a crafted HTML page. (Chromium security severity: Critical)",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://chromereleases.googleblog.com/2026/05/stable-channel-update-for-desktop_0841193308.html",
+          "type": "reference"
+        },
+        {
+          "url": "https://issues.chromium.org/issues/503551154",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Google",
+          "product": "Chrome",
+          "versions": [
+            {
+              "version": "148.0.7778.179",
+              "status": "affected",
+              "lessThan": "148.0.7778.179",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Inappropriate implementation"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9111",
+      "publishedDate": "2026-05-20T19:12:39.869Z",
+      "lastModifiedDate": "2026-05-20T19:43:49.940Z",
+      "description": "Use after free in WebRTC in Google Chrome on Linux prior to 148.0.7778.179 allowed a remote attacker to execute arbitrary code via a crafted HTML page. (Chromium security severity: Critical)",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://chromereleases.googleblog.com/2026/05/stable-channel-update-for-desktop_0841193308.html",
+          "type": "reference"
+        },
+        {
+          "url": "https://issues.chromium.org/issues/504551032",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Google",
+          "product": "Chrome",
+          "versions": [
+            {
+              "version": "148.0.7778.179",
+              "status": "affected",
+              "lessThan": "148.0.7778.179",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Use after free"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9137",
+      "publishedDate": "2026-05-20T18:43:30.895Z",
+      "lastModifiedDate": "2026-05-20T19:26:46.826Z",
+      "description": "The CSP report endpoint intended to limit logged CSP reports to 1 KB but incorrectly allowed reports up to 1 MB before truncation. On deployments where the endpoint is reachable by untrusted clients, this could allow attackers to generate excessive log volume and contribute to resource exhaustion or log flooding.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/MISP/MISP/commit/02932cccab230b295afcaf5aa05e363d30db0ec9",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "misp",
+          "product": "misp",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "2.5.0",
+              "lessThanOrEqual": "2.5.37",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-400 Uncontrolled Resource Consumption"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9136",
+      "publishedDate": "2026-05-20T18:39:40.231Z",
+      "lastModifiedDate": "2026-05-20T19:27:31.091Z",
+      "description": "A vulnerability was identified in the ShadowAttribute proposal creation workflow. The add action accepted user-controlled ShadowAttribute request data without removing the id field before saving the record. Because the underlying framework treats a supplied primary key as an instruction to update an existing record, an authenticated user able to submit shadow attribute proposals could provide the identifier of an existing ShadowAttribute and cause that record to be updated instead of creating a new proposal.\n\n\n\n\nThis can result in unauthorized modification of existing shadow attributes, potentially affecting proposals associated with events the user should not be able to alter. Depending on deployment configuration and accessible API responses, the issue may also expose or move proposal data across event contexts.\n\n\n\n\nThe vulnerability is caused by trusting a client-supplied primary key during object creation. The fix removes the id field from incoming ShadowAttribute data before processing, ensuring that the endpoint always creates a new proposal rather than updating an existing one. This has been fixed in MISP 2.5.38.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/MISP/MISP/commit/49911b1d4b6e4517d803e50e3d980aaa4d37c16d",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "misp",
+          "product": "misp",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "2.5.0",
+              "lessThanOrEqual": "2.5.37",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-639 Authorization Bypass Through User-Controlled Key"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9082",
+      "publishedDate": "2026-05-20T18:20:52.863Z",
+      "lastModifiedDate": "2026-05-20T19:37:09.384Z",
+      "description": "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') vulnerability in Drupal Drupal core allows SQL Injection.\n\nThis issue affects Drupal core: from 8.9.0 before 10.4.10, from 10.5.0 before 10.5.10, from 10.6.0 before 10.6.9, from 11.0.0 before 11.1.10, from 11.2.0 before 11.2.12, from 11.3.0 before 11.3.10.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.drupal.org/sa-core-2026-004",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Drupal",
+          "product": "Drupal core",
+          "collectionURL": "https://www.drupal.org/project/drupal",
+          "repo": "https://git.drupalcode.org/project/drupal",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "8.9.0",
+              "lessThan": "10.4.10",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "10.5.0",
+              "lessThan": "10.5.10",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "10.6.0",
+              "lessThan": "10.6.9",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "11.0.0",
+              "lessThan": "11.1.10",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "11.2.0",
+              "lessThan": "11.2.12",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "11.3.0",
+              "lessThan": "11.3.10",
               "versionType": "semver"
             }
           ],
@@ -198,709 +1738,32 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-7613",
-      "publishedDate": "2026-05-20T16:27:53.240Z",
-      "lastModifiedDate": "2026-05-20T17:33:43.416Z",
-      "description": "The Cost of Goods by PixelYourSite plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the 'csvdata[0][cost_of_goods_value]' parameter in versions up to, and including, 1.2.12 due to insufficient input sanitization and output escaping. This makes it possible for unauthenticated attackers to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page.",
-      "severity": 7.2,
-      "references": [
-        {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/6e8646f0-8bd1-4cfd-85bb-86a054ab297f?source=cve",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.pixelyoursite.com/plugins/woocommerce-cost-of-goods",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "pixelyoursite",
-          "product": "Cost of Goods by PixelYourSite",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "lessThanOrEqual": "1.2.12",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-20240",
-      "publishedDate": "2026-05-20T16:32:05.687Z",
-      "lastModifiedDate": "2026-05-20T16:32:05.687Z",
-      "description": "In Splunk Enterprise versions below 10.2.2, 10.0.5, 9.4.11, and 9.3.12, and Splunk Cloud Platform versions below 10.4.2603.1, 10.3.2512.9, 10.2.2510.11, 10.1.2507.21, 10.0.2503.13, and 9.3.2411.129, a low-privileged user that does not hold the ‘admin’ or ‘power’ Splunk roles could cause a Denial of Service by exploiting the `coldToFrozen.sh` script in the `splunk_archiver` app to rename critical Splunk directories, making the instance non-functional.<br><br>The Denial of Service is possible because of missing input validation in the `coldToFrozen.sh` script, which accepts arbitrary file paths and renames them without restricting operations to safe directories.",
-      "severity": 7.1,
-      "references": [
-        {
-          "url": "https://advisory.splunk.com/advisories/SVD-2026-0504",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Splunk Enterprise",
-          "vendor": "Splunk",
-          "versions": [
-            {
-              "version": "10.2",
-              "status": "affected",
-              "versionType": "custom",
-              "lessThan": "10.2.2"
-            },
-            {
-              "version": "10.0",
-              "status": "affected",
-              "versionType": "custom",
-              "lessThan": "10.0.5"
-            },
-            {
-              "version": "9.4",
-              "status": "affected",
-              "versionType": "custom",
-              "lessThan": "9.4.11"
-            },
-            {
-              "version": "9.3",
-              "status": "affected",
-              "versionType": "custom",
-              "lessThan": "9.3.12"
-            }
-          ]
-        },
-        {
-          "product": "Splunk Cloud Platform",
-          "vendor": "Splunk",
-          "versions": [
-            {
-              "version": "10.4.2603",
-              "status": "affected",
-              "versionType": "custom",
-              "lessThan": "10.4.2603.1"
-            },
-            {
-              "version": "10.3.2512",
-              "status": "affected",
-              "versionType": "custom",
-              "lessThan": "10.3.2512.9"
-            },
-            {
-              "version": "10.2.2510",
-              "status": "affected",
-              "versionType": "custom",
-              "lessThan": "10.2.2510.11"
-            },
-            {
-              "version": "10.1.2507",
-              "status": "affected",
-              "versionType": "custom",
-              "lessThan": "10.1.2507.21"
-            },
-            {
-              "version": "10.0.2503",
-              "status": "affected",
-              "versionType": "custom",
-              "lessThan": "10.0.2503.13"
-            },
-            {
-              "version": "9.3.2411",
-              "status": "affected",
-              "versionType": "custom",
-              "lessThan": "9.3.2411.129"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "The product does not validate or incorrectly validates input that can affect the control flow or data flow of a program."
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-32882",
-      "publishedDate": "2026-05-19T20:07:21.464Z",
-      "lastModifiedDate": "2026-05-20T17:23:02.780Z",
-      "description": "libheif is a HEIF and AVIF file format decoder and encoder. Versions 1.21.2 and prior contain a heap buffer over-read in HeifPixelImage::overlay() in libheif/pixelimage.cc. When compositing an overlay image (iovl) whose child image has a different bit depth for the alpha channel than for the color channels, the function indexes into the alpha plane using the color channel stride (in_stride) instead of the previously retrieved alpha_stride, causing reads past the end of the alpha buffer (up to 3,123 bytes for a 100×50 image with 10-bit color and 8-bit alpha). A crafted HEIF file can exploit this to cause a denial of service (crash) or potentially disclose adjacent heap memory through leaked bytes embedded in the decoded output pixels. This issue has been fixed in versionThis issue has been fixed in version 1.22.0.",
-      "severity": 7.1,
-      "references": [
-        {
-          "url": "https://github.com/strukturag/libheif/security/advisories/GHSA-hg7q-rjr2-8x46",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/strukturag/libheif/releases/tag/v1.22.0",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "strukturag",
-          "product": "libheif",
-          "versions": [
-            {
-              "version": "< 1.22.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-125: Out-of-bounds Read"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-20238",
-      "publishedDate": "2026-05-20T16:32:19.740Z",
-      "lastModifiedDate": "2026-05-20T16:32:19.740Z",
-      "description": "In Splunk AI Toolkit versions below 5.7.3, a low-privileged user that does not hold the 'admin' or 'power' roles could access confidential data that was restricted through `srchFilter` configurations on custom roles.<br><br>The app contains an `authorize.conf` configuration file with a `srchFilter` entry that modifies the built-in ‘user’ role. Because the Splunk platform combines inherited search filters with the `OR` SPL operator, the injected filter overrides more restrictive filters on child roles.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://advisory.splunk.com/advisories/SVD-2026-0502",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Splunk AI Toolkit",
-          "vendor": "Splunk",
-          "versions": [
-            {
-              "version": "5.7",
-              "status": "affected",
-              "versionType": "custom",
-              "lessThan": "5.7.3"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "The software performs an authorization check when an actor attempts to access a resource or perform an action, but it does not correctly perform the check. This allows attackers to bypass intended access restrictions."
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2023-7345",
-      "publishedDate": "2026-05-19T21:55:51.388Z",
-      "lastModifiedDate": "2026-05-20T17:20:12.853Z",
-      "description": "Ledger Live with vulnerable versions of ledgerhq/hw-app-eth prior to 6.34.7 contains an integer parsing vulnerability that allows attackers to manipulate EIP-712 typed data messages by exploiting incorrect hexadecimal field parsing when values contain an odd number of characters. Attackers can obtain signatures on truncated or misinterpreted message values to authorize unintended blockchain transactions, such as asset transfers at incorrect amounts.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://donjon.ledger.com/lsb/020/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/ledger-live-hw-app-eth-eip-712-message-parsing-integer-truncation",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Ledger",
-          "product": "ledgerhq/hw-app-eth",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "6.34.7",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        },
-        {
-          "vendor": "Ledger",
-          "product": "Ledger Live",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "2.70.0",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-704 Incorrect Type Conversion or Cast"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-6397",
-      "publishedDate": "2026-05-20T01:25:46.486Z",
-      "lastModifiedDate": "2026-05-20T17:18:35.975Z",
-      "description": "The Sticky plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the `cvmh-sticky` shortcode `readmoretext` attribute in versions up to and including 2.5.6. This is due to insufficient input sanitization and output escaping in the `cvmh_sticky_front_render()` function — the `readmoretext` attribute value is passed through `apply_filters()` and directly concatenated into the HTML output without any escaping function such as `esc_html()`. This makes it possible for authenticated attackers with Contributor-level access and above to inject arbitrary web scripts in pages that will execute whenever a user accesses a page containing the injected shortcode.",
-      "severity": 6.4,
-      "references": [
-        {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/135783c5-8175-4775-a013-f1e2bef04479?source=cve",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/sticky/trunk/includes/functions.php#L118",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/sticky/tags/2.5.6/includes/functions.php#L118",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/sticky/trunk/includes/shortcode.php#L7",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/sticky/tags/2.5.6/includes/shortcode.php#L7",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "cvmh",
-          "product": "Sticky",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "lessThanOrEqual": "2.5.6",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-9100",
-      "publishedDate": "2026-05-20T15:55:13.154Z",
-      "lastModifiedDate": "2026-05-20T17:20:32.902Z",
-      "description": "The MongoDB C Driver's legacy GridFS API accepts malformed file metadata from the database without adequate validation. Crafted documents in a GridFS collection may cause any application that reads those files via the legacy API to either crash (via a division-by-zero) or silently leak process memory contents (via an out-of-bounds read).",
-      "severity": 5.9,
-      "references": [
-        {
-          "url": "https://jira.mongodb.org/browse/CDRIVER-6281",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "MongoDB, Inc.",
-          "product": "C Driver",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "1.0",
-              "lessThan": "1.30.8",
-              "versionType": "custom"
-            },
-            {
-              "status": "affected",
-              "version": "2.0",
-              "lessThan": "2.2.4",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-1285: Improper Validation of Specified Index, Position, or Offset in Input"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-15369",
-      "publishedDate": "2026-05-20T02:27:48.088Z",
-      "lastModifiedDate": "2026-05-20T17:14:35.655Z",
-      "description": "The Xpro Addons — 140+ Widgets for Elementor plugin for WordPress is vulnerable to unauthorized modification of data due to a missing capability check on the get_content_editor function in all versions up to, and including, 1.5.0. This makes it possible for unauthenticated attackers to create published Xpro templates.",
-      "severity": 5.3,
-      "references": [
-        {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/cf49d3fb-de14-42bc-bf51-f9adceba0d32?source=cve",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/xpro-elementor-addons/trunk?rev=3508547",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "xpro",
-          "product": "Xpro Addons — 140+ Widgets for Elementor",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "lessThanOrEqual": "1.5.0",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-862 Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-7472",
-      "publishedDate": "2026-05-20T01:25:54.600Z",
-      "lastModifiedDate": "2026-05-20T17:16:36.961Z",
-      "description": "The Read More & Accordion plugin for WordPress is vulnerable to time-based blind SQL Injection via the 'orderby' parameter in all versions up to, and including, 3.5.7. This is due to the use of esc_sql() without surrounding the value in quotes in an ORDER BY clause inside the getAllDataByLimit() and getAccordionAllDataByLimit() functions in ReadMoreData.php. The user-supplied $_GET['orderby'] value is only processed through esc_attr() (an HTML-escaping function) before being passed to these database functions, where esc_sql() is applied but the value is directly concatenated—unquoted—into the ORDER BY fragment of the SQL query before $wpdb->prepare() is called. Because esc_sql() only escapes quote characters and backslashes (which are irrelevant in an unquoted ORDER BY context), an attacker can inject arbitrary SQL expressions such as (SELECT SLEEP(5)) or conditional subqueries to perform time-based blind data extraction. This makes it possible for authenticated attackers with administrator-level access or above (or any role explicitly permitted access to the plugin's admin pages via the yrm-user-roles setting) to extract sensitive data from the database, including administrator credential hashes.",
-      "severity": 4.9,
-      "references": [
-        {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/cc7c7e21-fbd7-4451-bc7d-3d11db01a443?source=cve",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/expand-maker/trunk/classes/ReadMoreData.php#L1522",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/expand-maker/tags/3.5.7/classes/ReadMoreData.php#L1522",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/expand-maker/trunk/views/readMorePagesView.php#L29",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/expand-maker/tags/3.5.7/views/readMorePagesView.php#L29",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/expand-maker/trunk/classes/ReadMoreData.php#L1537",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/expand-maker/tags/3.5.7/classes/ReadMoreData.php#L1537",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/expand-maker/trunk/views/accordionBuilder/list.php#L29",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/expand-maker/tags/3.5.7/views/accordionBuilder/list.php#L29",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "edmonparker",
-          "product": "Read More & Accordion",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "lessThanOrEqual": "3.5.7",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-34246",
-      "publishedDate": "2026-05-19T21:18:10.081Z",
-      "lastModifiedDate": "2026-05-20T17:21:20.034Z",
-      "description": "CtrlPanel is open-source billing software for hosting providers. Versions 1.1.1 and prior contain a Stored Cross-Site Scripting (XSS) vulnerability exists in the admin role management interface. In app/Http/Controllers/Admin/RoleController.php, the datatable() method interpolates $role->name and $role->color directly into a <span> element's HTML and style attribute without sanitization, and the chained .rawColumns(['actions', 'name']) call instructs DataTables to render the name column as raw HTML, bypassing automatic output escaping. An admin with role creation or edit permissions can inject a payload such as <img src=x onerror=\"alert('XSS_POC')\"> into the name or color fields, which is persisted to the database and executes in the browser of every admin who loads the /admin/roles page. This enables session hijacking via cookie theft, credential harvesting through fake login prompts or keyloggers, lateral privilege escalation by performing admin actions on behalf of victims, and a persistent backdoor that re-executes on every page load until the malicious role record is removed. This issue has been resolved in version 1.2.0.",
-      "severity": 4.8,
-      "references": [
-        {
-          "url": "https://github.com/Ctrlpanel-gg/panel/security/advisories/GHSA-wpqj-xwhq-2mmh",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/Ctrlpanel-gg/panel/releases/tag/1.2.0",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Ctrlpanel-gg",
-          "product": "panel",
-          "versions": [
-            {
-              "version": "< 1.2.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-80: Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)",
-        "CWE-116: Improper Encoding or Escaping of Output"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-8424",
-      "publishedDate": "2026-05-20T01:25:53.508Z",
-      "lastModifiedDate": "2026-05-20T17:17:11.846Z",
-      "description": "The Remove Yellow BGBOX plugin for WordPress is vulnerable to Cross-Site Request Forgery in all versions up to, and including, 1.0. This is due to missing or incorrect nonce validation on the 'rybb_api_settings' page. This makes it possible for unauthenticated attackers to reset the plugin's stored settings by overwriting its configuration via a forged request granted they can trick a site administrator into performing an action such as clicking on a link.",
-      "severity": 4.3,
-      "references": [
-        {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/c5b30d27-a3f8-4535-a47f-675c939ec648?source=cve",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/remove-yellow-bgbox/trunk/admin/rybb_api_settings.php#L5",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/remove-yellow-bgbox/tags/1.0/admin/rybb_api_settings.php#L5",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/remove-yellow-bgbox/trunk/includes/functions.php#L16",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/remove-yellow-bgbox/tags/1.0/includes/functions.php#L16",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "jay_patel",
-          "product": "Remove Yellow BGBOX",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "lessThanOrEqual": "1.0",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-352 Cross-Site Request Forgery (CSRF)"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-45498",
-      "publishedDate": "2026-05-20T13:09:12.903Z",
-      "lastModifiedDate": "2026-05-20T17:12:06.585Z",
-      "description": "Microsoft Defender Denial of Service Vulnerability",
-      "severity": 4,
-      "references": [
-        {
-          "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-45498",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Microsoft",
-          "product": "Microsoft Defender Antimalware Platform",
-          "versions": [
-            {
-              "version": "-",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Denial of Service"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-45232",
-      "publishedDate": "2026-05-20T00:45:28.540Z",
-      "lastModifiedDate": "2026-05-20T17:31:52.358Z",
-      "description": "Rsync versions before 3.4.3 contain an off-by-one out-of-bounds stack write vulnerability in the establish_proxy_connection() function in socket.c that allows network attackers to corrupt stack memory by sending a malformed HTTP proxy response. Attackers can exploit this by positioning themselves between the client and proxy or controlling the proxy server to send a response line of 1023 or more bytes without a newline terminator, causing a null byte to be written to an out-of-bounds stack address when the RSYNC_PROXY environment variable is set.",
-      "severity": 3.1,
-      "references": [
-        {
-          "url": "https://github.com/RsyncProject/rsync/security/advisories/GHSA-8f85-j2cv-59m8",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/RsyncProject/rsync/releases/tag/v3.4.3",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/rsync-off-by-one-stack-write-via-http-proxy",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "RsyncProject",
-          "product": "rsync",
-          "repo": "https://github.com/RsyncProject/rsync",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver",
-              "lessThan": "3.4.3"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "Off-by-one Error"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-7385",
-      "publishedDate": "2026-05-20T06:00:08.865Z",
-      "lastModifiedDate": "2026-05-20T17:34:58.686Z",
-      "description": "The Decent Comments WordPress plugin before 3.0.2 does not restrict access to comment author email addresses and post author email addresses via its REST API endpoint, allowing unauthenticated attackers to enumerate registered user email addresses.",
+      "id": "CVE-2026-9129",
+      "publishedDate": "2026-05-20T18:05:29.442Z",
+      "lastModifiedDate": "2026-05-20T19:28:30.057Z",
+      "description": "A path traversal vulnerability exists in the Altium Enterprise Server Viewer StorageController due to improper handling of file path route parameters. On on-premise deployments that use local filesystem storage, a regular authenticated user can supply a URL-encoded absolute path (such as an encoded drive letter) in a Viewer storage API request, causing the configured storage root to be discarded and allowing arbitrary files to be read from the server filesystem.\n\n\n\n\n\n\n\n\nBecause the readable files include the server's master configuration, which stores database credentials, signing key locations, certificate passwords, and OAuth secrets, exploitation can lead to disclosure of all server secrets and full compromise of the server and its data. Cloud deployments are not affected, as they use object storage and do not enable this component.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://wpscan.com/vulnerability/1c5949d0-cf50-45d3-a7e2-2f94cdb42405/",
-          "type": "poc"
+          "url": "https://www.altium.com/platform/security-compliance/security-advisories",
+          "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Unknown",
-          "product": "Decent Comments",
+          "vendor": "Altium",
+          "product": "Altium Enterprise Server",
+          "platforms": [
+            "Web"
+          ],
+          "modules": [
+            "Viewer StorageController (localStorage API)"
+          ],
           "versions": [
             {
               "status": "affected",
-              "versionType": "semver",
               "version": "0",
-              "lessThan": "3.0.2"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-200 Information Exposure"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-30691",
-      "publishedDate": "2026-05-20T00:00:00.000Z",
-      "lastModifiedDate": "2026-05-20T16:43:07.386Z",
-      "description": "Cross-Site Scripting (XSS) vulnerability in @cyntler/react-doc-viewer v1.17.1 allows remote attackers to execute arbitrary JavaScript via a crafted .txt file. The TXTRenderer component fails to sanitize file content and explicitly casts raw data as a ReactNode",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/cyntler/react-doc-viewer/issues/317",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/walidriouah/CVE-2026-30691",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "n/a",
-          "product": "n/a",
-          "versions": [
-            {
-              "version": "n/a",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "n/a"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-34744",
-      "publishedDate": "2026-05-19T22:45:35.012Z",
-      "lastModifiedDate": "2026-05-20T17:19:23.248Z",
-      "description": "Mantis Bug Tracker (MantisBT) is an open source issue tracker. Versions 2.28.1 and prior permit a user to list and download their own attachments from an Issue created by another user even after it becomes private, bypassing read access revocation. The loss of confidentiality caused by this vulnerability is minimal, considering that only attachments previously uploaded by the user themselves remain accessible. This issue has been fixed in version 2.82.2.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/mantisbt/mantisbt/security/advisories/GHSA-rmp5-5jj7-gmvf",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/mantisbt/mantisbt/commit/de7bdeec36de066235e38a77bf056917d951c84d",
-          "type": "reference"
-        },
-        {
-          "url": "https://mantisbt.org/bugs/view.php?id=36977",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "mantisbt",
-          "product": "mantisbt",
-          "versions": [
-            {
-              "version": "< 2.28.2",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor",
-        "CWE-281: Improper Preservation of Permissions"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-8495",
-      "publishedDate": "2026-05-19T22:29:50.850Z",
-      "lastModifiedDate": "2026-05-20T16:35:44.458Z",
-      "description": "Missing Authorization vulnerability in Drupal Date iCal allows Forceful Browsing.\n\nThis issue affects Date iCal: from 0.0.0 before 4.0.15.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://www.drupal.org/sa-contrib-2026-037",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Drupal",
-          "product": "Date iCal",
-          "collectionURL": "https://www.drupal.org/project/date_ical",
-          "repo": "https://git.drupalcode.org/project/date_ical",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0.0.0",
-              "lessThan": "4.0.15",
+              "lessThan": "8.0.4",
               "versionType": "semver"
             }
           ],
@@ -908,33 +1771,38 @@
         }
       ],
       "problemType": [
-        "CWE-862 Missing Authorization"
+        "CWE-22 Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')",
+        "CWE-200 Exposure of Sensitive Information to an Unauthorized Actor"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-8493",
-      "publishedDate": "2026-05-19T22:29:31.032Z",
-      "lastModifiedDate": "2026-05-20T16:35:50.626Z",
-      "description": "Improper Neutralization of Input During Web Page Generation (\"Cross-site Scripting\") vulnerability in Drupal Colorbox Inline allows Cross-Site Scripting (XSS).\n\nThis issue affects Colorbox Inline: from 0.0.0 before 2.1.1.",
+      "id": "CVE-2026-9102",
+      "publishedDate": "2026-05-20T17:48:31.798Z",
+      "lastModifiedDate": "2026-05-20T19:30:23.892Z",
+      "description": "A path traversal vulnerability exists in the Altium Enterprise Server ComparisonService due to missing filename sanitization in the Gerber file upload APIs. A regular authenticated workspace user can supply a crafted filename in the multipart Content-Disposition header to escape the intended temporary upload directory and write arbitrary files to any location on the server filesystem.\n\n\n\n\nBecause content-controlled files can be written to web-accessible directories, this can be escalated to remote code execution in the context of the service account. It can also be used to overwrite application binaries or configuration files, leading to service takeover or denial of service.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://www.drupal.org/sa-contrib-2026-036",
+          "url": "https://www.altium.com/platform/security-compliance/security-advisories",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Drupal",
-          "product": "Colorbox Inline",
-          "collectionURL": "https://www.drupal.org/project/colorbox_inline",
-          "repo": "https://git.drupalcode.org/project/colorbox_inline",
+          "vendor": "Altium",
+          "product": "Altium Enterprise Server",
+          "platforms": [
+            "Web"
+          ],
+          "modules": [
+            "ComparisonService (Gerber upload API)"
+          ],
           "versions": [
             {
               "status": "affected",
-              "version": "0.0.0",
-              "lessThan": "2.1.1",
+              "version": "0",
+              "lessThan": "8.0.4",
               "versionType": "semver"
             }
           ],
@@ -942,81 +1810,8 @@
         }
       ],
       "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation (\"Cross-site Scripting\")"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-8492",
-      "publishedDate": "2026-05-19T22:29:14.483Z",
-      "lastModifiedDate": "2026-05-20T16:35:56.415Z",
-      "description": "Modification of Assumed-Immutable Data (MAID) vulnerability in Drupal Translate Drupal with GTranslate allows Resource Location Spoofing.\n\nThis issue affects Translate Drupal with GTranslate: from 0.0.0 before 3.0.5.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://www.drupal.org/sa-contrib-2026-035",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Drupal",
-          "product": "Translate Drupal with GTranslate",
-          "collectionURL": "https://www.drupal.org/project/gtranslate",
-          "repo": "https://git.drupalcode.org/project/gtranslate",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0.0.0",
-              "lessThan": "3.0.5",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-471 Modification of Assumed-Immutable Data (MAID)"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-8491",
-      "publishedDate": "2026-05-19T22:28:58.101Z",
-      "lastModifiedDate": "2026-05-20T16:36:03.045Z",
-      "description": "Improper Check for Unusual or Exceptional Conditions vulnerability in Drupal Node View Permissions allows Forceful Browsing.\n\nThis issue affects Node View Permissions: from 0.0.0 before 1.7.0, from 2.0.0 before 2.0.1.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://www.drupal.org/sa-contrib-2026-034",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Drupal",
-          "product": "Node View Permissions",
-          "collectionURL": "https://www.drupal.org/project/node_view_permissions",
-          "repo": "https://git.drupalcode.org/project/node_view_permissions",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0.0.0",
-              "lessThan": "1.7.0",
-              "versionType": "semver"
-            },
-            {
-              "status": "affected",
-              "version": "2.0.0",
-              "lessThan": "2.0.1",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-754 Improper Check for Unusual or Exceptional Conditions"
+        "CWE-22 Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')",
+        "CWE-434 Unrestricted upload of file with dangerous type"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
