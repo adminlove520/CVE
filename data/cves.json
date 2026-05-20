@@ -2,72 +2,656 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 2,
-    "last_updated": "2026-05-20T09:50:54.942467",
+    "total_count": 13,
+    "last_updated": "2026-05-20T12:17:51.776690",
     "severity_distribution": {
       "critical": 0,
-      "high": 0,
-      "medium": 0,
-      "low": 0,
-      "none": 2
+      "high": 4,
+      "medium": 8,
+      "low": 1,
+      "none": 0
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-9065",
-      "publishedDate": "2026-05-20T08:23:55.218Z",
-      "lastModifiedDate": "2026-05-20T08:23:55.218Z",
-      "description": "SureCart version prior to 4.2.1 are vulnerable to authenticated SQL injection via multiple parameters ('model_name', 'model_id', 'integration_id', 'provider') on the REST API endpoint '/surecart/v1/integrations/{id}'.\n\nThe root cause is a flawed escaping bypass in the query builder ('wp-query-builder'). Values passed to the 'where()' method are only sanitized via '$wpdb->prepare()' when they do **not** contain a dot ('.') or the WordPress table prefix ('wp_'). By including a dot anywhere in the payload, an attacker completely bypasses the escaping logic and injects arbitrary SQL into the 'WHERE' clause, allowing full UNION-based extraction of the database.",
-      "severity": "N/A",
+      "id": "CVE-2026-7504",
+      "publishedDate": "2026-05-19T11:01:19.663Z",
+      "lastModifiedDate": "2026-05-20T11:24:43.812Z",
+      "description": "A flaw was found in Keycloak's URL validation logic during redirect operations. By crafting a malicious request, an attacker could bypass validation to redirect users to unauthorized URLs, potentially leading to the exposure of sensitive information within the domain or facilitating further attacks. This vulnerability specifically affects Keycloak clients configured with a wildcard (*) in the \"Valid Redirect URIs\" field and requires user interaction to be successfully exploited.\n\nThe issue stems from a discrepancy in how Keycloak and the underlying Java URI implementation handle the user-info component of a URL. If a malicious redirect URL is constructed using multiple @ characters in the user-info section, Java's URI parser fails to extract the user-info, leaving only the raw authority field. Consequently, Keycloak's validation check fails to detect the malformed user-info, falls back to a wildcard comparison, and incorrectly permits the malicious redirect.",
+      "severity": 8.1,
       "references": [
         {
-          "url": "https://www.tenable.com/security/research/tra-2026-43",
+          "url": "https://access.redhat.com/errata/RHSA-2026:19594",
+          "type": "reference"
+        },
+        {
+          "url": "https://access.redhat.com/errata/RHSA-2026:19597",
+          "type": "reference"
+        },
+        {
+          "url": "https://access.redhat.com/security/cve/CVE-2026-7504",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2464128",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "brainstormforce",
-          "product": "Surecart",
-          "collectionURL": "https://wordpress.org/plugins/surecart",
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.2.16",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "defaultStatus": "unaffected",
+          "packageName": "rhbk/keycloak-rhel9-operator",
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.2::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.4",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-operator-bundle",
+          "defaultStatus": "affected",
           "versions": [
             {
-              "status": "affected",
-              "version": "O",
-              "lessThan": "4.2.1",
-              "versionType": "custom"
+              "version": "26.4.12-1",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
             }
           ],
-          "defaultStatus": "unaffected"
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.4::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.4",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-rhel9",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.4-17",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.4::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.4",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-rhel9-operator",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.4-17",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.4::el9"
+          ]
         }
       ],
       "problemType": [
-        "CWE-89 Improper neutralization of special elements used in an SQL command ('SQL injection')"
+        "URL Redirection to Untrusted Site ('Open Redirect')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-9059",
-      "publishedDate": "2026-05-20T07:41:28.135Z",
-      "lastModifiedDate": "2026-05-20T07:59:31.182Z",
-      "description": "NextGEN Gallery version prior to 4.2.1 are vulnerable to authenticated SQL injection via the 'orderby' parameter on the REST API endpoints '/imagely/v1/galleries' and '/imagely/v1/albums'.\n\n\n\nThe root cause is an insufficient sanitization function ('_clean_column()') in the data mapper layer that uses a character blacklist instead of a whitelist approach. This allows an authenticated attacker with the 'NextGEN Gallery overview' capability (assigned to the Administrator role by default) to inject arbitrary SQL into the 'ORDER BY' clause.",
-      "severity": "N/A",
+      "id": "CVE-2026-7507",
+      "publishedDate": "2026-05-19T11:01:25.443Z",
+      "lastModifiedDate": "2026-05-20T11:24:15.269Z",
+      "description": "A session fixation vulnerability was found in Keycloak's login-actions endpoints. An unauthenticated attacker could exploit this flaw by pre-creating an authentication session and tricking a victim into visiting a maliciously crafted link. By leveraging the /login-actions/restart endpoint—which processes session handles without adequate CSRF protection or cookie ownership validation—an attacker can reset the authentication flow state. This causes Single Sign-On (SSO) to authenticate the victim transparently upon clicking the link, allowing the attacker to hijack the required-action form without needing the victim's credentials. A successful exploit could lead to complete account takeover, including highly privileged administrative accounts.",
+      "severity": 7.5,
       "references": [
         {
-          "url": "https://www.tenable.com/security/research/tra-2026-42",
+          "url": "https://access.redhat.com/errata/RHSA-2026:19594",
+          "type": "reference"
+        },
+        {
+          "url": "https://access.redhat.com/errata/RHSA-2026:19597",
+          "type": "reference"
+        },
+        {
+          "url": "https://access.redhat.com/security/cve/CVE-2026-7507",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2464145",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "awesomemotive",
-          "product": "NextGEN Gallery",
-          "collectionURL": "https://fr.wordpress.org/plugins/nextgen-gallery/",
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.2.16",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "defaultStatus": "unaffected",
+          "packageName": "rhbk/keycloak-rhel9-operator",
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.2::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.4",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-operator-bundle",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.4.12-1",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.4::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.4",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-rhel9",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.4-17",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.4::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.4",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-rhel9-operator",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.4-17",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.4::el9"
+          ]
+        }
+      ],
+      "problemType": [
+        "Authentication Bypass by Spoofing"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-7307",
+      "publishedDate": "2026-05-19T10:52:24.684Z",
+      "lastModifiedDate": "2026-05-20T11:38:05.057Z",
+      "description": "A flaw was found in Keycloak. A remote, unauthenticated attacker can send a specially crafted XML input to the Security Assertion Markup Language (SAML) endpoint. This malicious input can cause high CPU usage and worker thread starvation, leading to a Denial of Service (DoS) where the server becomes unavailable.",
+      "severity": 7.5,
+      "references": [
+        {
+          "url": "https://access.redhat.com/errata/RHSA-2026:19594",
+          "type": "reference"
+        },
+        {
+          "url": "https://access.redhat.com/errata/RHSA-2026:19597",
+          "type": "reference"
+        },
+        {
+          "url": "https://access.redhat.com/security/cve/CVE-2026-7307",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2476526",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.2.16",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "defaultStatus": "unaffected",
+          "packageName": "rhbk/keycloak-rhel9",
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.2::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.4",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-operator-bundle",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.4.12-1",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.4::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.4",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-rhel9",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.4-17",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.4::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.4",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-rhel9-operator",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.4-17",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.4::el9"
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Validation of Syntactic Correctness of Input"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-7571",
+      "publishedDate": "2026-05-19T11:01:26.987Z",
+      "lastModifiedDate": "2026-05-20T11:26:28.270Z",
+      "description": "A flaw was found in Keycloak. A low-privilege user, with knowledge of user credentials and client ID, can bypass a security control intended to disable the implicit flow in OpenID Connect (OIDC) clients. By manipulating client data during a session restart, an attacker can obtain an access token that should not be available. This vulnerability can also lead to the exposure of these access tokens in server logs, proxy logs, and HTTP Referrer headers, resulting in sensitive information disclosure.",
+      "severity": 7.1,
+      "references": [
+        {
+          "url": "https://access.redhat.com/errata/RHSA-2026:19597",
+          "type": "reference"
+        },
+        {
+          "url": "https://access.redhat.com/security/cve/CVE-2026-7571",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2464263",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.4",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-operator-bundle",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.4.12-1",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.4::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.4",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-rhel9",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.4-17",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.4::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.4",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-rhel9-operator",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.4-17",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.4::el9"
+          ]
+        }
+      ],
+      "problemType": [
+        "External Control of Assumed-Immutable Web Parameter"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-37982",
+      "publishedDate": "2026-05-19T10:52:32.486Z",
+      "lastModifiedDate": "2026-05-20T11:26:40.177Z",
+      "description": "A flaw was found in Keycloak. This authentication vulnerability allows a remote attacker to replay `ExecuteActionsActionToken` tokens within Keycloak's WebAuthn (Web Authentication) flow. By intercepting an execute-actions email link, an attacker can register their own authenticator to a victim's account. This leads to unauthorized enrollment of a hardware-backed credential, enabling persistent account takeover.",
+      "severity": 6.8,
+      "references": [
+        {
+          "url": "https://access.redhat.com/errata/RHSA-2026:19597",
+          "type": "reference"
+        },
+        {
+          "url": "https://access.redhat.com/security/cve/CVE-2026-37982",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2455329",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.4",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-operator-bundle",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.4.12-1",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.4::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.4",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-rhel9",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.4-17",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.4::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.4",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-rhel9-operator",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.4-17",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.4::el9"
+          ]
+        }
+      ],
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4630",
+      "publishedDate": "2026-05-19T10:28:15.936Z",
+      "lastModifiedDate": "2026-05-20T11:26:31.273Z",
+      "description": "A flaw was found in Keycloak. An authenticated client could exploit an Insecure Direct Object Reference (IDOR) vulnerability in the Authorization Services Protection API endpoint. By knowing or obtaining a resource's unique identifier (UUID) belonging to another Resource Server within the same realm, the client could bypass authorization checks. This allows the client to perform unauthorized GET, PUT, and DELETE operations on resources, leading to information disclosure and potential unauthorized modification or deletion of data.",
+      "severity": 6.8,
+      "references": [
+        {
+          "url": "https://access.redhat.com/errata/RHSA-2026:19597",
+          "type": "reference"
+        },
+        {
+          "url": "https://access.redhat.com/security/cve/CVE-2026-4630",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2450245",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.4",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-operator-bundle",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.4.12-1",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.4::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.4",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-rhel9",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.4-17",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.4::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.4",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-rhel9-operator",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.4-17",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.4::el9"
+          ]
+        }
+      ],
+      "problemType": [
+        "Authorization Bypass Through User-Controlled Key"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-37979",
+      "publishedDate": "2026-05-19T10:52:30.442Z",
+      "lastModifiedDate": "2026-05-20T11:26:34.936Z",
+      "description": "A flaw was found in Keycloak. This access control vulnerability in Keycloak's OpenID Connect (OIDC) token introspection endpoint allows a confidential client to bypass audience restrictions. An attacker-controlled client with valid credentials can retrieve sensitive token claims intended for other resource servers, compromising the confidentiality of lightweight access tokens. This issue can be exploited remotely by any confidential client in the realm with valid credentials.",
+      "severity": 6.5,
+      "references": [
+        {
+          "url": "https://access.redhat.com/errata/RHSA-2026:19597",
+          "type": "reference"
+        },
+        {
+          "url": "https://access.redhat.com/security/cve/CVE-2026-37979",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2455328",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.4",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-operator-bundle",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.4.12-1",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.4::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.4",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-rhel9",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.4-17",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.4::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.4",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-rhel9-operator",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.4-17",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.4::el9"
+          ]
+        }
+      ],
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-0857",
+      "publishedDate": "2026-05-20T10:50:58.695Z",
+      "lastModifiedDate": "2026-05-20T12:01:48.193Z",
+      "description": "Cleartext Storage of Sensitive Information in Memory vulnerability in Mesalvo Meona Client Launcher Component, Mesalvo Meona Server Component.\n\nThis issue affects Meona Client Launcher Component: through 19.06.2020 15:11:49; Meona Server Component: through 2025.04 5+323020.",
+      "severity": 6,
+      "references": [
+        {
+          "url": "https://seccore.at/blog/cves-meona/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Mesalvo",
+          "product": "Meona Client Launcher Component",
           "versions": [
             {
               "status": "affected",
-              "version": "O",
-              "lessThan": "4.2.1",
+              "version": "0",
+              "lessThanOrEqual": "19.06.2020 15:11:49",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        },
+        {
+          "vendor": "Mesalvo",
+          "product": "Meona Server Component",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThanOrEqual": "2025.04 5+323020",
               "versionType": "custom"
             }
           ],
@@ -75,7 +659,274 @@
         }
       ],
       "problemType": [
-        "CWE-89 Improper neutralization of special elements used in an SQL command ('SQL injection')"
+        "CWE-316: Cleartext Storage of Sensitive Information in Memory"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-37978",
+      "publishedDate": "2026-05-19T10:52:29.997Z",
+      "lastModifiedDate": "2026-05-20T11:26:32.989Z",
+      "description": "A flaw was found in Keycloak. A low-privilege administrator with the 'view-clients' role can exploit this by invoking the 'evaluate-scopes' Admin API endpoints with an arbitrary user ID (userId) parameter. This vulnerability allows for cross-role personally identifiable information (PII) leakage, enabling unauthorized visibility into user identities and authorizations across the realm. Exploitation is possible remotely via network access to the Admin API.",
+      "severity": 4.9,
+      "references": [
+        {
+          "url": "https://access.redhat.com/errata/RHSA-2026:19597",
+          "type": "reference"
+        },
+        {
+          "url": "https://access.redhat.com/security/cve/CVE-2026-37978",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2455327",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.4",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-operator-bundle",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.4.12-1",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.4::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.4",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-rhel9",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.4-17",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.4::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.4",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-rhel9-operator",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.4-17",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.4::el9"
+          ]
+        }
+      ],
+      "problemType": [
+        "Authorization Bypass Through User-Controlled Key"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-25602",
+      "publishedDate": "2026-05-20T10:54:13.448Z",
+      "lastModifiedDate": "2026-05-20T12:00:29.697Z",
+      "description": "Insufficient Verification of Data Authenticity vulnerability in Mesalvo Meona Client Launcher Component, Mesalvo Meona Server Component makes it possible to send messages to any email address. This issue affects Meona Client Launcher Component: through 19.06.2020 15:11:49; Meona Server Component: through 2025.04 5+323020.",
+      "severity": 4.4,
+      "references": [
+        {
+          "url": "https://seccore.at/blog/cves-meona/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Mesalvo",
+          "product": "Meona Client Launcher Component",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThanOrEqual": "19.06.2020 15:11:49",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        },
+        {
+          "vendor": "Mesalvo",
+          "product": "Meona Server Component",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThanOrEqual": "2025.04 5+323020",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-345: Insufficient Verification of Data Authenticity"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-37981",
+      "publishedDate": "2026-05-19T10:28:24.207Z",
+      "lastModifiedDate": "2026-05-20T11:26:36.827Z",
+      "description": "A flaw was found in Keycloak. A broken access control vulnerability in the Account Resources user lookup endpoint allows a remote authenticated user, who owns at least one User-Managed Access (UMA) resource, to enumerate and harvest personally identifiable information (PII) for all realm users. By sending crafted requests with arbitrary usernames or email values, the endpoint returns full profile objects for unrelated users. This leads to broad profile-level information disclosure.",
+      "severity": 4.3,
+      "references": [
+        {
+          "url": "https://access.redhat.com/errata/RHSA-2026:19597",
+          "type": "reference"
+        },
+        {
+          "url": "https://access.redhat.com/security/cve/CVE-2026-37981",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2455326",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.4",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-operator-bundle",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.4.12-1",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.4::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.4",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-rhel9",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.4-17",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.4::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.4",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-rhel9-operator",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.4-17",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.4::el9"
+          ]
+        }
+      ],
+      "problemType": [
+        "Insufficient Granularity of Access Control"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-31973",
+      "publishedDate": "2026-05-20T11:25:44.157Z",
+      "lastModifiedDate": "2026-05-20T11:25:44.157Z",
+      "description": "HCL BigFix Service Management (SM) is susceptible to  a Configuration – 'Insecure Use of Base Image Version'. Using outdated or insecure base images may introduce known vulnerabilities, potentially increasing the risk of exploitation in the application environment.",
+      "severity": 4,
+      "references": [
+        {
+          "url": "https://support.hcl-software.com/csm?id=kb_article&sysparm_article=KB0128144",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "HCL",
+          "product": "BigFix Service Management (SM)",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "23"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-1395: Dependency on Vulnerable Third-Party Component"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-31985",
+      "publishedDate": "2026-05-20T11:28:03.667Z",
+      "lastModifiedDate": "2026-05-20T11:28:03.667Z",
+      "description": "HCL BigFix Service Management (SM) is affected by a security misconfiguration due to a missing or insecure “X-Content-Type-Options” header.  This could allow browsers to perform MIME-type sniffing, potentially causing malicious content to be interpreted and executed incorrectly.",
+      "severity": 3.7,
+      "references": [
+        {
+          "url": "https://support.hcl-software.com/csm?id=kb_article&sysparm_article=KB0128144",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "HCL",
+          "product": "BigFix Service Management (SM)",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "23"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
