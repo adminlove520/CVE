@@ -2,267 +2,654 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 4,
-    "last_updated": "2026-05-22T08:02:38.902830",
+    "total_count": 10,
+    "last_updated": "2026-05-22T11:14:13.575323",
     "severity_distribution": {
       "critical": 0,
-      "high": 0,
-      "medium": 0,
+      "high": 3,
+      "medium": 7,
       "low": 0,
-      "none": 4
+      "none": 0
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-5072",
-      "publishedDate": "2026-05-22T07:00:36.025Z",
-      "lastModifiedDate": "2026-05-22T07:00:36.025Z",
-      "description": "A bitwise shift vulnerability in Zephyr's PTP subsystem allows a remote attacker to cause undefined behavior and potential system crashes. An attacker sends a crafted PTP_MSG_MANAGEMENT message to set an unvalidated negative log_announce_interval value in the port's data set. When a subsequent PTP_MSG_ANNOUNCE message is processed, port_timer_set_timeout_random computes a timeout as NSEC_PER_SEC >> -log_seconds; if the attacker-supplied value is sufficiently negative (e.g., -127), the shift amount exceeds the 64-bit integer width, triggering undefined behavior in C. This can cause a system crash via a compiler-generated illegal instruction trap on some architectures, or produce an erroneous zero timeout leading to resource starvation loops or other logical errors.",
-      "severity": "N/A",
+      "id": "CVE-2026-5740",
+      "publishedDate": "2026-05-22T10:22:01.030Z",
+      "lastModifiedDate": "2026-05-22T10:22:01.030Z",
+      "description": "Mattermost versions 11.6.x <= 11.6.0, 11.5.x <= 11.5.3, 11.4.x <= 11.4.4, 10.11.x <= 10.11.14 fail to properly validate msgpack-encoded WebSocket frames before memory allocation which allows an unauthenticated remote attacker to crash the server process and cause a full service outage for all users via a crafted binary WebSocket message sent to the public WebSocket endpoint.. Mattermost Advisory ID: MMSA-2026-00647",
+      "severity": 7.5,
       "references": [
         {
-          "url": "https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-3v98-458v-388r",
+          "url": "https://mattermost.com/security-updates",
           "type": "reference"
         }
       ],
       "affected": [
         {
           "defaultStatus": "unaffected",
-          "packageName": "Zephyr",
-          "product": "Zephyr",
-          "repo": "https://github.com/zephyrproject-rtos/zephyr",
-          "vendor": "zephyrproject-rtos",
+          "product": "Mattermost",
+          "vendor": "Mattermost",
           "versions": [
             {
-              "lessThanOrEqual": "4.3",
+              "lessThanOrEqual": "11.6.0",
               "status": "affected",
-              "version": "*",
-              "versionType": "git"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-43497",
-      "publishedDate": "2026-05-21T12:12:47.150Z",
-      "lastModifiedDate": "2026-05-22T07:32:48.345Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nfbdev: udlfb: add vm_ops to dlfb_ops_mmap to prevent use-after-free\n\ndlfb_ops_mmap() uses remap_pfn_range() to map vmalloc framebuffer pages\nto userspace but sets no vm_ops on the VMA. This means the kernel cannot\ntrack active mmaps. When dlfb_realloc_framebuffer() replaces the backing\nbuffer via FBIOPUT_VSCREENINFO, existing mmap PTEs are not invalidated.\nOn USB disconnect, dlfb_ops_destroy() calls vfree() on the old pages\nwhile userspace PTEs still reference them, resulting in a use-after-free:\nthe process retains read/write access to freed kernel pages.\n\nAdd vm_operations_struct with open/close callbacks that maintain an\natomic mmap_count on struct dlfb_data. In dlfb_realloc_framebuffer(),\ncheck mmap_count and return -EBUSY if the buffer is currently mapped,\npreventing buffer replacement while userspace holds stale PTEs.\n\nTested with PoC using dummy_hcd + raw_gadget USB device emulation.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://git.kernel.org/stable/c/4f312c30f0368e8d2a76aa650dff73f23490b5e7",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/18dd358de72d57993422cbb5dfb29ccd74efe192",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/da9b065cedfd3b574f229d5be594e6aa47a27ae6",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/a2c53a3822ee26e8d758071815b9ed3bf6669fc1",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/8de779dc40d35d39fa07387b6f921eb11df0f511",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/video/fbdev/udlfb.c",
-            "include/video/udlfb.h"
-          ],
-          "versions": [
-            {
-              "version": "7433914efd584b22bb49d3e1eee001f5d0525ecd",
-              "lessThan": "4f312c30f0368e8d2a76aa650dff73f23490b5e7",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "7433914efd584b22bb49d3e1eee001f5d0525ecd",
-              "lessThan": "18dd358de72d57993422cbb5dfb29ccd74efe192",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "7433914efd584b22bb49d3e1eee001f5d0525ecd",
-              "lessThan": "da9b065cedfd3b574f229d5be594e6aa47a27ae6",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "7433914efd584b22bb49d3e1eee001f5d0525ecd",
-              "lessThan": "a2c53a3822ee26e8d758071815b9ed3bf6669fc1",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "7433914efd584b22bb49d3e1eee001f5d0525ecd",
-              "lessThan": "8de779dc40d35d39fa07387b6f921eb11df0f511",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/video/fbdev/udlfb.c",
-            "include/video/udlfb.h"
-          ],
-          "versions": [
-            {
-              "version": "4.19",
-              "status": "affected"
-            },
-            {
-              "version": "0",
-              "lessThan": "4.19",
-              "status": "unaffected",
+              "version": "11.6.0",
               "versionType": "semver"
             },
             {
-              "version": "6.6.140",
-              "lessThanOrEqual": "6.6.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.12.88",
-              "lessThanOrEqual": "6.12.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.18.30",
-              "lessThanOrEqual": "6.18.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.0.7",
-              "lessThanOrEqual": "7.0.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.1-rc3",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-45250",
-      "publishedDate": "2026-05-21T08:37:17.553Z",
-      "lastModifiedDate": "2026-05-22T07:11:47.863Z",
-      "description": "The setcred(2) system call is only available to privileged users.  However, before the privilege level of the caller is checked, the user-supplied list of supplementary groups is copied into a fixed-size kernel stack buffer without first validating its length.  If the supplied list exceeds the capacity of that buffer, a stack buffer overflow occurs.\n\nBecause the bounds check on the supplementary groups list occurs after the kernel stack buffer has already been written, an unprivileged local user may trigger the overflow without holding any special privilege.  Successful exploitation may allow an attacker to execute arbitrary code in the context of the kernel, allowing an unprivileged local user to gain elevated privileges on the affected system.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://security.freebsd.org/advisories/FreeBSD-SA-26:18.setcred.asc",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unknown",
-          "modules": [
-            "setcred"
-          ],
-          "product": "FreeBSD",
-          "vendor": "FreeBSD",
-          "versions": [
-            {
+              "lessThanOrEqual": "11.5.3",
               "status": "affected",
-              "versionType": "release",
-              "version": "15.0-RELEASE",
-              "lessThan": "p9"
+              "version": "11.5.0",
+              "versionType": "semver"
             },
             {
+              "lessThanOrEqual": "11.4.4",
               "status": "affected",
-              "versionType": "release",
-              "version": "14.4-RELEASE",
-              "lessThan": "p5"
+              "version": "11.4.0",
+              "versionType": "semver"
             },
             {
+              "lessThanOrEqual": "10.11.14",
               "status": "affected",
-              "versionType": "release",
-              "version": "14.3-RELEASE",
-              "lessThan": "p14"
+              "version": "10.11.0",
+              "versionType": "semver"
+            },
+            {
+              "version": "11.7.0",
+              "status": "unaffected"
+            },
+            {
+              "version": "11.6.1",
+              "status": "unaffected"
+            },
+            {
+              "version": "11.5.4",
+              "status": "unaffected"
+            },
+            {
+              "version": "11.4.5",
+              "status": "unaffected"
+            },
+            {
+              "version": "10.11.15",
+              "status": "unaffected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-121: Stack-based Buffer Overflow"
+        "CWE-789: Memory Allocation with Excessive Size Value"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-5090",
-      "publishedDate": "2026-05-19T21:30:03.552Z",
-      "lastModifiedDate": "2026-05-22T06:39:14.682Z",
-      "description": "Template::Plugin::HTML versions through 3.102 for Perl allows HTML and JavaScript to be injected.\n\nThe html_filter function did not escape single quotes. HTML attributes inside of single quotes could be have code injected.  For example, the variable \"var\" in\n\n    <a id='ref' title='[% var | html %]'>\n\nwould not be properly escaped. An attacker could insert some limited HTML and JavaScript, for example,\n\n    var = \" ' onclick='while (true) { alert(1) }'\"\n\nNote that arbitrary HTML and JavaScript would be difficult to inject, because angle brackets, ampersands and double-quotes would still be escaped.",
-      "severity": "N/A",
+      "id": "CVE-2026-8679",
+      "publishedDate": "2026-05-22T07:50:27.202Z",
+      "lastModifiedDate": "2026-05-22T10:20:11.498Z",
+      "description": "The AudioIgniter plugin for WordPress is vulnerable to Insecure Direct Object Reference in versions up to, and including, 2.0.2. This is due to the handle_playlist_endpoint() function (hooked to template_redirect) accepting a user-controlled playlist ID via the audioigniter_playlist_id query var or the /audioigniter/playlist/{id}/ rewrite rule and returning playlist track data without performing any authentication, capability, or post_status check — only the post_type is validated. This makes it possible for unauthenticated attackers to view track metadata (titles, artists, audio URLs, buy links, download URLs, and cover images) of any playlist on the site, including those in draft, private, pending, or trash status.",
+      "severity": 7.5,
       "references": [
         {
-          "url": "https://github.com/abw/Template2/issues/327",
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/fe573d64-036e-4f6f-bcc1-5183bb9ad2b9?source=cve",
           "type": "reference"
         },
         {
-          "url": "https://github.com/abw/Template2/pull/337/changes/11c78a7a771d4af505efeb754a0b8775689c2eae",
+          "url": "https://plugins.trac.wordpress.org/browser/audioigniter/tags/2.0.2/audioigniter.php#L1315",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/audioigniter/tags/2.0.2/audioigniter.php#L1263",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/audioigniter/tags/2.0.2/audioigniter.php#L1257",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/cssigniter/audioigniter/commit/35a0508583c26c01b6ac446404ad6fe1d440d8d4",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "collectionURL": "https://cpan.org/modules",
-          "defaultStatus": "unaffected",
-          "packageName": "Template-Toolkit",
-          "product": "Template::Plugin::HTML",
-          "programFiles": [
-            "lib/Template/Plugin/HTML.pm"
-          ],
-          "programRoutines": [
-            {
-              "name": "Template::Plugin::HTML::html_filter"
-            }
-          ],
-          "repo": "https://github.com/abw/Template2",
-          "vendor": "TODDR",
+          "vendor": "cssigniterteam",
+          "product": "AudioIgniter Music Player",
           "versions": [
             {
-              "lessThanOrEqual": "3.102",
-              "status": "affected",
               "version": "0",
-              "versionType": "custom"
+              "status": "affected",
+              "lessThanOrEqual": "2.0.2",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-639 Authorization Bypass Through User-Controlled Key"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4834",
+      "publishedDate": "2026-05-22T02:28:07.862Z",
+      "lastModifiedDate": "2026-05-22T10:21:44.297Z",
+      "description": "The WP ERP Pro plugin for WordPress is vulnerable to SQL Injection via the 'search_key' parameter in all versions up to, and including, 1.5.1. This is due to insufficient escaping on the user supplied parameter and lack of sufficient preparation on the existing SQL query. This makes it possible for unauthenticated attackers to append additional SQL queries into already existing queries that can be used to extract sensitive information from the database.",
+      "severity": 7.5,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/d3849db8-5c9e-410e-be53-c9ab76162630?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://wperp.com/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "weDevs",
+          "product": "WP ERP Pro",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "1.5.1",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4635",
+      "publishedDate": "2026-05-22T10:28:47.634Z",
+      "lastModifiedDate": "2026-05-22T10:28:47.634Z",
+      "description": "Mattermost versions 11.6.x <= 11.6.0, 11.5.x <= 11.5.3, 11.4.x <= 11.4.4, 10.11.x <= 10.11.14 fail to archive the channel before removing persistent notifications which allows authenticated user to crash the server via timing the creation of persistent notification message between the server deleting existing persistent notifications and archiving the channel.. Mattermost Advisory ID: MMSA-2026-00637",
+      "severity": 6.5,
+      "references": [
+        {
+          "url": "https://mattermost.com/security-updates",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Mattermost",
+          "vendor": "Mattermost",
+          "versions": [
+            {
+              "lessThanOrEqual": "11.6.0",
+              "status": "affected",
+              "version": "11.6.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThanOrEqual": "11.5.3",
+              "status": "affected",
+              "version": "11.5.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThanOrEqual": "11.4.4",
+              "status": "affected",
+              "version": "11.4.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThanOrEqual": "10.11.14",
+              "status": "affected",
+              "version": "10.11.0",
+              "versionType": "semver"
+            },
+            {
+              "version": "11.7.0",
+              "status": "unaffected"
+            },
+            {
+              "version": "11.6.1",
+              "status": "unaffected"
+            },
+            {
+              "version": "11.5.4",
+              "status": "unaffected"
+            },
+            {
+              "version": "11.4.5",
+              "status": "unaffected"
+            },
+            {
+              "version": "10.11.15",
+              "status": "unaffected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation"
+        "CWE-362: Concurrent Execution using Shared Resource with Improper Synchronization ('Race Condition')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-5755",
+      "publishedDate": "2026-05-22T10:18:49.798Z",
+      "lastModifiedDate": "2026-05-22T10:18:49.798Z",
+      "description": "Mattermost versions 11.6.x <= 11.6.0, 11.5.x <= 11.5.2, 11.5.x <= 11.5.3, 11.4.x <= 11.4.4, 10.11.x <= 10.11.14 fail to validate the TIFF IFD offset in the image header before allocating memory, which allows authenticated users with file upload or posting permissions to cause a denial of service (server OOM) via uploading a crafted TIFF file or posting a URL that serves one.. Mattermost Advisory ID: MMSA-2026-00648",
+      "severity": 6.5,
+      "references": [
+        {
+          "url": "https://mattermost.com/security-updates",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Mattermost",
+          "vendor": "Mattermost",
+          "versions": [
+            {
+              "lessThanOrEqual": "11.6.0",
+              "status": "affected",
+              "version": "11.6.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThanOrEqual": "11.5.2",
+              "status": "affected",
+              "version": "11.5.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThanOrEqual": "11.5.3",
+              "status": "affected",
+              "version": "11.5.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThanOrEqual": "11.4.4",
+              "status": "affected",
+              "version": "11.4.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThanOrEqual": "10.11.14",
+              "status": "affected",
+              "version": "10.11.0",
+              "versionType": "semver"
+            },
+            {
+              "version": "11.7.0",
+              "status": "unaffected"
+            },
+            {
+              "version": "11.6.1",
+              "status": "unaffected"
+            },
+            {
+              "version": "11.5.3",
+              "status": "unaffected"
+            },
+            {
+              "version": "11.5.4",
+              "status": "unaffected"
+            },
+            {
+              "version": "11.4.5",
+              "status": "unaffected"
+            },
+            {
+              "version": "10.11.15",
+              "status": "unaffected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-400 Uncontrolled Resource Consumption"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-7509",
+      "publishedDate": "2026-05-22T03:39:21.812Z",
+      "lastModifiedDate": "2026-05-22T10:21:17.426Z",
+      "description": "The KIA Subtitle plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the plugin's `the-subtitle` shortcode `before` and `after` attributes in all versions up to, and including, 4.0.1. This is due to insufficient input sanitization and output escaping on user supplied attributes. This makes it possible for authenticated attackers, with Contributor-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page.",
+      "severity": 6.4,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/a9a52097-0d85-4036-9b74-f35fea549607?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/kia-subtitle/tags/4.0.1/kia-subtitle.php#L359",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/kia-subtitle/tags/4.0.1/kia-subtitle.php#L329",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/kia-subtitle/trunk/kia-subtitle.php#L359",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/kia-subtitle/trunk/kia-subtitle.php#L329",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/kia-subtitle/tags/4.0.2/kia-subtitle.php#L369",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/kia-subtitle/tags/4.0.2/kia-subtitle.php#L370",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "helgatheviking",
+          "product": "KIA Subtitle",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "4.0.1",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3473",
+      "publishedDate": "2026-05-22T10:27:02.600Z",
+      "lastModifiedDate": "2026-05-22T10:27:02.600Z",
+      "description": "Mattermost versions 11.6.x <= 11.6.0, 11.5.x <= 11.5.3, 11.4.x <= 11.4.4, 10.11.x <= 10.11.14 fail to validate file ownership and access control, which allows an authenticated user to access and download files belonging to other users or teams via crafted Boards API requests using valid file IDs.. Mattermost Advisory ID: MMSA-2026-00620",
+      "severity": 5.9,
+      "references": [
+        {
+          "url": "https://mattermost.com/security-updates",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Mattermost",
+          "vendor": "Mattermost",
+          "versions": [
+            {
+              "lessThanOrEqual": "11.6.0",
+              "status": "affected",
+              "version": "11.6.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThanOrEqual": "11.5.3",
+              "status": "affected",
+              "version": "11.5.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThanOrEqual": "11.4.4",
+              "status": "affected",
+              "version": "11.4.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThanOrEqual": "10.11.14",
+              "status": "affected",
+              "version": "10.11.0",
+              "versionType": "semver"
+            },
+            {
+              "version": "11.7.0",
+              "status": "unaffected"
+            },
+            {
+              "version": "11.6.1",
+              "status": "unaffected"
+            },
+            {
+              "version": "11.5.4",
+              "status": "unaffected"
+            },
+            {
+              "version": "11.4.5",
+              "status": "unaffected"
+            },
+            {
+              "version": "10.11.15",
+              "status": "unaffected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-639: Authorization Bypass Through User-Controlled Key"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-5308",
+      "publishedDate": "2026-05-22T10:20:43.629Z",
+      "lastModifiedDate": "2026-05-22T10:20:43.629Z",
+      "description": "Mattermost versions 11.6.x <= 11.6.0, 11.5.x <= 11.5.3, 11.4.x <= 11.4.4, 10.11.x <= 10.11.14 fail to enforce request body size limits on plugin HTTP endpoints which allows an attacker to cause a denial of service via crafted oversized HTTP requests.. Mattermost Advisory ID: MMSA-2026-00646",
+      "severity": 4.9,
+      "references": [
+        {
+          "url": "https://mattermost.com/security-updates",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Mattermost",
+          "vendor": "Mattermost",
+          "versions": [
+            {
+              "lessThanOrEqual": "11.6.0",
+              "status": "affected",
+              "version": "11.6.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThanOrEqual": "11.5.3",
+              "status": "affected",
+              "version": "11.5.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThanOrEqual": "11.4.4",
+              "status": "affected",
+              "version": "11.4.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThanOrEqual": "10.11.14",
+              "status": "affected",
+              "version": "10.11.0",
+              "versionType": "semver"
+            },
+            {
+              "version": "11.7.0",
+              "status": "unaffected"
+            },
+            {
+              "version": "11.6.1",
+              "status": "unaffected"
+            },
+            {
+              "version": "11.5.4",
+              "status": "unaffected"
+            },
+            {
+              "version": "11.4.5",
+              "status": "unaffected"
+            },
+            {
+              "version": "10.11.15",
+              "status": "unaffected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-400 Uncontrolled Resource Consumption"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-4646",
+      "publishedDate": "2026-05-22T10:25:17.315Z",
+      "lastModifiedDate": "2026-05-22T10:25:17.315Z",
+      "description": "Mattermost versions 11.6.x <= 11.6.0, 11.5.x <= 11.5.3, 11.4.x <= 11.4.4, 10.11.x <= 10.11.14 fail to validate user-supplied input in API request handlers which allows an authenticated attacker to crash the plugin process via a crafted HTTP request to the PR details endpoint.. Mattermost Advisory ID: MMSA-2026-00638",
+      "severity": 4.3,
+      "references": [
+        {
+          "url": "https://mattermost.com/security-updates",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Mattermost",
+          "vendor": "Mattermost",
+          "versions": [
+            {
+              "lessThanOrEqual": "11.6.0",
+              "status": "affected",
+              "version": "11.6.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThanOrEqual": "11.5.3",
+              "status": "affected",
+              "version": "11.5.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThanOrEqual": "11.4.4",
+              "status": "affected",
+              "version": "11.4.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThanOrEqual": "10.11.14",
+              "status": "affected",
+              "version": "10.11.0",
+              "versionType": "semver"
+            },
+            {
+              "version": "11.7.0",
+              "status": "unaffected"
+            },
+            {
+              "version": "11.6.1",
+              "status": "unaffected"
+            },
+            {
+              "version": "11.5.4",
+              "status": "unaffected"
+            },
+            {
+              "version": "11.4.5",
+              "status": "unaffected"
+            },
+            {
+              "version": "10.11.15",
+              "status": "unaffected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-1287: Improper Validation of Specified Type of Input"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-3636",
+      "publishedDate": "2026-05-22T10:23:20.485Z",
+      "lastModifiedDate": "2026-05-22T10:23:20.485Z",
+      "description": "Mattermost versions 11.6.x <= 11.6.0, 11.5.x <= 11.5.3, 11.4.x <= 11.4.4, 10.11.x <= 10.11.14 fail to sanitize team member data when returned via API to users without elevated permissions which allows a user without permissions to get data about team members roles via invoking various team API endpoints.. Mattermost Advisory ID: MMSA-2026-00626",
+      "severity": 4.3,
+      "references": [
+        {
+          "url": "https://mattermost.com/security-updates",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Mattermost",
+          "vendor": "Mattermost",
+          "versions": [
+            {
+              "lessThanOrEqual": "11.6.0",
+              "status": "affected",
+              "version": "11.6.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThanOrEqual": "11.5.3",
+              "status": "affected",
+              "version": "11.5.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThanOrEqual": "11.4.4",
+              "status": "affected",
+              "version": "11.4.0",
+              "versionType": "semver"
+            },
+            {
+              "lessThanOrEqual": "10.11.14",
+              "status": "affected",
+              "version": "10.11.0",
+              "versionType": "semver"
+            },
+            {
+              "version": "11.7.0",
+              "status": "unaffected"
+            },
+            {
+              "version": "11.6.1",
+              "status": "unaffected"
+            },
+            {
+              "version": "11.5.4",
+              "status": "unaffected"
+            },
+            {
+              "version": "11.4.5",
+              "status": "unaffected"
+            },
+            {
+              "version": "10.11.15",
+              "status": "unaffected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-200 Exposure of Sensitive Information to an Unauthorized Actor"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
