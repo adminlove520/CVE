@@ -2,38 +2,38 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 1,
-    "last_updated": "2026-05-23T11:21:49.425802",
+    "total_count": 3,
+    "last_updated": "2026-05-23T12:11:03.927706",
     "severity_distribution": {
       "critical": 0,
       "high": 0,
       "medium": 1,
       "low": 0,
-      "none": 0
+      "none": 2
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-9299",
-      "publishedDate": "2026-05-23T11:00:14.603Z",
-      "lastModifiedDate": "2026-05-23T11:00:14.603Z",
-      "description": "A flaw has been found in omec-project amf up to 2.1.1. Affected by this issue is the function PDUSessionResourceModifyIndication of the file /go/src/amf/ngap/handler.go. This manipulation causes memory corruption. Remote exploitation of the attack is possible. The exploit has been published and may be used. Applying a patch is the recommended action to fix this issue.",
+      "id": "CVE-2026-9300",
+      "publishedDate": "2026-05-23T11:45:12.057Z",
+      "lastModifiedDate": "2026-05-23T11:45:12.057Z",
+      "description": "A vulnerability has been found in omec-project amf up to 2.1.1. This affects an unknown part of the component NGSetupRequest Handler. Such manipulation leads to memory corruption. The attack can be executed remotely. The exploit has been disclosed to the public and may be used. It is best practice to apply a patch to resolve this issue.",
       "severity": 6.3,
       "references": [
         {
-          "url": "https://vuldb.com/vuln/365246",
+          "url": "https://vuldb.com/vuln/365247",
           "type": "reference"
         },
         {
-          "url": "https://vuldb.com/vuln/365246/cti",
+          "url": "https://vuldb.com/vuln/365247/cti",
           "type": "reference"
         },
         {
-          "url": "https://vuldb.com/submit/811829",
+          "url": "https://vuldb.com/submit/811841",
           "type": "reference"
         },
         {
-          "url": "https://github.com/omec-project/amf/issues/681",
+          "url": "https://github.com/omec-project/amf/issues/679",
           "type": "poc"
         },
         {
@@ -61,12 +61,333 @@
           ],
           "cpes": [
             "cpe:2.3:a:omec-project:amf:*:*:*:*:*:*:*:*"
+          ],
+          "modules": [
+            "NGSetupRequest Handler"
           ]
         }
       ],
       "problemType": [
         "Memory Corruption"
       ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-46300",
+      "publishedDate": "2026-05-23T11:44:02.231Z",
+      "lastModifiedDate": "2026-05-23T11:44:02.231Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: skbuff: propagate shared-frag marker through frag-transfer helpers\n\nTwo frag-transfer helpers (__pskb_copy_fclone() and skb_shift()) fail\nto propagate the SKBFL_SHARED_FRAG bit in skb_shinfo()->flags when\nmoving frags from source to destination.  __pskb_copy_fclone() defers\nthe rest of the shinfo metadata to skb_copy_header() after copying\nfrag descriptors, but that helper only carries over gso_{size,segs,\ntype} and never touches skb_shinfo()->flags; skb_shift() moves frag\ndescriptors directly and leaves flags untouched.  As a result, the\ndestination skb keeps a reference to the same externally-owned or\npage-cache-backed pages while reporting skb_has_shared_frag() as\nfalse.\n\nThe mismatch is harmful in any in-place writer that uses\nskb_has_shared_frag() to decide whether shared pages must be detoured\nthrough skb_cow_data().  ESP input is one such writer (esp4.c,\nesp6.c), and a single nft 'dup to <local>' rule -- or any other\nnf_dup_ipv4() / xt_TEE caller -- is enough to land a pskb_copy()'d\nskb in esp_input() with the marker stripped, letting an unprivileged\nuser write into the page cache of a root-owned read-only file via\nauthencesn-ESN stray writes.\n\nSet SKBFL_SHARED_FRAG on the destination whenever frag descriptors\nwere actually moved from the source.  skb_copy() and skb_copy_expand()\nshare skb_copy_header() too but linearize all paged data into freshly\nallocated head storage and emerge with nr_frags == 0, so\nskb_has_shared_frag() returns false on its own; they need no change.\n\nThe same omission exists in skb_gro_receive() and skb_gro_receive_list().\nThe former moves the incoming skb's frag descriptors into the\naccumulator's last sub-skb via two paths (a direct frag-move loop and\nthe head_frag + memcpy path); the latter chains the incoming skb whole\nonto p's frag_list.  Downstream skb_segment() reads only\nskb_shinfo(p)->flags, and skb_segment_list() reuses each sub-skb's\nshinfo as the nskb -- both p and lp must carry the marker.\n\nThe same omission also exists in tcp_clone_payload(), which builds an\nMTU probe skb by moving frag descriptors from skbs on sk_write_queue\ninto a freshly allocated nskb.  The helper falls into the same family\nand warrants the same fix for consistency; no TCP TX-side in-place\nwriter is currently known to reach a user page through this gap, but\na future consumer depending on the marker would regress silently.\n\nThe same omission exists in skb_segment(): the per-iteration flag\nmerge takes only head_skb's flag, and the inner switch that rebinds\nfrag_skb to list_skb on head_skb-frags exhaustion does not fold the\nnew frag_skb's flag into nskb.  Fold frag_skb's flag at both sites\nso segments drawing frags from frag_list members carry the marker.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://git.kernel.org/stable/c/fbeab9555564a1b98e8582cd106dfe46c4606991",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/179f1852bdedc300e373e807cc102cd81feff196",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/12401fcfb01f53ccc63ab0a3246570fe8f3105ee",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/989214c66884d70716d83dc1d0bf5e16287bf349",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/fc6eb39c55e97df2f94ad974b8a5bbcd019da2c8",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/ff375cc75f9167168db38e0464a482d5fbc8d81d",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/9bc9d6d6967a2239aa57af2aa53554eddd640d20",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "unaffected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "net/core/gro.c",
+            "net/core/skbuff.c",
+            "net/ipv4/tcp_output.c"
+          ],
+          "versions": [
+            {
+              "version": "cef401de7be8c4e155c6746bfccf721a4fa5fab9",
+              "lessThan": "fbeab9555564a1b98e8582cd106dfe46c4606991",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "cef401de7be8c4e155c6746bfccf721a4fa5fab9",
+              "lessThan": "179f1852bdedc300e373e807cc102cd81feff196",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "cef401de7be8c4e155c6746bfccf721a4fa5fab9",
+              "lessThan": "12401fcfb01f53ccc63ab0a3246570fe8f3105ee",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "cef401de7be8c4e155c6746bfccf721a4fa5fab9",
+              "lessThan": "989214c66884d70716d83dc1d0bf5e16287bf349",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "cef401de7be8c4e155c6746bfccf721a4fa5fab9",
+              "lessThan": "fc6eb39c55e97df2f94ad974b8a5bbcd019da2c8",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "cef401de7be8c4e155c6746bfccf721a4fa5fab9",
+              "lessThan": "ff375cc75f9167168db38e0464a482d5fbc8d81d",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "cef401de7be8c4e155c6746bfccf721a4fa5fab9",
+              "lessThan": "9bc9d6d6967a2239aa57af2aa53554eddd640d20",
+              "status": "affected",
+              "versionType": "git"
+            }
+          ]
+        },
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "affected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "net/core/gro.c",
+            "net/core/skbuff.c",
+            "net/ipv4/tcp_output.c"
+          ],
+          "versions": [
+            {
+              "version": "3.9",
+              "status": "affected"
+            },
+            {
+              "version": "0",
+              "lessThan": "3.9",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "5.10.257",
+              "lessThanOrEqual": "5.10.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "5.15.208",
+              "lessThanOrEqual": "5.15.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.1.174",
+              "lessThanOrEqual": "6.1.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.6.141",
+              "lessThanOrEqual": "6.6.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.12.91",
+              "lessThanOrEqual": "6.12.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.18.33",
+              "lessThanOrEqual": "6.18.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "7.0.10",
+              "lessThanOrEqual": "7.0.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-43503",
+      "publishedDate": "2026-05-23T11:44:01.103Z",
+      "lastModifiedDate": "2026-05-23T11:44:01.103Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: skbuff: preserve shared-frag marker during coalescing\n\nskb_try_coalesce() can attach paged frags from @from to @to.  If @from\nhas SKBFL_SHARED_FRAG set, the resulting @to skb can contain the same\nexternally-owned or page-cache-backed frags, but the shared-frag marker\nis currently lost.\n\nThat breaks the invariant relied on by later in-place writers.  In\nparticular, ESP input checks skb_has_shared_frag() before deciding\nwhether an uncloned nonlinear skb can skip skb_cow_data().  If TCP\nreceive coalescing has moved shared frags into an unmarked skb, ESP can\nsee skb_has_shared_frag() as false and decrypt in place over page-cache\nbacked frags.\n\nPropagate SKBFL_SHARED_FRAG when skb_try_coalesce() transfers paged\nfrags.  The tailroom copy path does not need the marker because it copies\nbytes into @to's linear data rather than transferring frag descriptors.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://git.kernel.org/stable/c/3599e6b3cc1ada96883d496a50a210d3afbb6987",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/2f2b16022a2e10ca7bccfb98db5ed2ec0f72641c",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/9d3e5fd19fe1063bf607219e8562fbd567b8e8d5",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/78bf6b6bb19541d19fbda6242e7cfe2c682763c0",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/760e1addc27ba1a7beb4a0a7e8b3e9ec49e7a34e",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/3bd9e113d50034db99d7ef69fd8e5242d15e414a",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/3884358a9286b17f389a72b1426fc4547c23c111",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "unaffected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "net/core/skbuff.c"
+          ],
+          "versions": [
+            {
+              "version": "cef401de7be8c4e155c6746bfccf721a4fa5fab9",
+              "lessThan": "3599e6b3cc1ada96883d496a50a210d3afbb6987",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "cef401de7be8c4e155c6746bfccf721a4fa5fab9",
+              "lessThan": "2f2b16022a2e10ca7bccfb98db5ed2ec0f72641c",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "cef401de7be8c4e155c6746bfccf721a4fa5fab9",
+              "lessThan": "9d3e5fd19fe1063bf607219e8562fbd567b8e8d5",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "cef401de7be8c4e155c6746bfccf721a4fa5fab9",
+              "lessThan": "78bf6b6bb19541d19fbda6242e7cfe2c682763c0",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "cef401de7be8c4e155c6746bfccf721a4fa5fab9",
+              "lessThan": "760e1addc27ba1a7beb4a0a7e8b3e9ec49e7a34e",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "cef401de7be8c4e155c6746bfccf721a4fa5fab9",
+              "lessThan": "3bd9e113d50034db99d7ef69fd8e5242d15e414a",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "cef401de7be8c4e155c6746bfccf721a4fa5fab9",
+              "lessThan": "3884358a9286b17f389a72b1426fc4547c23c111",
+              "status": "affected",
+              "versionType": "git"
+            }
+          ]
+        },
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "affected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "net/core/skbuff.c"
+          ],
+          "versions": [
+            {
+              "version": "3.9",
+              "status": "affected"
+            },
+            {
+              "version": "0",
+              "lessThan": "3.9",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "5.10.257",
+              "lessThanOrEqual": "5.10.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "5.15.208",
+              "lessThanOrEqual": "5.15.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.1.174",
+              "lessThanOrEqual": "6.1.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.6.141",
+              "lessThanOrEqual": "6.6.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.12.91",
+              "lessThanOrEqual": "6.12.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.18.33",
+              "lessThanOrEqual": "6.18.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "7.0.10",
+              "lessThanOrEqual": "7.0.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [],
       "fix_suggestion": "无法生成修复建议"
     }
   ]
