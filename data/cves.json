@@ -3,65 +3,63 @@
   "dataVersion": "5.1",
   "cveMetadata": {
     "total_count": 1,
-    "last_updated": "2026-05-31T19:02:45.753229",
+    "last_updated": "2026-05-31T20:19:13.463249",
     "severity_distribution": {
       "critical": 0,
       "high": 0,
-      "medium": 1,
+      "medium": 0,
       "low": 0,
-      "none": 0
+      "none": 1
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-10194",
-      "publishedDate": "2026-05-31T16:30:08.129Z",
-      "lastModifiedDate": "2026-05-31T16:30:08.129Z",
-      "description": "A weakness has been identified in OFFIS DCMTK 3.7.0. This affects the function DcmQueryRetrieveIndexDatabaseHandle::deleteOldestImages of the file dcmqrdb/libsrc/dcmqrdbi.cc of the component dcmqrscp. Executing a manipulation can lead to heap-based buffer overflow. The attack may be launched remotely. This patch is called 0f78a4ef6f645ea5530166e445e5436a5de58e75. A patch should be applied to remediate this issue.",
-      "severity": 6.3,
+      "id": "CVE-2026-8796",
+      "publishedDate": "2026-05-31T19:43:22.054Z",
+      "lastModifiedDate": "2026-05-31T19:43:22.054Z",
+      "description": "Sereal::Decoder versions before 5.005 for Perl allow heap out-of-bounds read via crafted input.\n\nIn Perl/Decoder/srl_decoder.c, srl_read_object() and srl_read_hash() process a COPY tag, a back-reference whose target byte the decoder re-decodes as a fresh tag. When that target byte matches the SHORT_BINARY pattern (an inline string whose length is encoded in the low bits of the tag), the resulting read is not bounded to precede the COPY tag's own offset and can run past the end of the input buffer. An attacker controlled COPY offset can land inside a previously decoded value rather than on a tag boundary, planting a byte that the decoder reads as a SHORT_BINARY tag and consuming up to 31 following bytes from the heap as a class name (OBJECT path) or hash key (HASH path).",
+      "severity": "N/A",
       "references": [
         {
-          "url": "https://vuldb.com/vuln/367475",
+          "url": "https://github.com/Sereal/Sereal/commit/303a2c69cdba80bf37a3ff43461e0aa78198a7a3.patch",
           "type": "reference"
         },
         {
-          "url": "https://vuldb.com/vuln/367475/cti",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/cve/CVE-2026-10194",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/submit/821029",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.dcmtk.org/?p=dcmtk.git;a=commit;h=0f78a4ef6f645ea5530166e445e5436a5de58e75",
+          "url": "https://metacpan.org/release/YVES/Sereal-Decoder-5.005/changes",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "OFFIS",
-          "product": "DCMTK",
-          "versions": [
+          "collectionURL": "https://cpan.org/modules",
+          "defaultStatus": "unaffected",
+          "packageName": "Sereal-Decoder",
+          "product": "Sereal::Decoder",
+          "programFiles": [
+            "Perl/Decoder/srl_decoder.c"
+          ],
+          "programRoutines": [
             {
-              "version": "3.7.0",
-              "status": "affected"
+              "name": "srl_read_object()"
+            },
+            {
+              "name": "srl_read_hash()"
             }
           ],
-          "cpes": [
-            "cpe:2.3:a:offis:dcmtk:*:*:*:*:*:*:*:*"
-          ],
-          "modules": [
-            "dcmqrscp"
+          "repo": "https://github.com/Sereal/Sereal",
+          "vendor": "YVES",
+          "versions": [
+            {
+              "lessThan": "5.005",
+              "status": "affected",
+              "version": "0",
+              "versionType": "custom"
+            }
           ]
         }
       ],
       "problemType": [
-        "Heap-based Buffer Overflow",
-        "Memory Corruption"
+        "CWE-125 Out-of-bounds Read"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
