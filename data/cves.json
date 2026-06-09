@@ -2,178 +2,761 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 24,
-    "last_updated": "2026-06-09T09:29:44.705133",
+    "total_count": 30,
+    "last_updated": "2026-06-09T12:23:18.496973",
     "severity_distribution": {
-      "critical": 0,
-      "high": 4,
-      "medium": 5,
+      "critical": 1,
+      "high": 14,
+      "medium": 1,
       "low": 0,
-      "none": 15
+      "none": 14
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-8365",
-      "publishedDate": "2026-06-09T08:29:40.638Z",
-      "lastModifiedDate": "2026-06-09T08:29:40.638Z",
-      "description": "The Blocksy theme for WordPress is vulnerable to PHP Object Injection leading to Remote Code Execution via the 'blocksy_meta' REST API field and the V200 database migration in versions up to and including 2.1.35. This is due to insufficient input sanitization in the blocksy_sanitize_post_meta_options() function, which only blocks values containing '<' or '>' and does not prevent serialized PHP object strings from being stored in post meta, combined with the SearchReplacer::run_recursively() function unconditionally deserializing all string values via @unserialize() during migration without restricting allowed classes. This makes it possible for authenticated attackers, with contributor-level access and above, to inject a serialized Blocksy\\RaiiPattern object into post meta that, when the V200 migration runs on an upgraded site, is deserialized and triggers RaiiPattern::__destruct(), which executes arbitrary PHP callables via call_user_func().",
-      "severity": 8.8,
+      "id": "CVE-2017-20251",
+      "publishedDate": "2026-06-09T11:48:39.195Z",
+      "lastModifiedDate": "2026-06-09T11:48:39.195Z",
+      "description": "WordPress Insert PHP plugin versions before 3.3.1 contain a PHP code injection vulnerability that allows unauthenticated attackers to execute arbitrary PHP code by injecting malicious shortcodes through the WordPress REST API. Attackers can send POST requests to the wp-json/wp/v2/posts endpoint with crafted content containing insert_php shortcodes to include and execute remote PHP files on the server.",
+      "severity": 9.8,
       "references": [
         {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/fd216743-ce8d-4632-9fd1-d63502c2dfcd?source=cve",
+          "url": "https://www.exploit-db.com/exploits/41308",
+          "type": "poc"
+        },
+        {
+          "url": "https://fr.wordpress.org/plugins/insert-php/",
           "type": "reference"
         },
         {
-          "url": "https://themes.trac.wordpress.org/browser/blocksy/trunk/inc/classes/db-versioning/utils/db-search-replacer.php#L98",
-          "type": "reference"
-        },
-        {
-          "url": "https://themes.trac.wordpress.org/browser/blocksy/2.1.41/inc/classes/db-versioning/utils/db-search-replacer.php#L98",
-          "type": "reference"
-        },
-        {
-          "url": "https://themes.trac.wordpress.org/browser/blocksy/trunk/admin/helpers/meta-boxes.php#L104",
-          "type": "reference"
-        },
-        {
-          "url": "https://themes.trac.wordpress.org/browser/blocksy/2.1.41/admin/helpers/meta-boxes.php#L104",
-          "type": "reference"
-        },
-        {
-          "url": "https://themes.trac.wordpress.org/browser/blocksy/trunk/admin/helpers/validator.php#L75",
-          "type": "reference"
-        },
-        {
-          "url": "https://themes.trac.wordpress.org/browser/blocksy/2.1.41/admin/helpers/validator.php#L75",
-          "type": "reference"
-        },
-        {
-          "url": "https://themes.trac.wordpress.org/browser/blocksy/trunk/inc/classes/raii.php#L12",
-          "type": "reference"
-        },
-        {
-          "url": "https://themes.trac.wordpress.org/browser/blocksy/2.1.41/inc/classes/raii.php#L12",
-          "type": "reference"
-        },
-        {
-          "url": "https://themes.trac.wordpress.org/browser/blocksy/2.1.35/inc/classes/db-versioning/utils/db-search-replacer.php#L98",
-          "type": "reference"
-        },
-        {
-          "url": "https://themes.trac.wordpress.org/browser/blocksy/2.1.35/admin/helpers/meta-boxes.php#L104",
-          "type": "reference"
-        },
-        {
-          "url": "https://themes.trac.wordpress.org/browser/blocksy/2.1.35/admin/helpers/validator.php#L75",
-          "type": "reference"
-        },
-        {
-          "url": "https://themes.trac.wordpress.org/browser/blocksy/2.1.35/inc/classes/raii.php#L12",
+          "url": "https://www.vulncheck.com/advisories/wordpress-insert-php-plugin-php-code-injection-via-rest-api",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "creativethemeshq",
-          "product": "Blocksy",
+          "vendor": "Themeisle",
+          "product": "Woody Code Snippets",
           "versions": [
             {
               "version": "0",
               "status": "affected",
-              "lessThanOrEqual": "2.1.41",
-              "versionType": "semver"
+              "versionType": "semver",
+              "lessThan": "3.3.1"
             }
-          ],
-          "defaultStatus": "unaffected"
+          ]
         }
       ],
       "problemType": [
-        "CWE-502 Deserialization of Untrusted Data"
+        "Improper Control of Generation of Code ('Code Injection')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-11616",
-      "publishedDate": "2026-06-09T07:49:56.778Z",
-      "lastModifiedDate": "2026-06-09T07:49:56.778Z",
-      "description": "The Events Calendar for GeoDirectory plugin for WordPress is vulnerable to Privilege Escalation in versions up to and including 2.3.28. This is due to the ajax_ayi_action() handler  only applying strip_tags(esc_sql()) — with no allow-list — to the attacker-controlled $_POST['type'] and $_POST['postid'] values before forwarding them to update_ayi_data(), which calls update_user_meta($current_user->ID, $rsvp_args['type'], $posts). By passing type=wp_capabilities and postid=administrator, an attacker writes ['subscriber'=>true,'administrator'=>'administrator'] into their own wp_capabilities user meta; WP_User::get_role_caps() then treats the 'administrator' array key as an active role on the next request. This makes it possible for authenticated attackers, with Subscriber-level access and above, to elevate their privileges to Administrator.",
-      "severity": 8.8,
+      "id": "CVE-2017-20249",
+      "publishedDate": "2026-06-09T11:48:37.737Z",
+      "lastModifiedDate": "2026-06-09T11:48:37.737Z",
+      "description": "Apptha Slider Gallery 1.0 contains an SQL injection vulnerability that allows unauthenticated attackers to execute arbitrary SQL queries by injecting malicious code through the albid parameter. Attackers can send GET requests with crafted SQL payloads in the albid parameter to extract sensitive database information including user credentials and authentication hashes.",
+      "severity": 8.2,
       "references": [
         {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/11ba187b-1fe4-4077-ad9d-a07660133e91?source=cve",
+          "url": "https://www.exploit-db.com/exploits/41567",
+          "type": "poc"
+        },
+        {
+          "url": "https://www.apptha.com/",
           "type": "reference"
         },
         {
-          "url": "https://plugins.trac.wordpress.org/browser/events-for-geodirectory/tags/2.3.28/includes/class-geodir-event-ayi.php#L357",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/events-for-geodirectory/tags/2.3.28/includes/class-geodir-event-ayi.php#L154",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=3533585%40events-for-geodirectory&new=3533585%40events-for-geodirectory&sfp_email=&sfph_mail=",
+          "url": "https://www.vulncheck.com/advisories/wordpress-plugin-apptha-slider-gallery-sql-injection",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "stiofansisland",
-          "product": "Events Calendar for GeoDirectory",
+          "vendor": "apptha",
+          "product": "Apptha Slider Gallery",
           "versions": [
             {
-              "version": "0",
-              "status": "affected",
-              "lessThanOrEqual": "2.3.28",
-              "versionType": "semver"
+              "version": "1.0",
+              "status": "affected"
             }
-          ],
-          "defaultStatus": "unaffected"
+          ]
         }
       ],
       "problemType": [
-        "CWE-269 Improper Privilege Management"
+        "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-46250",
-      "publishedDate": "2026-06-03T15:49:46.390Z",
-      "lastModifiedDate": "2026-06-09T07:37:24.062Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nMIPS: Work around LLVM bug when gp is used as global register variable\n\nOn MIPS, __current_thread_info is defined as global register variable\nlocating in $gp, and is simply assigned with new address during kernel\nrelocation.\n\nThis however is broken with LLVM, which always restores $gp if it finds\n$gp is clobbered in any form, including when intentionally through a\nglobal register variable. This is against GCC's documentation[1], which\nrequires a callee-saved register used as global register variable not to\nbe restored if it's clobbered.\n\nAs a result, $gp will continue to point to the unrelocated kernel after\nthe epilog of relocate_kernel(), leading to an early crash in init_idle,\n\n[    0.000000] CPU 0 Unable to handle kernel paging request at virtual address 0000000000000000, epc == ffffffff81afada8, ra == ffffffff81afad90\n[    0.000000] Oops[#1]:\n[    0.000000] CPU: 0 UID: 0 PID: 0 Comm: swapper Tainted: G        W           6.19.0-rc5-00262-gd3eeb99bbc99-dirty #188 VOLUNTARY\n[    0.000000] Tainted: [W]=WARN\n[    0.000000] Hardware name: loongson,loongson64v-4core-virtio\n[    0.000000] $ 0   : 0000000000000000 0000000000000000 0000000000000001 0000000000000000\n[    0.000000] $ 4   : ffffffff80b80ec0 ffffffff80b53d48 0000000000000000 00000000000f4240\n[    0.000000] $ 8   : 0000000000000100 ffffffff81d82f80 ffffffff81d82f80 0000000000000001\n[    0.000000] $12   : 0000000000000000 ffffffff81776f58 00000000000005da 0000000000000002\n[    0.000000] $16   : ffffffff80b80e40 0000000000000000 ffffffff80b81614 9800000005dfbe80\n[    0.000000] $20   : 00000000540000e0 ffffffff81980000 0000000000000000 ffffffff80f81c80\n[    0.000000] $24   : 0000000000000a26 ffffffff8114fb90\n[    0.000000] $28   : ffffffff80b50000 ffffffff80b53d40 0000000000000000 ffffffff81afad90\n[    0.000000] Hi    : 0000000000000000\n[    0.000000] Lo    : 0000000000000000\n[    0.000000] epc   : ffffffff81afada8 init_idle+0x130/0x270\n[    0.000000] ra    : ffffffff81afad90 init_idle+0x118/0x270\n[    0.000000] Status: 540000e2\tKX SX UX KERNEL EXL\n[    0.000000] Cause : 00000008 (ExcCode 02)\n[    0.000000] BadVA : 0000000000000000\n[    0.000000] PrId  : 00006305 (ICT Loongson-3)\n[    0.000000] Process swapper (pid: 0, threadinfo=(____ptrval____), task=(____ptrval____), tls=0000000000000000)\n[    0.000000] Stack : 9800000005dfbf00 ffffffff8178e950 0000000000000000 0000000000000000\n[    0.000000]         0000000000000000 ffffffff81970000 000000000000003f ffffffff810a6528\n[    0.000000]         0000000000000001 9800000005dfbe80 9800000005dfbf00 ffffffff81980000\n[    0.000000]         ffffffff810a6450 ffffffff81afb6c0 0000000000000000 ffffffff810a2258\n[    0.000000]         ffffffff81d82ec8 ffffffff8198d010 ffffffff81b67e80 ffffffff8197dd98\n[    0.000000]         ffffffff81d81c80 ffffffff81930000 0000000000000040 0000000000000000\n[    0.000000]         0000000000000000 0000000000000000 0000000000000000 0000000000000000\n[    0.000000]         0000000000000000 000000000000009e ffffffff9fc01000 0000000000000000\n[    0.000000]         0000000000000000 0000000000000000 0000000000000000 0000000000000000\n[    0.000000]         0000000000000000 ffffffff81ae86dc ffffffff81b3c741 0000000000000002\n[    0.000000]         ...\n[    0.000000] Call Trace:\n[    0.000000] [<ffffffff81afada8>] init_idle+0x130/0x270\n[    0.000000] [<ffffffff81afb6c0>] sched_init+0x5c8/0x6c0\n[    0.000000] [<ffffffff81ae86dc>] start_kernel+0x27c/0x7a8\n\nThis bug has been reported to LLVM[2] and affects version from (at\nleast) 18 to 21. Let's work around this by using inline assembly to\nassign $gp before a fix is widely available.",
-      "severity": 7.3,
+      "id": "CVE-2017-20247",
+      "publishedDate": "2026-06-09T11:48:36.298Z",
+      "lastModifiedDate": "2026-06-09T11:48:36.298Z",
+      "description": "WordPress Plugin PICA Photo Gallery 1.0 contains an SQL injection vulnerability that allows unauthenticated attackers to execute arbitrary SQL queries by injecting malicious code through the aid parameter. Attackers can send GET requests with crafted SQL payloads in the aid parameter to extract sensitive database information including user credentials and table contents.",
+      "severity": 8.2,
       "references": [
         {
-          "url": "https://git.kernel.org/stable/c/05bff9b0ae095b2420cfebb4a96759a09334bec6",
+          "url": "https://www.exploit-db.com/exploits/41569",
+          "type": "poc"
+        },
+        {
+          "url": "https://www.apptha.com/",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/1fe3b402b1e97a1718df3be0a1d3eee20133e735",
+          "url": "https://www.vulncheck.com/advisories/wordpress-plugin-pica-photo-gallery-sql-injection",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Apptha",
+          "product": "PICA Photo Gallery",
+          "versions": [
+            {
+              "version": "1.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2017-20246",
+      "publishedDate": "2026-06-09T11:48:35.588Z",
+      "lastModifiedDate": "2026-06-09T11:48:35.588Z",
+      "description": "KittyCatfish 2.2 plugin for WordPress contains an SQL injection vulnerability that allows unauthenticated attackers to read database contents by exploiting an unescaped GET parameter. Attackers can inject SQL code through the 'kc_ad' parameter in base.css.php or kittycatfish.php to extract sensitive database information using boolean-based blind or time-based blind techniques.",
+      "severity": 8.2,
+      "references": [
+        {
+          "url": "https://www.exploit-db.com/exploits/41919",
+          "type": "poc"
+        },
+        {
+          "url": "https://wordpress.org/plugins-wp/kittycatfish/",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/4dc65b40fb80c2020efbf139b9a38d30f9a37b92",
+          "url": "https://tad.group",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/c0155dee51b9f5f48aaf5c71cae005eb0e36521f",
+          "url": "https://www.vulncheck.com/advisories/kittycatfish-plugin-for-wordpress-sql-injection",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Missilesilo",
+          "product": "KittyCatfish",
+          "versions": [
+            {
+              "version": "2.2",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2017-20245",
+      "publishedDate": "2026-06-09T11:48:34.821Z",
+      "lastModifiedDate": "2026-06-09T11:48:34.821Z",
+      "description": "Wow Viral Signups 2.1 WordPress plugin contains an SQL injection vulnerability that allows unauthenticated attackers to extract database information by exploiting the unescaped 'idsignup' POST parameter. Attackers can send crafted requests to the admin-ajax.php endpoint with malicious SQL payloads in the 'idsignup' parameter to read arbitrary data from the database.",
+      "severity": 8.2,
+      "references": [
+        {
+          "url": "https://www.exploit-db.com/exploits/41921",
+          "type": "poc"
+        },
+        {
+          "url": "http://wow-company.com/",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/e3a6498a63394218561065a9a7a597a204f52f6a",
+          "url": "https://tad.group",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/561834f6d6f52b8a1791331e94b2aac753491d2a",
+          "url": "https://wordpress.org/plugins/mwp-viral-signup/",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/9bc3b0ae5203aba650297fdf3e1e774125e423f2",
+          "url": "https://www.vulncheck.com/advisories/wow-viral-signups-wordpress-plugin-sql-injection",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Wow-Company",
+          "product": "Wow Viral Signups",
+          "versions": [
+            {
+              "version": "2.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2017-20244",
+      "publishedDate": "2026-06-09T11:48:34.087Z",
+      "lastModifiedDate": "2026-06-09T11:48:34.087Z",
+      "description": "Wow Forms WordPress Plugin version 2.1 contains an SQL injection vulnerability that allows unauthenticated attackers to read arbitrary database information by exploiting an unescaped POST parameter. Attackers can inject SQL code through the 'mwpformid' parameter in requests to the admin-ajax.php endpoint with the 'send_mwp_form' action to extract sensitive database contents.",
+      "severity": 8.2,
+      "references": [
+        {
+          "url": "https://www.exploit-db.com/exploits/41922",
+          "type": "poc"
+        },
+        {
+          "url": "http://wow-company.com/",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/30bfc2d6a1132a89a5f1c3b96c59cf3e4d076ea3",
+          "url": "https://tad.group",
+          "type": "reference"
+        },
+        {
+          "url": "https://wordpress.org/plugins/mwp-forms/",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/wow-forms-wordpress-plugin-sql-injection",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Wow-Company",
+          "product": "Wow Forms",
+          "versions": [
+            {
+              "version": "2.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2017-20243",
+      "publishedDate": "2026-06-09T11:48:33.361Z",
+      "lastModifiedDate": "2026-06-09T11:48:33.361Z",
+      "description": "WordPress Car Park Booking Plugin version 13 October 17 contains a time-based SQL injection vulnerability that allows unauthenticated attackers to manipulate database queries by injecting SQL code through the space_id parameter. Attackers can send GET requests to the booking-page endpoint with malicious space_id values using AND SLEEP() payloads to extract sensitive database information.",
+      "severity": 8.2,
+      "references": [
+        {
+          "url": "https://www.exploit-db.com/exploits/43012",
+          "type": "poc"
+        },
+        {
+          "url": "https://codecanyon.net/item/car-park-booking-wordpress-plugin/20284035",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/wordpress-car-park-booking-plugin-sql-injection-via-space-id",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "QuanticaLabs",
+          "product": "Car Park Booking System",
+          "versions": [
+            {
+              "version": "1.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2016-20065",
+      "publishedDate": "2026-06-09T11:48:32.637Z",
+      "lastModifiedDate": "2026-06-09T11:48:32.637Z",
+      "description": "Product Catalog 8 1.2 plugin for WordPress contains an SQL injection vulnerability that allows unauthenticated attackers to execute arbitrary SQL queries by injecting malicious code through the selectedCategory parameter. Attackers can submit POST requests to the admin-ajax.php endpoint with the UpdateCategoryList action to extract sensitive database information from WordPress tables.",
+      "severity": 8.2,
+      "references": [
+        {
+          "url": "https://www.exploit-db.com/exploits/40783",
+          "type": "poc"
+        },
+        {
+          "url": "https://wordpress.org/plugins/product-catalog-8/",
+          "type": "reference"
+        },
+        {
+          "url": "http://lenonleite.com.br/",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/product-catalog-8-plugin-wordpress-sql-injection",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "EvWill",
+          "product": "Product Catalog 8",
+          "versions": [
+            {
+              "version": "1.2.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2016-20062",
+      "publishedDate": "2026-06-09T11:48:30.264Z",
+      "lastModifiedDate": "2026-06-09T11:48:30.264Z",
+      "description": "Simply Poll 1.4.1 plugin for WordPress contains an SQL injection vulnerability that allows unauthenticated attackers to extract database information by injecting SQL code through the 'pollid' POST parameter. Attackers can send requests to the admin-ajax.php endpoint with the 'spAjaxResults' action and malicious 'pollid' values to execute arbitrary SQL queries and read sensitive data from the WordPress database.",
+      "severity": 8.2,
+      "references": [
+        {
+          "url": "https://www.exploit-db.com/exploits/40971",
+          "type": "poc"
+        },
+        {
+          "url": "https://wordpress.org/plugins/simply-poll/",
+          "type": "reference"
+        },
+        {
+          "url": "https://tad.group",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/simply-poll-plugin-for-wordpress-sql-injection",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Ollie Armstrong",
+          "product": "Simply Poll",
+          "versions": [
+            {
+              "version": "1.4.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-41724",
+      "publishedDate": "2026-06-08T07:07:04.191Z",
+      "lastModifiedDate": "2026-06-09T11:51:48.420Z",
+      "description": "VMware Cloud Foundation Operations contains multiple stored cross-site scripting vulnerabilities.A malicious actor with privileges to create policies, views or text-widgets may be able to inject scripts to perform administrative actions in VMware Cloud Foundation Operations.",
+      "severity": 8,
+      "references": [
+        {
+          "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/37513",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "VMware",
+          "product": "VCF operations",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "5.x",
+              "lessThanOrEqual": "8.18.7",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "affected"
+        },
+        {
+          "vendor": "VMware",
+          "product": "VMware Aria Operations",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "8.18.x",
+              "lessThanOrEqual": "8.18.7",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "affected"
+        },
+        {
+          "vendor": "VMware",
+          "product": "VMware Telco Cloud Platform",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "5.x",
+              "lessThanOrEqual": "8.18.7",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "affected"
+        }
+      ],
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-41723",
+      "publishedDate": "2026-06-08T07:06:11.548Z",
+      "lastModifiedDate": "2026-06-09T11:52:17.283Z",
+      "description": "VMware Cloud Foundation Operations contains multiple stored cross-site scripting vulnerabilities.A malicious actor with privileges to create policies, views or text-widgets may be able to inject scripts to perform administrative actions in VMware Cloud Foundation Operations.",
+      "severity": 8,
+      "references": [
+        {
+          "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/37513",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "VMware",
+          "product": "VCF operations",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "9.1.x.x",
+              "lessThanOrEqual": "9.1.0.0",
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "9.0.x.x",
+              "lessThanOrEqual": "9.0.2.0 EP2",
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "5.x",
+              "lessThanOrEqual": "8.18.7",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "affected"
+        },
+        {
+          "vendor": "VMware",
+          "product": "VMware Aria Operations",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "8.18.x",
+              "lessThanOrEqual": "8.18.6",
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "8.18.x",
+              "lessThanOrEqual": "8.18.7",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "affected"
+        },
+        {
+          "vendor": "VMware",
+          "product": "VMware Telco Cloud Platform",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "5.x",
+              "lessThanOrEqual": "8.18.7",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "affected"
+        }
+      ],
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-41722",
+      "publishedDate": "2026-06-08T07:05:31.333Z",
+      "lastModifiedDate": "2026-06-09T11:52:36.791Z",
+      "description": "VMware Cloud Foundation Operations contains multiple stored cross-site scripting vulnerabilities.A malicious actor with privileges to create policies, views or text-widgets may be able to inject scripts to perform administrative actions in VMware Cloud Foundation Operations.",
+      "severity": 8,
+      "references": [
+        {
+          "url": "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/37513",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "VMware",
+          "product": "VCF operations",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "9.1.x.x",
+              "lessThanOrEqual": "9.1.0.0",
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "9.0.x.x",
+              "lessThanOrEqual": "9.0.2.0 EP2",
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "5.x",
+              "lessThanOrEqual": "8.18.7",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "affected"
+        },
+        {
+          "vendor": "VMware",
+          "product": "VMware Aria Operations",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "8.18.x",
+              "lessThanOrEqual": "8.18.6",
+              "versionType": "custom"
+            },
+            {
+              "status": "affected",
+              "version": "8.18.x",
+              "lessThanOrEqual": "8.18.7",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "affected"
+        },
+        {
+          "vendor": "VMware",
+          "product": "VMware Telco Cloud Platform",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "5.x",
+              "lessThanOrEqual": "8.18.7",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "affected"
+        }
+      ],
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2017-20250",
+      "publishedDate": "2026-06-09T11:48:38.506Z",
+      "lastModifiedDate": "2026-06-09T11:48:38.506Z",
+      "description": "Mac Photo Gallery 3.0 contains a path traversal vulnerability that allows unauthenticated attackers to download arbitrary files by manipulating the albid parameter. Attackers can send requests to macdownload.php with directory traversal sequences to access sensitive files like wp-load.php outside the intended plugin directory.",
+      "severity": 7.5,
+      "references": [
+        {
+          "url": "https://www.exploit-db.com/exploits/41566",
+          "type": "poc"
+        },
+        {
+          "url": "https://www.apptha.com/",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/wordpress-plugin-mac-photo-gallery-arbitrary-file-download",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Apptha",
+          "product": "Mac Photo Gallery",
+          "versions": [
+            {
+              "version": "3.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2017-20248",
+      "publishedDate": "2026-06-09T11:48:37.013Z",
+      "lastModifiedDate": "2026-06-09T11:48:37.013Z",
+      "description": "Apptha Slider Gallery 1.0 contains a path traversal vulnerability that allows unauthenticated attackers to download arbitrary files by manipulating the imgname parameter. Attackers can send requests to asgallDownload.php with directory traversal sequences ../ to access sensitive files outside the intended directory.",
+      "severity": 7.5,
+      "references": [
+        {
+          "url": "https://www.exploit-db.com/exploits/41568",
+          "type": "poc"
+        },
+        {
+          "url": "https://www.apptha.com/",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/wordpress-plugin-apptha-slider-gallery-path-traversal-file-download",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Apptha",
+          "product": "Apptha Slider Gallery",
+          "versions": [
+            {
+              "version": "1.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2016-20063",
+      "publishedDate": "2026-06-09T11:48:31.226Z",
+      "lastModifiedDate": "2026-06-09T11:48:31.226Z",
+      "description": "Single Personal Message 1.0.3 contains an SQL injection vulnerability that allows authenticated users to execute arbitrary SQL queries by injecting malicious code through the message parameter. Attackers can access the admin interface and supply crafted SQL statements in the message parameter to extract sensitive database information including user credentials and site configuration data.",
+      "severity": 7.1,
+      "references": [
+        {
+          "url": "https://www.exploit-db.com/exploits/40870",
+          "type": "poc"
+        },
+        {
+          "url": "https://wordpress.org/plugins/simple-personal-message/",
+          "type": "reference"
+        },
+        {
+          "url": "http://lenonleite.com.br/",
+          "type": "reference"
+        },
+        {
+          "url": "http://target/wp-admin/admin.php?page=simple-personal-message-outbox&action=view&message=0%20UNION%20SELECT%201,2.3,name,5,slug,7,8,9,10,11,12%20FROM%20wp_terms%20WHERE%20term_id=1",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/single-personal-message-wordpress-plugin-sql-injection",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Md. Shamim Shahnewaz",
+          "product": "Single Personal Message",
+          "versions": [
+            {
+              "version": "1.0.3",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2016-20064",
+      "publishedDate": "2026-06-09T11:48:31.922Z",
+      "lastModifiedDate": "2026-06-09T11:48:31.922Z",
+      "description": "WP Vault 0.8.6.6 contains a local file inclusion vulnerability that allows unauthenticated attackers to read arbitrary files by exploiting an unescaped parameter in the include functionality. Attackers can supply directory traversal sequences through the wpv-image GET parameter to access sensitive files like system configuration and credentials.",
+      "severity": 6.2,
+      "references": [
+        {
+          "url": "https://www.exploit-db.com/exploits/40850",
+          "type": "poc"
+        },
+        {
+          "url": "https://wordpress.org/plugins/wp-vault/",
+          "type": "reference"
+        },
+        {
+          "url": "http://lenonleite.com.br/",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.vulncheck.com/advisories/wp-vault-local-file-inclusion-via-wpv-image-parameter",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "myasui",
+          "product": "WP Vault",
+          "versions": [
+            {
+              "version": "0.8.6.6",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-46324",
+      "publishedDate": "2026-06-09T12:11:16.602Z",
+      "lastModifiedDate": "2026-06-09T12:11:16.602Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nnetfilter: nf_tables: use list_del_rcu for netlink hooks\n\nnft_netdev_unregister_hooks and __nft_unregister_flowtable_net_hooks need\nto use list_del_rcu(), this list can be walked by concurrent dumpers.\n\nAdd a new helper and use it consistently.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://git.kernel.org/stable/c/0bd93ce4f3c35e845532184331d7917d7e562c80",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/0f33e8ad6ac563ae2233dd7f75884e0ee010521d",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/f3224ee463f8f6f6ced7dcdf6081add4f8128527",
           "type": "reference"
         }
       ],
@@ -184,56 +767,92 @@
           "defaultStatus": "unaffected",
           "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
           "programFiles": [
-            "arch/mips/kernel/relocate.c"
+            "net/netfilter/nf_tables_api.c"
           ],
           "versions": [
             {
-              "version": "279b991b24d2439fbe9d2f093988b9c8aed2603d",
-              "lessThan": "05bff9b0ae095b2420cfebb4a96759a09334bec6",
+              "version": "f9a43007d3f7ba76d5e7f9421094f00f2ef202f8",
+              "lessThan": "0bd93ce4f3c35e845532184331d7917d7e562c80",
               "status": "affected",
               "versionType": "git"
             },
             {
-              "version": "279b991b24d2439fbe9d2f093988b9c8aed2603d",
-              "lessThan": "1fe3b402b1e97a1718df3be0a1d3eee20133e735",
+              "version": "f9a43007d3f7ba76d5e7f9421094f00f2ef202f8",
+              "lessThan": "0f33e8ad6ac563ae2233dd7f75884e0ee010521d",
               "status": "affected",
               "versionType": "git"
             },
             {
-              "version": "279b991b24d2439fbe9d2f093988b9c8aed2603d",
-              "lessThan": "4dc65b40fb80c2020efbf139b9a38d30f9a37b92",
+              "version": "f9a43007d3f7ba76d5e7f9421094f00f2ef202f8",
+              "lessThan": "f3224ee463f8f6f6ced7dcdf6081add4f8128527",
               "status": "affected",
               "versionType": "git"
             },
             {
-              "version": "279b991b24d2439fbe9d2f093988b9c8aed2603d",
-              "lessThan": "c0155dee51b9f5f48aaf5c71cae005eb0e36521f",
+              "version": "c73955a09408e7374d9abfd0e78ce3de9cda0635",
               "status": "affected",
               "versionType": "git"
             },
             {
-              "version": "279b991b24d2439fbe9d2f093988b9c8aed2603d",
-              "lessThan": "e3a6498a63394218561065a9a7a597a204f52f6a",
+              "version": "b09e6ccf0d12f9356e8e3508d3e3dce126298538",
               "status": "affected",
               "versionType": "git"
             },
             {
-              "version": "279b991b24d2439fbe9d2f093988b9c8aed2603d",
-              "lessThan": "561834f6d6f52b8a1791331e94b2aac753491d2a",
+              "version": "3fac8ce48fa9fd61ee9056d3ed48b2edefca8b82",
               "status": "affected",
               "versionType": "git"
             },
             {
-              "version": "279b991b24d2439fbe9d2f093988b9c8aed2603d",
-              "lessThan": "9bc3b0ae5203aba650297fdf3e1e774125e423f2",
+              "version": "9c413a8c8bb49cc16796371805ecb260e885bb2b",
               "status": "affected",
               "versionType": "git"
             },
             {
-              "version": "279b991b24d2439fbe9d2f093988b9c8aed2603d",
-              "lessThan": "30bfc2d6a1132a89a5f1c3b96c59cf3e4d076ea3",
+              "version": "a3940dcf552f2393d1e8f263b386593f98abe829",
               "status": "affected",
               "versionType": "git"
+            },
+            {
+              "version": "86c0154f4c3a56c5db8b9dd09e3ce885382c2c19",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "4.19.316",
+              "lessThan": "4.20",
+              "status": "affected",
+              "versionType": "semver"
+            },
+            {
+              "version": "5.4.262",
+              "lessThan": "5.5",
+              "status": "affected",
+              "versionType": "semver"
+            },
+            {
+              "version": "5.10.198",
+              "lessThan": "5.11",
+              "status": "affected",
+              "versionType": "semver"
+            },
+            {
+              "version": "5.15.45",
+              "lessThan": "5.16",
+              "status": "affected",
+              "versionType": "semver"
+            },
+            {
+              "version": "5.17.13",
+              "lessThan": "5.18",
+              "status": "affected",
+              "versionType": "semver"
+            },
+            {
+              "version": "5.18.2",
+              "lessThan": "5.19",
+              "status": "affected",
+              "versionType": "semver"
             }
           ]
         },
@@ -243,63 +862,33 @@
           "defaultStatus": "affected",
           "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
           "programFiles": [
-            "arch/mips/kernel/relocate.c"
+            "net/netfilter/nf_tables_api.c"
           ],
           "versions": [
             {
-              "version": "4.7",
+              "version": "5.19",
               "status": "affected"
             },
             {
               "version": "0",
-              "lessThan": "4.7",
+              "lessThan": "5.19",
               "status": "unaffected",
               "versionType": "semver"
             },
             {
-              "version": "5.10.252",
-              "lessThanOrEqual": "5.10.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "5.15.202",
-              "lessThanOrEqual": "5.15.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.1.165",
-              "lessThanOrEqual": "6.1.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.6.128",
-              "lessThanOrEqual": "6.6.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.12.75",
-              "lessThanOrEqual": "6.12.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.18.14",
+              "version": "6.18.33",
               "lessThanOrEqual": "6.18.*",
               "status": "unaffected",
               "versionType": "semver"
             },
             {
-              "version": "6.19.4",
-              "lessThanOrEqual": "6.19.*",
+              "version": "7.0.10",
+              "lessThanOrEqual": "7.0.*",
               "status": "unaffected",
               "versionType": "semver"
             },
             {
-              "version": "7.0",
+              "version": "7.1-rc2",
               "lessThanOrEqual": "*",
               "status": "unaffected",
               "versionType": "original_commit_for_fix"
@@ -311,421 +900,30 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-10840",
-      "publishedDate": "2026-06-04T12:04:42.823Z",
-      "lastModifiedDate": "2026-06-09T08:25:23.288Z",
-      "description": "A flaw was found in the OpenShift Pipelines operator. The tekton-scheduler-rolebinding ClusterRoleBinding grants the system:authenticated group write access to Kueue and cert-manager custom resources via the tekton-scheduler-role ClusterRole. When Kueue or cert-manager CRDs are present on the cluster, any authenticated user can disrupt workload scheduling, tamper with scheduling priorities, delete other tenants' Workload objects, or induce cert-manager to overwrite TLS Secrets including the default ingress controller certificate.",
-      "severity": 7.1,
-      "references": [
-        {
-          "url": "https://access.redhat.com/security/cve/CVE-2026-10840",
-          "type": "reference"
-        },
-        {
-          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2484720",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Red Hat",
-          "product": "Builds for Red Hat OpenShift",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "openshift-builds/openshift-builds-rhel9-operator",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/a:redhat:openshift_builds:1"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "OpenShift Pipelines",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "openshift-pipelines/pipelines-operator-proxy-rhel8",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/a:redhat:openshift_pipelines:1"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "OpenShift Pipelines",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "openshift-pipelines/pipelines-operator-proxy-rhel9",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/a:redhat:openshift_pipelines:1"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "OpenShift Pipelines",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "openshift-pipelines/pipelines-operator-webhook-rhel8",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/a:redhat:openshift_pipelines:1"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "OpenShift Pipelines",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "openshift-pipelines/pipelines-operator-webhook-rhel9",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/a:redhat:openshift_pipelines:1"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "OpenShift Pipelines",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "openshift-pipelines/pipelines-rhel8-operator",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/a:redhat:openshift_pipelines:1"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "OpenShift Pipelines",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "openshift-pipelines/pipelines-rhel9-operator",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/a:redhat:openshift_pipelines:1"
-          ]
-        }
-      ],
-      "problemType": [
-        "Incorrect Permission Assignment for Critical Resource"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-7542",
-      "publishedDate": "2026-06-09T07:49:57.401Z",
-      "lastModifiedDate": "2026-06-09T07:49:57.401Z",
-      "description": "The Slider Revolution plugin for WordPress is vulnerable to Sensitive Information Disclosure in versions up to and including 7.0.10. This is due to three compounding design flaws: (1) the plugin leaks a valid backend AJAX nonce (revslider_actions) to all authenticated users including Subscribers via the admin_footer hook; (2) the wordpress.create.image_from_url action is explicitly allowlisted in the $user_allowed array, bypassing the administrator-only access control; (3) the create_wordpress_image_from_url() function accepts an attacker-controlled url parameter that is passed to import_media(), where path_or_url_exists() explicitly accepts local filesystem paths (file_exists() && is_readable()) with no restriction to remote HTTP/HTTPS URLs, and @copy() physically copies those files into the publicly accessible /wp-content/uploads/revslider/ai/ directory. The MIME type check trusts the attacker-supplied content_type parameter to derive the destination extension without verifying actual file content, and the source extension blacklist does not block many sensitive types (.sql, .log, .json, .bak, .xml, .csv, .conf, .yml, .yaml, .pem, .key, .crt, .txt, .db, etc.). This makes it possible for authenticated attackers with Subscriber-level access and above to read the contents of server files with non-blacklisted extensions by having them copied to a publicly accessible URL.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/4f57cac9-5610-454b-affb-86384ea00881?source=cve",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.sliderrevolution.com/changelog/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Revolution Slider",
-          "product": "Slider Revolution",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "lessThanOrEqual": "7.0.10",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-200 Exposure of Sensitive Information to an Unauthorized Actor"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-8677",
-      "publishedDate": "2026-06-09T08:29:39.999Z",
-      "lastModifiedDate": "2026-06-09T08:29:39.999Z",
-      "description": "The Prime Elementor Addons – Lightweight Elementor Widgets for Faster Pages plugin for WordPress is vulnerable to Stored Cross-Site Scripting via Widget HTML Tag Settings in all versions up to, and including, 1.3.3 due to insufficient input sanitization and output escaping. This makes it possible for authenticated attackers, with contributor-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page. The exploit succeeds even for users without the unfiltered_html capability because the payload (e.g., 'img src=x onerror=alert(document.domain)') contains no HTML angle brackets and therefore passes through Elementor's wp_kses_post() filter unchanged at save time.",
-      "severity": 6.4,
-      "references": [
-        {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/95136083-58d7-4ee4-b894-6910c3992d20?source=cve",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/unlimited-elementor-inner-sections-by-boomdevs/tags/1.3.2/includes/Widgets/InfoBox.php#L1645",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/unlimited-elementor-inner-sections-by-boomdevs/tags/1.3.2/includes/Widgets/InfoBox.php#L1623",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/unlimited-elementor-inner-sections-by-boomdevs/tags/1.3.2/includes/Widgets/Counter.php#L1079",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/unlimited-elementor-inner-sections-by-boomdevs/tags/1.3.2/includes/Widgets/CallToAction.php#L1631",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/unlimited-elementor-inner-sections-by-boomdevs/tags/1.3.2/includes/Widgets/TeamMember.php#L2638",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/unlimited-elementor-inner-sections-by-boomdevs/tags/1.3.2/includes/Traits/PostGridRenderer.php#L164",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/unlimited-elementor-inner-sections-by-boomdevs/tags/1.3.2/includes/Widgets/AdvancedAccordion.php#L1396",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/unlimited-elementor-inner-sections-by-boomdevs/tags/1.2.0/includes/Widgets/InfoBox.php#L1645",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/unlimited-elementor-inner-sections-by-boomdevs/tags/1.2.0/includes/Widgets/InfoBox.php#L1623",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/unlimited-elementor-inner-sections-by-boomdevs/tags/1.2.0/includes/Widgets/Counter.php#L1079",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/unlimited-elementor-inner-sections-by-boomdevs/tags/1.2.0/includes/Widgets/CallToAction.php#L1631",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/unlimited-elementor-inner-sections-by-boomdevs/tags/1.2.0/includes/Widgets/TeamMember.php#L2638",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/unlimited-elementor-inner-sections-by-boomdevs/tags/1.2.0/includes/Traits/PostGridRenderer.php#L164",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/unlimited-elementor-inner-sections-by-boomdevs/tags/1.2.0/includes/Widgets/AdvancedAccordion.php#L1396",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/changeset?old_path=unlimited-elementor-inner-sections-by-boomdevs/tags/1.3.3&new_path=unlimited-elementor-inner-sections-by-boomdevs/tags/1.3.4",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "wpmessiah",
-          "product": "Prime Elementor Addons – Lightweight Elementor Widgets for Faster Pages",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "lessThanOrEqual": "1.3.3",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-8599",
-      "publishedDate": "2026-06-09T07:49:57.903Z",
-      "lastModifiedDate": "2026-06-09T07:49:57.903Z",
-      "description": "The MailerPress – Email Marketing, Newsletter, Email Automation & WooCommerce Emails plugin for WordPress is vulnerable to Stored Cross-Site Scripting via Campaign HTML Content Field in all versions up to, and including, 2.0.4 due to insufficient input sanitization and output escaping. This makes it possible for authenticated attackers, with author-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page. The public-facing campaign preview endpoint (/mp-email/{id}-slug/) is not affected by this vulnerability, as it applies a Content-Security-Policy header blocking all inline scripts; exploitation is limited to the admin dashboard preview.",
-      "severity": 6.4,
-      "references": [
-        {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/c52cadb2-703f-4aad-85f2-aec1dd4befdc?source=cve",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/mailerpress/tags/2.0.3/src/Api/Campaigns.php#L2128",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/mailerpress/tags/2.0.3/src/Api/Campaigns.php#L2100",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/mailerpress/tags/2.0.3/src/Api/Campaigns.php#L2137",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/mailerpress/tags/2.0.3/src/Actions/Shortcodes/CampaignEmail.php#L161",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/mailerpress/trunk/src/Api/Campaigns.php#L2128",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/mailerpress/trunk/src/Api/Campaigns.php#L2100",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/mailerpress/trunk/src/Api/Campaigns.php#L2137",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/mailerpress/trunk/src/Actions/Shortcodes/CampaignEmail.php#L161",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/mailerpress/tags/2.0.5/src/Api/Campaigns.php#L4713",
-          "type": "reference"
-        },
-        {
-          "url": "https://plugins.trac.wordpress.org/browser/mailerpress/tags/2.0.5/src/Api/Campaigns.php#L2229",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "mailerpress",
-          "product": "MailerPress – Email Marketing, Newsletter, Email Automation & WooCommerce Emails",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "lessThanOrEqual": "2.0.4",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-28262",
-      "publishedDate": "2026-06-09T08:41:42.774Z",
-      "lastModifiedDate": "2026-06-09T08:41:42.774Z",
-      "description": "Dell iDRAC Tools, versions prior to 11.4.1.0, contains an Improper Link Resolution Before File Access ('Link Following') vulnerability. A low privileged attacker with local access could potentially exploit this vulnerability, leading to Information tampering.",
-      "severity": 6,
-      "references": [
-        {
-          "url": "https://www.dell.com/support/kbdoc/en-us/000474864/dsa-2026-239-security-update-for-dell-idrac-tools-vulnerability",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Dell",
-          "product": "iDRAC Tools",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "11.4.1.0 or later",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-59: Improper Link Resolution Before File Access (Link Following)"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-6899",
-      "publishedDate": "2026-06-09T08:39:00.495Z",
-      "lastModifiedDate": "2026-06-09T08:39:00.495Z",
-      "description": "Check for certificate revocation only considers the first matching CRL and ignores other valid CRLs of the same CA in the CycloneCrypto cryptographic wrapper of S2OPC library. It might allow connection between an OPC UA client and server using a revoked certificate.",
-      "severity": 5.6,
-      "references": [
-        {
-          "url": "https://gitlab.com/systerel/S2OPC/-/work_items/1739",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Systerel",
-          "product": "S2OPC",
-          "versions": [
-            {
-              "version": "1.5.0",
-              "status": "affected",
-              "lessThan": "1.7.3",
-              "versionType": "semver"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-299: Improper Check for Certificate Revocation"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-49818",
-      "publishedDate": "2026-06-09T07:42:48.028Z",
-      "lastModifiedDate": "2026-06-09T07:42:48.028Z",
-      "description": "The Apache Airflow Samba provider's `GCSToSambaOperator` joined GCS object names to the SMB destination path without a containment check, so an object named with `../` segments resolved a write path outside the configured `destination_path`. An attacker able to write objects into the source GCS bucket — typically an external data producer distinct from the trusted DAG author — could write files to arbitrary locations on the Samba target when the operator ran. Upgrade apache-airflow-providers-samba to 4.12.6 or later, which validates the resolved destination stays within `destination_path`.",
+      "id": "CVE-2026-46323",
+      "publishedDate": "2026-06-09T12:11:15.562Z",
+      "lastModifiedDate": "2026-06-09T12:11:15.562Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet: gro: don't merge zcopy skbs\n\nskb_gro_receive() can currently copy frags between the source and GRO\nskb, without checking the zerocopy status, and in particular the\nSKBFL_MANAGED_FRAG_REFS flag.\n\nWhen SKBFL_MANAGED_FRAG_REFS is set, the skb doesn't hold a reference\non the pages in shinfo->frags. Appending those frags to another skb's\nfrags without fixing up the page refcount can lead to UAF.\n\nWhen either the last skb in the GRO chain (the one we would append\nfrags to) or the source skb is zerocopy, don't merge the skbs.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/apache/airflow/pull/67857",
+          "url": "https://git.kernel.org/stable/c/1f9c828556416fbe3f49386708ce999fc4d4da06",
           "type": "reference"
         },
         {
-          "url": "https://lists.apache.org/thread/3vs0m3p51psgf54tts18d6336g24x3sf",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://pypi.python.org",
-          "defaultStatus": "unaffected",
-          "packageName": "apache-airflow-providers-samba",
-          "product": "Apache Airflow Samba provider",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThan": "4.12.6",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-46315",
-      "publishedDate": "2026-06-09T07:38:13.713Z",
-      "lastModifiedDate": "2026-06-09T07:38:13.713Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nio_uring/waitid: clear waitid info before copying it to userspace\n\nIORING_OP_WAITID stores its result fields in struct io_waitid::info and\nlater copies them to userspace siginfo. The prep path initializes the\nrequest arguments, but it does not initialize info itself.\n\nIf the wait operation completes without reporting a child event, the common\nwait code can return without writing wo_info. In that case io_waitid_finish()\nstill copies iw->info to userspace, exposing stale bytes from the reused\nio_kiocb command storage.\n\nClear the result storage during prep so the io_uring path matches the\nregular waitid syscall, which uses a zero-initialized struct waitid_info.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://git.kernel.org/stable/c/954518e5a4a5efc5033253f6e36fc7b9f98363a3",
+          "url": "https://git.kernel.org/stable/c/479084ae0e1d9cb7929cb4298d35623de189f80a",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/b737c6612c60c23b40a9f31749b99e6f61943847",
+          "url": "https://git.kernel.org/stable/c/e334cbf3388fd9334503a778a82d9e9f14dd2f71",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/4d2a0de611ab60d02fc768ae0cd5918b16bd5474",
+          "url": "https://git.kernel.org/stable/c/44bea2032af0425e4ce6d26a8af0ede79db49ec1",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/93d93f5f8da791e98159795c6ef683f45bd95d13",
+          "url": "https://git.kernel.org/stable/c/4db79a322db8c97f7b73b8a347395ef4d685eb40",
           "type": "reference"
         }
       ],
@@ -736,30 +934,36 @@
           "defaultStatus": "unaffected",
           "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
           "programFiles": [
-            "io_uring/waitid.c"
+            "net/core/gro.c"
           ],
           "versions": [
             {
-              "version": "f31ecf671ddc498f20219453395794ff2383e06b",
-              "lessThan": "954518e5a4a5efc5033253f6e36fc7b9f98363a3",
+              "version": "753f1ca4e1e50248a1b760c9774d6d6b354562cc",
+              "lessThan": "1f9c828556416fbe3f49386708ce999fc4d4da06",
               "status": "affected",
               "versionType": "git"
             },
             {
-              "version": "f31ecf671ddc498f20219453395794ff2383e06b",
-              "lessThan": "b737c6612c60c23b40a9f31749b99e6f61943847",
+              "version": "753f1ca4e1e50248a1b760c9774d6d6b354562cc",
+              "lessThan": "479084ae0e1d9cb7929cb4298d35623de189f80a",
               "status": "affected",
               "versionType": "git"
             },
             {
-              "version": "f31ecf671ddc498f20219453395794ff2383e06b",
-              "lessThan": "4d2a0de611ab60d02fc768ae0cd5918b16bd5474",
+              "version": "753f1ca4e1e50248a1b760c9774d6d6b354562cc",
+              "lessThan": "e334cbf3388fd9334503a778a82d9e9f14dd2f71",
               "status": "affected",
               "versionType": "git"
             },
             {
-              "version": "f31ecf671ddc498f20219453395794ff2383e06b",
-              "lessThan": "93d93f5f8da791e98159795c6ef683f45bd95d13",
+              "version": "753f1ca4e1e50248a1b760c9774d6d6b354562cc",
+              "lessThan": "44bea2032af0425e4ce6d26a8af0ede79db49ec1",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "753f1ca4e1e50248a1b760c9774d6d6b354562cc",
+              "lessThan": "4db79a322db8c97f7b73b8a347395ef4d685eb40",
               "status": "affected",
               "versionType": "git"
             }
@@ -771,16 +975,22 @@
           "defaultStatus": "affected",
           "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
           "programFiles": [
-            "io_uring/waitid.c"
+            "net/core/gro.c"
           ],
           "versions": [
             {
-              "version": "6.7",
+              "version": "6.0",
               "status": "affected"
             },
             {
               "version": "0",
-              "lessThan": "6.7",
+              "lessThan": "6.0",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.6.142",
+              "lessThanOrEqual": "6.6.*",
               "status": "unaffected",
               "versionType": "semver"
             },
@@ -815,257 +1025,26 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-34905",
-      "publishedDate": "2026-06-09T07:35:56.670Z",
-      "lastModifiedDate": "2026-06-09T07:35:56.670Z",
-      "description": "Exposure of Sensitive Information to an Unauthorized Actor vulnerability in Apache Answer.\n\nThis issue affects Apache Answer: through 2.0.0.\n\nThe unlisted question feature did not enforce access restrictions on direct API endpoints, allowing authenticated users to discover and access unlisted questions, their answers, comments, and revision history.\nUsers are recommended to upgrade to version 2.0.1, which fixes the issue.",
+      "id": "CVE-2026-46322",
+      "publishedDate": "2026-06-09T12:11:14.776Z",
+      "lastModifiedDate": "2026-06-09T12:11:14.776Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\ntun: free page on build_skb failure in tun_xdp_one()\n\nWhen build_skb() fails in tun_xdp_one(), the function sets ret to\n-ENOMEM and jumps to the out label, which returns without freeing the\npage that vhost_net_build_xdp() allocated for the frame. As with the\nshort-frame rejection path, tun_sendmsg() discards the per-buffer error\nand still returns total_len, so vhost_tx_batch() takes the success path\nand never frees the page. Each build_skb() failure in a batch leaks one\npage-frag chunk.\n\nFree the page before taking the error path, matching the put_page() the\nother error exits of tun_xdp_one() already perform.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://lists.apache.org/thread/khxoft96sptr2kh0cpzgw7f6qwv0ltcf",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Apache Answer",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThanOrEqual": "2.0.0",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-200 Exposure of Sensitive Information to an Unauthorized Actor"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-34033",
-      "publishedDate": "2026-06-09T07:35:16.045Z",
-      "lastModifiedDate": "2026-06-09T07:35:16.045Z",
-      "description": "Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS) vulnerability in Apache Answer.\n\nThis issue affects Apache Answer: through 2.0.0.\n\nUser-supplied content was included in notification emails without proper escaping, allowing authenticated users to inject arbitrary HTML into emails sent to other users.\nUsers are recommended to upgrade to version 2.0.1, which fixes the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://lists.apache.org/thread/wrfd9blbfotfg479jr8vlwfx6pwr9sgj",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Apache Answer",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThanOrEqual": "2.0.0",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-80 Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2009-10007",
-      "publishedDate": "2026-06-09T07:34:51.909Z",
-      "lastModifiedDate": "2026-06-09T07:39:45.324Z",
-      "description": "Catalyst::Plugin::Authentication versions before 0.10_027 for Perl is susceptible to session fixation attacks.\n\nCatalyst::Plugin::Authentication does not automatically change the session id after authentication. An attacker that obtains a session id cookie can use this to impersonate the victim.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://metacpan.org/release/ETHER/Catalyst-Plugin-Authentication-0.10_027/changes",
+          "url": "https://git.kernel.org/stable/c/d16e38fac09a47bfcf98c1ad65a1bb53f94540f5",
           "type": "reference"
         },
         {
-          "url": "https://github.com/perl-catalyst/Catalyst-Plugin-Authentication/commit/b1385ea87a2491b64f33169222af19982d0acce3.patch",
+          "url": "https://git.kernel.org/stable/c/aa308e9dbb9acb17cacdbbce9e4504f69bac8385",
           "type": "reference"
         },
         {
-          "url": "https://metacpan.org/pod/Catalyst::Plugin::Session#change_session_id",
+          "url": "https://git.kernel.org/stable/c/4fefc6156a162a9f50035c12091a5e5130c82c6e",
           "type": "reference"
         },
         {
-          "url": "https://metacpan.org/pod/Plack::Middleware::Session#change_id",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://cpan.org/modules",
-          "defaultStatus": "unaffected",
-          "packageName": "Catalyst-Plugin-Authentication",
-          "product": "Catalyst::Plugin::Authentication",
-          "repo": "https://github.com/perl-catalyst/Catalyst-Plugin-Authentication",
-          "vendor": "ETHER",
-          "versions": [
-            {
-              "lessThan": "0.10_027",
-              "status": "affected",
-              "version": "0",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-384 Session Fixation"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-34031",
-      "publishedDate": "2026-06-09T07:34:38.977Z",
-      "lastModifiedDate": "2026-06-09T07:34:38.977Z",
-      "description": "Unrestricted Upload of File with Dangerous Type vulnerability in Apache Answer.\n\nThis issue affects Apache Answer: through 2.0.0.\n\nThe server did not sufficiently validate user-supplied image URLs, allowing arbitrary external content to be embedded as profile images, which could expose users to unintended external requests and tracking by third-party servers.\nUsers are recommended to upgrade to version 2.0.1, which fixes the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://lists.apache.org/thread/rwtxy39t54to9kv3dqtbjsbdpyk4jkd2",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Apache Answer",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThanOrEqual": "2.0.0",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-434 Unrestricted Upload of File with Dangerous Type"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-33582",
-      "publishedDate": "2026-06-09T07:34:02.379Z",
-      "lastModifiedDate": "2026-06-09T07:34:02.379Z",
-      "description": "Unrestricted Upload of File with Dangerous Type vulnerability in Apache Answer.\n\nThis issue affects Apache Answer: through 2.0.0.\n\nA crafted TIFF image could trigger excessive memory allocation during image decoding, allowing an authenticated user to cause the server process to crash.\nUsers are recommended to upgrade to version 2.0.1, which fixes the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://lists.apache.org/thread/3sgpx4cwsgpnt66xv3cqvtc8z4st1kbq",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Apache Answer",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThanOrEqual": "2.0.0",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-434 Unrestricted Upload of File with Dangerous Type"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-25699",
-      "publishedDate": "2026-06-09T07:33:18.349Z",
-      "lastModifiedDate": "2026-06-09T07:33:18.349Z",
-      "description": "Exposure of Private Personal Information to an Unauthorized Actor vulnerability in Apache Answer.\n\nThis issue affects Apache Answer: through 2.0.0.\n\nTimeline-related APIs lacked proper authorization checks, allowing regular authenticated users to access deleted, private, or unapproved content and its revision history.\nUsers are recommended to upgrade to version 2.0.1, which fixes the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://lists.apache.org/thread/c36k4hzwhncqo0qfn5fg57f1gkjhyfv8",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Apache Answer",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThanOrEqual": "2.0.0",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-359 Exposure of Private Personal Information to an Unauthorized Actor"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-25688",
-      "publishedDate": "2026-06-09T07:32:23.869Z",
-      "lastModifiedDate": "2026-06-09T07:32:23.869Z",
-      "description": "Improper Neutralization of Alternate XSS Syntax vulnerability in Apache Answer.\n\nThis issue affects Apache Answer: through 2.0.0.\n\nAI-generated response content was rendered in the browser without proper sanitization, allowing malicious scripts to be executed when the content was viewed.\nUsers are recommended to upgrade to version 2.0.1, which fixes the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://lists.apache.org/thread/x42joj43rqb38ms5q60f7bgq3qbo7t5q",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Apache Answer",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThanOrEqual": "2.0.0",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-87 Improper Neutralization of Alternate XSS Syntax"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-46311",
-      "publishedDate": "2026-06-08T15:50:41.866Z",
-      "lastModifiedDate": "2026-06-09T07:37:29.573Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/amdgpu/userq: fix access to stale wptr mapping\n\nUse drm_exec to take both locks i.e vm root bo and\nwptr_obj bo to access the mapping data properly.\n\nThis fixes the security issue of unmap the wptr_obj while\na queue creation is in progress and passing other\nbo at same address.\n\n(cherry picked from commit 1fc6c8ab45dbee096469c08c13f6099d57a52d6c)",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://git.kernel.org/stable/c/336a9186f3a4b65bbd865d93936605ac8a1a3991",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/6da7b1242da4455b11c24ce667d1cab1a348c8ea",
+          "url": "https://git.kernel.org/stable/c/aa8963fdce667a42fb7f0bdd2909fadcab02f9a8",
           "type": "reference"
         }
       ],
@@ -1076,18 +1055,30 @@
           "defaultStatus": "unaffected",
           "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
           "programFiles": [
-            "drivers/gpu/drm/amd/amdgpu/mes_userqueue.c"
+            "drivers/net/tun.c"
           ],
           "versions": [
             {
-              "version": "5fb2f7fc21a3668e5794cc0d153641b9719713e1",
-              "lessThan": "336a9186f3a4b65bbd865d93936605ac8a1a3991",
+              "version": "043d222f93ab8c76b56a3b315cd8692e35affb6c",
+              "lessThan": "d16e38fac09a47bfcf98c1ad65a1bb53f94540f5",
               "status": "affected",
               "versionType": "git"
             },
             {
-              "version": "5fb2f7fc21a3668e5794cc0d153641b9719713e1",
-              "lessThan": "6da7b1242da4455b11c24ce667d1cab1a348c8ea",
+              "version": "043d222f93ab8c76b56a3b315cd8692e35affb6c",
+              "lessThan": "aa308e9dbb9acb17cacdbbce9e4504f69bac8385",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "043d222f93ab8c76b56a3b315cd8692e35affb6c",
+              "lessThan": "4fefc6156a162a9f50035c12091a5e5130c82c6e",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "043d222f93ab8c76b56a3b315cd8692e35affb6c",
+              "lessThan": "aa8963fdce667a42fb7f0bdd2909fadcab02f9a8",
               "status": "affected",
               "versionType": "git"
             }
@@ -1099,519 +1090,7 @@
           "defaultStatus": "affected",
           "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
           "programFiles": [
-            "drivers/gpu/drm/amd/amdgpu/mes_userqueue.c"
-          ],
-          "versions": [
-            {
-              "version": "6.16",
-              "status": "affected"
-            },
-            {
-              "version": "0",
-              "lessThan": "6.16",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.0.9",
-              "lessThanOrEqual": "7.0.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.1-rc3",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-46302",
-      "publishedDate": "2026-06-08T15:46:29.545Z",
-      "lastModifiedDate": "2026-06-09T07:37:28.496Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nselinux: allow multiple opens of /sys/fs/selinux/policy\n\nCurrently there can only be a single open of /sys/fs/selinux/policy at\nany time. This allows any process to block any other process from\nreading the kernel policy. The original motivation seems to have been\na mix of preventing an inconsistent view of the policy size and\npreventing userspace from allocating kernel memory without bound, but\nthis is arguably equally bad. Eliminate the policy_opened flag and\nshrink the critical section that the policy mutex is held. While we\nare making changes here, drop a couple of extraneous BUG_ONs.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://git.kernel.org/stable/c/714362f3779dfa453a78ced32396a72726962a41",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/a02cd6805562305f936e807da83e253b719dd965",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "security/selinux/selinuxfs.c"
-          ],
-          "versions": [
-            {
-              "version": "cee74f47a6baba0ac457e87687fdcf0abd599f0a",
-              "lessThan": "714362f3779dfa453a78ced32396a72726962a41",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "cee74f47a6baba0ac457e87687fdcf0abd599f0a",
-              "lessThan": "a02cd6805562305f936e807da83e253b719dd965",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "security/selinux/selinuxfs.c"
-          ],
-          "versions": [
-            {
-              "version": "2.6.37",
-              "status": "affected"
-            },
-            {
-              "version": "0",
-              "lessThan": "2.6.37",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.0.7",
-              "lessThanOrEqual": "7.0.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.1-rc3",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-46294",
-      "publishedDate": "2026-06-08T15:46:21.401Z",
-      "lastModifiedDate": "2026-06-09T07:37:27.404Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\ndm: fix a buffer overflow in ioctl processing\n\nTony Asleson (using Claude) found a buffer overflow in dm-ioctl in the\nfunction retrieve_status:\n\n1. The code in retrieve_status checks that the output string fits into\n   the output buffer and writes the output string there\n2. Then, the code aligns the \"outptr\" variable to the next 8-byte\n   boundary:\n\toutptr = align_ptr(outptr);\n3. The alignment doesn't check overflow, so outptr could point past the\n   buffer end\n4. The \"for\" loop is iterated again, it executes:\n\tremaining = len - (outptr - outbuf);\n5. If \"outptr\" points past \"outbuf + len\", the arithmetics wraps around\n   and the variable \"remaining\" contains unusually high number\n6. With \"remaining\" being high, the code writes more data past the end of\n   the buffer\n\nLuckily, this bug has no security implications because:\n1. Only root can issue device mapper ioctls\n2. The commonly used libraries that communicate with device mapper\n   (libdevmapper and devicemapper-rs) use buffer size that is aligned to\n   8 bytes - thus, \"outptr = align_ptr(outptr)\" can't overshoot the input\n   buffer and the bug can't happen accidentally",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://git.kernel.org/stable/c/c8c5311237448f6ffeecc9aec2362e3692623668",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/448ee8fb79c26a26599ffa4b2adeb4322d3d3d8c",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/526ff9126a0ae087b65726e1faf31114c718020d",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/f0b0b09d9840838ae77ccdd6a62de0daef4e6e0a",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/d271631023cbe1cbe7c31a0275ab797883be6e0a",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/5af6a879e915ae7bcd83695c316ebb32e1c61bc2",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/8daa6c708ef524089ae43f2aed9190acb26d7df8",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/2fa49cc884f6496a915c35621ba4da35649bf159",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/md/dm-ioctl.c"
-          ],
-          "versions": [
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "c8c5311237448f6ffeecc9aec2362e3692623668",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "448ee8fb79c26a26599ffa4b2adeb4322d3d3d8c",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "526ff9126a0ae087b65726e1faf31114c718020d",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "f0b0b09d9840838ae77ccdd6a62de0daef4e6e0a",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "d271631023cbe1cbe7c31a0275ab797883be6e0a",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "5af6a879e915ae7bcd83695c316ebb32e1c61bc2",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "8daa6c708ef524089ae43f2aed9190acb26d7df8",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "1da177e4c3f41524e886b7f1b8a0c1fc7321cac2",
-              "lessThan": "2fa49cc884f6496a915c35621ba4da35649bf159",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/md/dm-ioctl.c"
-          ],
-          "versions": [
-            {
-              "version": "2.6.12",
-              "status": "affected"
-            },
-            {
-              "version": "0",
-              "lessThan": "2.6.12",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "5.10.258",
-              "lessThanOrEqual": "5.10.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "5.15.209",
-              "lessThanOrEqual": "5.15.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.1.175",
-              "lessThanOrEqual": "6.1.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.6.140",
-              "lessThanOrEqual": "6.6.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.12.88",
-              "lessThanOrEqual": "6.12.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.18.30",
-              "lessThanOrEqual": "6.18.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.0.7",
-              "lessThanOrEqual": "7.0.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.1-rc1",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-46286",
-      "publishedDate": "2026-06-08T15:41:29.682Z",
-      "lastModifiedDate": "2026-06-09T07:37:26.278Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nleds: qcom-lpg: Check for array overflow when selecting the high resolution\n\nWhen selecting the high resolution values from the array, FIELD_GET() is\nused to pull from a 3 bit register, yet the array being indexed has only\n5 values in it.  Odds are the hardware is sane, but just to be safe,\nproperly check before just overflowing and reading random data and then\nsetting up chip values based on that.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://git.kernel.org/stable/c/28a2e047d03721e0517c67ee726eaa6621c30e5f",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/36ce3094dc50598f38fd961b46688cd533940efc",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/438e357b3cc6cd6900df271e4bc567bfe1142281",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/f67a24e75d3251ba42538738120b6b659c0dca7d",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/d45963a93c1495e9f1338fde91d0ebba8fd22474",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/leds/rgb/leds-qcom-lpg.c"
-          ],
-          "versions": [
-            {
-              "version": "b00d2ed37617b5f2f091c98acf542fbedefcbf9b",
-              "lessThan": "28a2e047d03721e0517c67ee726eaa6621c30e5f",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "b00d2ed37617b5f2f091c98acf542fbedefcbf9b",
-              "lessThan": "36ce3094dc50598f38fd961b46688cd533940efc",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "b00d2ed37617b5f2f091c98acf542fbedefcbf9b",
-              "lessThan": "438e357b3cc6cd6900df271e4bc567bfe1142281",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "b00d2ed37617b5f2f091c98acf542fbedefcbf9b",
-              "lessThan": "f67a24e75d3251ba42538738120b6b659c0dca7d",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "b00d2ed37617b5f2f091c98acf542fbedefcbf9b",
-              "lessThan": "d45963a93c1495e9f1338fde91d0ebba8fd22474",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/leds/rgb/leds-qcom-lpg.c"
-          ],
-          "versions": [
-            {
-              "version": "6.4",
-              "status": "affected"
-            },
-            {
-              "version": "0",
-              "lessThan": "6.4",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.6.140",
-              "lessThanOrEqual": "6.6.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.12.86",
-              "lessThanOrEqual": "6.12.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.18.27",
-              "lessThanOrEqual": "6.18.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.0.4",
-              "lessThanOrEqual": "7.0.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.1-rc1",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-46276",
-      "publishedDate": "2026-06-08T15:41:18.672Z",
-      "lastModifiedDate": "2026-06-09T07:37:25.154Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/amdgpu: fix zero-size GDS range init on RDNA4\n\nRDNA4 (GFX 12) hardware removes the GDS, GWS, and OA on-chip memory\nresources. The gfx_v12_0 initialisation code correctly leaves\nadev->gds.gds_size, adev->gds.gws_size, and adev->gds.oa_size at\nzero to reflect this.\n\namdgpu_ttm_init() unconditionally calls amdgpu_ttm_init_on_chip() for\neach of these resources regardless of size. When the size is zero,\namdgpu_ttm_init_on_chip() forwards the call to ttm_range_man_init(),\nwhich calls drm_mm_init(mm, 0, 0). drm_mm_init() immediately fires\nDRM_MM_BUG_ON(start + size <= start) -- trivially true when size is\nzero -- crashing the kernel during modprobe of amdgpu on an RX 9070 XT.\n\nGuard against this by returning 0 early from\namdgpu_ttm_init_on_chip() when size_in_page is zero. This skips TTM\nresource manager registration for hardware resources that are absent,\nwithout affecting any other GPU type.\n\nDRM_MM_BUG_ON() only asserts if CONFIG_DRM_DEBUG_MM is enabled in\nthe kernel config.  This is apparently rarely enabled as these chips\nhave been in the market for over a year and this issue was only reported\nnow.\n\nOops-Analysis: http://oops.fenrus.org/reports/bugzilla.korg/221376/report.html\n(cherry picked from commit 5719ce5865279cad4fd5f01011fe037168503f2d)",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://git.kernel.org/stable/c/1f5d33e7b0a9a2a140f46e22fb52eede323c5946",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/9bc925759c05feae7dfa9570e77131d54729c8ea",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/36f9602fb22ede69fcc8b422be0cf8105bf655ad",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/be0376affcafa0bbb371bb501579a825eae32281",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/0e21db1a77967bc15df662efdca8ea8a61d124ea",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/30c000a49094ec568c9b51b7421f7a4a3f0b0298",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/3e26c76891ab99fa173e9c501119fbb5c9f4600f",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/095a8b0ad3c3b5cdc3850d961adb8a8f735220bb",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c"
-          ],
-          "versions": [
-            {
-              "version": "c832c346cdf9022872655be621880e0f66f4135d",
-              "lessThan": "1f5d33e7b0a9a2a140f46e22fb52eede323c5946",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "c832c346cdf9022872655be621880e0f66f4135d",
-              "lessThan": "9bc925759c05feae7dfa9570e77131d54729c8ea",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "c832c346cdf9022872655be621880e0f66f4135d",
-              "lessThan": "36f9602fb22ede69fcc8b422be0cf8105bf655ad",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "c832c346cdf9022872655be621880e0f66f4135d",
-              "lessThan": "be0376affcafa0bbb371bb501579a825eae32281",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "c832c346cdf9022872655be621880e0f66f4135d",
-              "lessThan": "0e21db1a77967bc15df662efdca8ea8a61d124ea",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "c832c346cdf9022872655be621880e0f66f4135d",
-              "lessThan": "30c000a49094ec568c9b51b7421f7a4a3f0b0298",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "c832c346cdf9022872655be621880e0f66f4135d",
-              "lessThan": "3e26c76891ab99fa173e9c501119fbb5c9f4600f",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "c832c346cdf9022872655be621880e0f66f4135d",
-              "lessThan": "095a8b0ad3c3b5cdc3850d961adb8a8f735220bb",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c"
+            "drivers/net/tun.c"
           ],
           "versions": [
             {
@@ -1625,6 +1104,418 @@
               "versionType": "semver"
             },
             {
+              "version": "6.12.93",
+              "lessThanOrEqual": "6.12.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.18.35",
+              "lessThanOrEqual": "6.18.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "7.0.12",
+              "lessThanOrEqual": "7.0.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "7.1-rc6",
+              "lessThanOrEqual": "*",
+              "status": "unaffected",
+              "versionType": "original_commit_for_fix"
+            }
+          ]
+        }
+      ],
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-46321",
+      "publishedDate": "2026-06-09T12:11:13.872Z",
+      "lastModifiedDate": "2026-06-09T12:11:13.872Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\ntun: free page on short-frame rejection in tun_xdp_one()\n\ntun_xdp_one() returns -EINVAL on a frame shorter than ETH_HLEN without\nfreeing the page that vhost_net_build_xdp() allocated for it.\ntun_sendmsg() discards that -EINVAL and still returns total_len, so\nvhost_tx_batch() takes the success path and never frees the page; each\nshort frame in a batch leaks one page-frag chunk.\n\nA local process that can open /dev/net/tun and /dev/vhost-net can hit\nthis path: it attaches a tun/tap device as the vhost-net backend and\nfeeds TX descriptors whose length minus the virtio-net header is below\nETH_HLEN. Each kick leaks the page-frag chunks for that batch, and a\ntight submission loop exhausts host memory and triggers an OOM panic.\nFree the page before returning -EINVAL, matching the XDP-program error\npath in the same function.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://git.kernel.org/stable/c/69863ff2720a0e9871f1a5710f2a33a94217fee0",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/37a1c268c2c8090bf4dc552d732bd23ba36f8eb0",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/98c67be9eb9de72465a071949e84a3cdb8fab5a3",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/f4feb1e20058e407cb00f45aff47f5b7e19a6bbf",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "unaffected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "drivers/net/tun.c"
+          ],
+          "versions": [
+            {
+              "version": "049584807f1d797fc3078b68035450a9769eb5c3",
+              "lessThan": "69863ff2720a0e9871f1a5710f2a33a94217fee0",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "049584807f1d797fc3078b68035450a9769eb5c3",
+              "lessThan": "37a1c268c2c8090bf4dc552d732bd23ba36f8eb0",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "049584807f1d797fc3078b68035450a9769eb5c3",
+              "lessThan": "98c67be9eb9de72465a071949e84a3cdb8fab5a3",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "049584807f1d797fc3078b68035450a9769eb5c3",
+              "lessThan": "f4feb1e20058e407cb00f45aff47f5b7e19a6bbf",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "32b0aaba5dbc85816898167d9b5d45a22eae82e9",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "6100e0237204890269e3f934acfc50d35fd6f319",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "589382f50b4a5d90d16d8bc9dcbc0e927a3e39b2",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "ad6b3f622ccfb4bfedfa53b6ebd91c3d1d04f146",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "d5ad89b7d01ed4e66fd04734fc63d6e78536692a",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "a9d1c27e2ee3b0ea5d40c105d6e728fc114470bb",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "8418f55302fa1d2eeb73e16e345167e545c598a5",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "5.4.281",
+              "lessThan": "5.5",
+              "status": "affected",
+              "versionType": "semver"
+            },
+            {
+              "version": "5.10.223",
+              "lessThan": "5.11",
+              "status": "affected",
+              "versionType": "semver"
+            },
+            {
+              "version": "5.15.164",
+              "lessThan": "5.16",
+              "status": "affected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.1.102",
+              "lessThan": "6.2",
+              "status": "affected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.6.43",
+              "lessThan": "6.7",
+              "status": "affected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.9.12",
+              "lessThan": "6.10",
+              "status": "affected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.10.2",
+              "lessThan": "6.11",
+              "status": "affected",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "affected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "drivers/net/tun.c"
+          ],
+          "versions": [
+            {
+              "version": "6.11",
+              "status": "affected"
+            },
+            {
+              "version": "0",
+              "lessThan": "6.11",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.12.93",
+              "lessThanOrEqual": "6.12.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.18.35",
+              "lessThanOrEqual": "6.18.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "7.0.12",
+              "lessThanOrEqual": "7.0.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "7.1-rc6",
+              "lessThanOrEqual": "*",
+              "status": "unaffected",
+              "versionType": "original_commit_for_fix"
+            }
+          ]
+        }
+      ],
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-46320",
+      "publishedDate": "2026-06-09T12:11:12.882Z",
+      "lastModifiedDate": "2026-06-09T12:11:12.882Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\ntap: free page on error paths in tap_get_user_xdp()\n\ntap_get_user_xdp() rejects a frame shorter than ETH_HLEN with -EINVAL,\nand returns -ENOMEM when build_skb() fails. Both paths jump to the err\nlabel without freeing the page that vhost_net_build_xdp() allocated for\nthe frame. tap_sendmsg() discards the per-buffer return value and always\nreturns 0, so vhost_tx_batch() takes the success path and never frees\nthe page; each rejected frame in a batch leaks one page-frag chunk.\n\nFree the page on both error paths, before the skb is built. This is the\ntap counterpart of the same leak in tun_xdp_one().",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://git.kernel.org/stable/c/18a84c35842e19cd3c5534d8cee73d31863f696d",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/3bcf7aec6a9d16438f2cec29f5d7c8d5b8edf9b2",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "unaffected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "drivers/net/tap.c"
+          ],
+          "versions": [
+            {
+              "version": "0efac27791ee068075d80f07c55a229b1335ce12",
+              "lessThan": "18a84c35842e19cd3c5534d8cee73d31863f696d",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "0efac27791ee068075d80f07c55a229b1335ce12",
+              "lessThan": "3bcf7aec6a9d16438f2cec29f5d7c8d5b8edf9b2",
+              "status": "affected",
+              "versionType": "git"
+            }
+          ]
+        },
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "affected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "drivers/net/tap.c"
+          ],
+          "versions": [
+            {
+              "version": "4.20",
+              "status": "affected"
+            },
+            {
+              "version": "0",
+              "lessThan": "4.20",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "7.0.12",
+              "lessThanOrEqual": "7.0.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "7.1-rc6",
+              "lessThanOrEqual": "*",
+              "status": "unaffected",
+              "versionType": "original_commit_for_fix"
+            }
+          ]
+        }
+      ],
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-46319",
+      "publishedDate": "2026-06-09T12:11:12.128Z",
+      "lastModifiedDate": "2026-06-09T12:11:12.128Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nnet/sched: act_ct: Only release RCU read lock after ct_ft\n\nWhen looking up a flow table in act_ct in tcf_ct_flow_table_get(),\nrhashtable_lookup_fast() internally opens and closes an RCU read critical\nsection before returning ct_ft.\nThe tcf_ct_flow_table_cleanup_work() can complete before refcount_inc_not_zero()\nis invoked on the returned ct_ft resulting in a UAF on the already freed ct_ft\nobject. This vulnerability can lead to privilege escalation.\n\nAnalysis from zdi-disclosures@trendmicro.com:\nWhen initializing act_ct, tcf_ct_init() is called, which internally triggers\ntcf_ct_flow_table_get().\n\nstatic int tcf_ct_flow_table_get(struct net *net, struct tcf_ct_params *params)\n\n{\n                struct zones_ht_key key = { .net = net, .zone = params->zone };\n                struct tcf_ct_flow_table *ct_ft;\n                int err = -ENOMEM;\n\n                mutex_lock(&zones_mutex);\n                ct_ft = rhashtable_lookup_fast(&zones_ht, &key, zones_params); // [1]\n                if (ct_ft && refcount_inc_not_zero(&ct_ft->ref)) // [2]\n                                goto out_unlock;\n                ...\n}\n\nstatic __always_inline void *rhashtable_lookup_fast(\n                struct rhashtable *ht, const void *key,\n                const struct rhashtable_params params)\n{\n                void *obj;\n\n                rcu_read_lock();\n                obj = rhashtable_lookup(ht, key, params);\n                rcu_read_unlock();\n\n                return obj;\n}\n\nAt [1], rhashtable_lookup_fast() looks up and returns the corresponding ct_ft\nfrom zones_ht . The lookup is performed within an RCU read critical section\nthrough rcu_read_lock() / rcu_read_unlock(), which prevents the object from\nbeing freed. However, at the point of function return, rcu_read_unlock() has\nalready been called, and there is nothing preventing ct_ft from being freed\nbefore reaching refcount_inc_not_zero(&ct_ft->ref) at [2]. This interval becomes\nthe race window, during which ct_ft can be freed.\n\nFree Process:\n\ntcf_ct_flow_table_put() is executed through the path tcf_ct_cleanup() call_rcu()\ntcf_ct_params_free_rcu() tcf_ct_params_free() tcf_ct_flow_table_put().\n\nstatic void tcf_ct_flow_table_put(struct tcf_ct_flow_table *ct_ft)\n{\n                if (refcount_dec_and_test(&ct_ft->ref)) {\n                                rhashtable_remove_fast(&zones_ht, &ct_ft->node, zones_params);\n                                INIT_RCU_WORK(&ct_ft->rwork, tcf_ct_flow_table_cleanup_work); // [3]\n                                queue_rcu_work(act_ct_wq, &ct_ft->rwork);\n                }\n}\n\nAt [3], tcf_ct_flow_table_cleanup_work() is scheduled as RCU work\n\nstatic void tcf_ct_flow_table_cleanup_work(struct work_struct *work)\n\n{\n                struct tcf_ct_flow_table *ct_ft;\n                struct flow_block *block;\n\n                ct_ft = container_of(to_rcu_work(work), struct tcf_ct_flow_table,\n                                                                rwork);\n                nf_flow_table_free(&ct_ft->nf_ft);\n                block = &ct_ft->nf_ft.flow_block;\n                down_write(&ct_ft->nf_ft.flow_block_lock);\n                WARN_ON(!list_empty(&block->cb_list));\n                up_write(&ct_ft->nf_ft.flow_block_lock);\n                kfree(ct_ft); // [4]\n\n                module_put(THIS_MODULE);\n}\n\ntcf_ct_flow_table_cleanup_work() frees ct_ft at [4]. When this function executes\nbetween [1] and [2], UAF occurs.\n\nThis race condition has a very short race window, making it generally\ndifficult to trigger. Therefore, to trigger the vulnerability an msleep(100) was\ninserted after[1]",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://git.kernel.org/stable/c/ece578ca61e572df96cfc80456357ebfae0b4b9e",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/a2e0c045c87aa252eb61412e67dd91f2c2b19f81",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/67c9ecc9f2575273ed1323e312881fc98ac83d6d",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/f23424a0ddadb494d4bd57056a7ca703312d3a7b",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/17dfb67cb399b660105d9a8c6100851c0d0cdc70",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/4c727c6967a41b37efe0f26332ca9ec5b74785a3",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/3e20e1b3058e0b94638e7b931c138e840e266724",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/f462dca0c8415bf0058d0ffa476354c4476d0f09",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "unaffected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "net/sched/act_ct.c"
+          ],
+          "versions": [
+            {
+              "version": "138470a9b2cc2e26e6018300394afc3858a54e6a",
+              "lessThan": "ece578ca61e572df96cfc80456357ebfae0b4b9e",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "138470a9b2cc2e26e6018300394afc3858a54e6a",
+              "lessThan": "a2e0c045c87aa252eb61412e67dd91f2c2b19f81",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "138470a9b2cc2e26e6018300394afc3858a54e6a",
+              "lessThan": "67c9ecc9f2575273ed1323e312881fc98ac83d6d",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "138470a9b2cc2e26e6018300394afc3858a54e6a",
+              "lessThan": "f23424a0ddadb494d4bd57056a7ca703312d3a7b",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "138470a9b2cc2e26e6018300394afc3858a54e6a",
+              "lessThan": "17dfb67cb399b660105d9a8c6100851c0d0cdc70",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "138470a9b2cc2e26e6018300394afc3858a54e6a",
+              "lessThan": "4c727c6967a41b37efe0f26332ca9ec5b74785a3",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "138470a9b2cc2e26e6018300394afc3858a54e6a",
+              "lessThan": "3e20e1b3058e0b94638e7b931c138e840e266724",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "138470a9b2cc2e26e6018300394afc3858a54e6a",
+              "lessThan": "f462dca0c8415bf0058d0ffa476354c4476d0f09",
+              "status": "affected",
+              "versionType": "git"
+            }
+          ]
+        },
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "affected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "net/sched/act_ct.c"
+          ],
+          "versions": [
+            {
+              "version": "5.7",
+              "status": "affected"
+            },
+            {
+              "version": "0",
+              "lessThan": "5.7",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
               "version": "5.10.258",
               "lessThanOrEqual": "5.10.*",
               "status": "unaffected",
@@ -1643,31 +1534,31 @@
               "versionType": "semver"
             },
             {
-              "version": "6.6.140",
+              "version": "6.6.141",
               "lessThanOrEqual": "6.6.*",
               "status": "unaffected",
               "versionType": "semver"
             },
             {
-              "version": "6.12.86",
+              "version": "6.12.91",
               "lessThanOrEqual": "6.12.*",
               "status": "unaffected",
               "versionType": "semver"
             },
             {
-              "version": "6.18.27",
+              "version": "6.18.33",
               "lessThanOrEqual": "6.18.*",
               "status": "unaffected",
               "versionType": "semver"
             },
             {
-              "version": "7.0.4",
+              "version": "7.0.10",
               "lessThanOrEqual": "7.0.*",
               "status": "unaffected",
               "versionType": "semver"
             },
             {
-              "version": "7.1-rc2",
+              "version": "7.1-rc1",
               "lessThanOrEqual": "*",
               "status": "unaffected",
               "versionType": "original_commit_for_fix"
@@ -1679,18 +1570,18 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-71315",
-      "publishedDate": "2026-06-08T14:30:52.457Z",
-      "lastModifiedDate": "2026-06-09T07:37:22.884Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\ndrm/vkms: Convert to DRM's vblank timer\n\nReplace vkms' vblank timer with the DRM implementation. The DRM\ncode is identical in concept, but differs in implementation.\n\nVblank timers are covered in vblank helpers and initializer macros,\nso remove the corresponding hrtimer in struct vkms_output. The\nvblank timer calls vkms' custom timeout code via handle_vblank_timeout\nin struct drm_crtc_helper_funcs.",
+      "id": "CVE-2026-46318",
+      "publishedDate": "2026-06-09T12:11:11.181Z",
+      "lastModifiedDate": "2026-06-09T12:11:11.181Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nRevert \"mm/hugetlbfs: update hugetlbfs to use mmap_prepare\"\n\nThis reverts commit ea52cb24cd3f (\"mm/hugetlbfs: update hugetlbfs to use\nmmap_prepare\") with conflict resolution to account for changes in commit\nea52cb24cd3f (\"mm/hugetlbfs: update hugetlbfs to use mmap_prepare\").\n\nThe patch incorrectly handled hugetlb VMA lock allocation at the\nmmap_prepare stage, where a failed allocation occurring after mmap_prepare\nis called might result in the lock leaking.\n\nThere is no risk of a merge causing a similar issues, as\nVMA_DONTEXPAND_BIT is set for hugetlb mappings.\n\nAs a first step in addressing this issue, simply revert the change so we\ncan rework how we do this having corrected the underlying issues.\n\nWe maintain the VMA flags changes as best we can, accounting for the fact\nthat we were working with a VMA descriptor previously and propagating\nlike-for-like changes for this.\n\nNote that we invoke vma_set_flags() and do not call vma_start_write() as\nvm_flags_set() does.  This is OK as it's being done in an .mmap hook where\nthe VMA is not yet linked into the tree so nobody else can be accessing\nit.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://git.kernel.org/stable/c/a0582cc923985c6b72fe871b5f7aa7c682bfc230",
+          "url": "https://git.kernel.org/stable/c/3af5fc3f0ac98c624c109c8c0796fa46e814344c",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/02e2681ffe1addde1fc8c35d05657b16bfa79613",
+          "url": "https://git.kernel.org/stable/c/83f9efcce93f8574be2279090ee2aec58b86cda7",
           "type": "reference"
         }
       ],
@@ -1701,19 +1592,21 @@
           "defaultStatus": "unaffected",
           "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
           "programFiles": [
-            "drivers/gpu/drm/vkms/vkms_crtc.c",
-            "drivers/gpu/drm/vkms/vkms_drv.h"
+            "fs/hugetlbfs/inode.c",
+            "include/linux/hugetlb.h",
+            "include/linux/hugetlb_inline.h",
+            "mm/hugetlb.c"
           ],
           "versions": [
             {
-              "version": "3a0709928b172a4123a76078f70e0a706265690c",
-              "lessThan": "a0582cc923985c6b72fe871b5f7aa7c682bfc230",
+              "version": "ea52cb24cd3fb121283754ab82b2cb3044609359",
+              "lessThan": "3af5fc3f0ac98c624c109c8c0796fa46e814344c",
               "status": "affected",
               "versionType": "git"
             },
             {
-              "version": "3a0709928b172a4123a76078f70e0a706265690c",
-              "lessThan": "02e2681ffe1addde1fc8c35d05657b16bfa79613",
+              "version": "ea52cb24cd3fb121283754ab82b2cb3044609359",
+              "lessThan": "83f9efcce93f8574be2279090ee2aec58b86cda7",
               "status": "affected",
               "versionType": "git"
             }
@@ -1725,28 +1618,30 @@
           "defaultStatus": "affected",
           "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
           "programFiles": [
-            "drivers/gpu/drm/vkms/vkms_crtc.c",
-            "drivers/gpu/drm/vkms/vkms_drv.h"
+            "fs/hugetlbfs/inode.c",
+            "include/linux/hugetlb.h",
+            "include/linux/hugetlb_inline.h",
+            "mm/hugetlb.c"
           ],
           "versions": [
             {
-              "version": "4.19",
+              "version": "6.19",
               "status": "affected"
             },
             {
               "version": "0",
-              "lessThan": "4.19",
+              "lessThan": "6.19",
               "status": "unaffected",
               "versionType": "semver"
             },
             {
-              "version": "6.18.34",
-              "lessThanOrEqual": "6.18.*",
+              "version": "7.0.12",
+              "lessThanOrEqual": "7.0.*",
               "status": "unaffected",
               "versionType": "semver"
             },
             {
-              "version": "6.19",
+              "version": "7.1-rc6",
               "lessThanOrEqual": "*",
               "status": "unaffected",
               "versionType": "original_commit_for_fix"
@@ -1755,6 +1650,455 @@
         }
       ],
       "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-11764",
+      "publishedDate": "2026-06-09T11:54:37.865Z",
+      "lastModifiedDate": "2026-06-09T11:54:37.865Z",
+      "description": "When creating an export of all reusable media, the secrets of connected \ngift cards were included in the export even if the user creating the \nexport does not have permission to view gift cards. This is inconsistent\n with the UI and API where only the first letters of the gift card \nsecret are shown. Therefore, it allows circumventing a permission \nboundary.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://pretix.eu/about/en/blog/20260609-release-2026-5-1/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "pretix",
+          "product": "pretix",
+          "collectionURL": "https://pypi.org/",
+          "packageName": "pretix",
+          "repo": "https://github.com/pretix/pretix",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "2024.1.0",
+              "lessThan": "2026.3.0",
+              "versionType": "python"
+            },
+            {
+              "status": "affected",
+              "version": "2026.3.0",
+              "lessThan": "2026.4.0",
+              "changes": [
+                {
+                  "at": "2026.3.3",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "python"
+            },
+            {
+              "status": "affected",
+              "version": "2026.4.0",
+              "lessThan": "2026.5.0",
+              "changes": [
+                {
+                  "at": "2026.4.3",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "python"
+            },
+            {
+              "status": "affected",
+              "version": "2026.5.0",
+              "lessThan": "2026.6.0",
+              "changes": [
+                {
+                  "at": "2026.5.1",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "python"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-280 Improper handling of insufficient permissions or privileges"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-46317",
+      "publishedDate": "2026-06-09T11:52:30.333Z",
+      "lastModifiedDate": "2026-06-09T11:52:30.333Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nKVM: arm64: Reassign nested_mmus array behind mmu_lock\n\nkvm->arch.nested_mmus[] is walked under kvm->mmu_lock, including from the\nMMU notifier path (kvm_unmap_gfn_range() -> kvm_nested_s2_unmap()), which\ncan run at any time. kvm_vcpu_init_nested() reallocates the array and frees\nthe old buffer while holding only kvm->arch.config_lock, so such a walker\ncan reference the freed array.\n\nAllocate the new array outside of mmu_lock, as the allocation can sleep.\nUnder the lock, copy the existing entries, fix up the back pointers and\nreassign the array. Free the old buffer after dropping the lock, as\nkvfree() can sleep as well.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://git.kernel.org/stable/c/918450ad6010df6ecd2efde12a1409e011da22d6",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/4424dbcb06d68e34e51c019a5781a7dc00731971",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/70543358fa08e0f7cebc3447c3b70fe97ad7aaa8",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "unaffected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "arch/arm64/kvm/nested.c"
+          ],
+          "versions": [
+            {
+              "version": "4f128f8e1aaac189f83d0f828bcdb2986d8d2e51",
+              "lessThan": "918450ad6010df6ecd2efde12a1409e011da22d6",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "4f128f8e1aaac189f83d0f828bcdb2986d8d2e51",
+              "lessThan": "4424dbcb06d68e34e51c019a5781a7dc00731971",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "4f128f8e1aaac189f83d0f828bcdb2986d8d2e51",
+              "lessThan": "70543358fa08e0f7cebc3447c3b70fe97ad7aaa8",
+              "status": "affected",
+              "versionType": "git"
+            }
+          ]
+        },
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "affected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "arch/arm64/kvm/nested.c"
+          ],
+          "versions": [
+            {
+              "version": "6.11",
+              "status": "affected"
+            },
+            {
+              "version": "0",
+              "lessThan": "6.11",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.18.35",
+              "lessThanOrEqual": "6.18.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "7.0.12",
+              "lessThanOrEqual": "7.0.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "7.1-rc7",
+              "lessThanOrEqual": "*",
+              "status": "unaffected",
+              "versionType": "original_commit_for_fix"
+            }
+          ]
+        }
+      ],
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-46316",
+      "publishedDate": "2026-06-09T11:52:29.349Z",
+      "lastModifiedDate": "2026-06-09T11:52:29.349Z",
+      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nKVM: arm64: vgic-its: Drop the translation cache reference only for the erased entry\n\nvgic_its_invalidate_cache() walks the per-ITS translation cache with\nxa_for_each() and drops the cache's reference on each entry with\nvgic_put_irq(). It puts the iterated pointer, though, rather than the\nvalue returned by xa_erase().\n\nThe function is called from contexts that do not exclude one another: the\nITS command handlers hold its_lock, the GITS_CTLR write path holds\ncmd_lock, and the path that clears EnableLPIs in a redistributor's\nGICR_CTLR holds neither. Two or more of them can drain the same cache\nconcurrently, and if each one observes the same entry, erases it and then\nputs it, the single reference the cache holds on that entry is dropped\nmore than once. The entry can then be freed while an ITE still maps it.\n\nxa_erase() is atomic and returns the previous entry, so put only the entry\nthat this context actually removed. The cache reference is then dropped\nexactly once per entry even when the invalidations run concurrently, and\nthe behavior is unchanged when only one context runs.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://git.kernel.org/stable/c/b7b72e88046328c9fdc638fe887d4240257dd5dc",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/2bbc395e81bd29c543a0529a678327e932a7ec69",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/9121f4605ab94969f62d1b5714ca3c6c69bd202f",
+          "type": "reference"
+        },
+        {
+          "url": "https://git.kernel.org/stable/c/13031fb6b8357fbbcded2a7f4cba73e4781ee594",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "unaffected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "arch/arm64/kvm/vgic/vgic-its.c"
+          ],
+          "versions": [
+            {
+              "version": "8201d1028caa4fae88e222c4e8cf541fdf45b821",
+              "lessThan": "b7b72e88046328c9fdc638fe887d4240257dd5dc",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "8201d1028caa4fae88e222c4e8cf541fdf45b821",
+              "lessThan": "2bbc395e81bd29c543a0529a678327e932a7ec69",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "8201d1028caa4fae88e222c4e8cf541fdf45b821",
+              "lessThan": "9121f4605ab94969f62d1b5714ca3c6c69bd202f",
+              "status": "affected",
+              "versionType": "git"
+            },
+            {
+              "version": "8201d1028caa4fae88e222c4e8cf541fdf45b821",
+              "lessThan": "13031fb6b8357fbbcded2a7f4cba73e4781ee594",
+              "status": "affected",
+              "versionType": "git"
+            }
+          ]
+        },
+        {
+          "product": "Linux",
+          "vendor": "Linux",
+          "defaultStatus": "affected",
+          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+          "programFiles": [
+            "arch/arm64/kvm/vgic/vgic-its.c"
+          ],
+          "versions": [
+            {
+              "version": "6.10",
+              "status": "affected"
+            },
+            {
+              "version": "0",
+              "lessThan": "6.10",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.12.93",
+              "lessThanOrEqual": "6.12.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "6.18.35",
+              "lessThanOrEqual": "6.18.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "7.0.12",
+              "lessThanOrEqual": "7.0.*",
+              "status": "unaffected",
+              "versionType": "semver"
+            },
+            {
+              "version": "7.1-rc7",
+              "lessThanOrEqual": "*",
+              "status": "unaffected",
+              "versionType": "original_commit_for_fix"
+            }
+          ]
+        }
+      ],
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-2638",
+      "publishedDate": "2026-06-09T11:21:30.879Z",
+      "lastModifiedDate": "2026-06-09T11:21:30.879Z",
+      "description": "A vulnerability in the quarantine and restore workflow of the X-VPN macOS website versions 77.0 through 77.5 allow a local attacker to leverage a race condition and symlink manipulation to achieve privileged file corruption.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://fluidattacks.com/es/advisories/soad",
+          "type": "reference"
+        },
+        {
+          "url": "https://xvpn.io/resources/statement-local-privilege-escalation-vulnerability",
+          "type": "reference"
+        },
+        {
+          "url": "https://xvpn.io/download/vpn-mac",
+          "type": "reference"
+        },
+        {
+          "url": "https://xvpn.io/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "platforms": [
+            "MacOS"
+          ],
+          "product": "X-VPN macOS website",
+          "vendor": "X-VPN",
+          "versions": [
+            {
+              "lessThanOrEqual": "77.5",
+              "status": "affected",
+              "version": "77.0",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-367 Time-of-check Time-of-use (TOCTOU) Race Condition"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-49742",
+      "publishedDate": "2026-06-09T10:54:58.139Z",
+      "lastModifiedDate": "2026-06-09T11:30:34.203Z",
+      "description": "Backend users with file download permissions were able to download files from the fallback storage of the file abstraction layer (FAL) via the Media Module. Since the fallback storage resolves paths relative to the server's document root, this could expose sensitive files such as log files. This issue affects TYPO3 CMS versions 11.0.0-11.5.50, 12.0.0-12.4.45, 13.0.0-13.4.30 and 14.0.0-14.3.2.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://typo3.org/security/advisory/typo3-core-sa-2026-013",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/TYPO3/typo3/commit/caa6b444d7ab1bdd1eb76a68004c8be73d98e6ae",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/TYPO3/typo3/commit/ad636b6183843b57c758a1e12174a75093ac93c3",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "TYPO3",
+          "product": "TYPO3 CMS",
+          "collectionURL": "https://packagist.org",
+          "packageName": "typo3/cms-core",
+          "repo": "https://github.com/TYPO3/typo3",
+          "modules": [
+            "Filelist"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "11.0.0",
+              "lessThan": "11.5.51",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "12.0.0",
+              "lessThan": "12.4.46",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "13.0.0",
+              "lessThan": "13.4.31",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "14.0.0",
+              "lessThan": "14.3.3",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-22 Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')",
+        "CWE-200 Exposure of Sensitive Information to an Unauthorized Actor"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-44119",
+      "publishedDate": "2026-06-08T15:17:31.939Z",
+      "lastModifiedDate": "2026-06-09T11:57:10.824Z",
+      "description": "Improper Privilege Management vulnerability in Apache HTTP Server 2.4.67 and earlier allows local .htaccess authors to read files with the privileges of the httpd user.\n\nThis issue affects Apache HTTP Server: from through 2.4.67.\n\nUsers are recommended to upgrade to version 2.4.68, which fixes the issue.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://httpd.apache.org/security/vulnerabilities_24.html",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Apache HTTP Server",
+          "vendor": "Apache Software Foundation",
+          "versions": [
+            {
+              "lessThanOrEqual": "2.4.67",
+              "status": "affected",
+              "version": "2.4.0",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-269 Improper Privilege Management"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-42535",
+      "publishedDate": "2026-06-08T15:14:49.189Z",
+      "lastModifiedDate": "2026-06-09T12:13:11.748Z",
+      "description": "A path handling issue in mod_dav_fs in Apache 2.4.67 and earlier allows a WebDAV content author to directly manipulate trusted DAV property databases, potentially causing child process crashes.\n\nUsers are recommended to upgrade to version 2.4.68, which fixes this issue.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://httpd.apache.org/security/vulnerabilities_24.html",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "Apache HTTP Server",
+          "vendor": "Apache Software Foundation",
+          "versions": [
+            {
+              "lessThanOrEqual": "2.4.67",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-668 Exposure of Resource to Wrong Sphere"
+      ],
       "fix_suggestion": "无法生成修复建议"
     }
   ]
