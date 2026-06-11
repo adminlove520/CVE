@@ -2,209 +2,76 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 5,
-    "last_updated": "2026-06-10T23:38:29.285864",
+    "total_count": 2,
+    "last_updated": "2026-06-11T02:04:02.546985",
     "severity_distribution": {
       "critical": 0,
-      "high": 2,
-      "medium": 1,
+      "high": 0,
+      "medium": 0,
       "low": 0,
       "none": 2
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-50636",
-      "publishedDate": "2026-06-09T17:34:31.751Z",
-      "lastModifiedDate": "2026-06-10T22:47:05.513Z",
-      "description": "The RemoteControl API methods invite_participants and remind_participants pass a caller-supplied token-ID array into TokenDynamic::findUninvited(), which concatenates the values directly into a tid IN ('...') SQL clause without parameterization or input validation. A remote, authenticated attacker holding the tokens/update permission on a survey can inject a crafted array element to perform SQL injection. Because LimeSurvey configures its PDO connection with emulated prepared statements (emulatePrepare = true) and does not disable MySQL multi-statements, the injection supports stacked queries: the attacker can append arbitrary additional statements (INSERT/UPDATE/DELETE/DROP/CREATE) after the original SELECT. This permits both arbitrary read of any data in the database, such as administrator bcrypt password hashes (lime_users), survey response PII, session records, and global settings, all recoverable via a SLEEP() time-based blind oracle, and arbitrary write/destruction of that data, including directly overwriting the administrator password hash for immediate account takeover or dropping/truncating tables. Reads and writes extend to any schema the application's database user can access. The RemoteControl interface (RPCInterface = json/xml) must be enabled, which is not the default.",
-      "severity": 8.8,
-      "references": [
-        {
-          "url": "https://github.com/LimeSurvey/LimeSurvey/pull/5031",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.limesurvey.org/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/limesurvey-remotecontrol-invite-participants-remind-participants-sql-injection",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "LimeSurvey",
-          "product": "LimeSurvey",
-          "defaultStatus": "unknown",
-          "versions": [
-            {
-              "version": "0",
-              "lessThanOrEqual": "7.0",
-              "status": "affected",
-              "versionType": "custom"
-            },
-            {
-              "status": "unaffected",
-              "version": "7.0.1",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-50635",
-      "publishedDate": "2026-06-09T17:34:30.992Z",
-      "lastModifiedDate": "2026-06-10T22:46:42.371Z",
-      "description": "LimeSurvey constructs account password-reset links from the client-supplied HTTP Host header without validating it. The optional allowedHosts allowlist that would constrain this is undefined in the default (and documented) configuration, so LSHttpRequest::checkIsAllowedHost() results in no operation. A remote, unauthenticated attacker who submits a forgotten-password request for a known account (requiring only the target's username and email) with a spoofed Host header causes LimeSurvey to email that account a reset link whose hostname is attacker-controlled while embedding the genuine validation_key. When the recipient or an automated inbound mail-security link scanner dereferences the link, the valid reset token is disclosed to the attacker, who replays it against the legitimate host's newPassword endpoint to set a new password and take over the account.",
-      "severity": 8.8,
-      "references": [
-        {
-          "url": "https://github.com/LimeSurvey/LimeSurvey/pull/5032",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.limesurvey.org/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/limesurvey-password-reset-host-header-injection-discloses-reset-token",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "LimeSurvey",
-          "product": "LimeSurvey",
-          "defaultStatus": "unknown",
-          "versions": [
-            {
-              "version": "0",
-              "lessThanOrEqual": "7.0",
-              "status": "affected",
-              "versionType": "custom"
-            },
-            {
-              "status": "unaffected",
-              "version": "7.0.1",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Weak Password Recovery Mechanism for Forgotten Password"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-46645",
-      "publishedDate": "2026-06-10T22:23:57.397Z",
-      "lastModifiedDate": "2026-06-10T22:23:57.397Z",
-      "description": "SQLAdmin is a flexible Admin interface for SQLAlchemy models. Prior to version 0.25.1, the ajax_lookup endpoint in application.py bypasses the is_accessible() access control check that all other endpoints enforce. If a developer restricts model access by overriding is_accessible(), an authenticated user can still query that model's data through the ajax_lookup endpoint — silently bypassing the restriction. This issue has been patched in version 0.25.1.",
-      "severity": 4.3,
-      "references": [
-        {
-          "url": "https://github.com/smithyhq/sqladmin/security/advisories/GHSA-54mc-gghv-4cfj",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/smithyhq/sqladmin/pull/1035",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/smithyhq/sqladmin/commit/b0d3a19fb9b074a9ed243de46930108375dfbb98",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/smithyhq/sqladmin/releases/tag/0.25.1",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "smithyhq",
-          "product": "sqladmin",
-          "versions": [
-            {
-              "version": "< 0.25.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-862: Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-47342",
-      "publishedDate": "2026-06-10T22:29:06.793Z",
-      "lastModifiedDate": "2026-06-10T22:41:59.149Z",
-      "description": "A privilege escalation vulnerability in Apache OFBiz allows a low-privileged authenticated user to obtain higher privileges\n\n\n\nThis issue affects Apache OFBiz: before 24.09.07.\n\nUsers are recommended to upgrade to version 24.09.07, which fixes the issue.",
+      "id": "CVE-2022-48575",
+      "publishedDate": "2026-06-10T20:09:04.767Z",
+      "lastModifiedDate": "2026-06-11T00:25:13.286Z",
+      "description": "A person with access to a Mac may be able to bypass Login Window. A consistency issue was addressed with improved state handling. This issue is fixed in macOS Monterey 12.4.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://lists.apache.org/thread/xqph4qjm163kmp0tcg9dodl6js499n75",
+          "url": "https://support.apple.com/en-us/213257",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "unaffected",
-          "product": "Apache OFBiz",
-          "vendor": "Apache Software Foundation",
+          "vendor": "Apple",
+          "product": "macOS Monterey",
           "versions": [
             {
-              "lessThan": "24.09.07",
-              "status": "affected",
               "version": "0",
-              "versionType": "semver"
+              "status": "affected",
+              "lessThan": "12.4",
+              "versionType": "custom"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-285 Improper Authorization"
+        "A person with access to a Mac may be able to bypass Login Window"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-50223",
-      "publishedDate": "2026-06-10T22:23:49.650Z",
-      "lastModifiedDate": "2026-06-10T22:42:04.290Z",
-      "description": "Improper Control of Generation of Code ('Code Injection') vulnerability in Apache OFBiz allows a low-privileged authenticated user with Content/DataResource editing privileges to perform template injection attacks that could lead to Remote Code Execution.\n\nThis issue affects Apache OFBiz: before 24.09.07.\n\nUsers are recommended to upgrade to version 24.09.07, which fixes the issue.",
+      "id": "CVE-2022-26758",
+      "publishedDate": "2026-06-10T20:09:03.837Z",
+      "lastModifiedDate": "2026-06-11T00:23:14.636Z",
+      "description": "A malicious application may cause unexpected changes in memory shared between processes. A memory corruption issue was addressed with improved state management. This issue is fixed in macOS Monterey 12.4.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://lists.apache.org/thread/trr2p4zokg54glqlhjnglt4yr7n8t5xd",
+          "url": "https://support.apple.com/en-us/213257",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "unaffected",
-          "product": "Apache OFBiz",
-          "vendor": "Apache Software Foundation",
+          "vendor": "Apple",
+          "product": "macOS Monterey",
           "versions": [
             {
-              "lessThan": "24.09.07",
-              "status": "affected",
               "version": "0",
-              "versionType": "semver"
+              "status": "affected",
+              "lessThan": "12.4",
+              "versionType": "custom"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-94 Improper Control of Generation of Code ('Code Injection')"
+        "A malicious application may cause unexpected changes in memory shared between processes"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
