@@ -2,145 +2,89 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 3,
-    "last_updated": "2026-06-13T15:56:11.603095",
+    "total_count": 1,
+    "last_updated": "2026-06-13T17:39:26.670387",
     "severity_distribution": {
       "critical": 0,
       "high": 1,
-      "medium": 2,
+      "medium": 0,
       "low": 0,
       "none": 0
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-53833",
-      "publishedDate": "2026-06-12T21:56:57.866Z",
-      "lastModifiedDate": "2026-06-13T12:00:41.234Z",
-      "description": "OpenClaw before 2026.4.29 contains an authorization bypass vulnerability in the QQBot streaming command that allows authenticated senders to mutate configuration without explicit allowFrom restrictions. Attackers can modify QQBot streaming configuration outside intended admin policy by reaching the affected command without non-wildcard allowlist entry requirements.",
-      "severity": 7.7,
+      "id": "CVE-2026-6428",
+      "publishedDate": "2026-06-13T16:34:10.326Z",
+      "lastModifiedDate": "2026-06-13T16:35:56.718Z",
+      "description": "SQL Injection in reports/catalogue_out.pl in Koha Community Koha through 22.11.37, 23.x, 24.x before 24.11.16, 25.05.x before 25.05.11, 25.11.x before 25.11.05, 26.05.x before 26.05.01, and 26.11.x before 26.11.00 allows an authenticated staff user with the Reports module flag to read arbitrary data from the Koha application database via the Filter URL parameter when the Criteria parameter matches /branchcode/.\n\n\n\nThe vulnerable sink in sub calculate concatenates the unmodified Filter request parameter directly into a LIKE clause of the auxiliary $strsth2 statement and executes it via DBI without bound parameters:\n\n\n\nmy $f = @$filters[0];\n$f =~ s/\\*/%/g;\n$strsth2 .= \" AND $column LIKE '$f' \";\n\n\n\nThis enables error-based SQL injection (e.g., via EXTRACTVALUE) and full read access to sensitive tables including borrowers (password hashes, 2FA secrets, PII), borrower_password_recovery, api_keys, and sessions.\n\n\n\nProof of concept (error-based, single request):\n\n\n\nGET /cgi-bin/koha/reports/catalogue_out.pl?do_it=1&output=screen&Limit=10&Criteria=branchcode&Filter=x'+AND+EXTRACTVALUE(1,CONCAT(0x7e,VERSION(),0x7c,USER(),0x7c,DATABASE(),0x7e))--+-\nCookie: CGISESSID=<LIBRARIAN_SESSION>\n\n\n\nThe response body contains the DBI exception leaking the MariaDB version, database user, client IP, and database name, after which arbitrary data can be paged out using LIMIT n,1 / SUBSTRING(...).\n\n\n\nThe vulnerable sink was introduced in commit 6bb77ae3e4 (2008-07-09); CVE-2015-4633 patched the same class in sibling files but did not generalise the fix to reports/catalogue_out.pl. Fixed in Koha 22.11.38, 24.11.16, 25.05.11, 25.11.05, 26.05.01, and 26.11.00 by replacing the raw concatenation with a parameterised placeholder.",
+      "severity": 7.6,
       "references": [
         {
-          "url": "https://github.com/openclaw/openclaw/security/advisories/GHSA-jvm4-4j77-39p6",
+          "url": "https://bugs.koha-community.org/bugzilla3/show_bug.cgi?id=42361",
           "type": "reference"
         },
         {
-          "url": "https://www.vulncheck.com/advisories/openclaw-authorization-bypass-via-qqbot-streaming-command",
+          "url": "https://bugs.koha-community.org/bugzilla3/attachment.cgi?id=199539",
+          "type": "reference"
+        },
+        {
+          "url": "https://koha-community.org/security-releases/",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "OpenClaw",
-          "product": "OpenClaw",
-          "defaultStatus": "unaffected",
-          "packageURL": "pkg:npm/openclaw/qqbot",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "versionType": "semver",
-              "lessThan": "2026.4.29"
-            },
-            {
-              "version": "2026.4.29",
-              "status": "unaffected",
-              "versionType": "semver"
-            }
+          "vendor": "Koha Community",
+          "product": "Koha",
+          "collectionURL": "https://koha-community.org/",
+          "repo": "https://gitlab.com/koha-community/Koha",
+          "programFiles": [
+            "reports/catalogue_out.pl"
           ],
-          "repo": "https://github.com/openclaw/openclaw"
-        }
-      ],
-      "problemType": [
-        "Authentication Bypass by Spoofing"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-53824",
-      "publishedDate": "2026-06-12T21:56:51.614Z",
-      "lastModifiedDate": "2026-06-13T11:59:29.411Z",
-      "description": "OpenClaw before 2026.4.24 contains a token revocation vulnerability allowing callers with revoked slash tokens to continue executing commands during monitor refresh windows. Attackers can exploit stale token acceptance to invoke slash command behavior briefly after token revocation, potentially executing unauthorized actions depending on operator configuration.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://github.com/openclaw/openclaw/security/advisories/GHSA-4m3v-q747-pc6h",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/mattermost-slash-token-revocation-lag-via-monitor-refresh-delay",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "OpenClaw",
-          "product": "OpenClaw",
-          "defaultStatus": "unaffected",
-          "packageURL": "pkg:npm/openclaw",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "versionType": "semver",
-              "lessThan": "2026.4.24"
-            },
-            {
-              "version": "2026.4.24",
-              "status": "unaffected",
-              "versionType": "semver"
-            }
-          ],
-          "repo": "https://github.com/openclaw/openclaw"
-        }
-      ],
-      "problemType": [
-        "Insufficient Session Expiration"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-53982",
-      "publishedDate": "2026-06-12T16:25:42.757Z",
-      "lastModifiedDate": "2026-06-13T12:04:29.319Z",
-      "description": "Cap-go Console < 12.28.2 contains a denial-of-service vulnerability in its account deletion flow that allows an attacker to block authentication and onboarding functions by triggering account deletion while a device identifier is linked to the active session. The platform incorrectly associates the deletion state with the device identifier, causing the affected device or browser environment to be redirected to an account-disabled page for approximately 30 days, preventing any account login or registration from that device.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://github.com/Cap-go/capgo/security/advisories/GHSA-qmrm-qgwr-55jf",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/Cap-go/capgo/commit/6685e5f11adef257bf3d085e481f4d8ebcec602e",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/capgo-console-account-deletion-dos-via-device-identifier-association",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Cap-go",
-          "product": "capgo",
           "versions": [
             {
               "status": "affected",
               "version": "0",
-              "lessThan": "12.128.2",
+              "lessThan": "22.11.38",
               "versionType": "semver"
             },
             {
-              "status": "unaffected",
-              "version": "6685e5f11adef257bf3d085e481f4d8ebcec602e",
-              "versionType": "git"
+              "status": "affected",
+              "version": "23.05.00",
+              "lessThanOrEqual": "23.11.15",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "24.05.00",
+              "lessThan": "24.11.16",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "25.05.00",
+              "lessThan": "25.05.11",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "25.11.00",
+              "lessThan": "25.11.05",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "26.05.00",
+              "lessThan": "26.05.01",
+              "versionType": "semver"
             }
           ],
-          "defaultStatus": "affected"
+          "defaultStatus": "unaffected"
         }
       ],
       "problemType": [
-        "Overly Restrictive Account Lockout Mechanism"
+        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
