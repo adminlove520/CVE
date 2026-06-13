@@ -3,10 +3,10 @@
   "dataVersion": "5.1",
   "cveMetadata": {
     "total_count": 1,
-    "last_updated": "2026-06-13T17:39:26.670387",
+    "last_updated": "2026-06-13T18:57:38.471774",
     "severity_distribution": {
-      "critical": 0,
-      "high": 1,
+      "critical": 1,
+      "high": 0,
       "medium": 0,
       "low": 0,
       "none": 0
@@ -14,77 +14,53 @@
   },
   "cves": [
     {
-      "id": "CVE-2026-6428",
-      "publishedDate": "2026-06-13T16:34:10.326Z",
-      "lastModifiedDate": "2026-06-13T16:35:56.718Z",
-      "description": "SQL Injection in reports/catalogue_out.pl in Koha Community Koha through 22.11.37, 23.x, 24.x before 24.11.16, 25.05.x before 25.05.11, 25.11.x before 25.11.05, 26.05.x before 26.05.01, and 26.11.x before 26.11.00 allows an authenticated staff user with the Reports module flag to read arbitrary data from the Koha application database via the Filter URL parameter when the Criteria parameter matches /branchcode/.\n\n\n\nThe vulnerable sink in sub calculate concatenates the unmodified Filter request parameter directly into a LIKE clause of the auxiliary $strsth2 statement and executes it via DBI without bound parameters:\n\n\n\nmy $f = @$filters[0];\n$f =~ s/\\*/%/g;\n$strsth2 .= \" AND $column LIKE '$f' \";\n\n\n\nThis enables error-based SQL injection (e.g., via EXTRACTVALUE) and full read access to sensitive tables including borrowers (password hashes, 2FA secrets, PII), borrower_password_recovery, api_keys, and sessions.\n\n\n\nProof of concept (error-based, single request):\n\n\n\nGET /cgi-bin/koha/reports/catalogue_out.pl?do_it=1&output=screen&Limit=10&Criteria=branchcode&Filter=x'+AND+EXTRACTVALUE(1,CONCAT(0x7e,VERSION(),0x7c,USER(),0x7c,DATABASE(),0x7e))--+-\nCookie: CGISESSID=<LIBRARIAN_SESSION>\n\n\n\nThe response body contains the DBI exception leaking the MariaDB version, database user, client IP, and database name, after which arbitrary data can be paged out using LIMIT n,1 / SUBSTRING(...).\n\n\n\nThe vulnerable sink was introduced in commit 6bb77ae3e4 (2008-07-09); CVE-2015-4633 patched the same class in sibling files but did not generalise the fix to reports/catalogue_out.pl. Fixed in Koha 22.11.38, 24.11.16, 25.05.11, 25.11.05, 26.05.01, and 26.11.00 by replacing the raw concatenation with a parameterised placeholder.",
-      "severity": 7.6,
+      "id": "CVE-2026-12183",
+      "publishedDate": "2026-06-13T17:36:49.109Z",
+      "lastModifiedDate": "2026-06-13T17:41:00.118Z",
+      "description": "Nefteprodukttekhnika BUK TS-G Gas Station Automation System 2.9.1 through 2.10.2 on Linux contains an Improper Authentication vulnerability (CWE-287) in the system configuration module. The /php/ajax-login.php endpoint returns userid=1 (administrator) in response to any HTTP POST request that supplies arbitrary credentials (e.g., action=dologin&login=<any_value>&pwd=<any_value>), and subsequent privileged endpoints under /php/ajax-main.php and /modules/* do not validate a server-side session. A remote unauthenticated attacker can invoke any administrative action exposed by the configuration module, including reading and modifying user rules, fuel tank gauges, fuel dispensers, relays, cash registers, bank terminals, fuel cards, price and customer displays, cash collection, and pricing rules.",
+      "severity": 9.8,
       "references": [
         {
-          "url": "https://bugs.koha-community.org/bugzilla3/show_bug.cgi?id=42361",
+          "url": "https://github.com/ciprobe/bukts_auth_bypass",
+          "type": "poc"
+        },
+        {
+          "url": "https://bukts.ru/repo-bukts-current",
           "type": "reference"
         },
         {
-          "url": "https://bugs.koha-community.org/bugzilla3/attachment.cgi?id=199539",
+          "url": "https://cwe.mitre.org/data/definitions/287.html",
           "type": "reference"
         },
         {
-          "url": "https://koha-community.org/security-releases/",
+          "url": "https://cwe.mitre.org/data/definitions/306.html",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Koha Community",
-          "product": "Koha",
-          "collectionURL": "https://koha-community.org/",
-          "repo": "https://gitlab.com/koha-community/Koha",
-          "programFiles": [
-            "reports/catalogue_out.pl"
+          "vendor": "Nefteprodukttekhnika LLC",
+          "product": "BUK TS-G Gas Station Automation System",
+          "platforms": [
+            "Linux"
+          ],
+          "modules": [
+            "Configuration Module (Модуль: Настройка)"
           ],
           "versions": [
             {
               "status": "affected",
-              "version": "0",
-              "lessThan": "22.11.38",
-              "versionType": "semver"
-            },
-            {
-              "status": "affected",
-              "version": "23.05.00",
-              "lessThanOrEqual": "23.11.15",
-              "versionType": "semver"
-            },
-            {
-              "status": "affected",
-              "version": "24.05.00",
-              "lessThan": "24.11.16",
-              "versionType": "semver"
-            },
-            {
-              "status": "affected",
-              "version": "25.05.00",
-              "lessThan": "25.05.11",
-              "versionType": "semver"
-            },
-            {
-              "status": "affected",
-              "version": "25.11.00",
-              "lessThan": "25.11.05",
-              "versionType": "semver"
-            },
-            {
-              "status": "affected",
-              "version": "26.05.00",
-              "lessThan": "26.05.01",
+              "version": "2.9.1",
+              "lessThanOrEqual": "2.10.2",
               "versionType": "semver"
             }
           ],
-          "defaultStatus": "unaffected"
+          "defaultStatus": "unknown"
         }
       ],
       "problemType": [
-        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+        "CWE-287 Improper Authentication",
+        "CWE-306 Missing Authentication for Critical Function"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
