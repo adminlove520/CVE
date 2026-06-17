@@ -2,474 +2,85 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 12,
-    "last_updated": "2026-06-17T21:54:35.283312",
+    "total_count": 2,
+    "last_updated": "2026-06-17T23:42:10.720622",
     "severity_distribution": {
-      "critical": 0,
-      "high": 5,
-      "medium": 3,
+      "critical": 1,
+      "high": 1,
+      "medium": 0,
       "low": 0,
-      "none": 4
+      "none": 0
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-50194",
-      "publishedDate": "2026-06-17T21:03:26.756Z",
-      "lastModifiedDate": "2026-06-17T21:03:26.756Z",
-      "description": "Steeltoe is an open source project that provides a collection of libraries that helps users build cloud-native applications. When Steeltoe management endpoints versions 3.2.2 through 3.3.0 and 4.1.0 are configured to listen on an alternate port (`Management:Endpoints:Port` is configured), the middleware responsible for restricting access to the endpoints uses the `Host` HTTP header rather than the actual network socket port. Versions 3.4.0 and 4.2.0 patch the issue. If an immediate upgrade to a patched version is not possible, add explicit ASP.NET Core authorization (`RequireAuthorization`) to all sensitive actuator endpoints as a defense-in-depth measure independent of port isolation and/or configure the reverse proxy or load balancer to enforce the `Host` header value and prevent clients from setting an arbitrary port.",
+      "id": "CVE-2026-48768",
+      "publishedDate": "2026-06-17T23:13:41.768Z",
+      "lastModifiedDate": "2026-06-17T23:13:41.768Z",
+      "description": "TypeBot is a chatbot builder tool. In versions 3.16.1 and earlier, POST /api/blocks/file-input/v3/generate-upload-url is unauthenticated and uses unsanitized fileName input to construct public/ S3 object keys, while issuing presigned PUT URLs that do not bind Content-Type. As a result, any anonymous visitor to a published bot with a file input can upload attacker-controlled HTML, SVG, or JS to attacker-chosen subpaths, including other tenants’ publicly served result paths, enabling arbitrary content hosting and potential stored XSS on the storage origin. ../ traversal is blocked by S3/MinIO canonicalization (signature mismatch), but forward-slash path injection is exploitable. This issue has been fixed in version 3.17.0.",
+      "severity": 9.3,
+      "references": [
+        {
+          "url": "https://github.com/baptisteArno/typebot.io/security/advisories/GHSA-fp7x-6pqh-vhvf",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/baptisteArno/typebot.io/releases/tag/v3.17.0",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "baptisteArno",
+          "product": "typebot.io",
+          "versions": [
+            {
+              "version": "< 3.17.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')",
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-48764",
+      "publishedDate": "2026-06-17T23:29:49.629Z",
+      "lastModifiedDate": "2026-06-17T23:29:49.629Z",
+      "description": "TypeBot is a chatbot builder tool. In versions prior to 3.17.2, SSRF validation is implemented by resolving a hostname once and checking whether the resolved IP belongs to a forbidden range allowing for DNS rebinding bypass. The root cause is a time-of-check to time-of-use gap in the SSRF guard. The validator resolves the hostname and approves it, but the later request path performs a fresh resolution and connects to whatever IP the hostname maps to at that moment. The actual outbound request is then performed later using the original hostname, without pinning the validated IP to the network connection. An attacker who can supply a URL to a public bot that performs a server-side HTTP Request block or server-side script fetch can use DNS rebinding to pass the initial validation and still force the server to connect to a private or metadata address during the real request. This enables server-side access to private network services, cloud metadata endpoints, and other internal HTTP targets that the validator was intended to block. The exact downstream impact depends on the reachable internal services. Concrete consequences include metadata disclosure, access to internal admin panels, credential theft from metadata services, and further compromise through internal-only HTTP interfaces. This issue has been fixed in version 3.17.2.",
       "severity": 8.2,
       "references": [
         {
-          "url": "https://github.com/SteeltoeOSS/security-advisories/security/advisories/GHSA-58f6-6rj2-3v8r",
+          "url": "https://github.com/baptisteArno/typebot.io/security/advisories/GHSA-hgqq-whf5-mrrf",
           "type": "reference"
         },
         {
-          "url": "https://github.com/SteeltoeOSS/Steeltoe/commit/4cbc352fe89ac2e6c609554e435ab28996fec5e9",
+          "url": "https://github.com/baptisteArno/typebot.io/commit/f56c3c3f771df13a8c11e88f500dfdd78981bed1",
           "type": "reference"
         },
         {
-          "url": "https://github.com/SteeltoeOSS/Steeltoe/commit/b7ca93c510aaa08d7e4ebec40ce20c5811c2c4b6",
+          "url": "https://github.com/baptisteArno/typebot.io/releases/tag/v3.17.2",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "SteeltoeOSS",
-          "product": "Steeltoe.Management.Endpoint",
+          "vendor": "baptisteArno",
+          "product": "typebot.io",
           "versions": [
             {
-              "version": "< 4.2.0",
-              "status": "affected"
-            }
-          ]
-        },
-        {
-          "vendor": "SteeltoeOSS",
-          "product": "Steeltoe.Management.EndpointCore",
-          "versions": [
-            {
-              "version": ">= 3.2.2, < 3.4.0",
+              "version": "< 3.17.2",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-288: Authentication Bypass Using an Alternate Path or Channel",
-        "CWE-639: Authorization Bypass Through User-Controlled Key"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-50200",
-      "publishedDate": "2026-06-17T21:44:21.586Z",
-      "lastModifiedDate": "2026-06-17T21:44:21.586Z",
-      "description": "Steeltoe is an open source project that provides a collection of libraries that helps users build cloud-native applications. In Steeltoe.Management.Endpoint prior to version 4.2.0 and Steeltoe.Management.EndpointCore prior to version 3.4.0, the `Sanitizer` component in the Environment actuator redacts configuration values by matching the configuration key name against a suffix list. The default list (`password`, `secret`, `key`, `token`, `.*credentials.*`, `vcap_services`) does not cover the standard .NET pattern `ConnectionStrings:<name>` or Steeltoe Connectors' `Steeltoe:Client:<type>:Default:ConnectionString`. There is no value-based scrubbing, so full connection string values including embedded `Password=` and `user:pass@host` segments are returned verbatim in `/actuator/env` responses. Steeltoe.Management.Endpoint 4.2.0 and Steeltoe.Management.EndpointCore 3.4.0 patch the issue. If an immediate upgrade is not possible: On the standard path, remove `env` from the actuator exposure list; add `.*connectionstring.*` to `KeysToSanitize` as a defense-in-depth measure for both paths; and/or require authorization on actuator endpoints.",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://github.com/SteeltoeOSS/security-advisories/security/advisories/GHSA-q62h-354g-5r85",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/SteeltoeOSS/Steeltoe/commit/bef9f14b710232fca3fbe87e48fdd1b9e6b60d43",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/SteeltoeOSS/Steeltoe/commit/e50cd31a429b191841120f0d38fa9dda8f751b0a",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "SteeltoeOSS",
-          "product": "Steeltoe.Management.Endpoint",
-          "versions": [
-            {
-              "version": "< 4.2.0",
-              "status": "affected"
-            }
-          ]
-        },
-        {
-          "vendor": "SteeltoeOSS",
-          "product": "Steeltoe.Management.EndpointCore",
-          "versions": [
-            {
-              "version": "< 3.4.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor",
-        "CWE-319: Cleartext Transmission of Sensitive Information"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-50196",
-      "publishedDate": "2026-06-17T21:18:42.651Z",
-      "lastModifiedDate": "2026-06-17T21:18:42.651Z",
-      "description": "Steeltoe is an open source project that provides a collection of libraries that helps users build cloud-native applications. In Steeltoe.Discovery.Eureka prior to versions 4.2.0 and 3.4.0, `DataCenterInfo.FromJson` throws `ArgumentException` for any `name` value other than `\"MyOwn\"` or `\"Amazon\"`, despite the Java Eureka specification defining a third valid value: `\"Netflix\"`. The exception propagates through the entire registry deserialization chain and is swallowed by the periodic cache refresh task, leaving the local service registry permanently empty or stale. Versions 4.2.0 and 3.4.0 patch the issue. If an immediate upgrade is not possible, remove any registrations using unsupported `DataCenterInfo.name` values from the registry. In mixed Java/Spring and Steeltoe environments, audit for the `Netflix` data center type before deploying Steeltoe Eureka clients.",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://github.com/SteeltoeOSS/security-advisories/security/advisories/GHSA-j8ph-6fxj-g533",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/SteeltoeOSS/Steeltoe/commit/b8ed8557bb595863e4f340051d16b26ba40a75f4",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/SteeltoeOSS/Steeltoe/commit/c34a7399e808d0d11dd977460e81df1f2722df28",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "SteeltoeOSS",
-          "product": "Steeltoe.Discovery.Eureka",
-          "versions": [
-            {
-              "version": ">= 4.0.0, < 4.2.0",
-              "status": "affected"
-            },
-            {
-              "version": "< 3.4.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-20: Improper Input Validation",
-        "CWE-400: Uncontrolled Resource Consumption"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-12530",
-      "publishedDate": "2026-06-17T21:05:00.616Z",
-      "lastModifiedDate": "2026-06-17T21:05:00.616Z",
-      "description": "Improper neutralization of argument delimiters in the install_packages() method in AWS Bedrock AgentCore Python SDK versions >= 1.1.3 and < 1.6.1 might allow a remote authenticated user to execute arbitrary commands within the Code Interpreter sandbox via crafted package name arguments.\n\n\n\nTo mitigate this issue, users should upgrade to version 1.6.1.",
-      "severity": 7.3,
-      "references": [
-        {
-          "url": "https://pypi.org/project/bedrock-agentcore/1.6.1/",
-          "type": "reference"
-        },
-        {
-          "url": "https://aws.amazon.com/security/security-bulletins/2026-044-aws/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "AWS",
-          "product": "bedrock-agentcore",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "1.1.3",
-              "lessThan": "1.6.1",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-88 Improper neutralization of argument delimiters in a command ('argument injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-48997",
-      "publishedDate": "2026-06-17T21:42:59.679Z",
-      "lastModifiedDate": "2026-06-17T21:42:59.679Z",
-      "description": "e107 is a content management system (CMS). Versions  2.3.5 and earlier contain a command injection vulnerability in the ImageMagick resize destination path. In resize_image(), the source path is escaped with escapeshellarg(), but the destination path is inserted inside raw double quotes in the convert command; in the submit-news upload flow, that destination filename includes the first six characters of user-controlled news title input. Because the title filter removes literal spaces but not tab characters, and shell expansions such as $(...) and backticks can survive into the quoted destination argument, /bin/sh -c may evaluate attacker-controlled input. Exploitation is possible only when all of the following non-default settings are enabled: resize_method=ImageMagick, subnews_attach=1, upload_enabled=1, subnews_resize is numeric between 30 and 5000, and the attacker is a non-admin in classes permitted by both subnews_class and upload_class. This issue has been fixed in version 2.3.6.",
-      "severity": 7.1,
-      "references": [
-        {
-          "url": "https://github.com/e107inc/e107/security/advisories/GHSA-3j33-c9v4-4p42",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/e107inc/e107/releases/tag/v2.3.6",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "e107inc",
-          "product": "e107",
-          "versions": [
-            {
-              "version": "< 2.3.6",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-54386",
-      "publishedDate": "2026-06-17T21:37:00.583Z",
-      "lastModifiedDate": "2026-06-17T21:37:00.583Z",
-      "description": "marimo before 0.23.9 contains a reflected cross-site scripting vulnerability in the notebook page that allows unauthenticated attackers to inject arbitrary JavaScript by exploiting improper escaping of single quotes in the file query parameter reflected into an inline JavaScript string literal. Attackers can craft a malicious link with a payload beginning with __new__ to bypass the 404 check and inject JavaScript into the page, which executes without Content-Security-Policy restrictions in the origin of a victim's marimo server.",
-      "severity": 6.1,
-      "references": [
-        {
-          "url": "https://github.com/marimo-team/marimo/releases/tag/0.23.9",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/marimo-team/marimo/pull/9789",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/marimo-team/marimo/commit/fdd55c8cf6260ae23bb411dc9d9269def5cf75d6",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/marimo-xss-via-file-query-parameter-in-assets-py",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "affected",
-          "vendor": "marimo-team",
-          "product": "marimo",
-          "repo": "https://github.com/marimo-team/marimo",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver",
-              "lessThan": "0.23.9"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-48991",
-      "publishedDate": "2026-06-17T21:32:41.402Z",
-      "lastModifiedDate": "2026-06-17T21:32:41.402Z",
-      "description": "XianYuLauncher is a Minecraft Java Edition launcher. In versions prior to 1.5.5, sensitive authentication artifacts could be exposed during a user-initiated login under certain local attack conditions. Affected versions relied on a fixed localhost redirect URI without PKCE or state validation. Exploitation is most likely to occur when an attacker is able to observe, intercept, or otherwise interfere with the local authentication flow on the same device. This issue has been fixed in version 1.5.5.",
-      "severity": 5.5,
-      "references": [
-        {
-          "url": "https://github.com/XianYuLauncher/XianYuLauncher/security/advisories/GHSA-q6r9-qxmf-8hfx",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/XianYuLauncher/XianYuLauncher/pull/213",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "XianYuLauncher",
-          "product": "XianYuLauncher",
-          "versions": [
-            {
-              "version": "< 1.5.5",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-287: Improper Authentication"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-48990",
-      "publishedDate": "2026-06-17T21:08:10.534Z",
-      "lastModifiedDate": "2026-06-17T21:08:10.534Z",
-      "description": "joserfc is a Python library that provides an implementation of several JSON Object Signing and Encryption (JOSE) standards. In versions 1.3.4 through 1.6.5, joserfc accepts oversized RFC7797 b64=false JWS payloads without applying JWSRegistry.max_payload_length, which can lead to resource exhaustion. The normal JWS compact and flattened JSON paths reject payloads above the configured payload-size limit with ExceededSizeError. The RFC7797 unencoded payload paths do not make the same check. A valid b64=false compact or flattened JSON JWS can therefore deserialize successfully with a payload larger than JWSRegistry.max_payload_length. Applications that accept lower-trust JWS values and rely on joserfc to reject oversized token content during verification have a moderate availability risk. This issue has been fixed in version 1.6.7.",
-      "severity": 5.3,
-      "references": [
-        {
-          "url": "https://github.com/authlib/joserfc/security/advisories/GHSA-wphv-vfrh-23q5",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/authlib/joserfc/releases/tag/1.6.7",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "authlib",
-          "product": "joserfc",
-          "versions": [
-            {
-              "version": "< 1.6.7",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-400: Uncontrolled Resource Consumption",
-        "CWE-770: Allocation of Resources Without Limits or Throttling"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-48820",
-      "publishedDate": "2026-06-17T21:19:44.238Z",
-      "lastModifiedDate": "2026-06-17T21:19:44.238Z",
-      "description": "CakePHP is a rapid development framework for PHP. In versions 4.5.11 and earlier, 4.6.0 through 4.6.3, 5.0.0 through 5.1.6, 5.2.0 through 5.2.12, and 5.3.0 through 5.3.5, View::_getElementFileName() does not check that the resolved element path is within the application/plugin view template paths. When element names are created with specifically crafted user-supplied data this weakness can be leveraged to include other PHP files on the server. Patched releases are available in 5.3.6, 5.2.13, 5.1.7, 4.6.4, and 4.5.11.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/cakephp/cakephp/security/advisories/GHSA-wpvj-hjcr-h3p2",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "cakephp",
-          "product": "cakephp",
-          "versions": [
-            {
-              "version": ">= 5.3.0, < 5.3.6",
-              "status": "affected"
-            },
-            {
-              "version": ">= 5.2.0, < 5.2.13",
-              "status": "affected"
-            },
-            {
-              "version": ">= 5.0.0, < 5.1.7",
-              "status": "affected"
-            },
-            {
-              "version": ">= 4.6.0, < 4.6.4",
-              "status": "affected"
-            },
-            {
-              "version": "< 4.5.11",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-98: Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')",
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-8050",
-      "publishedDate": "2026-06-17T21:05:32.448Z",
-      "lastModifiedDate": "2026-06-17T21:05:32.448Z",
-      "description": "In SignalRGB versions prior to 1.3.7.0, seven of the thirteen IOCTL handlers dereference the SystemBuffer pointer without first verifying that it is non-NULL. Sending an IOCTL with an empty input buffer causes a NULL pointer dereference, resulting in a kernel crash.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://kb.cert.org/vuls/id/380058",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "SignalRGB",
-          "product": "SignalRGB kernel driver",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "1.3.7.0",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-476 NULL Pointer Dereference"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-8049",
-      "publishedDate": "2026-06-17T21:05:25.402Z",
-      "lastModifiedDate": "2026-06-17T21:05:25.402Z",
-      "description": "In SignalRGB versions prior to 1.3.7.0, the \\\\.\\SignalIo device object is created without an explicit SDDL security descriptor and without FILE_DEVICE_SECURE_OPEN. This results in overly permissive default access control, allowing any authenticated local user to obtain a handle to the device and issue privileged IOCTLs.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://kb.cert.org/vuls/id/380058",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "SignalRGB",
-          "product": "SignalRGB kernel driver",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "1.3.7.0",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-284"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-48989",
-      "publishedDate": "2026-06-17T21:02:15.047Z",
-      "lastModifiedDate": "2026-06-17T21:02:15.047Z",
-      "description": "Windows-MCP is an open-source project that integrates AI agents with Windows. In versions prior to 0.7.5, certain HTTP modes exposed the MCP control plane without authentication while enabling wildcard CORS (allow_origins=*, allow_methods=*, allow_headers=*). Because the same server also exposed a PowerShell tool that executes caller-controlled commands as the Windows user running Windows-MCP, attackers could reach the control plane from arbitrary origins or non-browser clients and achieve arbitrary PowerShell execution. This issue was fixed in version 0.7.5.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/CursorTouch/Windows-MCP/security/advisories/GHSA-vrxg-gm77-7q5g",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/CursorTouch/Windows-MCP/releases/tag/v0.7.5",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "CursorTouch",
-          "product": "Windows-MCP",
-          "versions": [
-            {
-              "version": "< 0.7.5",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-306: Missing Authentication for Critical Function"
+        "CWE-918: Server-Side Request Forgery (SSRF)"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
