@@ -2,15 +2,1046 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 0,
-    "last_updated": "2026-06-18T02:04:06.609788",
+    "total_count": 16,
+    "last_updated": "2026-06-18T07:03:59.791645",
     "severity_distribution": {
-      "critical": 0,
-      "high": 0,
-      "medium": 0,
+      "critical": 1,
+      "high": 1,
+      "medium": 13,
       "low": 0,
-      "none": 0
+      "none": 1
     }
   },
-  "cves": []
+  "cves": [
+    {
+      "id": "CVE-2026-55740",
+      "publishedDate": "2026-06-18T05:48:27.016Z",
+      "lastModifiedDate": "2026-06-18T05:48:27.016Z",
+      "description": "Nur-Alam39 bus-ticket (no released versions; latest commit 459cabdbeb99c00225b26e46e3c2c30ae1de7bad) contains an unauthenticated SQL injection vulnerability in bus_info.php. The busid parameter received via HTTP POST is concatenated directly into a MySQL query (select * from bus_info where id=$busid) without sanitization, escaping, or parameterization, and in a numeric (unquoted) context. A remote, unauthenticated attacker can inject arbitrary SQL — for example a UNION-based payload such as busid=-1 UNION SELECT 1,2,3,4,5,6 — to read arbitrary data from the bus_service database. The application connects to the database as the MySQL root account with an empty password, increasing the potential impact. The query is executed via mysqli_query(), which does not permit stacked (semicolon-separated) statements.",
+      "severity": 9.8,
+      "references": [
+        {
+          "url": "https://github.com/Nur-Alam39/bus-ticket/blob/459cabdbeb99c00225b26e46e3c2c30ae1de7bad/bus_info.php#L14-L16",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/Nur-Alam39/bus-ticket",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Nur-Alam39",
+          "product": "bus-ticket",
+          "collectionURL": "https://github.com/Nur-Alam39/bus-ticket",
+          "repo": "https://github.com/Nur-Alam39/bus-ticket",
+          "programFiles": [
+            "bus_info.php"
+          ],
+          "defaultStatus": "affected"
+        }
+      ],
+      "problemType": [
+        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9860",
+      "publishedDate": "2026-06-18T04:31:08.916Z",
+      "lastModifiedDate": "2026-06-18T04:31:08.916Z",
+      "description": "The Offload, AI & Optimize with Cloudflare Images plugin for WordPress is vulnerable to Remote Code Execution in all versions up to, and including, 1.10.2 via the 'account-id' parameter parameter. This is due to insufficient privilege enforcement on the cf_images_do_setup AJAX handler, which requires only the upload_files capability (Author+) rather than manage_options before writing to wp-config.php, combined with the absence of single-quote escaping — sanitize_text_field() does not strip single quotes, and filter_input(INPUT_POST) bypasses wp_magic_quotes() slashing — allowing a single quote in the account-id or api-key parameter to break out of the single-quoted PHP string literal in the write_config() define() statement. This makes it possible for authenticated attackers, with author-level access and above, to execute code on the server. This is possible because the 'cf-images-nonce' nonce required by the AJAX handler is exposed to all Author-level and above users on wp-admin/upload.php via the CFImages JavaScript object, meaning any upload-capable user can satisfy the nonce check and reach the vulnerable wp-config.php write path.",
+      "severity": 8.8,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/a772041e-015e-48e8-9fab-79f1fcdb265c?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/cf-images/tags/1.10.1/app/class-settings.php#L123",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/cf-images/tags/1.10.1/app/class-settings.php#L75",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/cf-images/tags/1.10.1/app/traits/trait-ajax.php#L36",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/cf-images/tags/1.10.1/app/class-media.php#L94",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=3564001%40cf-images&new=3564001%40cf-images&sfp_email=&sfph_mail=",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "vanyukov",
+          "product": "Offload, AI & Optimize with Cloudflare Images",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "1.10.2",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-434 Unrestricted Upload of File with Dangerous Type"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-11402",
+      "publishedDate": "2026-06-18T05:34:26.069Z",
+      "lastModifiedDate": "2026-06-18T05:34:26.069Z",
+      "description": "The Services Section Block – Showcase Service Details in Grid or Columns plugin for WordPress is vulnerable to Stored Cross-Site Scripting via 'link' Block Attribute in all versions up to, and including, 1.4.4 due to insufficient input sanitization and output escaping. This makes it possible for authenticated attackers, with contributor-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page. The payload persists inside HTML comments in post_content, bypassing wp_kses_post sanitization at save time, and executes via both the primary service link anchor and a secondary title-wrapped anchor when the linkIn option is set to 'title'.",
+      "severity": 6.4,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/8e796458-acd4-4334-af1c-29c82f0791ac?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/services-section/trunk/build/service/render.php#L2",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/services-section/trunk/build/service/view.js#L1",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=3570724%40services-section&new=3570724%40services-section&sfp_email=&sfph_mail=",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "bplugins",
+          "product": "Services Section Block – Showcase Service Details in Grid or Columns",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "1.4.4",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-12093",
+      "publishedDate": "2026-06-18T05:34:25.315Z",
+      "lastModifiedDate": "2026-06-18T05:34:25.315Z",
+      "description": "The Simple Membership plugin for WordPress is vulnerable to authorization bypass in all versions up to, and including, 4.7.5. This is due to the plugin not properly verifying that a user is authorized to perform an action. This makes it possible for unauthenticated attackers to deactivate arbitrary member accounts by forging a charge.refunded webhook event containing a victim's subscription ID, setting the target member's account_state to 'inactive' and triggering cancellation hooks, transaction-record status changes, and cancellation notification emails. This vulnerability is exploitable only on installations where no Stripe webhook signing secret has been configured, which is the default out-of-the-box state; sites that have configured the stripe-webhook-signing-secret option are routed to the properly verified HMAC path and are not affected.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/2f91a7c3-ee0e-48e9-aa5f-dfc1160bbc09?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/simple-membership/tags/4.7.4/ipn/swpm-stripe-webhook-handler.php#L297",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/simple-membership/tags/4.7.4/ipn/swpm-stripe-webhook-handler.php#L71",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/simple-membership/tags/4.7.4/classes/class.swpm-wp-loaded-tasks.php#L96",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/simple-membership/tags/4.7.4/ipn/swpm_handle_subsc_ipn.php#L381",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/simple-membership/tags/4.7.3/ipn/swpm-stripe-webhook-handler.php#L297",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/simple-membership/tags/4.7.3/ipn/swpm-stripe-webhook-handler.php#L71",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/simple-membership/tags/4.7.3/classes/class.swpm-wp-loaded-tasks.php#L96",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/simple-membership/tags/4.7.3/ipn/swpm_handle_subsc_ipn.php#L381",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=3573852%40simple-membership&new=3573852%40simple-membership&sfp_email=&sfph_mail=",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "wpinsider-1",
+          "product": "Simple Membership",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "4.7.5",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-862 Missing Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-10029",
+      "publishedDate": "2026-06-18T04:31:09.312Z",
+      "lastModifiedDate": "2026-06-18T04:31:09.312Z",
+      "description": "The Event Koi Lite – Events Calendar, Event Management, RSVP, and Tickets plugin for WordPress is vulnerable to Sensitive Information Exposure in all versions up to, and including, 1.3.13.1 via the get_events. This makes it possible for unauthenticated attackers to extract sensitive data including virtual meeting URLs, physical location data, latitude/longitude coordinates, Google Maps links, and RSVP configuration belonging to draft, pending, and private events that are otherwise inaccessible via public URLs.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/b1be4b6c-ce48-49a2-8d2c-89c9611c8750?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/eventkoi-lite/tags/1.3.12.2/includes/core/class-events.php#L270",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/eventkoi-lite/tags/1.3.12.2/includes/api/class-events.php#L39",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/eventkoi-lite/tags/1.3.12.2/includes/api/class-event.php#L40",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/eventkoi-lite/tags/1.3.12.2/includes/api/class-event.php#L151",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/eventkoi-lite/tags/1.3.12.2/includes/api/class-events.php#L49",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/eventkoi-lite/tags/1.3.0.3/includes/core/class-events.php#L270",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/eventkoi-lite/tags/1.3.0.3/includes/api/class-events.php#L39",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/eventkoi-lite/tags/1.3.0.3/includes/api/class-event.php#L40",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/eventkoi-lite/tags/1.3.0.3/includes/api/class-event.php#L151",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/eventkoi-lite/tags/1.3.0.3/includes/api/class-events.php#L49",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=3561415%40eventkoi-lite&new=3561415%40eventkoi-lite&sfp_email=&sfph_mail=",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "eventkoi",
+          "product": "Event Koi Lite – Events Calendar, Event Management, RSVP, and Tickets",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "1.3.13.1",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-862 Missing Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-12120",
+      "publishedDate": "2026-06-18T04:31:08.565Z",
+      "lastModifiedDate": "2026-06-18T04:31:08.565Z",
+      "description": "The FireBox Popups – Increase Sales and Grow Your Email List plugin for WordPress is vulnerable to Sensitive Information Exposure in all versions up to, and including, 3.1.7 via the 'form_id' parameter. This makes it possible for unauthenticated attackers to extract download a full CSV export of all form submissions — including any personally identifiable information submitted by users — for any arbitrary form_id.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/54f939f9-2853-401a-adc0-5b727da5179b?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/firebox/tags/3.1.7/Inc/Core/Admin/Admin.php#L156",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/firebox/tags/3.1.7/Inc/Core/Admin/Admin.php#L42",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/firebox/tags/3.1.7/Inc/Core/Plugin.php#L217",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/firebox/tags/3.1.7/Inc/Framework/init.php#L254",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/firebox/tags/3.1.6/Inc/Core/Admin/Admin.php#L156",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/firebox/tags/3.1.6/Inc/Core/Admin/Admin.php#L42",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/firebox/tags/3.1.6/Inc/Core/Plugin.php#L217",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/firebox/tags/3.1.6/Inc/Framework/init.php#L254",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=3572719%40firebox&new=3572719%40firebox&sfp_email=&sfph_mail=#file38",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "fireplugins",
+          "product": "FireBox Popups – Increase Sales and Grow Your Email List",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "3.1.7",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-200 Exposure of Sensitive Information to an Unauthorized Actor"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-10736",
+      "publishedDate": "2026-06-18T05:34:24.933Z",
+      "lastModifiedDate": "2026-06-18T05:34:24.933Z",
+      "description": "The Tutor LMS – eLearning and online course solution plugin for WordPress is vulnerable to generic SQL Injection via the 'data' parameter in all versions up to, and including, 3.9.11 due to insufficient escaping on the user supplied parameter and lack of sufficient preparation on the existing SQL query. This makes it possible for authenticated attackers, with administrator-level access and above, to append additional SQL queries into already existing queries that can be used to extract sensitive information from the database.",
+      "severity": 4.9,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/1e193bb9-bb16-4a77-877b-fa0ab29a6c74?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/tutor/tags/3.9.11/models/WithdrawModel.php#L118",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/tutor/tags/3.9.11/models/WithdrawModel.php#L169",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/tutor/tags/3.9.11/views/pages/withdraw_requests.php#L29",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/tutor/tags/3.9.11/classes/Input.php#L78",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/tutor/tags/3.9.8/models/WithdrawModel.php#L118",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/tutor/tags/3.9.8/models/WithdrawModel.php#L169",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/tutor/tags/3.9.8/views/pages/withdraw_requests.php#L29",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/tutor/tags/3.9.8/classes/Input.php#L78",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset/3565513/tutor/tags/3.9.12/models/WithdrawModel.php",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "themeum",
+          "product": "Tutor LMS – eLearning and online course solution",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "3.9.11",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-11360",
+      "publishedDate": "2026-06-18T05:34:24.013Z",
+      "lastModifiedDate": "2026-06-18T05:34:24.013Z",
+      "description": "The Advanced Order Export For WooCommerce plugin for WordPress is vulnerable to generic SQL Injection via the 'sort_direction' parameter in all versions up to, and including, 4.0.10 due to insufficient escaping on the user supplied parameter and lack of sufficient preparation on the existing SQL query. This makes it possible for authenticated attackers, with shop manager-level access and above, to append additional SQL queries into already existing queries that can be used to extract sensitive information from the database. The endpoint requires a valid woe_nonce and Shop Manager-level capabilities (view_woocommerce_reports or export_woocommerce_orders), and wp_magic_quotes protection is stripped via stripslashes_deep() before processing, allowing quote and backslash characters to survive intact into the SQL context.",
+      "severity": 4.9,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/0b395777-2e2a-4dc3-9b0c-ce4c9d22d7e9?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/woo-order-export-lite/tags/4.0.9/classes/core/class-wc-order-export-engine.php#L531",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/woo-order-export-lite/tags/4.0.9/classes/core/class-wc-order-export-engine.php#L537",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/woo-order-export-lite/tags/4.0.9/classes/core/class-wc-order-export-engine.php#L649",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/woo-order-export-lite/tags/4.0.9/classes/core/class-wc-order-export-engine.php#L378",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/woo-order-export-lite/tags/4.0.9/classes/admin/tabs/ajax/trait-wc-order-export-admin-tab-abstract-ajax-export.php#L13",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/woo-order-export-lite/tags/4.0.9/classes/class-wc-order-export-admin.php#L550",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/woo-order-export-lite/tags/4.0.7/classes/core/class-wc-order-export-engine.php#L531",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/woo-order-export-lite/tags/4.0.7/classes/core/class-wc-order-export-engine.php#L537",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/woo-order-export-lite/tags/4.0.7/classes/core/class-wc-order-export-engine.php#L649",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/woo-order-export-lite/tags/4.0.7/classes/core/class-wc-order-export-engine.php#L378",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/woo-order-export-lite/tags/4.0.7/classes/admin/tabs/ajax/trait-wc-order-export-admin-tab-abstract-ajax-export.php#L13",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/woo-order-export-lite/tags/4.0.7/classes/class-wc-order-export-admin.php#L550",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=3564108%40woo-order-export-lite&new=3564108%40woo-order-export-lite&sfp_email=&sfph_mail=",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "algolplus",
+          "product": "Advanced Order Export For WooCommerce",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "4.0.10",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-11776",
+      "publishedDate": "2026-06-18T04:31:09.688Z",
+      "lastModifiedDate": "2026-06-18T04:31:09.688Z",
+      "description": "The Form Maker by 10Web – Mobile-Friendly Drag & Drop Contact Form Builder plugin for WordPress is vulnerable to generic SQL Injection via the 'groupids' parameter in all versions up to, and including, 1.15.43 due to insufficient escaping on the user supplied parameter and lack of sufficient preparation on the existing SQL query. This makes it possible for authenticated attackers, with administrator-level access and above, to append additional SQL queries into already existing queries that can be used to extract sensitive information from the database.",
+      "severity": 4.9,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/b7850e73-8ffd-46d4-97c6-5343486a31dc?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/form-maker/tags/1.15.43/framework/WDW_FM_Library.php#L4748",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/form-maker/tags/1.15.43/framework/WDW_FM_Library.php#L4682",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/form-maker/tags/1.15.43/admin/controllers/Generete_csv.php#L33",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/form-maker/tags/1.15.43/form-maker.php#L873",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/form-maker/tags/1.15.41/framework/WDW_FM_Library.php#L4748",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/form-maker/tags/1.15.41/framework/WDW_FM_Library.php#L4682",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/form-maker/tags/1.15.41/admin/controllers/Generete_csv.php#L33",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/form-maker/tags/1.15.41/form-maker.php#L873",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=3567408%40form-maker&new=3567408%40form-maker&sfp_email=&sfph_mail=",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "10web",
+          "product": "Form Maker by 10Web – Mobile-Friendly Drag & Drop Contact Form Builder",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "1.15.43",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-11777",
+      "publishedDate": "2026-06-18T04:31:08.180Z",
+      "lastModifiedDate": "2026-06-18T04:31:08.180Z",
+      "description": "The Form Maker by 10Web – Mobile-Friendly Drag & Drop Contact Form Builder plugin for WordPress is vulnerable to generic SQL Injection via the 'name' parameter in all versions up to, and including, 1.15.43 due to insufficient escaping on the user supplied parameter and lack of sufficient preparation on the existing SQL query. This makes it possible for authenticated attackers, with administrator-level access, to append additional SQL queries into already existing queries that can be used to extract sensitive information from the database.",
+      "severity": 4.9,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/513f407d-e90f-4fd1-82dd-c28bab9f76d0?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/form-maker/tags/1.15.43/admin/models/FMSelectDataFromDb.php#L94",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/form-maker/tags/1.15.43/admin/models/FMSelectDataFromDb.php#L88",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/form-maker/tags/1.15.43/admin/controllers/Select_data_from_db.php#L84",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/form-maker/tags/1.15.43/form-maker.php#L911",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/form-maker/tags/1.15.41/admin/models/FMSelectDataFromDb.php#L94",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/form-maker/tags/1.15.41/admin/models/FMSelectDataFromDb.php#L88",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/form-maker/tags/1.15.41/admin/controllers/Select_data_from_db.php#L84",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/form-maker/tags/1.15.41/form-maker.php#L911",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=3567408%40form-maker&new=3567408%40form-maker&sfp_email=&sfph_mail=",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "10web",
+          "product": "Form Maker by 10Web – Mobile-Friendly Drag & Drop Contact Form Builder",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "1.15.43",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-11358",
+      "publishedDate": "2026-06-18T05:34:26.440Z",
+      "lastModifiedDate": "2026-06-18T05:34:26.440Z",
+      "description": "The Orbit Fox: Duplicate Page, Menu Icons, SVG Support, Cookie Notice, Custom Fonts & More plugin for WordPress is vulnerable to Stored Cross-Site Scripting via admin settings in all versions up to, and including, 3.0.6 due to insufficient input sanitization and output escaping. This makes it possible for authenticated attackers, with administrator-level permissions and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page. This only affects multi-site installations and installations where unfiltered_html has been disabled.",
+      "severity": 4.4,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/beb1268c-b680-4ebe-8fe2-65f656390038?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/themeisle-companion/tags/3.0.6/obfx_modules/menu-icons/init.php#L118",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/themeisle-companion/tags/3.0.6/obfx_modules/menu-icons/init.php#L296",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/themeisle-companion/tags/3.0.5/obfx_modules/menu-icons/init.php#L118",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/themeisle-companion/tags/3.0.5/obfx_modules/menu-icons/init.php#L296",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=3574306%40themeisle-companion&new=3574306%40themeisle-companion&sfp_email=&sfph_mail=",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "themeisle",
+          "product": "Orbit Fox: Duplicate Page, Menu Icons, SVG Support, Cookie Notice, Custom Fonts & More",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "3.0.6",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-11784",
+      "publishedDate": "2026-06-18T05:34:25.696Z",
+      "lastModifiedDate": "2026-06-18T05:34:25.696Z",
+      "description": "The Optimole – Optimize Images | Convert WebP & AVIF | CDN & Lazy Load | Image Optimization plugin for WordPress is vulnerable to Cross-Site Request Forgery in all versions up to, and including, 4.2.6. This is due to missing or incorrect nonce validation on the replace_file function. This makes it possible for unauthenticated attackers to overwrite existing media attachments with attacker-supplied file content by supplying a forged multipart POST request targeting any attachment the victim has edit_post capability over via a forged request granted they can trick a site administrator into performing an action such as clicking on a link. The forged request requires a victim with at least Author-level privileges, as the handler enforces a current_user_can('edit_post', $id) check; tricking an Author-level or higher user into clicking a crafted link is sufficient to trigger the overwrite against attachments that user can edit.",
+      "severity": 4.3,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/8a90de6e-6bd5-43b6-980d-84d25d4120ad?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/optimole-wp/tags/4.2.6/inc/media_rename/attachment_edit.php#L331",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/optimole-wp/tags/4.2.6/inc/media_rename/attachment_edit.php#L24",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/optimole-wp/tags/4.2.5/inc/media_rename/attachment_edit.php#L331",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/optimole-wp/tags/4.2.5/inc/media_rename/attachment_edit.php#L24",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=3574315%40optimole-wp&new=3574315%40optimole-wp&sfp_email=&sfph_mail=",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "optimole",
+          "product": "Optimole – Optimize Images | Convert WebP & AVIF | CDN & Lazy Load | Image Optimization",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "4.2.6",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-352 Cross-Site Request Forgery (CSRF)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-10623",
+      "publishedDate": "2026-06-18T05:34:24.522Z",
+      "lastModifiedDate": "2026-06-18T05:34:24.522Z",
+      "description": "The PressPrimer Quiz – AI Quiz Maker, Exam Builder & LMS Assessment Plugin plugin for WordPress is vulnerable to Insecure Direct Object Reference in all versions up to, and including, 2.3.0 via the 'rule_id' parameter due to missing validation on a user controlled key. This makes it possible for authenticated attackers, with custom-level access and above, to modify or delete quiz rules belonging to other teachers, resulting in unauthorized tampering of another user's quiz structure.",
+      "severity": 4.3,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/150ac796-d77b-4915-8bbf-9f9b54be8eaf?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/pressprimer-quiz/tags/2.2.2/includes/api/class-ppq-rest-controller.php#L1923",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/pressprimer-quiz/tags/2.2.2/includes/api/class-ppq-rest-controller.php#L1963",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/pressprimer-quiz/tags/2.2.2/includes/api/class-ppq-rest-controller.php#L1786",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/pressprimer-quiz/tags/2.2.2/includes/api/class-ppq-rest-controller.php#L1813",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/pressprimer-quiz/tags/2.2.2/includes/api/class-ppq-rest-controller.php#L1703",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/pressprimer-quiz/tags/2.2.2/includes/api/class-ppq-rest-controller.php#L1860",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/pressprimer-quiz/tags/2.2.2/includes/api/class-ppq-rest-controller.php#L434",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/pressprimer-quiz/tags/2.1.0/includes/api/class-ppq-rest-controller.php#L1923",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/pressprimer-quiz/tags/2.1.0/includes/api/class-ppq-rest-controller.php#L1963",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/pressprimer-quiz/tags/2.1.0/includes/api/class-ppq-rest-controller.php#L1786",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/pressprimer-quiz/tags/2.1.0/includes/api/class-ppq-rest-controller.php#L1813",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/pressprimer-quiz/tags/2.1.0/includes/api/class-ppq-rest-controller.php#L1703",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/pressprimer-quiz/tags/2.1.0/includes/api/class-ppq-rest-controller.php#L1860",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/pressprimer-quiz/tags/2.1.0/includes/api/class-ppq-rest-controller.php#L434",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/PressPrimer/pressprimer-quiz/commit/1795687",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "pressprimer",
+          "product": "PressPrimer Quiz – AI Quiz Maker, Exam Builder & LMS Assessment Plugin",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "2.3.0",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-639 Authorization Bypass Through User-Controlled Key"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-11357",
+      "publishedDate": "2026-06-18T04:31:10.064Z",
+      "lastModifiedDate": "2026-06-18T04:31:10.064Z",
+      "description": "The Kadence Blocks — Page Builder Toolkit for Gutenberg Editor plugin for WordPress is vulnerable to Sensitive Information Exposure in all versions up to, and including, 3.7.5 via the editor_assets_variables. This makes it possible for authenticated attackers, with contributor-level access and above, to extract the site's connected Kadence account license key, license owner email, api_key, api_email, and license domain from the browser console by inspecting window.kadence_blocks_params.proData. Exploitation requires only that an administrator has previously connected a valid Kadence license; the full credential bundle is then readable by any Contributor-level user from the block editor client context without any server-side request manipulation.",
+      "severity": 4.3,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/fa62c795-57b8-48e5-a49f-2e1f3c792c87?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/kadence-blocks/tags/3.7.5/includes/class-kadence-blocks-editor-assets.php#L337",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/kadence-blocks/tags/3.7.5/includes/class-kadence-blocks-editor-assets.php#L291",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/kadence-blocks/tags/3.7.5/includes/helper-functions.php#L286",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/kadence-blocks/tags/3.6.7/includes/class-kadence-blocks-editor-assets.php#L337",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/kadence-blocks/tags/3.6.7/includes/class-kadence-blocks-editor-assets.php#L291",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/kadence-blocks/tags/3.6.7/includes/helper-functions.php#L286",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=3569191%40kadence-blocks&new=3569191%40kadence-blocks&sfp_email=&sfph_mail=",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "stellarwp",
+          "product": "Kadence Blocks — Page Builder Toolkit for Gutenberg Editor",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "3.7.5",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-200 Exposure of Sensitive Information to an Unauthorized Actor"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9199",
+      "publishedDate": "2026-06-18T04:31:07.632Z",
+      "lastModifiedDate": "2026-06-18T04:31:07.632Z",
+      "description": "The Equalize Digital Accessibility Checker – WCAG, ADA, EAA and Section 508 compliance plugin for WordPress is vulnerable to authorization bypass in all versions up to, and including, 1.42.1. This is due to the plugin not properly verifying that a user is authorized to perform an action. This makes it possible for authenticated attackers, with author-level access and above, to dismiss, ignore, or restore accessibility audit issue records belonging to posts they are not permitted to edit by supplying an issue from their own post as an authorization token to affect matching issues across the entire site. An Author-level user can exploit this by passing largeBatch=true on a dismiss-issue request referencing one of their own post's issues, causing the handler to bulk-modify all site-wide accessibility issues sharing the same 'object' value — including those belonging to administrator-owned posts.",
+      "severity": 4.3,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/0e5cc0ce-3785-4240-863e-d1396db6e8ef?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/accessibility-checker/tags/1.42.0/includes/classes/class-rest-api.php#L1247",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/accessibility-checker/tags/1.42.0/includes/classes/class-rest-api.php#L1232",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/accessibility-checker/tags/1.42.0/includes/classes/class-rest-api.php#L349",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/accessibility-checker/tags/1.39.0/includes/classes/class-rest-api.php#L1247",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/accessibility-checker/tags/1.39.0/includes/classes/class-rest-api.php#L1232",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/accessibility-checker/tags/1.39.0/includes/classes/class-rest-api.php#L349",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset?sfp_email=&sfph_mail=&reponame=&old=3553926%40accessibility-checker&new=3553926%40accessibility-checker&sfp_email=&sfph_mail=",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "equalizedigital",
+          "product": "Equalize Digital Accessibility Checker – WCAG, ADA, EAA and Section 508 compliance",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "1.42.1",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-862 Missing Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-48591",
+      "publishedDate": "2026-06-17T16:42:37.508Z",
+      "lastModifiedDate": "2026-06-18T04:45:59.864Z",
+      "description": "Improper Neutralization of Script in Attributes in a Web Page vulnerability in pragdave earmark allows stored cross-site scripting via unescaped HTML attribute values.\n\n'Elixir.Earmark.Transform':_make_att1/2 in lib/earmark/transform.ex splices attribute values verbatim between two literal \" bytes: [\" \", name, \"=\\\"\", value, \"\\\"\"]. Text nodes are routed through the existing escape function which encodes \" as &quot;, but attribute values never visit that path. A markdown link whose URL or title contains a bare \" closes the attribute early and lets the trailing bytes be parsed by the browser as fresh HTML attributes. For example, [click](http://example.com/?a=x\" onerror=\"alert(1)) renders as <a href=\"http://example.com/?a=x\" onerror=\"alert(1)\">click</a>, executing arbitrary JavaScript in the victim's browser.\n\nThe earmark library is no longer maintained and has been retired on Hex. No patched version will be released. All releases from 1.4.1 onward are affected, and users should migrate to a maintained Markdown library such as MDEx.\n\nThis issue affects earmark from 1.4.1 onward.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://cna.erlef.org/cves/CVE-2026-48591.html",
+          "type": "reference"
+        },
+        {
+          "url": "https://osv.dev/vulnerability/EEF-CVE-2026-48591",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://repo.hex.pm",
+          "cpes": [
+            "cpe:2.3:a:pragdave:earmark:*:*:*:*:*:*:*:*"
+          ],
+          "defaultStatus": "unaffected",
+          "modules": [
+            "'Elixir.Earmark.Transform'"
+          ],
+          "packageName": "earmark",
+          "packageURL": "pkg:hex/earmark",
+          "product": "earmark",
+          "programFiles": [
+            "lib/earmark/transform.ex"
+          ],
+          "programRoutines": [
+            {
+              "name": "'Elixir.Earmark.Transform':_make_att1/2"
+            }
+          ],
+          "repo": "https://github.com/pragdave/earmark",
+          "vendor": "pragdave",
+          "versions": [
+            {
+              "lessThan": "*",
+              "status": "affected",
+              "version": "1.4.1",
+              "versionType": "semver"
+            }
+          ]
+        },
+        {
+          "collectionURL": "https://github.com",
+          "cpes": [
+            "cpe:2.3:a:pragdave:earmark:*:*:*:*:*:*:*:*"
+          ],
+          "defaultStatus": "unaffected",
+          "modules": [
+            "'Elixir.Earmark.Transform'"
+          ],
+          "packageName": "pragdave/earmark",
+          "packageURL": "pkg:github/pragdave/earmark",
+          "product": "earmark",
+          "programFiles": [
+            "lib/earmark/transform.ex"
+          ],
+          "programRoutines": [
+            {
+              "name": "'Elixir.Earmark.Transform':_make_att1/2"
+            }
+          ],
+          "repo": "https://github.com/pragdave/earmark",
+          "vendor": "pragdave",
+          "versions": [
+            {
+              "lessThan": "*",
+              "status": "affected",
+              "version": "8236a0570bd894b50e360da08131ec3294c20799",
+              "versionType": "git"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-83 Improper Neutralization of Script in Attributes in a Web Page"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    }
+  ]
 }
