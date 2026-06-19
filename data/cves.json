@@ -2,1052 +2,232 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 23,
-    "last_updated": "2026-06-19T18:18:10.082098",
+    "total_count": 9,
+    "last_updated": "2026-06-19T20:09:22.571200",
     "severity_distribution": {
-      "critical": 0,
-      "high": 19,
-      "medium": 3,
+      "critical": 2,
+      "high": 1,
+      "medium": 1,
       "low": 0,
-      "none": 1
+      "none": 5
     }
   },
   "cves": [
     {
-      "id": "CVE-2019-25758",
-      "publishedDate": "2026-06-19T17:35:17.973Z",
-      "lastModifiedDate": "2026-06-19T17:35:17.973Z",
-      "description": "Joomla! Component vBizz 1.0.7 contains an unrestricted file upload vulnerability that allows authenticated attackers to upload arbitrary PHP files by submitting malicious files through the profile_pic parameter. Attackers can upload PHP files via POST requests to the employee view endpoint and execute them from the uploads directory to achieve remote code execution.",
-      "severity": 8.8,
+      "id": "CVE-2026-48772",
+      "publishedDate": "2026-06-19T19:28:46.248Z",
+      "lastModifiedDate": "2026-06-19T19:28:46.248Z",
+      "description": "ProxySQL is a proxy for MySQL and its forks, as well as PostgreSQL. In versions 2.0.0 through 3.0.8, the ProxySQL MySQL frontend accepts the `PROXY UNKNOWN <addr> <addr> <port> <port>\\r\\n` PP1 frame as a well-formed PROXY protocol header. The HAProxy PROXY protocol v1 specification says that when the protocol token is `UNKNOWN`, the receiver MUST ignore any address fields that follow it, because the proxy has declared it cannot determine the client identity. ProxySQL parses those address fields anyway via `sscanf` and writes the spoofed source address into the session's `addr.addr` field. From there it flows directly into the query-rule matcher, where the `client_addr` predicate decides routing and ACL. When `mysql-proxy_protocol_networks = '*'` (the default), any TCP peer can send a PP1 frame and choose any source IP claim. With that, any `mysql_query_rules` row pinned to a `client_addr` value is forgeable: the attacker writes the address they want to match into the PP1 line, and ProxySQL routes their query as if it came from that address. In practice this is a routing and ACL bypass. Real deployments use `client_addr` for read-write splitting (internal apps go to the primary, public traffic to read replicas), per-app schema pinning, and query-filter rules (DDL allowed only from admin CIDR, public queries blocked from dangerous patterns). An attacker that can reach the frontend port can forge their way into any of those routes. Version 3.0.9 patches this issue.",
+      "severity": 10,
       "references": [
         {
-          "url": "https://www.exploit-db.com/exploits/46224",
-          "type": "poc"
-        },
-        {
-          "url": "http://wdmtech.com/",
+          "url": "https://github.com/sysown/proxysql/security/advisories/GHSA-gw94-85m2-x8v2",
           "type": "reference"
         },
         {
-          "url": "https://extensions.joomla.org/extensions/extension/marketing/crm/vbizz/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/joomla-component-vbizz-remote-code-execution",
+          "url": "https://github.com/sysown/proxysql/releases/tag/v3.0.9",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Wdmtech",
-          "product": "vBizz",
+          "vendor": "sysown",
+          "product": "proxysql",
           "versions": [
             {
-              "version": "1.0.7",
+              "version": ">= 2.0.0, < 3.0.9",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "Unrestricted Upload of File with Dangerous Type"
+        "CWE-348: Use of Less Trusted Source",
+        "CWE-863: Incorrect Authorization"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2019-25756",
-      "publishedDate": "2026-06-19T17:28:34.661Z",
-      "lastModifiedDate": "2026-06-19T17:28:34.661Z",
-      "description": "Joomla! Component vAccount 2.0.2 contains an SQL injection vulnerability that allows unauthenticated attackers to execute arbitrary SQL queries by injecting malicious code through the vid parameter. Attackers can send GET requests to the vaccount-dashboard/expense endpoint with crafted SQL payloads in the vid parameter to extract sensitive database information including version and database names.",
-      "severity": 8.2,
+      "id": "CVE-2026-48773",
+      "publishedDate": "2026-06-19T19:27:12.183Z",
+      "lastModifiedDate": "2026-06-19T19:27:12.183Z",
+      "description": "ProxySQL is a proxy for MySQL and its forks, as well as PostgreSQL. Versions 2.0.18 through 3.0.8 have a pre-authentication heap memory corruption vulnerability in the MySQL and PostgreSQL protocol first-read paths. A remote unauthenticated client can declare an oversized first packet length, and ProxySQL passes that attacker-controlled length directly to `recv()` while writing into a fixed 32 KB input queue. Version 3.0.9 patches the issue.",
+      "severity": 9.8,
       "references": [
         {
-          "url": "https://www.exploit-db.com/exploits/46226",
-          "type": "poc"
-        },
-        {
-          "url": "http://wdmtech.com/",
+          "url": "https://github.com/sysown/proxysql/security/advisories/GHSA-58ww-865x-grpr",
           "type": "reference"
         },
         {
-          "url": "https://extensions.joomla.org/extensions/extension/financial/cost-calculators/vaccount/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/joomla-component-vaccount-sql-injection-via-vaccount-dashboard",
+          "url": "https://github.com/sysown/proxysql/releases/tag/v3.0.9",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Wdmtech",
-          "product": "vAccount",
+          "vendor": "sysown",
+          "product": "proxysql",
           "versions": [
             {
-              "version": "2.0.2",
+              "version": ">= 2.0.18, < 3.0.9",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+        "CWE-787: Out-of-bounds Write"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2019-25755",
-      "publishedDate": "2026-06-19T17:25:11.921Z",
-      "lastModifiedDate": "2026-06-19T17:25:11.921Z",
-      "description": "Joomla Component vReview 1.9.11 contains an SQL injection vulnerability that allows unauthenticated attackers to execute arbitrary SQL queries by injecting malicious code through the cmId parameter. Attackers can send POST requests to the editReview task endpoint with URL-encoded SQL UNION statements in the cmId parameter to extract database information including usernames, passwords, and database versions.",
-      "severity": 8.2,
-      "references": [
-        {
-          "url": "https://www.exploit-db.com/exploits/46227",
-          "type": "poc"
-        },
-        {
-          "url": "http://wdmtech.com/",
-          "type": "reference"
-        },
-        {
-          "url": "https://extensions.joomla.org/extensions/extension/clients-a-communities/ratings-a-reviews/vreview/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/joomla-vreview-sql-injection-via-editreview",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Wdmtech",
-          "product": "vReview",
-          "versions": [
-            {
-              "version": "1.9.11",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2019-25754",
-      "publishedDate": "2026-06-19T17:21:50.251Z",
-      "lastModifiedDate": "2026-06-19T17:21:50.251Z",
-      "description": "Joomla Component vRestaurant 1.9.4 contains an SQL injection vulnerability that allows unauthenticated attackers to execute arbitrary SQL queries by injecting malicious code through the keysearch parameter. Attackers can send POST requests to the menu-listing-layout endpoint with crafted SQL payloads in the keysearch parameter to extract database table names and sensitive information from the database.",
-      "severity": 8.2,
-      "references": [
-        {
-          "url": "https://www.exploit-db.com/exploits/46228",
-          "type": "poc"
-        },
-        {
-          "url": "http://wdmtech.com/",
-          "type": "reference"
-        },
-        {
-          "url": "https://extensions.joomla.org/extensions/extension/vertical-markets/food-a-beverage/vrestaurant/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/joomla-vrestaurant-sql-injection-via-menu-listing-layout",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Wdmtech",
-          "product": "vRestaurant",
-          "versions": [
-            {
-              "version": "1.9.4",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2019-25753",
-      "publishedDate": "2026-06-19T17:18:28.551Z",
-      "lastModifiedDate": "2026-06-19T17:18:28.551Z",
-      "description": "Joomla! Component VMap 1.9.6 contains an SQL injection vulnerability that allows unauthenticated attackers to execute arbitrary SQL queries by injecting malicious code into the latlngbound parameter. Attackers can send GET requests to index.php with the option=com_vmap&task=loadmarker parameters containing SQL injection payloads to manipulate database queries and extract sensitive information.",
-      "severity": 8.2,
-      "references": [
-        {
-          "url": "https://www.exploit-db.com/exploits/46229",
-          "type": "poc"
-        },
-        {
-          "url": "http://wdmtech.com/",
-          "type": "reference"
-        },
-        {
-          "url": "https://extensions.joomla.org/extensions/extension/maps-a-weather/maps-a-locations/vmap/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/joomla-component-vmap-sql-injection-via-loadmarker",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Wdmtech",
-          "product": "VMap",
-          "versions": [
-            {
-              "version": "1.9.6",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2019-25752",
-      "publishedDate": "2026-06-19T17:15:06.780Z",
-      "lastModifiedDate": "2026-06-19T17:15:06.780Z",
-      "description": "Joomla! Component J-BusinessDirectory 4.9.7 contains an SQL injection vulnerability that allows unauthenticated attackers to execute arbitrary SQL queries by injecting malicious code through the type parameter. Attackers can send GET requests to index.php with the option=com_jbusinessdirectory&task=categories.getCategories parameters and inject UNION-based SQL statements in the type parameter to extract database information including schema names and sensitive data.",
-      "severity": 8.2,
-      "references": [
-        {
-          "url": "https://www.exploit-db.com/exploits/46230",
-          "type": "poc"
-        },
-        {
-          "url": "http://cmsjunkie.com/",
-          "type": "reference"
-        },
-        {
-          "url": "https://extensions.joomla.org/extensions/extension/directory-a-documentation/directory/j-businessdirectory/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/joomla-component-j-businessdirectory-sql-injection",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Cmsjunkie",
-          "product": "BusinessDirectory",
-          "versions": [
-            {
-              "version": "4.9.7",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2019-25751",
-      "publishedDate": "2026-06-19T17:11:45.189Z",
-      "lastModifiedDate": "2026-06-19T17:11:45.189Z",
-      "description": "Joomla Component J-ClassifiedsManager 3.0.5 contains an SQL injection vulnerability that allows unauthenticated attackers to execute arbitrary SQL queries by injecting malicious code through POST parameters. Attackers can submit crafted SQL payloads in the categorySearch, adType, and citySearch parameters to the displayads component to extract sensitive database information including usernames, databases, and version details.",
-      "severity": 8.2,
-      "references": [
-        {
-          "url": "https://www.exploit-db.com/exploits/46231",
-          "type": "poc"
-        },
-        {
-          "url": "http://cmsjunkie.com/",
-          "type": "reference"
-        },
-        {
-          "url": "https://extensions.joomla.org/extensions/extension/ads-a-affiliates/classified-ads/j-classifiedsmanager/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/joomla-j-classifiedsmanager-sql-injection",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Cmsjunkie",
-          "product": "ClassifiedsManager",
-          "versions": [
-            {
-              "version": "3.0.5",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2019-25750",
-      "publishedDate": "2026-06-19T17:08:23.474Z",
-      "lastModifiedDate": "2026-06-19T17:08:23.474Z",
-      "description": "Joomla Component J-MultipleHotelReservation 6.0.7 contains an SQL injection vulnerability that allows unauthenticated attackers to execute arbitrary SQL queries by injecting malicious code through the hotel_id parameter. Attackers can send POST requests to the search-hotels endpoint with crafted SQL UNION SELECT statements to extract sensitive database information including table names and column data.",
-      "severity": 8.2,
-      "references": [
-        {
-          "url": "https://www.exploit-db.com/exploits/46232",
-          "type": "poc"
-        },
-        {
-          "url": "http://cmsjunkie.com/",
-          "type": "reference"
-        },
-        {
-          "url": "https://extensions.joomla.org/extensions/extension/vertical-markets/booking-a-reservations/jmultiplehotelreservation/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/joomla-j-multiplehotelreservation-sql-injection",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Cmsjunkie",
-          "product": "MultipleHotelReservation",
-          "versions": [
-            {
-              "version": "6.0.7",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-49286",
-      "publishedDate": "2026-06-19T17:03:58.118Z",
-      "lastModifiedDate": "2026-06-19T17:03:58.118Z",
-      "description": "PhpWeasyPrint is a PHP library allowing PDF generation from a URL or an HTML page. Prior to version 2.6.0, `pontedilana/php-weasyprint` guarded the output filename against the `phar://` stream wrapper with a case-sensitive blacklist. PHP stream wrappers are case-insensitive, so `PHAR://`, `Phar://`, etc. bypass the check and reach `fileExists()` (`file_exists()`) in `prepareOutput()`. On PHP 7 (which the library still supports — PHP 7.4+), this triggers deserialization of a crafted PHAR archive's metadata, leading to remote code execution. This is the patch-bypass of CVE-2023-28115. The same issue and fix were handled upstream in KnpLabs/snappy (GHSA-92rv-4j2h-8mjj). PhpWeasyPrint version 2.6.0 contains a patch for the issue.",
-      "severity": 8.1,
-      "references": [
-        {
-          "url": "https://github.com/pontedilana/php-weasyprint/security/advisories/GHSA-2fmj-p74r-3wjm",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/KnpLabs/snappy/security/advisories/GHSA-92rv-4j2h-8mjj",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/pontedilana/php-weasyprint/commit/d1aa487722b5a3cab9b222b85fdb5608a5a550c3",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/pontedilana/php-weasyprint/releases/tag/2.6.0",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "pontedilana",
-          "product": "php-weasyprint",
-          "versions": [
-            {
-              "version": "< 2.6.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-502: Deserialization of Untrusted Data"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-56208",
-      "publishedDate": "2026-06-19T16:28:26.466Z",
-      "lastModifiedDate": "2026-06-19T17:36:50.113Z",
-      "description": "A heap buffer overflow vulnerability was found in libaom, the reference AV1 codec implementation. A flaw in the AV1 encoder's Look-Ahead Processing (LAP) mode causes the first-pass stats ring buffer wrap-around guard to be bypassed when g_lag_in_frames is set to 1 or higher. This results in a 232-byte out-of-bounds write on every encoded frame after the second, corrupting adjacent heap objects. An attacker who can influence encoder configuration in a transcoding service or WebRTC session could exploit this to cause a denial of service (process crash) or potentially achieve code execution.",
-      "severity": 7.6,
-      "references": [
-        {
-          "url": "https://access.redhat.com/security/cve/CVE-2026-56208",
-          "type": "reference"
-        },
-        {
-          "url": "https://aomedia.googlesource.com/aom/+/243f8ae84b",
-          "type": "reference"
-        },
-        {
-          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2490799",
-          "type": "reference"
-        },
-        {
-          "url": "https://issues.chromium.org/issues/504317456",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat Enterprise Linux 10",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "firefox",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:10"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat Enterprise Linux 10",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "thunderbird",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:10"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat Enterprise Linux 9",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "firefox",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:9"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat Enterprise Linux 9",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "thunderbird",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:9"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat Enterprise Linux AI (RHEL AI) 3",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "aom",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/a:redhat:enterprise_linux_ai:3"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat Hardened Images",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "aom",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/a:redhat:hummingbird:1"
-          ]
-        }
-      ],
-      "problemType": [
-        "Heap-based Buffer Overflow"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2019-25762",
-      "publishedDate": "2026-06-19T17:48:44.945Z",
-      "lastModifiedDate": "2026-06-19T17:48:44.945Z",
-      "description": "Joomla! Component JoomProject 1.1.3.2 contains an information disclosure vulnerability that allows unauthenticated attackers to access sensitive user data by exploiting the projects endpoint. Attackers can send requests to index.php with option=com_jpprojects&view=projects&tmpl=component&format=json parameters to retrieve user IDs, names, and email addresses in JSON format.",
+      "id": "CVE-2026-48774",
+      "publishedDate": "2026-06-19T19:34:39.971Z",
+      "lastModifiedDate": "2026-06-19T19:34:39.971Z",
+      "description": "ProxySQL is a proxy for MySQL and its forks, as well as PostgreSQL. In versions 3.0.0 through 3.0.8, ProxySQL's GenAI/MCP `run_sql_readonly` tool violates its documented read-only contract for MySQL targets. The tool validates only the full input string with a substring blacklist and first-keyword allowlist, but then executes the entire SQL string on a backend connection created with `CLIENT_MULTI_STATEMENTS`. As a result, a caller can submit a read-only first statement followed by a side-effecting second statement, such as `SELECT 1; RENAME TABLE ...`. The validator accepts the payload because it starts with `SELECT` and because side-effecting MySQL statements such as `RENAME TABLE`, `SET`, `RESET`, `LOCK TABLES`, and `KILL` are not rejected by the blacklist. In a live MCP runtime test, the `/mcp/query` endpoint accepted a `run_sql_readonly` request. The MCP response reported success for the first `SELECT`, and direct backend verification showed that the table had actually been renamed. This violates the endpoint's read-only security contract and lets an MCP caller perform backend writes or administrative SQL, limited by the configured MCP target account's database privileges. Version 3.0.9 contains a fix. Other operator mitigations include: keeping MCP disabled unless required; setting a non-empty `mcp-query_endpoint_auth` token before exposing `/mcp/query`; restricting MCP listener network exposure; configuring MCP backend target credentials as database-level read-only users; and adding temporary MCP query rules to block obvious multi-statement patterns.",
       "severity": 7.5,
       "references": [
         {
-          "url": "https://www.exploit-db.com/exploits/46121",
-          "type": "poc"
-        },
-        {
-          "url": "http://joomboost.com/",
+          "url": "https://github.com/sysown/proxysql/security/advisories/GHSA-7wh6-2vcc-gcm4",
           "type": "reference"
         },
         {
-          "url": "https://extensions.joomla.org/extensions/extension/clients-a-communities/project-a-task-management/joomproject/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/joomla-component-joomproject-information-disclosure",
+          "url": "https://github.com/sysown/proxysql/commit/e32b7fd50c7c234ea628e392e621e09a2a919e08",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Joomboost",
-          "product": "JoomProject",
+          "vendor": "sysown",
+          "product": "proxysql",
           "versions": [
             {
-              "version": "1.1.3.2",
+              "version": ">= 3.0.6, < 3.0.9",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "Exposure of Private Personal Information to an Unauthorized Actor"
+        "CWE-20: Improper Input Validation"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-49287",
-      "publishedDate": "2026-06-19T17:36:23.536Z",
-      "lastModifiedDate": "2026-06-19T17:36:23.536Z",
-      "description": "Statamic is a Laravel and Git powered content management system (CMS). Prior to 5.73.23 and 6.20.0, the fix for CVE-2026-41175 was incomplete. It addressed the issue in the query builder, but the same protection was not applied to in-memory collection sorting. Manipulating sort parameters could result in the loss of content and assets. This requires a front-end template that passes request input into a tag's sort parameter. It is not exploitable by default — a template would need to be explicitly set up to sort by a visitor-controlled value. This has been fixed in 5.73.23 and 6.20.0.",
-      "severity": 7.4,
+      "id": "CVE-2026-49342",
+      "publishedDate": "2026-06-19T19:13:59.598Z",
+      "lastModifiedDate": "2026-06-19T19:13:59.598Z",
+      "description": "YARD is a documentation generation tool for the Ruby programming language. Prior to version 0.9.44, YARD's static cache lookup reads a request path before the router's path cleanup runs. When a server is configured with a document root, a traversal path such as `/../yard-cache-secret.html` is joined against that root and can return a readable sibling `.html` file outside the intended static tree. Version 0.9.44 patches the issue.",
+      "severity": 5.3,
       "references": [
         {
-          "url": "https://github.com/statamic/cms/security/advisories/GHSA-m92m-r54r-x8r2",
+          "url": "https://github.com/lsegal/yard/security/advisories/GHSA-pxcc-8665-phx8",
           "type": "reference"
         },
         {
-          "url": "https://github.com/statamic/cms/security/advisories/GHSA-4jjr-vmv7-wh4w",
+          "url": "https://github.com/lsegal/yard/commit/f78c19f0dd33a407085b4ed181bb60c0aa0078b4",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "statamic",
-          "product": "cms",
+          "vendor": "lsegal",
+          "product": "yard",
           "versions": [
             {
-              "version": "< 5.73.23",
-              "status": "affected"
-            },
-            {
-              "version": ">= 6.0.0, < 6.20.0",
+              "version": "< 0.9.44",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-470: Use of Externally-Controlled Input to Select Classes or Code ('Unsafe Reflection')"
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2019-25761",
-      "publishedDate": "2026-06-19T17:45:23.204Z",
-      "lastModifiedDate": "2026-06-19T17:45:23.204Z",
-      "description": "Joomla! Component JoomCRM 1.1.1 contains an SQL injection vulnerability that allows authenticated attackers to execute arbitrary SQL queries by injecting malicious code through the deal_id parameter. Attackers can send GET requests to index.php with option=com_joomcrm&view=contacts and inject SQL code in the deal_id parameter to extract sensitive database information including table names and schemas.",
-      "severity": 7.1,
+      "id": "CVE-2026-48787",
+      "publishedDate": "2026-06-19T19:46:41.748Z",
+      "lastModifiedDate": "2026-06-19T19:46:41.748Z",
+      "description": "gin-vue-admin is an AI-assisted basic development platform. In version 2.9.1, an authenticated attacker with access to the code-generation feature and MCP management interface can exploit this vulnerability by injecting attacker-controlled Go source code through POST /autoCode/addFunc, and then invoking POST /autoCode/mcpStart to trigger a rebuild and restart of the standalone MCP service. This allows arbitrary operating system commands to be executed on the server with the privileges of the application process. Successful exploitation may lead to remote code execution (RCE), modification of backend source code or runtime logic, deployment of persistent backdoors, access to or manipulation of application data and configuration, and further impact on local resources running under the same service account or privilege context. The risk is highest in deployments that retain the source tree, allow writes to source files, and support local build or startup of standalone MCP components. In environments using binary-only releases, read-only filesystems, or with local build capabilities removed, the exploitability of the full attack chain is significantly reduced. However, once the online code-generation capability and MCP-hosted startup workflow are enabled, the overall security impact may reach high to critical severity. As of time of publication, it is unknown if a patched version is available. As a workaround, enforce strict allowlist validation on path- and identifier-related fields such as `humpPackageName`, `packageName`, `FuncName`, and `Router`, and only permit safe identifier formats.",
+      "severity": "N/A",
       "references": [
         {
-          "url": "https://www.exploit-db.com/exploits/46122",
-          "type": "poc"
-        },
-        {
-          "url": "http://joomboost.com/",
-          "type": "reference"
-        },
-        {
-          "url": "https://extensions.joomla.org/extensions/extension/marketing/crm/joomcrm/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/joomla-component-joomcrm-sql-injection-via-deal-id",
+          "url": "https://github.com/flipped-aurora/gin-vue-admin/security/advisories/GHSA-22cv-9jv2-6m62",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Joomboost",
-          "product": "JoomCRM",
+          "vendor": "flipped-aurora",
+          "product": "gin-vue-admin",
           "versions": [
             {
-              "version": "1.1.1",
+              "version": "= 2.9.1",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2019-25759",
-      "publishedDate": "2026-06-19T17:38:39.694Z",
-      "lastModifiedDate": "2026-06-19T17:38:39.694Z",
-      "description": "Joomla! Component vBizz 1.0.7 contains an SQL injection vulnerability that allows authenticated attackers to execute arbitrary SQL queries by injecting malicious code through the payid parameter. Attackers can submit POST requests to the employee management interface with crafted payid array values containing SQL commands to extract sensitive database information including version and database names.",
-      "severity": 7.1,
+      "id": "CVE-2026-48089",
+      "publishedDate": "2026-06-19T19:38:04.175Z",
+      "lastModifiedDate": "2026-06-19T19:38:04.175Z",
+      "description": "DevGuard provides vulnerability management for the full software supply chain. Prior to 1.4.2, on a DevGuard API instance with one or more public assets, any authenticated user — including users from a different organization with no membership or role in the affected org/project — can create, update, reapply, and delete VEX rules on those public assets. The same flaw affects the other vulnerability-triage write endpoints exposed under a public asset, including VEX rule create / update / reapply / delete; dependency-vuln event creation (accept / reject / mitigate decisions), batch event creation, vuln sync, and mitigation; license risk creation; external reference writes; and/or artifact creation and license refresh. The attacker needs a valid account on the instance, but no membership in the victim organization, project, or asset is required. Version `v1.4.2`contains a patch. As a workaround, make affected assets non-public. In the asset settings, switch visibility from public to private. This removes the public-read exemption in the access-control middleware and restores correct authorization on all write endpoints for that asset. Downstream consumers that previously relied on the public `vex.json` / `sbom.json` endpoints will need to be granted explicit access or must receive an exported file version until the patched release is deployed.",
+      "severity": "N/A",
       "references": [
         {
-          "url": "https://www.exploit-db.com/exploits/46223",
-          "type": "poc"
-        },
-        {
-          "url": "http://wdmtech.com/",
+          "url": "https://github.com/l3montree-dev/devguard/security/advisories/GHSA-6p54-fw2f-q7gf",
           "type": "reference"
         },
         {
-          "url": "https://extensions.joomla.org/extensions/extension/marketing/crm/vbizz/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/joomla-component-vbizz-sql-injection",
+          "url": "https://github.com/l3montree-dev/devguard/commit/1be88ec1309a5dc0566e35a23bdc4ea3ecd11417",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Wdmtech",
-          "product": "vBizz",
+          "vendor": "l3montree-dev",
+          "product": "devguard",
           "versions": [
             {
-              "version": "1.0.7",
+              "version": "< 1.4.2",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+        "CWE-285: Improper Authorization",
+        "CWE-863: Incorrect Authorization"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2019-25757",
-      "publishedDate": "2026-06-19T17:31:56.281Z",
-      "lastModifiedDate": "2026-06-19T17:31:56.281Z",
-      "description": "Joomla vWishlist 1.0.1 contains an SQL injection vulnerability that allows authenticated attackers to execute arbitrary SQL queries by injecting malicious code through the vproductid and userid parameters. Attackers can send POST requests to the component with crafted SQL payloads in these parameters to extract sensitive database information including version and database names.",
-      "severity": 7.1,
+      "id": "CVE-2026-49345",
+      "publishedDate": "2026-06-19T19:23:22.858Z",
+      "lastModifiedDate": "2026-06-19T19:23:22.858Z",
+      "description": "Mercator is an open source web application that enables mapping of the information system. Prior to version 2025.05.19, a Server-Side Request Forgery (SSRF) vulnerability exists in Mercator's CVE configuration panel (`/admin/config/parameters`). The `testProvider()` method in `ConfigurationController` passes user-supplied input directly to `curl_init()` without validating the scheme, hostname, or destination IP address. An authenticated user with the `configure` permission can force the Mercator server to issue arbitrary outbound network requests. The suffix `/api/dbInfo` appended to the URL can be bypassed by injecting a `#` fragment character (e.g. `http://TARGET/PATH#`), allowing full control over the target URL. No scheme whitelist, host whitelist, or private/loopback IP block is applied. The `telnet://` scheme can be used for internal port scanning; the `gopher://` scheme enables interaction with unauthenticated internal services (Redis, Memcached), potentially leading to Remote Code Execution under specific deployment conditions. Version 2025.05.19 patches the issue.",
+      "severity": "N/A",
       "references": [
         {
-          "url": "https://www.exploit-db.com/exploits/46225",
-          "type": "poc"
-        },
-        {
-          "url": "http://wdmtech.com/",
-          "type": "reference"
-        },
-        {
-          "url": "https://extensions.joomla.org/extensions/extension/extension-specific/virtuemart-extensions/vwishlist/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/joomla-vwishlist-sql-injection-via-vproductid-parameter",
+          "url": "https://github.com/sourcentis/mercator/security/advisories/GHSA-6q97-4q5r-96j6",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Wdmtech",
-          "product": "vWishlist",
+          "vendor": "sourcentis",
+          "product": "mercator",
           "versions": [
             {
-              "version": "1.0.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2019-25749",
-      "publishedDate": "2026-06-19T17:05:01.621Z",
-      "lastModifiedDate": "2026-06-19T17:05:01.621Z",
-      "description": "Joomla J-CruisePortal 6.0.4 contains an SQL injection vulnerability that allows authenticated attackers to execute arbitrary SQL queries by injecting malicious code through the guest_adult parameter. Attackers can send POST requests to the cruises endpoint with crafted SQL payloads in the guest_adult parameter to extract sensitive database information or manipulate database records.",
-      "severity": 7.1,
-      "references": [
-        {
-          "url": "https://www.exploit-db.com/exploits/46233",
-          "type": "poc"
-        },
-        {
-          "url": "http://cmsjunkie.com/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.cmsjunkie.com/joomla-cruise-reservation-portal",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/joomla-j-cruiseportal-sql-injection-via-cruises",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Cmsjunkie",
-          "product": "CruisePortal",
-          "versions": [
-            {
-              "version": "6.0.7",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-56211",
-      "publishedDate": "2026-06-19T16:28:33.603Z",
-      "lastModifiedDate": "2026-06-19T17:47:00.659Z",
-      "description": "A remote code execution vulnerability was found in libaom, the reference AV1 codec implementation. Insufficient bounds validation in the AV1 encoder's SVC (Scalable Video Coding) layer ID control allows an attacker to supply crafted video frame pixels that overlap with internal encoder layer context structures. In fork-based video processing services, an attacker can use this to hijack the cyclic refresh map pointer, brute-force the process base address via a crash oracle, and redirect control flow to achieve arbitrary command execution. Exploitation requires the target service to use libaom with SVC encoding enabled and accept attacker-supplied video frames.",
-      "severity": 7.1,
-      "references": [
-        {
-          "url": "https://access.redhat.com/security/cve/CVE-2026-56211",
-          "type": "reference"
-        },
-        {
-          "url": "https://aomedia.googlesource.com/aom/+/a93ba0ffaa",
-          "type": "reference"
-        },
-        {
-          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2490802",
-          "type": "reference"
-        },
-        {
-          "url": "https://issues.chromium.org/issues/503993985",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat Enterprise Linux 10",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "firefox",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:10"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat Enterprise Linux 10",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "thunderbird",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:10"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat Enterprise Linux 9",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "firefox",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:9"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat Enterprise Linux 9",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "thunderbird",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:9"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat Enterprise Linux AI (RHEL AI) 3",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "aom",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/a:redhat:enterprise_linux_ai:3"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat Hardened Images",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "aom",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/a:redhat:hummingbird:1"
-          ]
-        }
-      ],
-      "problemType": [
-        "Out-of-bounds Write"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-56210",
-      "publishedDate": "2026-06-19T16:28:33.035Z",
-      "lastModifiedDate": "2026-06-19T17:36:50.100Z",
-      "description": "A heap-buffer-overflow read vulnerability was found in libaom, the reference AV1 codec implementation. A missing bounds check in the SVC (Scalable Video Coding) layer ID control function allows setting a spatial_layer_id exceeding the configured number of layers. This causes an out-of-bounds heap read of approximately 40,728 bytes when computing a layer context array index. An attacker who can influence SVC encoder parameters in a network-facing service could exploit this for information disclosure (heap content leak) or denial of service (segmentation fault from hitting unmapped memory).",
-      "severity": 7.1,
-      "references": [
-        {
-          "url": "https://access.redhat.com/security/cve/CVE-2026-56210",
-          "type": "reference"
-        },
-        {
-          "url": "https://aomedia.googlesource.com/aom/+/a93ba0ffaa",
-          "type": "reference"
-        },
-        {
-          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2490801",
-          "type": "reference"
-        },
-        {
-          "url": "https://issues.chromium.org/issues/503975732",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat Enterprise Linux 10",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "firefox",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:10"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat Enterprise Linux 10",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "thunderbird",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:10"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat Enterprise Linux 9",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "firefox",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:9"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat Enterprise Linux 9",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "thunderbird",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:9"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat Enterprise Linux AI (RHEL AI) 3",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "aom",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/a:redhat:enterprise_linux_ai:3"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat Hardened Images",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "aom",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/a:redhat:hummingbird:1"
-          ]
-        }
-      ],
-      "problemType": [
-        "Out-of-bounds Read"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-56209",
-      "publishedDate": "2026-06-19T16:28:26.462Z",
-      "lastModifiedDate": "2026-06-19T17:47:00.627Z",
-      "description": "An arbitrary address write vulnerability was found in libaom, the reference AV1 codec implementation. A missing bounds check in the SVC (Scalable Video Coding) layer ID control function allows an attacker to inject an arbitrary pointer into the cyclic refresh map field via crafted image pixel values. The encoder then writes approximately 1,200 bytes at the attacker-controlled address. This is fully deterministic and does not require a separate information leak. An attacker who can supply frames to a network-facing libaom encoder with SVC enabled could exploit this for denial of service or potential code execution.",
-      "severity": 7.1,
-      "references": [
-        {
-          "url": "https://access.redhat.com/security/cve/CVE-2026-56209",
-          "type": "reference"
-        },
-        {
-          "url": "https://aomedia.googlesource.com/aom/+/a93ba0ffaa",
-          "type": "reference"
-        },
-        {
-          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2490800",
-          "type": "reference"
-        },
-        {
-          "url": "https://issues.chromium.org/issues/503993984",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat Enterprise Linux 10",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "firefox",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:10"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat Enterprise Linux 10",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "thunderbird",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:10"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat Enterprise Linux 9",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "firefox",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:9"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat Enterprise Linux 9",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "thunderbird",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:9"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat Enterprise Linux AI (RHEL AI) 3",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "aom",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/a:redhat:enterprise_linux_ai:3"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat Hardened Images",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "aom",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/a:redhat:hummingbird:1"
-          ]
-        }
-      ],
-      "problemType": [
-        "Out-of-bounds Write"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-49271",
-      "publishedDate": "2026-06-19T17:16:20.157Z",
-      "lastModifiedDate": "2026-06-19T17:16:20.157Z",
-      "description": "libheif is a HEIF and AVIF file format decoder and encoder. Prior to version 1.22.1, the uncompressed HEIF decoder validates explicit icef compressed-unit offsets using unit_offset + unit_size. Because the addition can wrap, a crafted HEIF file can pass the range check and then construct a vector from iterators outside the compressed item buffer, producing an out-of-bounds heap read and crash. Version 1.22.1 patches the issue.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://github.com/strukturag/libheif/security/advisories/GHSA-r7qj-cg5r-r6vf",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "strukturag",
-          "product": "libheif",
-          "versions": [
-            {
-              "version": "< 1.22.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-125: Out-of-bounds Read"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-49359",
-      "publishedDate": "2026-06-19T17:06:12.737Z",
-      "lastModifiedDate": "2026-06-19T17:06:12.737Z",
-      "description": "PhpWeasyPrint is a PHP library allowing PDF generation from a URL or an HTML page. Prior to version 2.6.0, `pontedilana/php-weasyprint` fetches the content of option values server-side via `file_get_contents()` when the value looks like a URL, without restricting the URL scheme. The `attachment` option of `Pdf` is the reachable sink: any value that passes `isOptionUrl()` (`filter_var(..., FILTER_VALIDATE_URL)`) is downloaded by the PHP process and embedded into the generated PDF. Because `FILTER_VALIDATE_URL` accepts `http`, `https`, `ftp`, `file` and PHP stream wrappers such as `php://`, an attacker who can influence the `attachment` value reaches both a **Server-Side Request Forgery** primitive (e.g. internal HTTP endpoints, cloud metadata) and a local file disclosure primitive (`file://`, `php://filter/...`), with the fetched bytes exfiltrated as a PDF attachment. This is the same class of issue KnpLabs/snappy patched for its `xsl-style-sheet` option in GHSA-c5fp-p67m-gq56. The library is documented as a one-to-one substitute for KnpLabs/snappy and shares the same code shape. PhpWeasyPrint version 2.6.0 contains a patch for the issue.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://github.com/pontedilana/php-weasyprint/security/advisories/GHSA-x8g9-h984-pc36",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/KnpLabs/snappy/security/advisories/GHSA-c5fp-p67m-gq56",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/pontedilana/php-weasyprint/commit/9582dcf119a405276cf55e9e10bc577a887792cb",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/pontedilana/php-weasyprint/releases/tag/2.6.0",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "pontedilana",
-          "product": "php-weasyprint",
-          "versions": [
-            {
-              "version": "< 2.6.0",
+              "version": "< 2025.05.19",
               "status": "affected"
             }
           ]
@@ -1059,86 +239,64 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2019-25760",
-      "publishedDate": "2026-06-19T17:42:01.424Z",
-      "lastModifiedDate": "2026-06-19T17:42:01.424Z",
-      "description": "Joomla! Component Easy Shop 1.2.3 contains a local file inclusion vulnerability that allows unauthenticated attackers to read arbitrary files by supplying base64-encoded file paths. Attackers can send GET requests to index.php with the option parameter set to com_easyshop, task set to ajax.loadImage, and a base64-encoded file path in the file parameter to retrieve sensitive files like configuration.php and system files.",
-      "severity": 6.2,
+      "id": "CVE-2026-49344",
+      "publishedDate": "2026-06-19T19:21:46.127Z",
+      "lastModifiedDate": "2026-06-19T19:22:33.640Z",
+      "description": "Mercator is an open source web application that enables mapping of the information system. Prior to version 2025.05.19, Mercator's Query Engine (`/admin/queries/execute`) accepts a JSON DSL (`from` / `select` / `filters` / `traverse` / `output`), translates it into an Eloquent query, and returns results as JSON. The controller method `QueryController::execute()` does not enforce an authorization gate, unlike `store()` and `massDestroy()` in the same controller which are correctly protected. As a result, any authenticated account — including the read-only Auditor role — can query models beyond its intended scope, including the `User` model. Additionally, the `password` column, although declared `$hidden`, is not excluded from filter predicates, which allows it to be used in `LIKE` conditions. The `schema()` and `schemaModel()` endpoints of the same controller are similarly unguarded. The Query Engine is read-only; integrity and availability are not affected. Version 2025.05.19 patches the issue.",
+      "severity": "N/A",
       "references": [
         {
-          "url": "https://www.exploit-db.com/exploits/46219",
-          "type": "poc"
-        },
-        {
-          "url": "https://joomtech.net/",
-          "type": "reference"
-        },
-        {
-          "url": "https://extensions.joomla.org/extensions/extension/e-commerce/shopping-cart/easy-shop/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/joomla-component-easy-shop-local-file-inclusion",
+          "url": "https://github.com/sourcentis/mercator/security/advisories/GHSA-q3r8-3h7c-96w3",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Joomtech",
-          "product": "Easy Shop",
+          "vendor": "sourcentis",
+          "product": "mercator",
           "versions": [
             {
-              "version": "1.2.3",
+              "version": "< 2025.05.19",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
+        "CWE-359: Exposure of Private Personal Information to an Unauthorized Actor"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-49290",
-      "publishedDate": "2026-06-19T17:31:05.659Z",
-      "lastModifiedDate": "2026-06-19T17:31:05.659Z",
-      "description": "Slopsmith is a self-contained web application for browsing, playing, and practicing Rocksmith 2014 Custom DLC (CDLC). Prior to 0.2.9-alpha.5, a path-traversal vulnerability in Slopsmith's archive extractors allows an attacker to write arbitrary files outside the extraction directory by supplying a crafted PSARC or sloppak archive. With the default Docker configuration (running as root) and the ability to drop a file into the plugin directory, this escalates to arbitrary remote code execution on the host. Three archive extractors concatenated archive-entry filenames directly onto the extraction root without validation: `lib/psarc.py::unpack_psarc` — PSARC TOC filenames; `lib/patcher.py::unpack_psarc` — duplicate of the above in the patcher flow; `lib/sloppak.py::_unpack_zip` — bare `ZipFile.extractall()` with no member filter. Each accepts entry names containing `..` segments, absolute paths, or backslash separators. The Python `zipfile` module's default `extractall()` is documented as not preventing traversal when callers don't supply a member-filter callback. Version 0.2.9-alpha.5 patches the issue. Until updated, do not open PSARC or sloppak archives from untrusted sources, and do not expose the Slopsmith instance to the public internet. Docker users should also pull the latest image after the next slopsmith Docker image is published.",
+      "id": "CVE-2026-48715",
+      "publishedDate": "2026-06-19T19:18:23.721Z",
+      "lastModifiedDate": "2026-06-19T19:18:23.721Z",
+      "description": "radvd is a router advertisement daemon for IPv6. Prior to version 2.21, the `radvdump` utility shipped with radvd contains a stack buffer overflow in the Route Information option parser. When processing a crafted ICMPv6 Router Advertisement, `print_ff()` copies up to 2032 bytes from attacker-controlled packet data into a 16-byte `struct in6_addr` on the stack, overflowing by up to 2016 bytes. Note that the main `radvd` daemon is not affected by the vulnerability. Version 2.21 patches the issue.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://web.archive.org/web/20260522065709/https://github.com/byrongamatos/slopsmith",
+          "url": "https://github.com/radvd-project/radvd/security/advisories/GHSA-52px-gh9p-m379",
           "type": "reference"
         },
         {
-          "url": "https://github.com/byrongamatos/slopsmith/security/advisories/GHSA-8wr9-348x-xwmr",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/byrongamatos/slopsmith/commit/9cccac12a",
-          "type": "reference"
-        },
-        {
-          "url": "https://web.archive.org/web/20260522065709/https://github.com/byrongamatos/slopsmith",
+          "url": "https://github.com/radvd-project/radvd/commit/068bde13e3fd6a5fcdb6859e6a2acd293a325dc5",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "byrongamatos",
-          "product": "slopsmith",
+          "vendor": "radvd-project",
+          "product": "radvdump",
           "versions": [
             {
-              "version": "< 0.2.9-alpha.5",
+              "version": "< 2.21",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')",
-        "CWE-23: Relative Path Traversal",
-        "CWE-36: Absolute Path Traversal"
+        "CWE-121: Stack-based Buffer Overflow"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
