@@ -2,301 +2,412 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 9,
-    "last_updated": "2026-06-19T20:09:22.571200",
+    "total_count": 13,
+    "last_updated": "2026-06-19T21:35:38.712831",
     "severity_distribution": {
-      "critical": 2,
-      "high": 1,
-      "medium": 1,
+      "critical": 5,
+      "high": 5,
+      "medium": 2,
       "low": 0,
-      "none": 5
+      "none": 1
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-48772",
-      "publishedDate": "2026-06-19T19:28:46.248Z",
-      "lastModifiedDate": "2026-06-19T19:28:46.248Z",
-      "description": "ProxySQL is a proxy for MySQL and its forks, as well as PostgreSQL. In versions 2.0.0 through 3.0.8, the ProxySQL MySQL frontend accepts the `PROXY UNKNOWN <addr> <addr> <port> <port>\\r\\n` PP1 frame as a well-formed PROXY protocol header. The HAProxy PROXY protocol v1 specification says that when the protocol token is `UNKNOWN`, the receiver MUST ignore any address fields that follow it, because the proxy has declared it cannot determine the client identity. ProxySQL parses those address fields anyway via `sscanf` and writes the spoofed source address into the session's `addr.addr` field. From there it flows directly into the query-rule matcher, where the `client_addr` predicate decides routing and ACL. When `mysql-proxy_protocol_networks = '*'` (the default), any TCP peer can send a PP1 frame and choose any source IP claim. With that, any `mysql_query_rules` row pinned to a `client_addr` value is forgeable: the attacker writes the address they want to match into the PP1 line, and ProxySQL routes their query as if it came from that address. In practice this is a routing and ACL bypass. Real deployments use `client_addr` for read-write splitting (internal apps go to the primary, public traffic to read replicas), per-app schema pinning, and query-filter rules (DDL allowed only from admin CIDR, public queries blocked from dangerous patterns). An attacker that can reach the frontend port can forge their way into any of those routes. Version 3.0.9 patches this issue.",
+      "id": "CVE-2026-45480",
+      "publishedDate": "2026-06-19T20:27:46.192Z",
+      "lastModifiedDate": "2026-06-19T20:27:46.192Z",
+      "description": "Improper authentication in Azure Active Directory allows an unauthorized attacker to elevate privileges over a network.",
       "severity": 10,
       "references": [
         {
-          "url": "https://github.com/sysown/proxysql/security/advisories/GHSA-gw94-85m2-x8v2",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/sysown/proxysql/releases/tag/v3.0.9",
+          "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-45480",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "sysown",
-          "product": "proxysql",
+          "vendor": "Microsoft",
+          "product": "Azure Active Directory",
           "versions": [
             {
-              "version": ">= 2.0.0, < 3.0.9",
+              "version": "-",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-348: Use of Less Trusted Source",
-        "CWE-863: Incorrect Authorization"
+        "CWE-287: Improper Authentication"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-48773",
-      "publishedDate": "2026-06-19T19:27:12.183Z",
-      "lastModifiedDate": "2026-06-19T19:27:12.183Z",
-      "description": "ProxySQL is a proxy for MySQL and its forks, as well as PostgreSQL. Versions 2.0.18 through 3.0.8 have a pre-authentication heap memory corruption vulnerability in the MySQL and PostgreSQL protocol first-read paths. A remote unauthenticated client can declare an oversized first packet length, and ProxySQL passes that attacker-controlled length directly to `recv()` while writing into a fixed 32 KB input queue. Version 3.0.9 patches the issue.",
+      "id": "CVE-2026-48584",
+      "publishedDate": "2026-06-19T20:27:48.494Z",
+      "lastModifiedDate": "2026-06-19T20:27:48.494Z",
+      "description": "Execution with unnecessary privileges in Azure Synapse allows an authorized attacker to elevate privileges over a network.",
+      "severity": 9.9,
+      "references": [
+        {
+          "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-48584",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Azure Synapse",
+          "versions": [
+            {
+              "version": "-",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-250: Execution with Unnecessary Privileges"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-47647",
+      "publishedDate": "2026-06-18T21:42:40.084Z",
+      "lastModifiedDate": "2026-06-19T20:27:47.867Z",
+      "description": "Improper access control in Microsoft Dynamics 365 allows an authorized attacker to elevate privileges over a network.",
+      "severity": 9.9,
+      "references": [
+        {
+          "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-47647",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Microsoft Dynamics 365",
+          "versions": [
+            {
+              "version": "-",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-284: Improper Access Control"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-54130",
+      "publishedDate": "2026-06-18T21:42:39.358Z",
+      "lastModifiedDate": "2026-06-19T20:27:47.312Z",
+      "description": "Missing authentication for critical function in M365 Copilot allows an unauthorized attacker to disclose information over a network.",
       "severity": 9.8,
       "references": [
         {
-          "url": "https://github.com/sysown/proxysql/security/advisories/GHSA-58ww-865x-grpr",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/sysown/proxysql/releases/tag/v3.0.9",
+          "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-54130",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "sysown",
-          "product": "proxysql",
+          "vendor": "Microsoft",
+          "product": "Microsoft 365 Copilot",
           "versions": [
             {
-              "version": ">= 2.0.18, < 3.0.9",
+              "version": "-",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-787: Out-of-bounds Write"
+        "CWE-306: Missing Authentication for Critical Function"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-48774",
-      "publishedDate": "2026-06-19T19:34:39.971Z",
-      "lastModifiedDate": "2026-06-19T19:34:39.971Z",
-      "description": "ProxySQL is a proxy for MySQL and its forks, as well as PostgreSQL. In versions 3.0.0 through 3.0.8, ProxySQL's GenAI/MCP `run_sql_readonly` tool violates its documented read-only contract for MySQL targets. The tool validates only the full input string with a substring blacklist and first-keyword allowlist, but then executes the entire SQL string on a backend connection created with `CLIENT_MULTI_STATEMENTS`. As a result, a caller can submit a read-only first statement followed by a side-effecting second statement, such as `SELECT 1; RENAME TABLE ...`. The validator accepts the payload because it starts with `SELECT` and because side-effecting MySQL statements such as `RENAME TABLE`, `SET`, `RESET`, `LOCK TABLES`, and `KILL` are not rejected by the blacklist. In a live MCP runtime test, the `/mcp/query` endpoint accepted a `run_sql_readonly` request. The MCP response reported success for the first `SELECT`, and direct backend verification showed that the table had actually been renamed. This violates the endpoint's read-only security contract and lets an MCP caller perform backend writes or administrative SQL, limited by the configured MCP target account's database privileges. Version 3.0.9 contains a fix. Other operator mitigations include: keeping MCP disabled unless required; setting a non-empty `mcp-query_endpoint_auth` token before exposing `/mcp/query`; restricting MCP listener network exposure; configuring MCP backend target credentials as database-level read-only users; and adding temporary MCP query rules to block obvious multi-statement patterns.",
+      "id": "CVE-2026-48582",
+      "publishedDate": "2026-06-19T20:29:41.615Z",
+      "lastModifiedDate": "2026-06-19T20:29:41.615Z",
+      "description": "Missing authorization in Microsoft Exchange Online allows an authorized attacker to elevate privileges over a network.",
+      "severity": 9.6,
+      "references": [
+        {
+          "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-48582",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Microsoft Exchange Online",
+          "versions": [
+            {
+              "version": "-",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-862: Missing Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-47645",
+      "publishedDate": "2026-06-19T20:29:42.232Z",
+      "lastModifiedDate": "2026-06-19T20:29:42.232Z",
+      "description": "Url redirection to untrusted site ('open redirect') in Microsoft 365 Copilot's Business Chat allows an unauthorized attacker to elevate privileges over a network.",
+      "severity": 8.8,
+      "references": [
+        {
+          "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-47645",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Microsoft 365 Copilot",
+          "versions": [
+            {
+              "version": "-",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-601: URL Redirection to Untrusted Site ('Open Redirect')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-32208",
+      "publishedDate": "2026-06-19T20:27:45.083Z",
+      "lastModifiedDate": "2026-06-19T20:27:45.083Z",
+      "description": "Improper neutralization of input during web page generation ('cross-site scripting') in Microsoft Edge (Chromium-based) allows an authorized attacker to perform spoofing over a network.",
+      "severity": 8.8,
+      "references": [
+        {
+          "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-32208",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Microsoft Edge (Chromium-based)",
+          "versions": [
+            {
+              "version": "-",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-50656",
+      "publishedDate": "2026-06-16T18:01:33.601Z",
+      "lastModifiedDate": "2026-06-19T20:28:34.860Z",
+      "description": "Microsoft is aware of an elevation of privilege in the Microsoft Malware Protection Engine in Microsoft Defender publicly referred to as &quot;RoguePlanet &quot;. We are working to provide a high quality security update that addresses this vulnerability. We will provide information in this CVE when the update is available.",
+      "severity": 7.8,
+      "references": [
+        {
+          "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-50656",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Microsoft Malware Protection Engine",
+          "versions": [
+            {
+              "version": "-",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-59: Improper Link Resolution Before File Access ('Link Following')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-32174",
+      "publishedDate": "2026-06-18T21:39:17.817Z",
+      "lastModifiedDate": "2026-06-19T20:27:45.721Z",
+      "description": "Improper authentication in Azure Bot Service allows an authorized attacker to elevate privileges over a network.",
+      "severity": 7.7,
+      "references": [
+        {
+          "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-32174",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Azure AI Bot Service",
+          "versions": [
+            {
+              "version": "-",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-287: Improper Authentication"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-47633",
+      "publishedDate": "2026-06-18T21:37:36.850Z",
+      "lastModifiedDate": "2026-06-19T20:27:44.357Z",
+      "description": "Exposure of sensitive information to an unauthorized actor in Cost Management Interactive Experiences allows an unauthorized attacker to disclose information over a network.",
       "severity": 7.5,
       "references": [
         {
-          "url": "https://github.com/sysown/proxysql/security/advisories/GHSA-7wh6-2vcc-gcm4",
+          "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-47633",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Microsoft Cost Management",
+          "versions": [
+            {
+              "version": "-",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-50519",
+      "publishedDate": "2026-06-19T20:28:35.395Z",
+      "lastModifiedDate": "2026-06-19T20:28:35.395Z",
+      "description": "Initialization of a resource with an insecure default in GitHub Copilot and Visual Studio Code allows an unauthorized attacker to disclose information over a network.",
+      "severity": 6.5,
+      "references": [
+        {
+          "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-50519",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "GitHub Copilot Chat",
+          "versions": [
+            {
+              "version": "1.0.0",
+              "lessThan": "1.123.2",
+              "versionType": "custom",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-1188: Initialization of a Resource with an Insecure Default"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-42895",
+      "publishedDate": "2026-06-19T20:27:46.785Z",
+      "lastModifiedDate": "2026-06-19T20:27:46.785Z",
+      "description": "Improper neutralization of special elements used in a command ('command injection') in Microsoft Copilot allows an unauthorized attacker to perform tampering over a network.",
+      "severity": 6.5,
+      "references": [
+        {
+          "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-42895",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Microsoft",
+          "product": "Microsoft 365 Copilot",
+          "versions": [
+            {
+              "version": "-",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-77: Improper Neutralization of Special Elements used in a Command ('Command Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-11527",
+      "publishedDate": "2026-06-14T11:40:45.634Z",
+      "lastModifiedDate": "2026-06-19T20:31:36.704Z",
+      "description": "Config::IniFiles versions before 3.001000 for Perl allow OS command injection and file overwrite via a 2-arg open() of the -file argument in _make_filehandle.\n\nConfig::IniFiles::_make_filehandle opens a filename argument with Perl's 2-arg open(), so a filename that begins or ends with a pipe (\"| cmd\", \"cmd |\") or begins with a redirect (\"> path\", \">> path\") is run as a command or redirect rather than opened as a file. The helper is the open path behind the documented -file argument: new(-file => $thing) reaches it through ReadConfig. An in-memory scalar reference (-file => \\$text) does not open a path and is unaffected.\n\nAny caller that forwards untrusted input to the -file argument can run an arbitrary command or truncate a file under the process UID.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/shlomif/perl-Config-IniFiles/commit/3e48f9627fbba4dae5de35be1f735cdeb7e47fb8.patch",
           "type": "reference"
         },
         {
-          "url": "https://github.com/sysown/proxysql/commit/e32b7fd50c7c234ea628e392e621e09a2a919e08",
+          "url": "https://metacpan.org/release/SHLOMIF/Config-IniFiles-3.001000/changes",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "sysown",
-          "product": "proxysql",
+          "collectionURL": "https://cpan.org/modules",
+          "defaultStatus": "unaffected",
+          "packageName": "Config-IniFiles",
+          "product": "Config::IniFiles",
+          "programFiles": [
+            "lib/Config/IniFiles.pm"
+          ],
+          "programRoutines": [
+            {
+              "name": "Config::IniFiles::_make_filehandle"
+            }
+          ],
+          "repo": "https://github.com/shlomif/perl-Config-IniFiles",
+          "vendor": "SHLOMIF",
           "versions": [
             {
-              "version": ">= 3.0.6, < 3.0.9",
-              "status": "affected"
+              "lessThan": "3.001000",
+              "status": "affected",
+              "version": "0",
+              "versionType": "custom"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-20: Improper Input Validation"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-49342",
-      "publishedDate": "2026-06-19T19:13:59.598Z",
-      "lastModifiedDate": "2026-06-19T19:13:59.598Z",
-      "description": "YARD is a documentation generation tool for the Ruby programming language. Prior to version 0.9.44, YARD's static cache lookup reads a request path before the router's path cleanup runs. When a server is configured with a document root, a traversal path such as `/../yard-cache-secret.html` is joined against that root and can return a readable sibling `.html` file outside the intended static tree. Version 0.9.44 patches the issue.",
-      "severity": 5.3,
-      "references": [
-        {
-          "url": "https://github.com/lsegal/yard/security/advisories/GHSA-pxcc-8665-phx8",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/lsegal/yard/commit/f78c19f0dd33a407085b4ed181bb60c0aa0078b4",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "lsegal",
-          "product": "yard",
-          "versions": [
-            {
-              "version": "< 0.9.44",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-48787",
-      "publishedDate": "2026-06-19T19:46:41.748Z",
-      "lastModifiedDate": "2026-06-19T19:46:41.748Z",
-      "description": "gin-vue-admin is an AI-assisted basic development platform. In version 2.9.1, an authenticated attacker with access to the code-generation feature and MCP management interface can exploit this vulnerability by injecting attacker-controlled Go source code through POST /autoCode/addFunc, and then invoking POST /autoCode/mcpStart to trigger a rebuild and restart of the standalone MCP service. This allows arbitrary operating system commands to be executed on the server with the privileges of the application process. Successful exploitation may lead to remote code execution (RCE), modification of backend source code or runtime logic, deployment of persistent backdoors, access to or manipulation of application data and configuration, and further impact on local resources running under the same service account or privilege context. The risk is highest in deployments that retain the source tree, allow writes to source files, and support local build or startup of standalone MCP components. In environments using binary-only releases, read-only filesystems, or with local build capabilities removed, the exploitability of the full attack chain is significantly reduced. However, once the online code-generation capability and MCP-hosted startup workflow are enabled, the overall security impact may reach high to critical severity. As of time of publication, it is unknown if a patched version is available. As a workaround, enforce strict allowlist validation on path- and identifier-related fields such as `humpPackageName`, `packageName`, `FuncName`, and `Router`, and only permit safe identifier formats.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/flipped-aurora/gin-vue-admin/security/advisories/GHSA-22cv-9jv2-6m62",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "flipped-aurora",
-          "product": "gin-vue-admin",
-          "versions": [
-            {
-              "version": "= 2.9.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-48089",
-      "publishedDate": "2026-06-19T19:38:04.175Z",
-      "lastModifiedDate": "2026-06-19T19:38:04.175Z",
-      "description": "DevGuard provides vulnerability management for the full software supply chain. Prior to 1.4.2, on a DevGuard API instance with one or more public assets, any authenticated user — including users from a different organization with no membership or role in the affected org/project — can create, update, reapply, and delete VEX rules on those public assets. The same flaw affects the other vulnerability-triage write endpoints exposed under a public asset, including VEX rule create / update / reapply / delete; dependency-vuln event creation (accept / reject / mitigate decisions), batch event creation, vuln sync, and mitigation; license risk creation; external reference writes; and/or artifact creation and license refresh. The attacker needs a valid account on the instance, but no membership in the victim organization, project, or asset is required. Version `v1.4.2`contains a patch. As a workaround, make affected assets non-public. In the asset settings, switch visibility from public to private. This removes the public-read exemption in the access-control middleware and restores correct authorization on all write endpoints for that asset. Downstream consumers that previously relied on the public `vex.json` / `sbom.json` endpoints will need to be granted explicit access or must receive an exported file version until the patched release is deployed.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/l3montree-dev/devguard/security/advisories/GHSA-6p54-fw2f-q7gf",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/l3montree-dev/devguard/commit/1be88ec1309a5dc0566e35a23bdc4ea3ecd11417",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "l3montree-dev",
-          "product": "devguard",
-          "versions": [
-            {
-              "version": "< 1.4.2",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-285: Improper Authorization",
-        "CWE-863: Incorrect Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-49345",
-      "publishedDate": "2026-06-19T19:23:22.858Z",
-      "lastModifiedDate": "2026-06-19T19:23:22.858Z",
-      "description": "Mercator is an open source web application that enables mapping of the information system. Prior to version 2025.05.19, a Server-Side Request Forgery (SSRF) vulnerability exists in Mercator's CVE configuration panel (`/admin/config/parameters`). The `testProvider()` method in `ConfigurationController` passes user-supplied input directly to `curl_init()` without validating the scheme, hostname, or destination IP address. An authenticated user with the `configure` permission can force the Mercator server to issue arbitrary outbound network requests. The suffix `/api/dbInfo` appended to the URL can be bypassed by injecting a `#` fragment character (e.g. `http://TARGET/PATH#`), allowing full control over the target URL. No scheme whitelist, host whitelist, or private/loopback IP block is applied. The `telnet://` scheme can be used for internal port scanning; the `gopher://` scheme enables interaction with unauthenticated internal services (Redis, Memcached), potentially leading to Remote Code Execution under specific deployment conditions. Version 2025.05.19 patches the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/sourcentis/mercator/security/advisories/GHSA-6q97-4q5r-96j6",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "sourcentis",
-          "product": "mercator",
-          "versions": [
-            {
-              "version": "< 2025.05.19",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-918: Server-Side Request Forgery (SSRF)"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-49344",
-      "publishedDate": "2026-06-19T19:21:46.127Z",
-      "lastModifiedDate": "2026-06-19T19:22:33.640Z",
-      "description": "Mercator is an open source web application that enables mapping of the information system. Prior to version 2025.05.19, Mercator's Query Engine (`/admin/queries/execute`) accepts a JSON DSL (`from` / `select` / `filters` / `traverse` / `output`), translates it into an Eloquent query, and returns results as JSON. The controller method `QueryController::execute()` does not enforce an authorization gate, unlike `store()` and `massDestroy()` in the same controller which are correctly protected. As a result, any authenticated account — including the read-only Auditor role — can query models beyond its intended scope, including the `User` model. Additionally, the `password` column, although declared `$hidden`, is not excluded from filter predicates, which allows it to be used in `LIKE` conditions. The `schema()` and `schemaModel()` endpoints of the same controller are similarly unguarded. The Query Engine is read-only; integrity and availability are not affected. Version 2025.05.19 patches the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/sourcentis/mercator/security/advisories/GHSA-q3r8-3h7c-96w3",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "sourcentis",
-          "product": "mercator",
-          "versions": [
-            {
-              "version": "< 2025.05.19",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-359: Exposure of Private Personal Information to an Unauthorized Actor"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-48715",
-      "publishedDate": "2026-06-19T19:18:23.721Z",
-      "lastModifiedDate": "2026-06-19T19:18:23.721Z",
-      "description": "radvd is a router advertisement daemon for IPv6. Prior to version 2.21, the `radvdump` utility shipped with radvd contains a stack buffer overflow in the Route Information option parser. When processing a crafted ICMPv6 Router Advertisement, `print_ff()` copies up to 2032 bytes from attacker-controlled packet data into a 16-byte `struct in6_addr` on the stack, overflowing by up to 2016 bytes. Note that the main `radvd` daemon is not affected by the vulnerability. Version 2.21 patches the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/radvd-project/radvd/security/advisories/GHSA-52px-gh9p-m379",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/radvd-project/radvd/commit/068bde13e3fd6a5fcdb6859e6a2acd293a325dc5",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "radvd-project",
-          "product": "radvdump",
-          "versions": [
-            {
-              "version": "< 2.21",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-121: Stack-based Buffer Overflow"
+        "CWE-78 Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')",
+        "CWE-73 External Control of File Name or Path"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
