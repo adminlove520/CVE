@@ -2,46 +2,62 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 1,
-    "last_updated": "2026-06-19T23:47:03.422154",
+    "total_count": 2,
+    "last_updated": "2026-06-20T01:56:07.854166",
     "severity_distribution": {
-      "critical": 1,
-      "high": 0,
+      "critical": 0,
+      "high": 1,
       "medium": 0,
       "low": 0,
-      "none": 0
+      "none": 1
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-11551",
-      "publishedDate": "2026-06-19T23:29:21.990Z",
-      "lastModifiedDate": "2026-06-19T23:29:21.990Z",
-      "description": "The Branda plugin for WordPress is vulnerable to privilege escalation via account takeover in all versions up to, and including, 3.4.29. This is due to the plugin not properly validating a user's identity prior to updating their password. This makes it possible for unauthenticated attackers to change arbitrary user's passwords, including administrators, and leverage that to gain access to their account.",
-      "severity": 9.8,
+      "id": "CVE-2026-9843",
+      "publishedDate": "2026-06-20T01:27:22.783Z",
+      "lastModifiedDate": "2026-06-20T01:27:22.783Z",
+      "description": "The Database for Contact Form 7, WPforms, Elementor forms plugin for WordPress is vulnerable to arbitrary file deletion due to insufficient file path validation in the view_page function in all versions up to, and including, 1.5.1. This makes it possible for unauthenticated attackers to delete arbitrary files on the server, which can easily lead to remote code execution when the right file is deleted (such as wp-config.php). Successful exploitation requires an administrator to view or edit the poisoned form entry, at which point PHP's bracket parser reshapes the attacker-crafted JSON key to bypass the stored-path isset check and trigger deletion of the traversal-specified file.",
+      "severity": 8.1,
       "references": [
         {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/56f13af3-71b6-42d4-9fda-a75778f32091?source=cve",
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/4169b390-0972-4aa9-ae04-f5f67afe15ef?source=cve",
           "type": "reference"
         },
         {
-          "url": "https://plugins.trac.wordpress.org/browser/branda-white-labeling/tags/3.4.29/inc/modules/login-screen/signup-password.php#L232",
+          "url": "https://plugins.trac.wordpress.org/browser/contact-form-entries/tags/1.5.1/includes/plugin-pages.php#L1197",
           "type": "reference"
         },
         {
-          "url": "https://plugins.trac.wordpress.org/changeset/3568291/branda-white-labeling/trunk/inc/modules/login-screen/signup-password.php",
+          "url": "https://plugins.trac.wordpress.org/browser/contact-form-entries/tags/1.5.1/contact-form-entries.php#L747",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/contact-form-entries/tags/1.5.1/contact-form-entries.php#L435",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/contact-form-entries/tags/1.5.1/includes/data.php#L539",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/contact-form-entries/tags/1.5.1/templates/view.php#L559",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/changeset/3578556/contact-form-entries",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "wpmudev",
-          "product": "Branda – White Label & Branding, Free Login Page Customizer",
+          "vendor": "crmperks",
+          "product": "Database for Contact Form 7, WPforms, Elementor forms",
           "versions": [
             {
               "version": "0",
               "status": "affected",
-              "lessThanOrEqual": "3.4.29",
+              "lessThanOrEqual": "1.5.1",
               "versionType": "semver"
             }
           ],
@@ -49,7 +65,61 @@
         }
       ],
       "problemType": [
-        "CWE-640 Weak Password Recovery Mechanism for Forgotten Password"
+        "CWE-22 Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9265",
+      "publishedDate": "2026-06-20T00:46:07.737Z",
+      "lastModifiedDate": "2026-06-20T00:46:07.737Z",
+      "description": "Crypt::OpenSSL::PKCS12 versions before 1.96 for Perl permits a heap OOB read in print_attribute UTF8STRING path.\n\nprint_attribute() copies a UTF8STRING ASN.1 attribute value into a heap buffer sized exactly to its declared length via strncpy, leaving no NUL terminator. Downstream callers run strlen() on the result and pass the inflated length to newSVpvn(), copying attacker-influenced adjacent heap bytes into a Perl scalar.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/dsully/perl-crypt-openssl-pkcs12/issues/55",
+          "type": "reference"
+        },
+        {
+          "url": "https://metacpan.org/release/JONASBN/Crypt-OpenSSL-PKCS12-1.96/source/Changes.md",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/dsully/perl-crypt-openssl-pkcs12/commit/a7bd2f319fa8aab8177b3d767ea06dd85ceb3173.patch",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://cpan.org/modules",
+          "defaultStatus": "unaffected",
+          "packageName": "Crypt-OpenSSL-PKCS12",
+          "product": "Crypt::OpenSSL::PKCS12",
+          "programFiles": [
+            "PKCS12.xs"
+          ],
+          "programRoutines": [
+            {
+              "name": "Crypt::OpenSSL::PKCS12::info"
+            },
+            {
+              "name": "Crypt::OpenSSL::PKCS12::info_as_hash"
+            }
+          ],
+          "repo": "https://github.com/dsully/perl-crypt-openssl-pkcs12",
+          "vendor": "JONASBN",
+          "versions": [
+            {
+              "lessThan": "1.96",
+              "status": "affected",
+              "version": "0",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-125 Out-of-bounds Read"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
