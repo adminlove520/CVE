@@ -2,797 +2,348 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 19,
-    "last_updated": "2026-06-22T21:49:33.891641",
+    "total_count": 9,
+    "last_updated": "2026-06-22T23:12:08.915121",
     "severity_distribution": {
-      "critical": 0,
-      "high": 1,
-      "medium": 5,
-      "low": 1,
-      "none": 12
+      "critical": 1,
+      "high": 2,
+      "medium": 3,
+      "low": 0,
+      "none": 3
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-55603",
-      "publishedDate": "2026-06-22T20:07:05.034Z",
-      "lastModifiedDate": "2026-06-22T20:07:05.034Z",
-      "description": "http-proxy-middleware is node.js http-proxy middleware. From 3.0.4 until 3.0.7 and 4.1.1, fixRequestBody() is the library's documented helper for re-emitting a request body that was already consumed by a body parser. When the outgoing Content-Type is multipart/form-data, it rebuilds the body with handlerFormDataBodyData(), which interpolates each req.body key and value directly into the multipart wire format without neutralizing CR/LF. A \\r\\n inside a value (or key) lets an attacker close the current part and inject an entirely new form part. Because the proxy's own body parser saw a single opaque value, any gateway-side policy or validation performed on req.body is evaluated against a different set of fields than the upstream backend ultimately parses a request/parameter desynchronization across the trust boundary. This vulnerability is fixed in 3.0.7 and 4.1.1.",
+      "id": "CVE-2026-48746",
+      "publishedDate": "2026-06-22T21:57:28.997Z",
+      "lastModifiedDate": "2026-06-22T21:57:28.997Z",
+      "description": "vLLM is an inference and serving engine for large language models (LLMs). From 0.3.0 until 0.22.0, a vulnerability in ASGI web servers and starlette's trust on those web servers enables an authentication bypass of the OpenAI API AuthenticationMiddleware. It allows to use the API without providing the configured VLLM_API_KEY or --api-key. This vulnerability is fixed in 0.22.0.",
+      "severity": 9.1,
+      "references": [
+        {
+          "url": "https://github.com/vllm-project/vllm/security/advisories/GHSA-94f4-hr76-p5j6",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/vllm-project/vllm/pull/43426",
+          "type": "reference"
+        },
+        {
+          "url": "https://x41-dsec.de/lab/advisories/x41-2026-002-starlette",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "vllm-project",
+          "product": "vllm",
+          "versions": [
+            {
+              "version": ">= 0.3.0, < 0.22.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-444: Inconsistent Interpretation of HTTP Requests ('HTTP Request/Response Smuggling')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-54232",
+      "publishedDate": "2026-06-22T22:16:43.101Z",
+      "lastModifiedDate": "2026-06-22T22:16:43.101Z",
+      "description": "vLLM is an inference and serving engine for large language models (LLMs). Prior to 0.22.1, the vLLM Dockerfile is vulnerable to a dependency confusion attack through the flashinfer-jit-cache package. The package is installed from a custom index (flashinfer.ai/whl/) using --extra-index-url, but the package name was not registered on PyPI, and UV_INDEX_STRATEGY=\"unsafe-best-match\" is set globally. An attacker who registers flashinfer-jit-cache on PyPI with version 0.6.11.post2 can execute arbitrary code as root during the Docker build and backdoor every resulting container image, enabling exfiltration of all user prompts, API credentials, and model data from production vLLM deployments This vulnerability is fixed in 0.22.1.",
+      "severity": 8.8,
+      "references": [
+        {
+          "url": "https://github.com/vllm-project/vllm/security/advisories/GHSA-jrf6-vqxq-pjv2",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "vllm-project",
+          "product": "vllm",
+          "versions": [
+            {
+              "version": "< 0.22.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-427: Uncontrolled Search Path Element"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-41523",
+      "publishedDate": "2026-06-22T22:18:14.494Z",
+      "lastModifiedDate": "2026-06-22T22:18:14.494Z",
+      "description": "vLLM is an inference and serving engine for large language models (LLMs). Prior to 0.22.0, an assert-based security check in vLLM's activation function loading allows any unauthenticated attacker to achieve arbitrary code execution on the server by publishing a malicious HuggingFace model, when vLLM runs in Python optimized mode (python -O or PYTHONOPTIMIZE=1). This vulnerability is fixed in 0.22.0.",
       "severity": 7.5,
       "references": [
         {
-          "url": "https://github.com/chimurai/http-proxy-middleware/security/advisories/GHSA-gcq2-9pq2-cxqm",
+          "url": "https://github.com/vllm-project/vllm/security/advisories/GHSA-q8gq-377p-jq3r",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/vllm-project/vllm/commit/b3c7ffcab82c2439726f8cb213800f6f38c023d3",
+          "type": "reference"
+        },
+        {
+          "url": "https://huntr.com/bounties/dcb05b04-e625-41e7-adbc-bbae0cc2d64c",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "chimurai",
-          "product": "http-proxy-middleware",
+          "vendor": "vllm-project",
+          "product": "vllm",
           "versions": [
             {
-              "version": ">= 3.0.4, < 3.0.7",
-              "status": "affected"
-            },
-            {
-              "version": ">= 4.0.0, < 4.1.1",
+              "version": "< 0.22.0",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-93: Improper Neutralization of CRLF Sequences ('CRLF Injection')"
+        "CWE-94: Improper Control of Generation of Code ('Code Injection')",
+        "CWE-617: Reachable Assertion"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-39904",
-      "publishedDate": "2026-06-22T20:11:14.670Z",
-      "lastModifiedDate": "2026-06-22T20:11:14.670Z",
-      "description": "Gophish through 0.12.1 contains a denial of service vulnerability that allows authenticated users with the User role to exhaust server memory by uploading a crafted Office document as an email template attachment. The ApplyTemplate() function in models/attachment.go processes Office documents as ZIP archives and calls ioutil.ReadAll() on each contained file entry without enforcing size restrictions on uncompressed content, allowing a zip bomb payload to expand to several gigabytes in memory and cause the process to be terminated by the operating system.",
+      "id": "CVE-2026-47155",
+      "publishedDate": "2026-06-22T22:20:10.793Z",
+      "lastModifiedDate": "2026-06-22T22:20:10.793Z",
+      "description": "vLLM is an inference and serving engine for large language models (LLMs). Prior to 0.22.0, vLLM's revision pinning controls do not consistently apply to all artifacts loaded for a model. A deployment that supplies --revision or --code-revision can still load dynamic code, GGUF files, image processors, retrieval side weights, or same-repository subfolder weights/config from an unpinned/default revision. This is a supply-chain integrity issue for pinned vLLM deployments. Operators can believe they are serving a reviewed model revision while vLLM resolves behavior-affecting nested or sibling artifacts outside that reviewed revision. This vulnerability is fixed in 0.22.0.",
       "severity": 6.5,
       "references": [
         {
-          "url": "https://github.com/ashikmd7/GoPhish-0.12.1/blob/main/Unbounded%20Memory%20Allocation%20in%20Office%20Attachment%20Processing%20Leads%20to%20Server%20DoS/README.md",
-          "type": "poc"
+          "url": "https://github.com/vllm-project/vllm/security/advisories/GHSA-3ww4-5jv9-j5gm",
+          "type": "reference"
         },
         {
-          "url": "https://www.vulncheck.com/advisories/gophish-denial-of-service-via-office-document-upload",
+          "url": "https://github.com/vllm-project/vllm/pull/42616",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/vllm-project/vllm/commit/d26a28ab033697f55a1414b5b0435de7cd6045b6",
+          "type": "reference"
+        },
+        {
+          "url": "https://huntr.com/bounties/3f1e24c0-87d2-4f6c-a705-820f380879ac",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "affected",
-          "vendor": "gophish",
-          "product": "gophish",
-          "repo": "https://github.com/gophish/gophish",
+          "vendor": "vllm-project",
+          "product": "vllm",
           "versions": [
             {
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver",
-              "lessThanOrEqual": "0.12.1"
+              "version": "< 0.22.0",
+              "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "Allocation of Resources Without Limits or Throttling"
+        "CWE-345: Insufficient Verification of Data Authenticity"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-44273",
-      "publishedDate": "2026-06-22T18:51:37.736Z",
-      "lastModifiedDate": "2026-06-22T20:38:14.139Z",
-      "description": "Dell Wyse Management Suite (WMS), versions prior to WMS 2605, contain a Use of Default Credentials vulnerability. A high privileged attacker with local access could potentially exploit this vulnerability, leading to Information Disclosure.",
-      "severity": 6,
+      "id": "CVE-2026-54233",
+      "publishedDate": "2026-06-22T22:10:45.689Z",
+      "lastModifiedDate": "2026-06-22T22:10:45.689Z",
+      "description": "vLLM is an inference and serving engine for large language models (LLMs). Prior to 0.23.1rc0, vLLM's /v1/audio/transcriptions endpoint limits compressed upload size but not decoded PCM output. A 25MB OPUS file expands to ~14.9GB of float32 PCM at decode time. This vulnerability is fixed in 0.23.1rc0.",
+      "severity": 6.5,
       "references": [
         {
-          "url": "https://www.dell.com/support/kbdoc/en-us/000472001/dsa-2026-247",
+          "url": "https://github.com/vllm-project/vllm/security/advisories/GHSA-6pr9-rp53-2pmc",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/vllm-project/vllm/pull/44970",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Dell",
-          "product": "Wyse Management Suite (WMS)",
+          "vendor": "vllm-project",
+          "product": "vllm",
           "versions": [
             {
+              "version": "< 0.23.1rc0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-409: Improper Handling of Highly Compressed Data (Data Amplification)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-54236",
+      "publishedDate": "2026-06-22T22:09:15.034Z",
+      "lastModifiedDate": "2026-06-22T22:09:15.034Z",
+      "description": "vLLM is an inference and serving engine for large language models (LLMs). Prior to 0.23.1rc0, the fix for CVE-2026-22778, which introduced a sanitize_message helper that strips object-repr memory addresses from error messages before they reach the client, is incomplete: several response paths echo str(exc) directly to clients without calling sanitize_message. The unsanitized sites include the Anthropic API router in vllm/entrypoints/anthropic/api_router.py (the POST /v1/messages and POST /v1/messages/count_tokens handlers), the Server-Sent Events streaming converter in vllm/entrypoints/anthropic/serving.py, and the realtime speech-to-text WebSocket in vllm/entrypoints/speech_to_text/realtime/connection.py. These paths catch the exception inside the route coroutine and construct the JSONResponse themselves, bypassing the sanitizing global FastAPI exception handler, and WebSocket frames do not traverse that handler chain at all. Using the same primitive as the parent issue, an unauthenticated attacker can send malformed image bytes through the Anthropic Messages API image content parts so that PIL.Image.open raises an UnidentifiedImageError whose message contains the BytesIO object repr, leaking the heap memory address verbatim in the error.message field of the response body. This vulnerability is fixed in 0.23.1rc0.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://github.com/vllm-project/vllm/security/advisories/GHSA-hgg8-fqqc-vfmw",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/vllm-project/vllm/pull/45119",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/vllm-project/vllm/commit/94923629729381d7f7c9efde72071a2441f7fd82",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "vllm-project",
+          "product": "vllm",
+          "versions": [
+            {
+              "version": "< 0.23.1rc0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-532: Insertion of Sensitive Information into Log File"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-54235",
+      "publishedDate": "2026-06-22T21:59:02.710Z",
+      "lastModifiedDate": "2026-06-22T21:59:02.710Z",
+      "description": "vLLM is an inference and serving engine for large language models (LLMs). Prior to 0.23.1rc0, ll temperature validation gates use comparison operators (<, >), which silently evaluate to False for NaN and for positive Infinity in Python's IEEE 754 float semantics. Both values pass every guard and propagate to GPU sampling kernels, where they produce undefined behavior or CUDA errors that can crash the inference worker. This vulnerability is fixed in 0.23.1rc0.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/vllm-project/vllm/security/advisories/GHSA-7h4p-rffg-7823",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/vllm-project/vllm/pull/45116",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/vllm-project/vllm/commit/d598d239737cfa37bcfcb98886ec3f3557fc7198",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "vllm-project",
+          "product": "vllm",
+          "versions": [
+            {
+              "version": "< 0.23.1rc0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-1287: Improper Validation of Specified Type of Input"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-53923",
+      "publishedDate": "2026-06-22T21:55:42.001Z",
+      "lastModifiedDate": "2026-06-22T21:55:42.001Z",
+      "description": "vLLM is an inference and serving engine for large language models (LLMs). From 0.5.5 until 0.23.1rc0, integer truncation of tensor dimensions in vLLM's GGUF dequantize kernels (csrc/quantization/gguf/gguf_kernel.cu) causes partial tensor processing. The output tensor is allocated at full size via torch::empty (uninitialized memory), but the dequantize CUDA kernel processes only a truncated number of elements. The unfilled portion of the output tensor retains whatever was previously in GPU memory. In multi-tenant inference deployments, this residual GPU memory may contain tensor data from other users' inference requests, constituting information disclosure. This vulnerability is fixed in 0.23.1rc0.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/vllm-project/vllm/security/advisories/GHSA-5jv2-g5wq-cmr4",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/vllm-project/vllm/pull/44971",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/vllm-project/vllm/commit/f219788f91952827132fa4fdf916427cd20d225e",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "vllm-project",
+          "product": "vllm",
+          "versions": [
+            {
+              "version": ">= 0.5.5, < 0.23.1rc0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-681: Incorrect Conversion between Numeric Types",
+        "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-48931",
+      "publishedDate": "2026-06-22T18:59:30.822Z",
+      "lastModifiedDate": "2026-06-22T21:53:26.126Z",
+      "description": "A flaw in Node.js HTTP Agent can cause a client to accept as valid a response that is send before the client has sent the request.\r\n\r\nThis vulnerability affects all supported release lines: **Node.js 22**, **Node.js 24**, and **Node.js 26**.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://nodejs.org/en/blog/vulnerability/june-2026-security-releases",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "vendor": "nodejs",
+          "product": "node",
+          "versions": [
+            {
+              "version": "22.22.3",
               "status": "affected",
-              "version": "0",
-              "lessThan": "2605",
+              "lessThanOrEqual": "22.22.3",
+              "versionType": "semver"
+            },
+            {
+              "version": "24.16.0",
+              "status": "affected",
+              "lessThanOrEqual": "24.16.0",
+              "versionType": "semver"
+            },
+            {
+              "version": "26.3.0",
+              "status": "affected",
+              "lessThanOrEqual": "26.3.0",
               "versionType": "semver"
             }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-1392: Use of Default Credentials"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-55599",
-      "publishedDate": "2026-06-22T20:00:09.322Z",
-      "lastModifiedDate": "2026-06-22T20:00:09.322Z",
-      "description": "phpseclib is a PHP secure communications library. From 0.1.1 until 1.0.30, 2.0.55, and 3.0.54, when an application validates an untrusted X.509 certificate with phpseclib, X509::validateSignature() reads a URL out of that certificate's Authority Information Access (AIA) extension and connects to it. Attacker who supplies certificate fully controls host, port, and path of that connection. URL fetching is enabled by default, and no destination is blocked. An unauthenticated attacker can therefore make a validating server open connections to internal hosts and ports it should never reach, for example loopback 127.0.0.1, cloud metadata address 169.254.169.254, and internal-only services. This is a server-side request forgery (SSRF) caused by an insecure default. This vulnerability is fixed in 1.0.30, 2.0.55, and 3.0.54.",
-      "severity": 5.8,
-      "references": [
-        {
-          "url": "https://github.com/phpseclib/phpseclib/security/advisories/GHSA-m557-wrgg-6rp4",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "phpseclib",
-          "product": "phpseclib",
-          "versions": [
-            {
-              "version": ">= 0.1.1, < 1.0.30",
-              "status": "affected"
-            },
-            {
-              "version": ">= 2.0.0, < 2.0.55",
-              "status": "affected"
-            },
-            {
-              "version": ">= 3.0.0, < 3.0.54",
-              "status": "affected"
-            }
           ]
         }
       ],
       "problemType": [
-        "CWE-918: Server-Side Request Forgery (SSRF)"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41479",
-      "publishedDate": "2026-06-22T20:35:13.699Z",
-      "lastModifiedDate": "2026-06-22T20:35:13.699Z",
-      "description": "Authlib is a Python library which builds OAuth and OpenID Connect servers. Prior to 1.6.10 and 1.7.1, Authlib's OAuth 2.0 authorization endpoint can be turned into an unauthenticated open redirect when a request uses an unsupported response_type and supplies an attacker-controlled redirect_uri. The vulnerable behavior happens before client lookup and before any redirect URI validation. As a result, an attacker does not need a valid client registration, an authenticated user, or any prior state. A single request to the authorization endpoint is enough to obtain a 302 Location response to an arbitrary attacker-controlled URL. This vulnerability is fixed in 1.6.10 and 1.7.1.",
-      "severity": 5.4,
-      "references": [
-        {
-          "url": "https://github.com/authlib/authlib/security/advisories/GHSA-w8p2-r796-3vmq",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/authlib/authlib/commit/3be08468201a7766a93012ce149ea12822cab096",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "authlib",
-          "product": "authlib",
-          "versions": [
-            {
-              "version": "< 1.6.10",
-              "status": "affected"
-            },
-            {
-              "version": "= 1.7.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-601: URL Redirection to Untrusted Site ('Open Redirect')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-55443",
-      "publishedDate": "2026-06-22T17:21:46.121Z",
-      "lastModifiedDate": "2026-06-22T19:52:02.637Z",
-      "description": "LangChain is a framework for building agents and LLM-powered applications. Prior to 1.3.9, several LangChain components that resolve filesystem paths or expand search patterns do not consistently confine the resolved path to the intended root directory. Affected behaviors include: a file-search agent middleware that validates a starting directory but not the search pattern or the resolved target of matched files, so glob patterns and symlinks can reach files outside the configured root; prompt- and chain/agent-configuration loaders that accept path fields and resolve them without confining the result to a trusted base or rejecting symlink targets; and path-prefix authorization checks that compare by string prefix without a path-segment boundary, so a sibling path sharing the prefix is accepted. When these components receive path values, search patterns, or workspace contents influenced by an untrusted source — including an LLM acting on untrusted input — the result can be disclosure of files outside the intended boundary. This vulnerability is fixed in 1.3.9.",
-      "severity": 5.1,
-      "references": [
-        {
-          "url": "https://github.com/langchain-ai/langchain/security/advisories/GHSA-gr75-jv2w-4656",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/langchain-ai/langchain/commit/dcaf7795a3e6590af55c3ff7bda6add6355e9ea6",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "langchain-ai",
-          "product": "langchain",
-          "versions": [
-            {
-              "version": "< 1.3.9",
-              "status": "affected"
-            }
-          ]
-        },
-        {
-          "vendor": "langchain-ai",
-          "product": "langchain-anthropic",
-          "versions": [
-            {
-              "version": "< 1.4.6",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')",
-        "CWE-59: Improper Link Resolution Before File Access ('Link Following')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-53663",
-      "publishedDate": "2026-06-22T17:39:29.160Z",
-      "lastModifiedDate": "2026-06-22T19:52:50.287Z",
-      "description": "React Router is a router for React. From 7.12.0 until 7.15.1, certain CSRF checks in React Router v7 Framework Mode were insufficient and run on POST requests, but were bypassed on PUT/PATCH/DELETE requests. This is a low severity vulnerability because modern browser protections (CORS preflight, SameSite cookies) already block the cross-origin attack vectors that this missing CSRF check would otherwise gate. This vulnerability is fixed in 7.15.1.",
-      "severity": 3.1,
-      "references": [
-        {
-          "url": "https://github.com/remix-run/react-router/security/advisories/GHSA-84g9-w2xq-vcv6",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "remix-run",
-          "product": "react-router",
-          "versions": [
-            {
-              "version": ">= 7.12.0, < 7.15.1",
-              "status": "affected"
-            }
-          ]
-        },
-        {
-          "vendor": "@remix-run",
-          "product": "server-runtime",
-          "versions": [
-            {
-              "version": ">= 2.17.3, < 2.17.5",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-352: Cross-Site Request Forgery (CSRF)"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-49468",
-      "publishedDate": "2026-06-22T20:37:14.494Z",
-      "lastModifiedDate": "2026-06-22T20:37:14.494Z",
-      "description": "LiteLLM is a proxy server (AI Gateway) to call LLM APIs in OpenAI (or native) format. Prior to 1.84.0,  This vulnerability is fixed in 1.84.0.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/BerriAI/litellm/security/advisories/GHSA-4xpc-pv4p-pm3w",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/BerriAI/litellm/releases/tag/v1.84.0",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "BerriAI",
-          "product": "litellm",
-          "versions": [
-            {
-              "version": "< 1.84.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-290: Authentication Bypass by Spoofing"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-45034",
-      "publishedDate": "2026-06-22T20:32:32.011Z",
-      "lastModifiedDate": "2026-06-22T20:32:32.011Z",
-      "description": "PhpSpreadsheet is a pure PHP library for reading and writing spreadsheet files. Prior to 1.30.5, CVE-2026-34084 was patched by the helper File::prohibitWrappers. The helper calls parse_url($filename, PHP_URL_SCHEME) and then checks is_string($scheme) && strlen($scheme) > 1 to reject stream wrappers such as phar://, php://, data:// or expect://. The check is not equivalent to \"does the path contain a wrapper\". When the input has the form phar:///path/file.phar/inner with three or more slashes after the scheme, parse_url returns boolean false instead of returning the scheme string. The is_string($scheme) branch is therefore skipped, the helper returns without throwing, and the caller proceeds. PHP's stream layer, however, still treats phar:///... as a valid phar wrapper and opens the underlying phar file. The result is that IOFactory::load($attackerPath) walks past the patch and still touches the phar wrapper. On PHP 7.x, simply reaching the phar wrapper via is_file is enough for PHP to automatically deserialize the phar metadata, which in turn invokes the magic methods __wakeup and __destruct of an attacker controlled object and gives full RCE. On PHP 8.x, automatic metadata deserialization for plain file ops was removed, so the chain at the PhpSpreadsheet layer reduces to a phar wrapper file read primitive, and RCE only resurfaces if the downstream consumer ever calls Phar::getMetadata. This vulnerability is fixed in 1.30.5.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/PHPOffice/PhpSpreadsheet/security/advisories/GHSA-87m4-826x-3crx",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "PHPOffice",
-          "product": "PhpSpreadsheet",
-          "versions": [
-            {
-              "version": "< 1.30.5",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-502: Deserialization of Untrusted Data"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-54651",
-      "publishedDate": "2026-06-22T20:28:28.412Z",
-      "lastModifiedDate": "2026-06-22T20:28:28.412Z",
-      "description": "pypdf is a free and open-source pure-python PDF library. Prior to 6.13.1, an attacker who uses this vulnerability can craft a PDF which leads to an infinite loop. This requires merging a file with threads/articles into a writer. This vulnerability is fixed in 6.13.1.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/py-pdf/pypdf/security/advisories/GHSA-g9xf-7f8q-9mcj",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/py-pdf/pypdf/pull/3839",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/py-pdf/pypdf/releases/tag/6.13.1",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "py-pdf",
-          "product": "pypdf",
-          "versions": [
-            {
-              "version": "< 6.13.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-835: Loop with Unreachable Exit Condition ('Infinite Loop')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-49460",
-      "publishedDate": "2026-06-22T20:28:16.413Z",
-      "lastModifiedDate": "2026-06-22T20:28:16.413Z",
-      "description": "pypdf is a free and open-source pure-python PDF library. Prior to 6.12.2, an attacker who uses this vulnerability can craft a PDF which leads to long runtimes. This requires accessing a stream which uses the /FlateDecode filter with a PNG predictor. This vulnerability is fixed in 6.12.2.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/py-pdf/pypdf/security/advisories/GHSA-5hgr-hg42-57jg",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/py-pdf/pypdf/pull/3806",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/py-pdf/pypdf/releases/tag/6.12.2",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "py-pdf",
-          "product": "pypdf",
-          "versions": [
-            {
-              "version": "< 6.12.2",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-407: Inefficient Algorithmic Complexity"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-49461",
-      "publishedDate": "2026-06-22T20:27:16.174Z",
-      "lastModifiedDate": "2026-06-22T20:27:16.174Z",
-      "description": "pypdf is a free and open-source pure-python PDF library. Prior to 6.12.2, an attacker who uses this vulnerability can craft a PDF which leads to large memory usage. This requires extracting the text of a page which contains a form XObject with self-references. This vulnerability is fixed in 6.12.2.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/py-pdf/pypdf/security/advisories/GHSA-j543-4vmf-qm7v",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/py-pdf/pypdf/pull/3805",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/py-pdf/pypdf/releases/tag/6.12.2",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "py-pdf",
-          "product": "pypdf",
-          "versions": [
-            {
-              "version": "< 6.12.2",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-400: Uncontrolled Resource Consumption"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-54531",
-      "publishedDate": "2026-06-22T20:26:19.756Z",
-      "lastModifiedDate": "2026-06-22T20:26:19.756Z",
-      "description": "pypdf is a free and open-source pure-python PDF library. Prior to 6.13.0, an attacker who uses this vulnerability can craft a PDF which leads to an infinite loop. This requires merging a file with outlines into a writer. This vulnerability is fixed in 6.13.0.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/py-pdf/pypdf/security/advisories/GHSA-m2v9-299j-rv96",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/py-pdf/pypdf/pull/3830",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/py-pdf/pypdf/releases/tag/6.13.0",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "py-pdf",
-          "product": "pypdf",
-          "versions": [
-            {
-              "version": "< 6.13.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-835: Loop with Unreachable Exit Condition ('Infinite Loop')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-54530",
-      "publishedDate": "2026-06-22T20:25:29.305Z",
-      "lastModifiedDate": "2026-06-22T20:25:29.305Z",
-      "description": "pypdf is a free and open-source pure-python PDF library. Prior to 6.13.0, an attacker who uses this vulnerability can craft a PDF which leads to an infinite loop. This requires extracting the text in layout mode. This vulnerability is fixed in 6.13.0.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/py-pdf/pypdf/security/advisories/GHSA-52x6-gq3r-vpf4",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/py-pdf/pypdf/pull/3830",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/py-pdf/pypdf/releases/tag/6.13.0",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "py-pdf",
-          "product": "pypdf",
-          "versions": [
-            {
-              "version": "< 6.13.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-835: Loop with Unreachable Exit Condition ('Infinite Loop')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-47242",
-      "publishedDate": "2026-06-22T20:19:41.222Z",
-      "lastModifiedDate": "2026-06-22T20:19:41.222Z",
-      "description": "Net::IMAP implements Internet Message Access Protocol (IMAP) client functionality in Ruby. Prior to 0.6.5 and 0.5.15, when Net::IMAP#id is called with a hash argument, although the ID field value strings are correctly quoted (escaping quoted specials), they were not validated to prohibit CRLF sequences. While Net::IMAP#enable does process its arguments for aliases, it does not validate them as valid atoms (or as a list of valid atoms). The #to_s value is sent verbatim. Arguments to either command could be used by an attacker to inject arbitrary IMAP commands. This vulnerability is fixed in 0.6.5 and 0.5.15.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/ruby/net-imap/security/advisories/GHSA-46q3-7gv7-qmgg",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "ruby",
-          "product": "net-imap",
-          "versions": [
-            {
-              "version": ">= 0.6.0, < 0.6.4.1",
-              "status": "affected"
-            },
-            {
-              "version": "< 0.5.15",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-77: Improper Neutralization of Special Elements used in a Command ('Command Injection')",
-        "CWE-93: Improper Neutralization of CRLF Sequences ('CRLF Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-47240",
-      "publishedDate": "2026-06-22T20:17:15.376Z",
-      "lastModifiedDate": "2026-06-22T20:17:15.376Z",
-      "description": "Net::IMAP implements Internet Message Access Protocol (IMAP) client functionality in Ruby. Prior to 0.6.5 and 0.5.15, several Net::IMAP commands accept a \"raw data\" argument that is sent verbatim after validation to prevent command injection. However, if a server does not support non-synchronizing literals, it may still be possible to inject arbitrary IMAP commands inside non-synchronizing literals.  A server without support for non-synchronizing literals may interpret the \"+}\\r\\n\" as the end of a malformed command line and respond with a tagged BAD. In that case, the contents of the literal will be interpreted as one or more new pipelined commands, allowing a CRLF command injection attack to succeed. This affects criteria for #search and #uid_search; search_keys for #sort, #thread, #uid_sort, and #uid_thread; and attr for #fetch and #uid_fetch. This vulnerability is fixed in 0.6.5 and 0.5.15.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/ruby/net-imap/security/advisories/GHSA-8p34-64r3-mwg8",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "ruby",
-          "product": "net-imap",
-          "versions": [
-            {
-              "version": ">= 0.6.0, < 0.6.4.1",
-              "status": "affected"
-            },
-            {
-              "version": "< 0.5.15",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-77: Improper Neutralization of Special Elements used in a Command ('Command Injection')",
-        "CWE-93: Improper Neutralization of CRLF Sequences ('CRLF Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-47241",
-      "publishedDate": "2026-06-22T20:11:04.329Z",
-      "lastModifiedDate": "2026-06-22T20:11:04.329Z",
-      "description": "Net::IMAP implements Internet Message Access Protocol (IMAP) client functionality in Ruby. Prior to 0.6.5 and 0.5.15, several Net::IMAP commands accept a raw string argument which is only validated to prevent CRLF injection and then sent verbatim. If this string is derived from user-controlled input, an attacker can force the next command to be absorbed as a continuation of the first command. This will cause the first command to eventually fail, but also prevents it from returning until another command is sent (from another thread). That other command will not return until the connection is closed. This vulnerability is fixed in 0.6.5 and 0.5.15.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/ruby/net-imap/security/advisories/GHSA-c4fp-cxrr-mj66",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "ruby",
-          "product": "net-imap",
-          "versions": [
-            {
-              "version": ">= 0.6.0, < 0.6.4.1",
-              "status": "affected"
-            },
-            {
-              "version": "< 0.5.15",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-162: Improper Neutralization of Trailing Special Elements",
-        "CWE-182: Collapse of Data into Unsafe Value",
-        "CWE-186: Overly Restrictive Regular Expression"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-44727",
-      "publishedDate": "2026-06-22T19:56:56.776Z",
-      "lastModifiedDate": "2026-06-22T19:56:56.776Z",
-      "description": "Jupyter Server is the backend for Jupyter web applications. Prior to 2.20, the nbconvert HTTP handlers in jupyter_server render user-authored notebook HTML under the Jupyter origin without a sandbox directive in their Content-Security-Policy. Combined with nbconvert.HTMLExporter's default non-sanitizing behavior, a notebook carrying an HTML payload in a display_data output triggers stored XSS with cookie access, full /api/* authority, and kernel RCE. This vulnerability is fixed in 2.20.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/jupyter-server/jupyter_server/security/advisories/GHSA-fcw5-x6j4-ccmp",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/jupyter-server/jupyter_server/commit/6cbee8d65e71abac851c4492fea987ad080580bd",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "jupyter-server",
-          "product": "jupyter_server",
-          "versions": [
-            {
-              "version": "< 2.20",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
-        "CWE-1021: Improper Restriction of Rendered UI Layers or Frames"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-11834",
-      "publishedDate": "2026-06-22T17:53:48.436Z",
-      "lastModifiedDate": "2026-06-22T19:54:41.824Z",
-      "description": "A command\ninjection vulnerability has been identified in the DHCP option processing logic\nin multiple TP-Link router models, due to insufficient validation of externally\nsupplied DHCP option data. An adjacent attacker may exploit this\nvulnerability by supplying crafted DHCP responses, potentially resulting in unauthorized\ncommand execution during device initialization or provisioning workflows. This\ntypically occurs when the device is in a factory-default or unconfigured state.\n\n\n\n\n\nSuccessful\nexploitation may allow an adjacent, unauthenticated attacker to execute\narbitrary commands with elevated privileges, potentially leading to full\ncompromise of the affected device and unauthorized administrative control.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://www.tp-link.com/en/support/download/archer-c20/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.tp-link.com/en/support/download/archer-mr402/#Firmware",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.tp-link.com/en/support/download/archer-mr200/#Firmware",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.tp-link.com/en/support/download/tl-mr6400/v7/#Firmware",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.tp-link.com/en/support/download/archer-vr2100/#Firmware",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.tp-link.com/us/support/download/archer-c20/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.tp-link.com/us/support/faq/5141/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "TP-Link Systems Inc.",
-          "product": "Archer MR200 v07",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "1.3.0 Build 250605",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        },
-        {
-          "vendor": "TP-Link Systems Inc.",
-          "product": "Archer MR200 v8",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "1.5.0 Build 260605",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        },
-        {
-          "vendor": "TP Link Systems Inc.",
-          "product": "Archer MR402 v1",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "1.5.0 Build 260605",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        },
-        {
-          "vendor": "TP-Link Systems Inc.",
-          "product": "Archer VR2100 v1",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "EU_V1_260330",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        },
-        {
-          "vendor": "TP-Link Systems Inc.",
-          "product": "Archer C20 v5",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "EU_V5_260317",
-              "versionType": "custom"
-            },
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "US_V5_260419",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        },
-        {
-          "vendor": "TP-Link Systems Inc.",
-          "product": "Archer C20 v6",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "V6_260608",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        },
-        {
-          "vendor": "TP-Link Systems Inc.",
-          "product": "TL-MR6400 v7",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "1.7.0 Build 260413",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-78 Improper neutralization of special elements used in an OS command ('OS command injection')"
+        "CWE-367 Time-of-check Time-of-use (TOCTOU) Race Condition"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
