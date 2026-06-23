@@ -2,348 +2,115 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 9,
-    "last_updated": "2026-06-22T23:12:08.915121",
+    "total_count": 3,
+    "last_updated": "2026-06-23T01:25:04.925613",
     "severity_distribution": {
-      "critical": 1,
+      "critical": 0,
       "high": 2,
-      "medium": 3,
+      "medium": 1,
       "low": 0,
-      "none": 3
+      "none": 0
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-48746",
-      "publishedDate": "2026-06-22T21:57:28.997Z",
-      "lastModifiedDate": "2026-06-22T21:57:28.997Z",
-      "description": "vLLM is an inference and serving engine for large language models (LLMs). From 0.3.0 until 0.22.0, a vulnerability in ASGI web servers and starlette's trust on those web servers enables an authentication bypass of the OpenAI API AuthenticationMiddleware. It allows to use the API without providing the configured VLLM_API_KEY or --api-key. This vulnerability is fixed in 0.22.0.",
-      "severity": 9.1,
+      "id": "CVE-2026-10658",
+      "publishedDate": "2026-06-22T23:58:47.022Z",
+      "lastModifiedDate": "2026-06-22T23:58:47.022Z",
+      "description": "A missing length validation in the Zephyr Bluetooth Host ISO receive path can be triggered by malformed HCI ISO data. In bt_iso_recv() (subsys/bluetooth/host/iso.c), when processing PB=START/SINGLE fragments, the code pulls a TS SDU header (8 bytes, ts=1) or a non-TS SDU header (4 bytes, ts=0) without first verifying that buf->len contains at least that many bytes. The outer HCI ISO length check in hci_iso() validates payload length consistency but not the minimum inner SDU header size, so a packet with payload length 1 passes hci_iso() and then reaches net_buf_pull_mem(), which asserts buf->len >= len. As a result, malformed ISO traffic deterministically triggers a kernel assert (denial of service) in assert-enabled builds, and in non-assert builds the same path may proceed with an undersized buffer, leading to out-of-bounds read behavior. The issue affects products using the Zephyr Host with CONFIG_BT_ISO_RX enabled, particularly where incoming HCI data can be influenced by a malicious or compromised controller or malformed forwarded ISO traffic.",
+      "severity": 7.1,
       "references": [
         {
-          "url": "https://github.com/vllm-project/vllm/security/advisories/GHSA-94f4-hr76-p5j6",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/vllm-project/vllm/pull/43426",
-          "type": "reference"
-        },
-        {
-          "url": "https://x41-dsec.de/lab/advisories/x41-2026-002-starlette",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "vllm-project",
-          "product": "vllm",
-          "versions": [
-            {
-              "version": ">= 0.3.0, < 0.22.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-444: Inconsistent Interpretation of HTTP Requests ('HTTP Request/Response Smuggling')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-54232",
-      "publishedDate": "2026-06-22T22:16:43.101Z",
-      "lastModifiedDate": "2026-06-22T22:16:43.101Z",
-      "description": "vLLM is an inference and serving engine for large language models (LLMs). Prior to 0.22.1, the vLLM Dockerfile is vulnerable to a dependency confusion attack through the flashinfer-jit-cache package. The package is installed from a custom index (flashinfer.ai/whl/) using --extra-index-url, but the package name was not registered on PyPI, and UV_INDEX_STRATEGY=\"unsafe-best-match\" is set globally. An attacker who registers flashinfer-jit-cache on PyPI with version 0.6.11.post2 can execute arbitrary code as root during the Docker build and backdoor every resulting container image, enabling exfiltration of all user prompts, API credentials, and model data from production vLLM deployments This vulnerability is fixed in 0.22.1.",
-      "severity": 8.8,
-      "references": [
-        {
-          "url": "https://github.com/vllm-project/vllm/security/advisories/GHSA-jrf6-vqxq-pjv2",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "vllm-project",
-          "product": "vllm",
-          "versions": [
-            {
-              "version": "< 0.22.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-427: Uncontrolled Search Path Element"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-41523",
-      "publishedDate": "2026-06-22T22:18:14.494Z",
-      "lastModifiedDate": "2026-06-22T22:18:14.494Z",
-      "description": "vLLM is an inference and serving engine for large language models (LLMs). Prior to 0.22.0, an assert-based security check in vLLM's activation function loading allows any unauthenticated attacker to achieve arbitrary code execution on the server by publishing a malicious HuggingFace model, when vLLM runs in Python optimized mode (python -O or PYTHONOPTIMIZE=1). This vulnerability is fixed in 0.22.0.",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://github.com/vllm-project/vllm/security/advisories/GHSA-q8gq-377p-jq3r",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/vllm-project/vllm/commit/b3c7ffcab82c2439726f8cb213800f6f38c023d3",
-          "type": "reference"
-        },
-        {
-          "url": "https://huntr.com/bounties/dcb05b04-e625-41e7-adbc-bbae0cc2d64c",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "vllm-project",
-          "product": "vllm",
-          "versions": [
-            {
-              "version": "< 0.22.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-94: Improper Control of Generation of Code ('Code Injection')",
-        "CWE-617: Reachable Assertion"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-47155",
-      "publishedDate": "2026-06-22T22:20:10.793Z",
-      "lastModifiedDate": "2026-06-22T22:20:10.793Z",
-      "description": "vLLM is an inference and serving engine for large language models (LLMs). Prior to 0.22.0, vLLM's revision pinning controls do not consistently apply to all artifacts loaded for a model. A deployment that supplies --revision or --code-revision can still load dynamic code, GGUF files, image processors, retrieval side weights, or same-repository subfolder weights/config from an unpinned/default revision. This is a supply-chain integrity issue for pinned vLLM deployments. Operators can believe they are serving a reviewed model revision while vLLM resolves behavior-affecting nested or sibling artifacts outside that reviewed revision. This vulnerability is fixed in 0.22.0.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://github.com/vllm-project/vllm/security/advisories/GHSA-3ww4-5jv9-j5gm",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/vllm-project/vllm/pull/42616",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/vllm-project/vllm/commit/d26a28ab033697f55a1414b5b0435de7cd6045b6",
-          "type": "reference"
-        },
-        {
-          "url": "https://huntr.com/bounties/3f1e24c0-87d2-4f6c-a705-820f380879ac",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "vllm-project",
-          "product": "vllm",
-          "versions": [
-            {
-              "version": "< 0.22.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-345: Insufficient Verification of Data Authenticity"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-54233",
-      "publishedDate": "2026-06-22T22:10:45.689Z",
-      "lastModifiedDate": "2026-06-22T22:10:45.689Z",
-      "description": "vLLM is an inference and serving engine for large language models (LLMs). Prior to 0.23.1rc0, vLLM's /v1/audio/transcriptions endpoint limits compressed upload size but not decoded PCM output. A 25MB OPUS file expands to ~14.9GB of float32 PCM at decode time. This vulnerability is fixed in 0.23.1rc0.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://github.com/vllm-project/vllm/security/advisories/GHSA-6pr9-rp53-2pmc",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/vllm-project/vllm/pull/44970",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "vllm-project",
-          "product": "vllm",
-          "versions": [
-            {
-              "version": "< 0.23.1rc0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-409: Improper Handling of Highly Compressed Data (Data Amplification)"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-54236",
-      "publishedDate": "2026-06-22T22:09:15.034Z",
-      "lastModifiedDate": "2026-06-22T22:09:15.034Z",
-      "description": "vLLM is an inference and serving engine for large language models (LLMs). Prior to 0.23.1rc0, the fix for CVE-2026-22778, which introduced a sanitize_message helper that strips object-repr memory addresses from error messages before they reach the client, is incomplete: several response paths echo str(exc) directly to clients without calling sanitize_message. The unsanitized sites include the Anthropic API router in vllm/entrypoints/anthropic/api_router.py (the POST /v1/messages and POST /v1/messages/count_tokens handlers), the Server-Sent Events streaming converter in vllm/entrypoints/anthropic/serving.py, and the realtime speech-to-text WebSocket in vllm/entrypoints/speech_to_text/realtime/connection.py. These paths catch the exception inside the route coroutine and construct the JSONResponse themselves, bypassing the sanitizing global FastAPI exception handler, and WebSocket frames do not traverse that handler chain at all. Using the same primitive as the parent issue, an unauthenticated attacker can send malformed image bytes through the Anthropic Messages API image content parts so that PIL.Image.open raises an UnidentifiedImageError whose message contains the BytesIO object repr, leaking the heap memory address verbatim in the error.message field of the response body. This vulnerability is fixed in 0.23.1rc0.",
-      "severity": 5.3,
-      "references": [
-        {
-          "url": "https://github.com/vllm-project/vllm/security/advisories/GHSA-hgg8-fqqc-vfmw",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/vllm-project/vllm/pull/45119",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/vllm-project/vllm/commit/94923629729381d7f7c9efde72071a2441f7fd82",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "vllm-project",
-          "product": "vllm",
-          "versions": [
-            {
-              "version": "< 0.23.1rc0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-532: Insertion of Sensitive Information into Log File"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-54235",
-      "publishedDate": "2026-06-22T21:59:02.710Z",
-      "lastModifiedDate": "2026-06-22T21:59:02.710Z",
-      "description": "vLLM is an inference and serving engine for large language models (LLMs). Prior to 0.23.1rc0, ll temperature validation gates use comparison operators (<, >), which silently evaluate to False for NaN and for positive Infinity in Python's IEEE 754 float semantics. Both values pass every guard and propagate to GPU sampling kernels, where they produce undefined behavior or CUDA errors that can crash the inference worker. This vulnerability is fixed in 0.23.1rc0.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/vllm-project/vllm/security/advisories/GHSA-7h4p-rffg-7823",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/vllm-project/vllm/pull/45116",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/vllm-project/vllm/commit/d598d239737cfa37bcfcb98886ec3f3557fc7198",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "vllm-project",
-          "product": "vllm",
-          "versions": [
-            {
-              "version": "< 0.23.1rc0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-1287: Improper Validation of Specified Type of Input"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-53923",
-      "publishedDate": "2026-06-22T21:55:42.001Z",
-      "lastModifiedDate": "2026-06-22T21:55:42.001Z",
-      "description": "vLLM is an inference and serving engine for large language models (LLMs). From 0.5.5 until 0.23.1rc0, integer truncation of tensor dimensions in vLLM's GGUF dequantize kernels (csrc/quantization/gguf/gguf_kernel.cu) causes partial tensor processing. The output tensor is allocated at full size via torch::empty (uninitialized memory), but the dequantize CUDA kernel processes only a truncated number of elements. The unfilled portion of the output tensor retains whatever was previously in GPU memory. In multi-tenant inference deployments, this residual GPU memory may contain tensor data from other users' inference requests, constituting information disclosure. This vulnerability is fixed in 0.23.1rc0.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/vllm-project/vllm/security/advisories/GHSA-5jv2-g5wq-cmr4",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/vllm-project/vllm/pull/44971",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/vllm-project/vllm/commit/f219788f91952827132fa4fdf916427cd20d225e",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "vllm-project",
-          "product": "vllm",
-          "versions": [
-            {
-              "version": ">= 0.5.5, < 0.23.1rc0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-681: Incorrect Conversion between Numeric Types",
-        "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-48931",
-      "publishedDate": "2026-06-22T18:59:30.822Z",
-      "lastModifiedDate": "2026-06-22T21:53:26.126Z",
-      "description": "A flaw in Node.js HTTP Agent can cause a client to accept as valid a response that is send before the client has sent the request.\r\n\r\nThis vulnerability affects all supported release lines: **Node.js 22**, **Node.js 24**, and **Node.js 26**.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://nodejs.org/en/blog/vulnerability/june-2026-security-releases",
+          "url": "https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-26g8-rmpf-j6cw",
           "type": "reference"
         }
       ],
       "affected": [
         {
           "defaultStatus": "unaffected",
-          "vendor": "nodejs",
-          "product": "node",
+          "packageName": "Zephyr",
+          "product": "Zephyr",
+          "repo": "https://github.com/zephyrproject-rtos/zephyr",
+          "vendor": "zephyrproject-rtos",
           "versions": [
             {
-              "version": "22.22.3",
+              "lessThanOrEqual": "4.4.0",
               "status": "affected",
-              "lessThanOrEqual": "22.22.3",
-              "versionType": "semver"
-            },
+              "version": "*",
+              "versionType": "git"
+            }
+          ]
+        }
+      ],
+      "problemType": [],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-10651",
+      "publishedDate": "2026-06-22T23:54:36.070Z",
+      "lastModifiedDate": "2026-06-22T23:54:36.070Z",
+      "description": "A malformed Bluetooth Classic SDP attribute can trigger a reachable assertion in Zephyr's SDP parser. In subsys/bluetooth/host/classic/sdp.c, bt_sdp_parse_attribute() accepts an input buffer once it contains the 1-byte attribute type and 2-byte attribute id, but then unconditionally pulls an additional byte for the value type without verifying that the byte is present. A truncated 3-byte attribute (for example 09 00 09) therefore reaches net_buf_simple_pull() with insufficient remaining length, triggering the __ASSERT_NO_MSG(buf->len >= len) check and a kernel panic in assert-enabled builds (denial of service). In builds where assertions are disabled, parsing may continue past the end of the available buffer, leading to an out-of-bounds read and undefined behavior.",
+      "severity": 7.1,
+      "references": [
+        {
+          "url": "https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-p93g-3r68-cj53",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "packageName": "Zephyr",
+          "product": "Zephyr",
+          "repo": "https://github.com/zephyrproject-rtos/zephyr",
+          "vendor": "zephyrproject-rtos",
+          "versions": [
             {
-              "version": "24.16.0",
+              "lessThanOrEqual": "4.4.0",
               "status": "affected",
-              "lessThanOrEqual": "24.16.0",
-              "versionType": "semver"
-            },
-            {
-              "version": "26.3.0",
-              "status": "affected",
-              "lessThanOrEqual": "26.3.0",
-              "versionType": "semver"
+              "version": "*",
+              "versionType": "git"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-367 Time-of-check Time-of-use (TOCTOU) Race Condition"
+        "Improper Input Validation",
+        "Reachable Assertion"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-10645",
+      "publishedDate": "2026-06-22T23:48:11.747Z",
+      "lastModifiedDate": "2026-06-22T23:48:11.747Z",
+      "description": "Zephyr's ext2 directory-entry parser does not fully validate on-disk directory entry structure before copying the entry name and advancing traversal state. In ext2_fetch_direntry() (subsys/fs/ext2/ext2_diskops.c), the code only checks de_name_len <= EXT2_MAX_FILE_NAME and then copies the name with memcpy without validating the structural relationship between de_rec_len, de_name_len, and the directory block boundary (for example that de_rec_len is non-zero, at least the size of the entry header, and that the record fits within the block). Callers such as find_dir_entry() and ext2_get_direntry() (subsys/fs/ext2/ext2_impl.c) then advance traversal using the unvalidated de_rec_len. A crafted ext2 image can therefore cause an out-of-bounds read from the directory block buffer when a malformed entry near the end of a block triggers an oversized name copy, or a zero-progress infinite loop when de_rec_len == 0. The issue is not reached at mount time but later through directory traversal paths such as pathname lookup, stat/open/unlink/rename, and readdir. The primary impact is denial of service and out-of-bounds reads under attacker-controlled ext2 images mounted from untrusted media.",
+      "severity": 4.9,
+      "references": [
+        {
+          "url": "https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-hwrh-9h3x-vccm",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "packageName": "Zephyr",
+          "product": "Zephyr",
+          "repo": "https://github.com/zephyrproject-rtos/zephyr",
+          "vendor": "zephyrproject-rtos",
+          "versions": [
+            {
+              "lessThanOrEqual": "4.4",
+              "status": "affected",
+              "version": "*",
+              "versionType": "git"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Out-of-bounds Read"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
