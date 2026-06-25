@@ -2,227 +2,220 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 20,
-    "last_updated": "2026-06-25T22:08:11.378965",
+    "total_count": 31,
+    "last_updated": "2026-06-25T23:45:42.124830",
     "severity_distribution": {
-      "critical": 4,
-      "high": 8,
-      "medium": 2,
+      "critical": 3,
+      "high": 11,
+      "medium": 11,
       "low": 0,
       "none": 6
     }
   },
   "cves": [
     {
-      "id": "CVE-2025-71338",
-      "publishedDate": "2026-06-25T21:41:07.495Z",
-      "lastModifiedDate": "2026-06-25T21:41:07.495Z",
-      "description": "Flowise contains a path traversal vulnerability in the /api/v1/document-store/loader/process endpoint that allows unauthenticated attackers to write arbitrary files to the filesystem. Attackers can exploit unsanitized fileName parameters with ../ sequences to overwrite critical files like package.json and achieve remote code execution when the application restarts.",
-      "severity": 10,
+      "id": "CVE-2026-54158",
+      "publishedDate": "2026-06-24T21:19:16.988Z",
+      "lastModifiedDate": "2026-06-25T23:12:30.943Z",
+      "description": "SiYuan is an open-source personal knowledge management system. Prior to 3.7.0, the attribute-view (database) cell renderer genAVValueHTML interpolates cell content raw in four of its branches: text, url, phone, and mAsset. A cell value like </textarea><img src=x onerror=\"...\"> or \"><img src=x onerror=\"...\"> breaks out of its surrounding tag and runs arbitrary JavaScript in the renderer when the victim opens the block-attribute panel. On Electron desktop the renderer runs with nodeIntegration:true, so the XSS chains to host RCE via require('child_process'). AV files live under the workspace and ride normal sync, so an attacker with write access to any synced workspace plants the payload once and it fires on every device that opens a panel containing that row.he kernel doesn't escape on the way in either, so the malicious cell persists byte-for-byte. There's no equivalent of the html.EscapeAttrVal call that protects block IAL attributes at kernel/model/blockial.go:261. This vulnerability is fixed in 3.7.0.",
+      "severity": 9.9,
       "references": [
         {
-          "url": "https://github.com/FlowiseAI/Flowise/security/advisories/GHSA-8vvx-qvq9-5948",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/flowise-arbitrary-file-write-to-remote-code-execution-via-document-store-api",
+          "url": "https://github.com/siyuan-note/siyuan/security/advisories/GHSA-5xfx-xj4h-5p7r",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Flowise",
-          "product": "Flowise",
-          "defaultStatus": "affected",
-          "packageURL": "pkg:npm/Flowise",
+          "vendor": "siyuan-note",
+          "product": "siyuan",
           "versions": [
             {
-              "version": "0",
-              "status": "affected",
-              "versionType": "semver"
+              "version": "< 3.7.0",
+              "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "External Control of File Name or Path"
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
+        "CWE-1188: Insecure Default Initialization of Resource"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-71336",
-      "publishedDate": "2026-06-25T21:41:06.841Z",
-      "lastModifiedDate": "2026-06-25T21:41:06.841Z",
-      "description": "Flowise before 3.0.6 (affected versions 2.2.7-patch.1 and earlier) contains an unsandboxed remote code execution vulnerability in the Custom MCP feature, which is designed to execute OS commands such as launching local MCP servers. Because Flowise's authentication and authorization model is minimal and lacks role-based access control, and the default installation runs without authentication unless FLOWISE_USERNAME and FLOWISE_PASSWORD are set, an attacker can send a crafted JSON payload with the header 'x-request-from: internal' to the /api/v1/node-load-method/customMCP endpoint to execute arbitrary OS commands, resulting in complete compromise of the platform container or server.",
-      "severity": 9.8,
+      "id": "CVE-2026-54836",
+      "publishedDate": "2026-06-25T13:17:25.186Z",
+      "lastModifiedDate": "2026-06-25T23:23:53.973Z",
+      "description": "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') vulnerability in YMC Filter allows SQL Injection.\n\nThis issue affects YMC Filter: from n/a through 3.11.5.",
+      "severity": 9.3,
       "references": [
         {
-          "url": "https://github.com/FlowiseAI/Flowise/security/advisories/GHSA-6933-jpx5-q87q",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/flowise-unsandboxed-remote-code-execution-via-custom-mcp",
+          "url": "https://patchstack.com/database/wordpress/plugin/ymc-smart-filter/vulnerability/wordpress-filter-grids-plugin-3-11-5-sql-injection-vulnerability?_s_id=cve",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Flowise",
-          "product": "Flowise",
-          "defaultStatus": "unaffected",
-          "packageURL": "pkg:npm/flowise",
+          "vendor": "YMC",
+          "product": "YMC Filter",
+          "collectionURL": "https://wordpress.org/plugins",
+          "packageName": "ymc-smart-filter",
           "versions": [
             {
-              "version": "0",
               "status": "affected",
-              "versionType": "semver",
-              "lessThan": "3.0.6"
-            },
-            {
-              "version": "3.0.6",
-              "status": "unaffected",
-              "versionType": "semver"
+              "version": "n/a",
+              "lessThanOrEqual": "3.11.5",
+              "changes": [
+                {
+                  "at": "3.11.6",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "custom"
             }
-          ]
+          ],
+          "defaultStatus": "unaffected"
         }
       ],
       "problemType": [
-        "Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-71334",
-      "publishedDate": "2026-06-25T21:41:05.552Z",
-      "lastModifiedDate": "2026-06-25T21:41:05.552Z",
-      "description": "Flowise before 3.0.6 (affected versions 2.2.8 and earlier) contains an arbitrary file access vulnerability due to missing validation that the chatflowId and chatId parameters are UUIDs or numbers in file handling operations. By supplying a path-traversal value (e.g., '../../../../../tmp') as the chatflow id, an unauthenticated attacker can use the /api/v1/chatflows endpoint (via addBase64FilesToStorage) to write arbitrary files, and the /api/v1/get-upload-file and /api/v1/openai-assistants-file/download endpoints (via streamStorageFile) to read arbitrary files. Arbitrary file write may lead to remote code execution.",
-      "severity": 9.8,
-      "references": [
-        {
-          "url": "https://github.com/FlowiseAI/Flowise/security/advisories/GHSA-q67q-549q-p849",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FlowiseAI/Flowise/commit/8bd3de41533de78e4ef6c980e5704a1f9cb7ae6f",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FlowiseAI/Flowise/commit/c2b830f279e454e8b758da441016b2234f220ac7",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/flowise-arbitrary-file-access-via-missing-chat-flow-id-validation",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Flowise",
-          "product": "Flowise",
-          "defaultStatus": "unaffected",
-          "packageURL": "pkg:npm/flowise",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "versionType": "semver",
-              "lessThan": "3.0.6"
-            },
-            {
-              "version": "3.0.6",
-              "status": "unaffected",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "External Control of File Name or Path"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-71327",
-      "publishedDate": "2026-06-25T21:41:03.513Z",
-      "lastModifiedDate": "2026-06-25T21:41:03.513Z",
-      "description": "Flowise contains an authentication bypass vulnerability in the unprotected /api/v1/account/register endpoint that allows unauthenticated attackers to create user accounts. Remote attackers can exploit this endpoint to register arbitrary accounts and authenticate to the system, gaining full API access without credentials.",
+      "id": "CVE-2026-45688",
+      "publishedDate": "2026-06-24T20:56:44.843Z",
+      "lastModifiedDate": "2026-06-25T23:06:57.734Z",
+      "description": "Rocket.Chat is an open-source, secure, fully customizable communications platform. Prior to 8.5.0, 8.4.1, 8.3.3, 8.2.3, 8.1.4, 8.0.5, 7.13.7, and 7.10.11, Rocket.Chat's CAS login handler forwards the client-supplied options.cas.credentialToken value straight into a MongoDB findOne({_id: ...}) query without any runtime type check. TypeScript's string parameter annotation is erased at runtime, so an unauthenticated attacker can substitute a MongoDB query operator ({\"$gt\": \"\"}, {\"$ne\": null}, etc.) for what the server expects to be an opaque ticket string. The injected operator matches the first unexpired document in the credential_tokens collection, bypassing the CAS ticket check entirely. When any legitimate CAS or SAML SSO login is in flight, the attacker's next DDP login call matches the same credential-token row via the NoSQL operator and is issued a full Meteor auth token (userId + token) bound to the victim. The token is immediately usable against the complete REST and DDP surface as that user. If the victim is an administrator, this escalates to full instance compromise via Apps-Engine app install. This vulnerability is fixed in 8.5.0, 8.4.1, 8.3.3, 8.2.3, 8.1.4, 8.0.5, 7.13.7, and 7.10.11.",
       "severity": 9.1,
       "references": [
         {
-          "url": "https://github.com/FlowiseAI/Flowise/security/advisories/GHSA-v5w9-prxf-w882",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/flowise-authentication-bypass-via-unprotected-registration-endpoint",
+          "url": "https://github.com/RocketChat/Rocket.Chat/security/advisories/GHSA-rr54-jf4h-6cj9",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Flowise",
-          "product": "Flowise",
-          "defaultStatus": "unaffected",
-          "packageURL": "pkg:npm/flowise",
+          "vendor": "RocketChat",
+          "product": "Rocket.Chat",
           "versions": [
             {
-              "version": "3.0.1",
-              "status": "affected",
-              "versionType": "semver"
+              "version": ">= 8.5.0-rc.0, < 8.5.0",
+              "status": "affected"
+            },
+            {
+              "version": ">= 8.4.0-rc.0, < 8.4.1",
+              "status": "affected"
+            },
+            {
+              "version": ">= 8.3.0-rc.0, < 8.3.3",
+              "status": "affected"
+            },
+            {
+              "version": ">= 8.2.0-rc.0, < 8.2.3",
+              "status": "affected"
+            },
+            {
+              "version": ">= 8.1.0-rc.0, < 8.1.4",
+              "status": "affected"
+            },
+            {
+              "version": ">= 8.0.0-rc.0, < 8.0.5",
+              "status": "affected"
+            },
+            {
+              "version": ">= 7.11.0-rc.0, < 7.13.7",
+              "status": "affected"
+            },
+            {
+              "version": "< 7.10.11",
+              "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "Missing Authentication for Critical Function"
+        "CWE-943: Improper Neutralization of Special Elements in Data Query Logic"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-71328",
-      "publishedDate": "2026-06-25T21:41:04.185Z",
-      "lastModifiedDate": "2026-06-25T21:41:04.185Z",
-      "description": "Flowise before 3.0.10 contains an unverified password change vulnerability. An authenticated user can change their account password through the account settings (Security) section without supplying the current password or any additional verification, as the application does not enforce a current-password check on the credential change. This can lead to full account takeover, particularly if an attacker can hijack or coerce an authenticated session.",
-      "severity": 8.3,
+      "id": "CVE-2026-56053",
+      "publishedDate": "2026-06-25T13:12:42.844Z",
+      "lastModifiedDate": "2026-06-25T23:23:16.436Z",
+      "description": "Subscriber PHP Object Injection in EventPrime <= 4.3.4.1 versions.",
+      "severity": 8.8,
       "references": [
         {
-          "url": "https://github.com/FlowiseAI/Flowise/security/advisories/GHSA-fjh6-8679-9pch",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/flowise-unverified-password-change-via-account-settings",
+          "url": "https://patchstack.com/database/wordpress/plugin/eventprime-event-calendar-management/vulnerability/wordpress-eventprime-plugin-4-3-4-1-php-object-injection-vulnerability?_s_id=cve",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Flowise",
-          "product": "Flowise",
+          "vendor": "EventPrime",
+          "collectionURL": "https://wordpress.org/plugins",
           "defaultStatus": "unaffected",
-          "packageURL": "pkg:npm/flowise-ui",
+          "packageName": "eventprime-event-calendar-management",
+          "product": "EventPrime",
           "versions": [
             {
-              "version": "0",
+              "lessThanOrEqual": "4.3.4.1",
               "status": "affected",
-              "versionType": "semver",
-              "lessThan": "3.0.10"
-            },
-            {
-              "version": "3.0.10",
-              "status": "unaffected",
-              "versionType": "semver"
+              "version": "n/a",
+              "versionType": "custom",
+              "changes": [
+                {
+                  "at": "4.3.4.2",
+                  "status": "unaffected"
+                }
+              ]
             }
           ]
         }
       ],
       "problemType": [
-        "Unverified Password Change"
+        "CWE-502 Deserialization of Untrusted Data"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9222",
+      "publishedDate": "2026-06-25T23:29:03.046Z",
+      "lastModifiedDate": "2026-06-25T23:29:03.046Z",
+      "description": "Setracker2 Android Companion App com.tgelec.setracker versions 3.1.5 and prior only require the password hash when authenticating with backend services from the client. This could allow an attacker, who knows the hash, to authenticate and gain full access.",
+      "severity": 8.1,
+      "references": [
+        {
+          "url": "https://raw.githubusercontent.com/cisagov/CSAF/refs/heads/develop/csaf_files/VA/white/2026/va-26-176-01.json",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Shenzhen i365-Tech Co. Ltd.",
+          "product": "Setracker2 Parental Control App (Android) package com.tgelec.setracker",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThanOrEqual": "3.1.5",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-836 Use of password hash instead of password for authentication"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
       "id": "CVE-2026-22879",
       "publishedDate": "2026-06-25T21:46:00.057Z",
-      "lastModifiedDate": "2026-06-25T21:46:00.057Z",
+      "lastModifiedDate": "2026-06-25T23:29:39.650Z",
       "description": "vtk vtk-dicom vtkDICOMItem::NewDataElement heap-based buffer overflow vulnerability",
       "severity": 8.1,
       "references": [
@@ -250,228 +243,425 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-71340",
-      "publishedDate": "2026-06-25T21:41:08.180Z",
-      "lastModifiedDate": "2026-06-25T21:41:08.180Z",
-      "description": "picklescan through 0.0.26 fails to detect malicious pickle files that invoke idlelib.pyshell.ModifiedInterpreter.runcode in __reduce__ methods. Attackers can embed undetected code in pickle files that executes arbitrary commands when the file is loaded via pickle.load(), enabling supply chain attacks on PyTorch models and saved Python objects. This is fixed in version 0.0.30.",
+      "id": "CVE-2026-54845",
+      "publishedDate": "2026-06-25T13:12:36.187Z",
+      "lastModifiedDate": "2026-06-25T23:21:07.580Z",
+      "description": "Unauthenticated Local File Inclusion in MDTF <= 1.3.8 versions.",
       "severity": 8.1,
       "references": [
         {
-          "url": "https://github.com/mmaitre314/picklescan/security/advisories/GHSA-3gf5-cxq9-w223",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/picklescan-remote-code-execution-via-idlelib-pyshell-modifiedinterpreter-runcode",
+          "url": "https://patchstack.com/database/wordpress/plugin/wp-meta-data-filter-and-taxonomy-filter/vulnerability/wordpress-mdtf-plugin-1-3-8-local-file-inclusion-vulnerability?_s_id=cve",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "picklescan",
-          "product": "picklescan",
+          "vendor": "PluginUs.Net",
+          "collectionURL": "https://wordpress.org/plugins",
           "defaultStatus": "unaffected",
-          "packageURL": "pkg:pypi/picklescan",
+          "packageName": "wp-meta-data-filter-and-taxonomy-filter",
+          "product": "MDTF",
           "versions": [
             {
-              "version": "0",
+              "lessThanOrEqual": "1.3.8",
               "status": "affected",
-              "versionType": "semver",
-              "lessThanOrEqual": "0.0.26"
-            },
-            {
-              "version": "0.0.30",
-              "status": "unaffected",
-              "versionType": "semver"
+              "version": "n/a",
+              "versionType": "custom",
+              "changes": [
+                {
+                  "at": "1.3.9",
+                  "status": "unaffected"
+                }
+              ]
             }
           ]
         }
       ],
       "problemType": [
-        "Deserialization of Untrusted Data"
+        "CWE-98 Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-71335",
-      "publishedDate": "2026-06-25T21:41:06.213Z",
-      "lastModifiedDate": "2026-06-25T21:41:06.213Z",
-      "description": "Flowise before 3.0.10 (affected versions 3.0.7 and earlier) fails to invalidate existing sessions and session tokens after a user changes their password. An attacker who already holds an active session, for example via a stolen session token or a device left logged in, remains authenticated as the legitimate user even after the user rotates their credentials, undermining the security purpose of the password change.",
-      "severity": 8.1,
+      "id": "CVE-2026-46733",
+      "publishedDate": "2026-06-25T13:17:39.256Z",
+      "lastModifiedDate": "2026-06-25T23:25:26.406Z",
+      "description": "Dell Display and Peripheral Manager (DDPM Windows), versions prior to 2.3, contain an Improper Access Control vulnerability. A low privileged attacker with local access could potentially exploit this vulnerability, leading to Code execution.",
+      "severity": 7.8,
       "references": [
         {
-          "url": "https://github.com/FlowiseAI/Flowise/security/advisories/GHSA-x7rp-qj2h-ghgw",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/flowise-session-invalidation-failure-after-password-change",
+          "url": "https://www.dell.com/support/kbdoc/en-fm/000477679/dsa-2026-277?msockid=3021cac2195069ed3194ddad186a68f9",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Flowise",
-          "product": "Flowise",
-          "defaultStatus": "unaffected",
-          "packageURL": "pkg:npm/flowise",
+          "vendor": "Dell",
+          "product": "Display and Peripheral Manager",
           "versions": [
             {
-              "version": "0",
               "status": "affected",
-              "versionType": "semver",
-              "lessThan": "3.0.10"
-            },
-            {
-              "version": "3.0.10",
-              "status": "unaffected",
-              "versionType": "semver"
+              "version": "0",
+              "lessThan": "Version 2.3 and later",
+              "versionType": "custom"
             }
-          ]
+          ],
+          "defaultStatus": "unaffected"
         }
       ],
       "problemType": [
-        "Insufficient Session Expiration"
+        "CWE-284: Improper Access Control"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-71324",
-      "publishedDate": "2026-06-25T21:41:02.849Z",
-      "lastModifiedDate": "2026-06-25T21:41:02.849Z",
-      "description": "Flowise before 3.0.6 contains an arbitrary file read vulnerability in the chatId parameter of the /api/v1/get-upload-file and /api/v1/openai-assistants-file/download endpoints. The chatId value is not validated and is passed to streamStorageFile(), where a fallback file-lookup path constructed without the orgId is evaluated after the storage-directory containment check, allowing path traversal beyond the intended storage directory. Unauthenticated attackers can read sensitive files such as /root/.flowise/database.sqlite, exposing all database content in the default configuration.",
+      "id": "CVE-2026-9221",
+      "publishedDate": "2026-06-25T23:27:26.905Z",
+      "lastModifiedDate": "2026-06-25T23:27:26.905Z",
+      "description": "The Setracker2 Android Companion App (com.tgelec.setracker) versions 3.1.5 and earlier uses MD5 to generate a request signature for authenticating communications between the mobile client and the backend REST API. Attackers could potentially reverse the signature to recover the session ID. With the session ID exposed, an attacker could impersonate the legitimate user and issue authenticated API requests.",
       "severity": 7.5,
       "references": [
         {
-          "url": "https://github.com/FlowiseAI/Flowise/security/advisories/GHSA-99pg-hqvx-r4gf",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/flowise-arbitrary-file-read-via-chatid-parameter",
+          "url": "https://raw.githubusercontent.com/cisagov/CSAF/refs/heads/develop/csaf_files/VA/white/2026/va-26-176-01.json",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Flowise",
-          "product": "Flowise",
-          "defaultStatus": "unaffected",
-          "packageURL": "pkg:npm/flowise",
+          "vendor": "Shenzhen i365-Tech Co. Ltd.",
+          "product": "Setracker2 Parental Control App (Android) package com.tgelec.setracker",
           "versions": [
             {
-              "version": "0",
               "status": "affected",
-              "versionType": "semver",
-              "lessThan": "3.0.6"
-            },
-            {
-              "version": "3.0.6",
-              "status": "unaffected",
-              "versionType": "semver"
+              "version": "0",
+              "lessThanOrEqual": "3.1.5",
+              "versionType": "custom"
             }
-          ]
+          ],
+          "defaultStatus": "unaffected"
         }
       ],
       "problemType": [
-        "External Control of File Name or Path"
+        "CWE-327 Use of a Broken or Risky Cryptographic Algorithm"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2021-47987",
-      "publishedDate": "2026-06-25T21:41:02.187Z",
-      "lastModifiedDate": "2026-06-25T21:41:02.187Z",
-      "description": "Parse Server before 4.10.0 was affected by a supply chain incident in which incorrect version tags were pushed to the official repository pointing to an unreviewed personal fork of a contributor with write access. No releases were published with these tags; a project was exposed only if it defined a git-based dependency referencing one of the affected tags (for example, parse-server#4.9.3). The code behind the tags was not reviewed or approved, and although no malicious code was identified, the introduction of security vulnerabilities could not be ruled out.",
+      "id": "CVE-2026-9220",
+      "publishedDate": "2026-06-25T23:13:41.275Z",
+      "lastModifiedDate": "2026-06-25T23:13:41.275Z",
+      "description": "Setracker2 Android Companion App com.tgelec.setracker versions 3.1.5 and prior encrypts requests between the watch and its backend with static hardcoded AES keys and initialization vectors. This allows an attacker to decrypt Setracker2 watch traffic.",
       "severity": 7.5,
       "references": [
         {
-          "url": "https://github.com/parse-community/parse-server/security/advisories/GHSA-593v-wcqx-hq2w",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/parse-server-arbitrary-code-execution-via-malicious-version-tags",
+          "url": "https://raw.githubusercontent.com/cisagov/CSAF/refs/heads/develop/csaf_files/VA/white/2026/va-26-176-01.json",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "parse-community",
-          "product": "parse-server",
-          "defaultStatus": "unaffected",
-          "packageURL": "pkg:npm/parse-server",
+          "vendor": "Shenzhen i365-Tech Co. Ltd.",
+          "product": "Setracker2 Parental Control App (Android) package com.tgelec.setracker",
           "versions": [
             {
-              "version": "0",
               "status": "affected",
-              "versionType": "semver",
-              "lessThan": "4.10.0"
-            },
-            {
-              "version": "4.10.0",
-              "status": "unaffected",
-              "versionType": "semver"
+              "version": "0",
+              "lessThanOrEqual": "3.1.5",
+              "versionType": "custom"
             }
-          ]
+          ],
+          "defaultStatus": "unaffected"
         }
       ],
       "problemType": [
-        "Download of Code Without Integrity Check"
+        "CWE-321 Use of hard-coded cryptographic key"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2021-47986",
-      "publishedDate": "2026-06-25T21:41:01.502Z",
-      "lastModifiedDate": "2026-06-25T21:41:01.502Z",
-      "description": "Parse Server before 4.10.0 contains a supply chain vulnerability where incorrect version tags were pushed to the repository linking to unreviewed code in a personal fork. Attackers could exploit this by specifying affected version tags in dependency declarations to execute unreviewed and potentially malicious code.",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://github.com/parse-community/parse-server/security/advisories/GHSA-593v-wcqx-hq2w",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/parse-server-unreviewed-code-execution-via-malicious-version-tags",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "parse-community",
-          "product": "parse-server",
-          "defaultStatus": "unaffected",
-          "packageURL": "pkg:npm/parse-server",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "versionType": "semver",
-              "lessThan": "4.10.0"
-            },
-            {
-              "version": "4.10.0",
-              "status": "unaffected",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Download of Code Without Integrity Check"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-12992",
-      "publishedDate": "2026-06-25T21:16:11.720Z",
-      "lastModifiedDate": "2026-06-25T21:35:50.805Z",
-      "description": "A flaw was found in Apicurio Registry. The WSDLReaderAccessor creates a wsdl4j WSDLReader without disabling the javax.wsdl.importDocuments feature. When the VALIDITY rule is set to FULL, an attacker with Developer-role access can upload a WSDL document containing attacker-controlled import locations, causing the registry to issue HTTP requests to arbitrary internal URLs (server-side request forgery).",
+      "id": "CVE-2026-54821",
+      "publishedDate": "2026-06-25T13:12:30.317Z",
+      "lastModifiedDate": "2026-06-25T23:20:16.128Z",
+      "description": "Subscriber Sensitive Data Exposure in Visual Link Preview <= 2.3.1 versions.",
       "severity": 7.4,
       "references": [
         {
-          "url": "https://access.redhat.com/security/cve/CVE-2026-12992",
+          "url": "https://patchstack.com/database/wordpress/plugin/visual-link-preview/vulnerability/wordpress-visual-link-preview-plugin-2-3-1-sensitive-data-exposure-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Bootstrapped Ventures",
+          "collectionURL": "https://wordpress.org/plugins",
+          "defaultStatus": "unaffected",
+          "packageName": "visual-link-preview",
+          "product": "Visual Link Preview",
+          "versions": [
+            {
+              "lessThanOrEqual": "2.3.1",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom",
+              "changes": [
+                {
+                  "at": "2.4.0",
+                  "status": "unaffected"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-201 Insertion of Sensitive Information Into Sent Data"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-55759",
+      "publishedDate": "2026-06-24T21:07:29.331Z",
+      "lastModifiedDate": "2026-06-25T23:10:28.449Z",
+      "description": "Rocket.Chat is an open-source, secure, fully customizable communications platform. Prior to 8.5.1, 8.4.4, 8.3.6, 8.2.6, 8.1.6, 8.0.7, and 7.10.13, Rocket.Chat's Apple Sign-In handler verifies JWT signatures but skips claims validation. Any Apple-signed JWT with a non-empty iss is accepted regardless of aud, exp, nbf, or nonce. An attacker who obtains a target user's Apple identity token (from server logs, an intercepted sign-in flow, or another application sharing the same Apple developer team) can replay it to authenticate as that user, with no expiration on the replay window. This vulnerability is fixed in 8.5.1, 8.4.4, 8.3.6, 8.2.6, 8.1.6, 8.0.7, and 7.10.13.",
+      "severity": 7.4,
+      "references": [
+        {
+          "url": "https://github.com/RocketChat/Rocket.Chat/security/advisories/GHSA-c75c-5hc7-j4vp",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "RocketChat",
+          "product": "Rocket.Chat",
+          "versions": [
+            {
+              "version": ">= 8.5.0-rc.0, < 8.5.1",
+              "status": "affected"
+            },
+            {
+              "version": ">= 8.4.0-rc.0, < 8.4.4",
+              "status": "affected"
+            },
+            {
+              "version": ">= 8.3.0-rc.0, < 8.3.6",
+              "status": "affected"
+            },
+            {
+              "version": ">= 8.2.0-rc.0, < 8.2.6",
+              "status": "affected"
+            },
+            {
+              "version": ">= 8.1.0-rc.0, < 8.1.6",
+              "status": "affected"
+            },
+            {
+              "version": ">= 7.11.0-rc.0, < 8.0.7",
+              "status": "affected"
+            },
+            {
+              "version": "< 7.10.13",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-287: Improper Authentication",
+        "CWE-294: Authentication Bypass by Capture-replay"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-13201",
+      "publishedDate": "2026-06-24T20:39:00.173Z",
+      "lastModifiedDate": "2026-06-25T23:23:24.879Z",
+      "description": "A flaw was found in KubeVirt's safepath package used by virt-handler. The OpenAtNoFollow function uses O_PATH|O_NOFOLLOW to obtain a file descriptor to a path leaf, but downstream operations resolve the path via /proc/self/fd/N using link-following syscalls. When the leaf is a symlink, the kernel dereferences it, defeating the intended no-follow protection. An attacker with access to a virt-launcher pod can exploit this to redirect virt-handler's IPC socket connections, including the notify socket used for VM domain lifecycle events. By hijacking this socket, the attacker can inject arbitrary domain events into virt-handler, causing it to take incorrect lifecycle actions, corrupt VM state in the Kubernetes API, or crash — resulting in sustained denial of VM management services for all virtual machines on the affected node. Additionally, the same symlink following flaw allows virt-handler to apply file ownership or permission changes to unintended host paths.",
+      "severity": 7.3,
+      "references": [
+        {
+          "url": "https://access.redhat.com/security/cve/CVE-2026-13201",
           "type": "reference"
         },
         {
-          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2491691",
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2492203",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat OpenShift Virtualization 4",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "container-native-virtualization/virt-handler",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:container_native_virtualization:4"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat OpenShift Virtualization 4",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "container-native-virtualization/virt-handler-rhel9",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:container_native_virtualization:4"
+          ]
+        }
+      ],
+      "problemType": [
+        "UNIX Symbolic Link (Symlink) Following"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-56014",
+      "publishedDate": "2026-06-25T13:12:39.551Z",
+      "lastModifiedDate": "2026-06-25T23:21:47.151Z",
+      "description": "Unauthenticated Cross Site Scripting (XSS) in Master Slider <= 3.11.2 versions.",
+      "severity": 7.1,
+      "references": [
+        {
+          "url": "https://patchstack.com/database/wordpress/plugin/master-slider/vulnerability/wordpress-master-slider-plugin-3-11-2-cross-site-scripting-xss-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Averta",
+          "collectionURL": "https://wordpress.org/plugins",
+          "defaultStatus": "unaffected",
+          "packageName": "master-slider",
+          "product": "Master Slider",
+          "versions": [
+            {
+              "lessThanOrEqual": "3.11.2",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-13083",
+      "publishedDate": "2026-06-25T23:23:42.386Z",
+      "lastModifiedDate": "2026-06-25T23:23:42.386Z",
+      "description": "A flaw was found in the Pen Drive report generator. Cluster-sourced data is rendered into HTML reports without proper escaping or sanitization. An attacker with cluster administrator privileges can inject a stored cross-site scripting (XSS) payload into cluster objects (such as ClusterVersion spec.channel) that executes in the browser of any user who opens the generated HTML report.",
+      "severity": 6.9,
+      "references": [
+        {
+          "url": "https://access.redhat.com/security/cve/CVE-2026-13083",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2491886",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Red Hat",
+          "product": "Pen Drive Powered by Red Hat Lightspeed",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "pen-drive/pen-drive-scanner-rhel9",
+          "defaultStatus": "unknown",
+          "cpes": [
+            "cpe:/a:redhat:pdrive_lightspeed:0"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Pen Drive Powered by Red Hat Lightspeed",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "pen-drive/pen-drive-scanner-rhel9",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:pdrive_lightspeed:1"
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-49278",
+      "publishedDate": "2026-06-24T21:05:33.587Z",
+      "lastModifiedDate": "2026-06-25T23:08:45.222Z",
+      "description": "Rocket.Chat is an open-source, secure, fully customizable communications platform. Prior to 8.5.0, 8.4.2, 8.3.4, 8.2.4, 8.1.5, 8.0.6, 7.13.8, and 7.10.12, in the visitors.info endpoint, https://developer.rocket.chat/apidocs/get-visitor-information-by-id-1, token is returned in the response. It looks like there's no use case for the token to be present in the response and it would be a good security practice to remove it altogether. This vulnerability is fixed in 8.5.0, 8.4.2, 8.3.4, 8.2.4, 8.1.5, 8.0.6, 7.13.8, and 7.10.12.",
+      "severity": 6.7,
+      "references": [
+        {
+          "url": "https://github.com/RocketChat/Rocket.Chat/security/advisories/GHSA-cqj7-h8cj-jmf2",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "RocketChat",
+          "product": "Rocket.Chat",
+          "versions": [
+            {
+              "version": ">= 8.5.0-rc.0, < 8.5.0",
+              "status": "affected"
+            },
+            {
+              "version": ">= 8.4.0-rc.0, < 8.4.2",
+              "status": "affected"
+            },
+            {
+              "version": ">= 8.3.0-rc.0, < 8.3.4",
+              "status": "affected"
+            },
+            {
+              "version": ">= 8.2.0-rc.0, < 8.2.4",
+              "status": "affected"
+            },
+            {
+              "version": ">= 8.1.0-rc.0, < 8.1.5",
+              "status": "affected"
+            },
+            {
+              "version": ">= 8.0.0-rc.0, < 8.0.6",
+              "status": "affected"
+            },
+            {
+              "version": ">= 7.11.0-rc.0, < 7.13.8",
+              "status": "affected"
+            },
+            {
+              "version": "< 7.10.12",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-285: Improper Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-12993",
+      "publishedDate": "2026-06-25T23:23:20.902Z",
+      "lastModifiedDate": "2026-06-25T23:23:20.902Z",
+      "description": "A flaw was found in Apicurio Registry. The DocumentBuilderAccessor correctly blocks external DTD and schema access but does not disable DOCTYPE declarations or enable FEATURE_SECURE_PROCESSING. An attacker with artifact-write permission can upload XML documents with internal entity-expansion payloads (billion-laughs variant) that cause CPU and heap exhaustion, partially mitigated by the JAXP default 64,000 entity-expansion limit.",
+      "severity": 6.5,
+      "references": [
+        {
+          "url": "https://access.redhat.com/security/cve/CVE-2026-12993",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2491692",
           "type": "reference"
         }
       ],
@@ -498,94 +688,397 @@
         }
       ],
       "problemType": [
+        "Improper Restriction of Recursive Entity References in DTDs ('XML Entity Expansion')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9219",
+      "publishedDate": "2026-06-25T23:10:19.862Z",
+      "lastModifiedDate": "2026-06-25T23:10:19.862Z",
+      "description": "Setracker2 Android Companion App com.tgelec.setracker versions 3.1.5 and prior have a predictable registration ID derived from IMEI. The enrollment system lacks additional authentication before assignment. If an attacker is able to obtain the registration ID, they would be able to arbitrarily enroll watches belonging to other users.",
+      "severity": 6.5,
+      "references": [
+        {
+          "url": "https://raw.githubusercontent.com/cisagov/CSAF/refs/heads/develop/csaf_files/VA/white/2026/va-26-176-01.json",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Shenzhen i365-Tech Co. Ltd.",
+          "product": "Setracker2 Parental Control App (Android) package com.tgelec.setracker",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThanOrEqual": "3.1.5",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-340 Generation of Predictable Numbers or Identifiers"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9705",
+      "publishedDate": "2026-06-25T16:17:46.330Z",
+      "lastModifiedDate": "2026-06-25T23:02:47.773Z",
+      "description": "A flaw was found in Keycloak's client registration service. A remote attacker, possessing a previously issued Registration Access Token (RAT), could exploit this vulnerability to re-enable a client that an administrator had explicitly disabled. This bypasses security controls, allowing the attacker to reset the client's secret and potentially regain privileged API access. The primary impact includes unauthorized information disclosure and potential integrity compromise.",
+      "severity": 6.5,
+      "references": [
+        {
+          "url": "https://access.redhat.com/errata/RHSA-2026:30083",
+          "type": "reference"
+        },
+        {
+          "url": "https://access.redhat.com/errata/RHSA-2026:30084",
+          "type": "reference"
+        },
+        {
+          "url": "https://access.redhat.com/security/cve/CVE-2026-9705",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2481878",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.6",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-operator-bundle",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.6.4-2",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.6::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.6",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-rhel9",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.6-8",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.6::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.6",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-rhel9-operator",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.6-8",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.6::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.6.4",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "defaultStatus": "unaffected",
+          "packageName": "rhbk/keycloak-rhel9",
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.6::el9"
+          ]
+        }
+      ],
+      "problemType": [
+        "Insufficient Session Expiration"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-12079",
+      "publishedDate": "2026-06-25T03:42:20.989Z",
+      "lastModifiedDate": "2026-06-25T23:18:52.368Z",
+      "description": "The Dokan Pro plugin for WordPress is vulnerable to time-based SQL Injection via the ’orderby’ parameter in all versions up to, and including, 5.0.4 due to insufficient escaping on the user supplied parameter and lack of sufficient preparation on the existing SQL query.  This makes it possible for authenticated attackers, with Subscriber-level access and above, to append additional SQL queries into already existing queries that can be used to extract sensitive information from the database.",
+      "severity": 6.5,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/5bf95020-ac4f-4fb2-8fb4-a9998005991c?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://dokan.co/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "wedevs",
+          "product": "Dokan Pro",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "5.0.4",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-11820",
+      "publishedDate": "2026-06-23T19:53:19.664Z",
+      "lastModifiedDate": "2026-06-25T23:23:47.329Z",
+      "description": "A flaw was found in the community.general Ansible collection's nexmo module.\nThe module constructs HTTP requests to the Vonage/Nexmo SMS API by encoding\nAPI credentials (api_key and api_secret) into URL query parameters and\nsending them via GET requests. This causes credentials to be exposed in web\nserver access logs, proxy logs, HTTP Referer headers, and network monitoring\ntools, despite the Ansible argument specification marking these parameters\nas no_log. An attacker with access to any of these logging or monitoring\npoints can obtain the full API credentials and gain unauthorized access to\nthe victim's Vonage/Nexmo account.",
+      "severity": 6.5,
+      "references": [
+        {
+          "url": "https://access.redhat.com/security/cve/CVE-2026-11820",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2488970",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 10",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhel-system-roles",
+          "defaultStatus": "unknown",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:10"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 8",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhc-worker-playbook",
+          "defaultStatus": "unknown",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:8"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 8",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhel-system-roles",
+          "defaultStatus": "unknown",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:8"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 9",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "rhel-system-roles",
+          "defaultStatus": "unknown",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:9"
+          ]
+        }
+      ],
+      "problemType": [
+        "Insertion of Sensitive Information into Log File"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-13318",
+      "publishedDate": "2026-06-25T23:23:38.121Z",
+      "lastModifiedDate": "2026-06-25T23:23:38.121Z",
+      "description": "A server-side request forgery (SSRF) flaw was found in KubeVirt's virt-api port-forward handler. When processing a port-forward request to a VirtualMachineInstance (VMI), virt-api reads the target IP from vmi.Status.Interfaces[0].IP and passes it directly to net.Dial() without validation. For VMIs using non-masquerade network bindings (bridge or secondary-only), this IP is reported by the QEMU guest agent running inside the VM and is fully controllable by the VM owner. An attacker with kubevirt.io:edit permissions can create a VM with a modified guest agent that reports an arbitrary IP address, then request port-forward to establish a bidirectional TCP tunnel from virt-api's cluster-internal network position to any routable destination, bypassing NetworkPolicy isolation.",
+      "severity": 6.4,
+      "references": [
+        {
+          "url": "https://access.redhat.com/security/cve/CVE-2026-13318",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2492659",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat OpenShift Virtualization 4",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "container-native-virtualization/virt-api",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:container_native_virtualization:4"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat OpenShift Virtualization 4",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "container-native-virtualization/virt-api-rhel9",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:container_native_virtualization:4"
+          ]
+        }
+      ],
+      "problemType": [
         "Server-Side Request Forgery (SSRF)"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2020-37256",
-      "publishedDate": "2026-06-25T21:41:00.831Z",
-      "lastModifiedDate": "2026-06-25T21:41:00.831Z",
-      "description": "Grav before 1.6.30 contains a cross-site scripting vulnerability in the Admin plugin page editor default security configuration. Privileged users with page editing capabilities can inject malicious scripts to execute arbitrary code and install malicious plugins for system access.",
-      "severity": 5.4,
+      "id": "CVE-2026-53766",
+      "publishedDate": "2026-06-24T21:29:29.003Z",
+      "lastModifiedDate": "2026-06-25T23:14:04.013Z",
+      "description": "Chrome DevTools for agents (chrome-devtools-mcp) lets your coding agent control and inspect a live Chrome browser. From 0.24.0 until 1.1.0, McpContext.validatePath() enforces workspace roots by checking whether path.resolve(filePath) textually falls under one of the configured root paths. path.resolve() does not canonicalize symbolic links. As a result, a symlink inside a configured workspace root can point to a file outside that root, pass validation, and then be followed by downstream file read/write operations. This bypass applies even when the MCP client correctly declares the roots capability with a non-empty list. It is separate from the documented legacy behavior where missing roots capability allows all paths. The practical impact is a workspace-boundary bypass. In the write direction, filePath-writing tools can overwrite out-of-root files through an in-root symlink. In the read direction, upload_file can read through the symlink and send the file to the currently selected web page. This vulnerability is fixed in 1.1.0.",
+      "severity": 6.1,
       "references": [
         {
-          "url": "https://github.com/getgrav/grav/security/advisories/GHSA-cvmr-6428-87w9",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/grav-cross-site-scripting-in-admin-plugin-page-editor",
+          "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp/security/advisories/GHSA-8qf9-62x2-82pp",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Grav",
-          "product": "Grav",
-          "defaultStatus": "unaffected",
+          "vendor": "ChromeDevTools",
+          "product": "chrome-devtools-mcp",
           "versions": [
             {
-              "version": "0",
-              "status": "affected",
-              "versionType": "semver",
-              "lessThan": "1.6.30"
-            },
-            {
-              "version": "1.6.30",
-              "status": "unaffected",
-              "versionType": "semver"
+              "version": ">= 0.24.0, < 1.1.0",
+              "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')",
+        "CWE-59: Improper Link Resolution Before File Access ('Link Following')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-56774",
-      "publishedDate": "2026-06-25T18:10:22.017Z",
-      "lastModifiedDate": "2026-06-25T21:33:28.578Z",
-      "description": "Kanboard through 1.2.52, fixed in commit 928c68a, UserViewController::removeSession fails to validate the session id parameter before passing it to RememberMeSessionModel::remove, allowing authenticated users to delete other users' Remember Me sessions. Attackers can enumerate sequential session IDs and mass-invalidate persistent login sessions of any user, including administrators, forcing re-authentication and causing denial of service.",
-      "severity": 5.4,
+      "id": "CVE-2026-9799",
+      "publishedDate": "2026-06-25T16:17:48.486Z",
+      "lastModifiedDate": "2026-06-25T23:02:55.759Z",
+      "description": "A flaw was found in org.keycloak.authorization. An authenticated user with a granted User-Managed Access (UMA) permission ticket for one resource can exploit this by using a specific permission request prefix to bypass per-resource access control. This allows the user to gain unauthorized access to all resources of that type within the same resource server, even if they do not have a ticket for those specific resources. This vulnerability requires the resource server to be configured in PERMISSIVE policy enforcement mode and affects typed resources with ownerManagedAccess enabled, where no explicit policy protects the resource type. The primary consequence is unauthorized information disclosure or modification of resources.",
+      "severity": 4.6,
       "references": [
         {
-          "url": "https://github.com/kanboard/kanboard/issues/5829",
-          "type": "poc"
-        },
-        {
-          "url": "https://github.com/kanboard/kanboard/pull/5831",
+          "url": "https://access.redhat.com/errata/RHSA-2026:30083",
           "type": "reference"
         },
         {
-          "url": "https://github.com/kanboard/kanboard/commit/928c68aa2b7c00092dd71084d329b912e229f3d1",
+          "url": "https://access.redhat.com/errata/RHSA-2026:30084",
           "type": "reference"
         },
         {
-          "url": "https://www.vulncheck.com/advisories/kanboard-cross-user-deletion-of-persistent-login-sessions-via-unvalidated-session-id",
+          "url": "https://access.redhat.com/security/cve/CVE-2026-9799",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2482471",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "kanboard",
-          "product": "kanboard",
-          "defaultStatus": "unaffected",
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.6",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-operator-bundle",
+          "defaultStatus": "affected",
           "versions": [
             {
-              "version": "0",
-              "status": "affected",
-              "versionType": "semver",
-              "lessThanOrEqual": "1.2.52"
-            },
-            {
-              "status": "unaffected",
-              "version": "928c68aa2b7c00092dd71084d329b912e229f3d1",
-              "versionType": "git"
+              "version": "26.6.4-2",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
             }
           ],
-          "repo": "https://github.com/kanboard/kanboard"
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.6::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.6",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-rhel9",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.6-8",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.6::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.6",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "rhbk/keycloak-rhel9-operator",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "26.6-8",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.6::el9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat build of Keycloak 26.6.4",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "defaultStatus": "unaffected",
+          "packageName": "rhbk/keycloak-rhel9",
+          "cpes": [
+            "cpe:/a:redhat:build_keycloak:26.6::el9"
+          ]
         }
       ],
       "problemType": [
@@ -594,218 +1087,254 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-13283",
-      "publishedDate": "2026-06-25T21:51:34.243Z",
-      "lastModifiedDate": "2026-06-25T21:51:34.243Z",
-      "description": "Use after free in AdFilter in Google Chrome on Android prior to 149.0.7827.201 allowed a remote attacker who convinced a user to engage in specific UI gestures to execute arbitrary code via a crafted HTML page. (Chromium security severity: High)",
-      "severity": "N/A",
+      "id": "CVE-2026-13218",
+      "publishedDate": "2026-06-25T23:23:23.228Z",
+      "lastModifiedDate": "2026-06-25T23:23:23.228Z",
+      "description": "A flaw was found in KubeVirt's virt-handler network cache handling. The WriteToCachedFile function writes data to a launcher-rooted path using os.WriteFile and os.Chown without symlink protection. A user with access to the virt-launcher container can plant a symlink at the cache file path, causing virt-handler to follow it and overwrite an arbitrary host file with JSON content and change its ownership.",
+      "severity": 4.2,
       "references": [
         {
-          "url": "https://chromereleases.googleblog.com/2026/06/stable-channel-update-for-desktop_01245939337.html",
+          "url": "https://access.redhat.com/security/cve/CVE-2026-13218",
           "type": "reference"
         },
         {
-          "url": "https://issues.chromium.org/issues/522561151",
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2492654",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Google",
-          "product": "Chrome",
+          "vendor": "Red Hat",
+          "product": "Red Hat OpenShift Virtualization 4",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "container-native-virtualization/virt-handler",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:container_native_virtualization:4"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat OpenShift Virtualization 4",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "container-native-virtualization/virt-handler-rhel9",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/a:redhat:container_native_virtualization:4"
+          ]
+        }
+      ],
+      "problemType": [
+        "UNIX Symbolic Link (Symlink) Following"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-43920",
+      "publishedDate": "2026-06-25T23:06:43.546Z",
+      "lastModifiedDate": "2026-06-25T23:06:43.546Z",
+      "description": "FOSSBilling is a free, open-source billing and client management system. In versions 0.5.4 through 0.7.2, the /run-patcher maintenance endpoint in FOSSBilling was accessible without authentication, which allowed unauthenticated remote users to trigger update patch routines that modify configuration files, execute database schema changes, perform filesystem mutations, and clear caches. The /run-patcher endpoint executes privileged maintenance operations - configuration migrations, database patch execution (including ALTER TABLE, DROP TABLE, UPDATE statements), filesystem deletions and renames, and cache clearing - without requiring administrator authentication, CSRF validation, or CLI context. An unauthenticated remote attacker can trigger these operations by sending a simple HTTP GET request to /run-patcher, which can be abused for denial-of-service attacks. Certain patches (e.g., batch token regeneration for all admin and client accounts in patch 53, and session invalidation) are disruptive even when re-executed against an already-patched instance. Repeated or concurrent requests may also cause inconsistent database state. This issue has been fixed in version 0.8.0.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/FOSSBilling/FOSSBilling/security/advisories/GHSA-prx6-m547-rfmg",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/FOSSBilling/FOSSBilling/releases/tag/0.8.0",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "FOSSBilling",
+          "product": "FOSSBilling",
           "versions": [
             {
-              "version": "149.0.7827.201",
-              "status": "affected",
-              "lessThan": "149.0.7827.201",
-              "versionType": "custom"
+              "version": ">= 0.5.4, < 0.8.0",
+              "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "Use after free"
+        "CWE-306: Missing Authentication for Critical Function"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-13282",
-      "publishedDate": "2026-06-25T21:51:33.645Z",
-      "lastModifiedDate": "2026-06-25T21:51:33.645Z",
-      "description": "Use after free in Payments in Google Chrome on Android prior to 149.0.7827.201 allowed a local attacker to potentially exploit heap corruption via physical access to the device. (Chromium security severity: High)",
+      "id": "CVE-2026-57455",
+      "publishedDate": "2026-06-25T15:22:37.949Z",
+      "lastModifiedDate": "2026-06-25T23:30:00.892Z",
+      "description": "Vim is an open source, command line text editor. Prior to 9.2.0698, the single-byte branch of spell_soundfold_sofo() in src/spell.c translates a word through a spell file's SOFO (sound-folding) byte map into a caller-owned result buffer. Its copy loop advances the output index ri with no upper bound and terminates only on the input NUL, writing one byte per input byte into the MAXWLEN-element stack buffer the caller provides. A word longer than MAXWLEN, passed to soundfold() (or reached via sound-based spell suggestion) while a SOFO-based spell language is active, therefore writes past the end of that buffer. This is a stack out-of-bounds write that corrupts the call frame and crashes the editor. This vulnerability is fixed in 9.2.0698.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://chromereleases.googleblog.com/2026/06/stable-channel-update-for-desktop_01245939337.html",
+          "url": "https://github.com/vim/vim/security/advisories/GHSA-q8mh-6qm3-25g4",
           "type": "reference"
         },
         {
-          "url": "https://issues.chromium.org/issues/517522620",
+          "url": "https://github.com/vim/vim/commit/497f931f85339d175d7f69588dd249e8ccfed41b",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/vim/vim/releases/tag/v9.2.0698",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Google",
-          "product": "Chrome",
+          "vendor": "vim",
+          "product": "vim",
           "versions": [
             {
-              "version": "149.0.7827.201",
-              "status": "affected",
-              "lessThan": "149.0.7827.201",
-              "versionType": "custom"
+              "version": "< 9.2.0698",
+              "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "Use after free"
+        "CWE-787: Out-of-bounds Write"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-13281",
-      "publishedDate": "2026-06-25T21:51:33.035Z",
-      "lastModifiedDate": "2026-06-25T21:51:33.035Z",
-      "description": "Integer overflow in Mojo in Google Chrome prior to 149.0.7827.201 allowed a remote attacker who had compromised the renderer process to potentially perform a sandbox escape via a malicious file. (Chromium security severity: High)",
+      "id": "CVE-2026-57436",
+      "publishedDate": "2026-06-25T14:33:29.496Z",
+      "lastModifiedDate": "2026-06-25T23:27:34.410Z",
+      "description": "Nokogiri is an open source XML and HTML library for the Ruby programming language. Prior to 1.19.4, Nokogiri::XML::Document#root= validated only that the new root was a Nokogiri::XML::Node, allowing a DTD node to be set as the document root. The result is a heap use-after-free during garbage collection or finalization, leading to an invalid memory read or potentially a segfault. This vulnerability is fixed in 1.19.4.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://chromereleases.googleblog.com/2026/06/stable-channel-update-for-desktop_01245939337.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://issues.chromium.org/issues/513138301",
+          "url": "https://github.com/sparklemotion/nokogiri/security/advisories/GHSA-wjv4-x9w8-wm3h",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Google",
-          "product": "Chrome",
+          "vendor": "sparklemotion",
+          "product": "nokogiri",
           "versions": [
             {
-              "version": "149.0.7827.201",
-              "status": "affected",
-              "lessThan": "149.0.7827.201",
-              "versionType": "custom"
+              "version": "< 1.19.4",
+              "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "Integer overflow"
+        "CWE-416: Use After Free"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-71333",
-      "publishedDate": "2026-06-25T21:41:04.896Z",
-      "lastModifiedDate": "2026-06-25T21:41:04.896Z",
-      "description": "Flowise through 2.2.4 contains an unauthenticated arbitrary file upload vulnerability in the /api/v1/attachments endpoint when storageType is set to local. Attackers can exploit path traversal in the chatId and chatflowId parameters to upload malicious files to arbitrary directories, potentially enabling remote code execution and server compromise.",
+      "id": "CVE-2026-40079",
+      "publishedDate": "2026-06-24T23:26:40.623Z",
+      "lastModifiedDate": "2026-06-25T23:17:29.519Z",
+      "description": "Cacti is an open source performance and fault management framework. Versions 1.2.30 and prior are vulnerable to Command Injection due to lack of sanitization in the escape_command() function. The escape_command() function at lib/rrd.php is a no-op: it returns $command unchanged. The command line built by rrdtool_function_graph() is passed through this function and then to shell_exec($full_commandline). The risk is in __rrd_execute() where text_format values from graph templates (which may contain host variable substitutions) reach shell_exec without adequate escaping. This issue has been addressed in version 1.2.31.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/FlowiseAI/Flowise/security/advisories/GHSA-h42x-xx2q-6v6g",
+          "url": "https://github.com/Cacti/cacti/security/advisories/GHSA-xq98-376r-hv9j",
           "type": "reference"
         },
         {
-          "url": "https://www.vulncheck.com/advisories/flowise-arbitrary-file-upload-via-unauthenticated-api-v1-attachments-endpoint",
+          "url": "https://github.com/Cacti/cacti/commit/4c09efaebf3a9faec66969d0b5c4aceaf397f37f",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Flowise",
-          "product": "Flowise",
-          "defaultStatus": "unaffected",
-          "packageURL": "pkg:npm/flowise",
+          "vendor": "Cacti",
+          "product": "cacti",
           "versions": [
             {
-              "version": "0",
-              "status": "affected",
-              "versionType": "semver",
-              "lessThanOrEqual": "2.2.4"
+              "version": "< 1.2.31",
+              "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "External Control of File Name or Path"
+        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')",
+        "CWE-88: Improper Neutralization of Argument Delimiters in a Command ('Argument Injection')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-7511",
-      "publishedDate": "2026-06-25T21:32:29.283Z",
-      "lastModifiedDate": "2026-06-25T21:32:29.283Z",
-      "description": "PKCS7_verify signer confusion allows forged signatures, where the signer associated with a signature is not correctly bound, permitting a forged signature to be accepted.",
+      "id": "CVE-2026-39899",
+      "publishedDate": "2026-06-24T22:33:14.099Z",
+      "lastModifiedDate": "2026-06-25T23:15:40.859Z",
+      "description": "Cacti is an open source performance and fault management framework. Versions 1.2.30 and prior are vulnerable to Path Traversal via filename parameter in package_import.php. This issue has been fixed in version 1.2.31.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/wolfSSL/wolfssl/pull/10203",
+          "url": "https://github.com/Cacti/cacti/security/advisories/GHSA-pr9x-34w8-4mf7",
           "type": "reference"
         },
         {
-          "url": "https://www.wolfssl.com/docs/security-vulnerabilities/",
+          "url": "https://github.com/Cacti/cacti/pull/6899",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "wolfSSL",
-          "product": "wolfSSL",
-          "collectionURL": "https://github.com/wolfSSL/wolfssl",
+          "vendor": "Cacti",
+          "product": "cacti",
           "versions": [
             {
-              "status": "affected",
-              "version": "3.15.5",
-              "lessThanOrEqual": "5.9.1",
-              "versionType": "semver"
+              "version": "< 1.2.31",
+              "status": "affected"
             }
-          ],
-          "defaultStatus": "unaffected"
+          ]
         }
       ],
       "problemType": [
-        "CWE-347 Improper Verification of Cryptographic Signature"
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-7532",
-      "publishedDate": "2026-06-25T21:31:11.577Z",
-      "lastModifiedDate": "2026-06-25T21:31:11.577Z",
-      "description": "iPAddress name constraints bypass when WOLFSSL_IP_ALT_NAME is not defined. IP address name constraints are not enforced in that configuration, allowing a certificate to bypass an issuing CA's IP address constraints.",
+      "id": "CVE-2026-52812",
+      "publishedDate": "2026-06-24T20:32:51.608Z",
+      "lastModifiedDate": "2026-06-25T23:03:37.203Z",
+      "description": "Gogs is an open source self-hosted Git service. Prior to 0.14.3, Git LFS storage is content-addressed by OID alone (<LFS-root>/<oid[0]>/<oid[1]>/<oid>) but per-repo authorization lives in the lfs_object table keyed (repo_id, oid). serveUpload skips re-uploading when the OID file already exists on disk and inserts a new (repo_id, oid) row pointing at it without verifying the request body hashes to the OID being claimed. Any user with write access to one repo can bind their repo to an OID owned by a private repo and download the original bytes via their own download endpoint. This vulnerability is fixed in 0.14.3.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/wolfSSL/wolfssl/pull/10354",
+          "url": "https://github.com/gogs/gogs/security/advisories/GHSA-6p9m-q3jp-47h4",
           "type": "reference"
         },
         {
-          "url": "https://www.wolfssl.com/docs/security-vulnerabilities/",
+          "url": "https://github.com/gogs/gogs/pull/8333",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/gogs/gogs/commit/f35a767af74e05342bafc6fdda02c791816426f8",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/gogs/gogs/releases/tag/v0.14.3",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "wolfSSL",
-          "product": "wolfSSL",
-          "collectionURL": "https://github.com/wolfSSL/wolfssl",
+          "vendor": "gogs",
+          "product": "gogs",
           "versions": [
             {
-              "status": "affected",
-              "version": "0",
-              "lessThanOrEqual": "5.9.1",
-              "versionType": "semver"
+              "version": "< 0.14.3",
+              "status": "affected"
             }
-          ],
-          "defaultStatus": "unaffected"
+          ]
         }
       ],
       "problemType": [
-        "CWE-295 Improper Certificate Validation"
+        "CWE-345: Insufficient Verification of Data Authenticity",
+        "CWE-639: Authorization Bypass Through User-Controlled Key",
+        "CWE-862: Missing Authorization"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
