@@ -2,21 +2,1689 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 6,
-    "last_updated": "2026-06-25T11:09:09.525028",
+    "total_count": 75,
+    "last_updated": "2026-06-25T13:27:05.862949",
     "severity_distribution": {
-      "critical": 0,
-      "high": 0,
-      "medium": 0,
-      "low": 0,
-      "none": 6
+      "critical": 3,
+      "high": 15,
+      "medium": 16,
+      "low": 4,
+      "none": 37
     }
   },
   "cves": [
     {
+      "id": "CVE-2026-52813",
+      "publishedDate": "2026-06-24T20:33:42.162Z",
+      "lastModifiedDate": "2026-06-25T12:38:16.882Z",
+      "description": "Gogs is an open source self-hosted Git service. Prior to 0.14.3, organization names containing path traversal sequences (../) are accepted by Gogs, and repositories under them are written to paths following these path traversals. This allows storing/retrieving data for repositories at arbitrary locations on the filesystem. By creating nested structure of Git repositories, one can overwrite the other's hooks configuration to result in Remote Code Execution (RCE). This vulnerability is fixed in 0.14.3.",
+      "severity": 10,
+      "references": [
+        {
+          "url": "https://github.com/gogs/gogs/security/advisories/GHSA-c39w-43gm-34h5",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/gogs/gogs/pull/8334",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/gogs/gogs/commit/f6acd467305943aae8403cbac81f0118dd1235d7",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/gogs/gogs/releases/tag/v0.14.3",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "gogs",
+          "product": "gogs",
+          "versions": [
+            {
+              "version": "< 0.14.3",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-23: Relative Path Traversal"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-52806",
+      "publishedDate": "2026-06-24T20:21:07.650Z",
+      "lastModifiedDate": "2026-06-25T12:39:31.534Z",
+      "description": "Gogs is an open source self-hosted Git service. Prior to 0.14.3, Gogs allows authenticated users to achieve Remote Code Execution (RCE) on the server by creating a pull request with a specially crafted branch name that injects the --exec flag into the git rebase command during the \"Rebase before merging\" merge operation. This vulnerability is fixed in 0.14.3.",
+      "severity": 9.9,
+      "references": [
+        {
+          "url": "https://github.com/gogs/gogs/security/advisories/GHSA-qf6p-p7ww-cwr9",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/gogs/gogs/pull/8301",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/gogs/gogs/commit/a9dbafbfd8e1020bacc626420238c01d75d03364",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/gogs/gogs/releases/tag/v0.14.3",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "gogs",
+          "product": "gogs",
+          "versions": [
+            {
+              "version": "< 0.14.3",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-77: Improper Neutralization of Special Elements used in a Command ('Command Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-45689",
+      "publishedDate": "2026-06-24T20:57:32.281Z",
+      "lastModifiedDate": "2026-06-25T12:35:25.012Z",
+      "description": "Rocket.Chat is an open-source, secure, fully customizable communications platform. Prior to 8.5.0, 8.4.1, 8.3.3, 8.2.3, 8.1.4, 8.0.5, 7.13.7, and 7.10.11, an unauthenticated network attacker obtains a valid Rocket.Chat OAuth access token for an arbitrary user by sending a single HTTP POST with MongoDB query operators to /oauth/token. The Rocket.Chat OAuth2 server does not validate that grant parameters are strings before forwarding them to findOne({...}) against the oauth_apps and oauth_access_tokens collections, so an attacker substitutes {\"$ne\": null} for client_id, client_secret, and refresh_token and receives a freshly minted {access_token, refresh_token} pair bound to whichever user's refresh token Mongo returned first. The resulting access token is a first-class bearer credential against the full /api/v1/* surface as that user. By iterating with $nin / $regex operators the attacker walks the entire oauth_access_tokens collection, collecting one fresh access token per user per request. If any matched token belongs to an admin, the stolen bearer gives full admin API access (including Apps-Engine app installation, i.e. server-side code execution). No account, credentials, userId, or prior interaction with the instance are required. This vulnerability is fixed in 8.5.0, 8.4.1, 8.3.3, 8.2.3, 8.1.4, 8.0.5, 7.13.7, and 7.10.11.",
+      "severity": 9.1,
+      "references": [
+        {
+          "url": "https://github.com/RocketChat/Rocket.Chat/security/advisories/GHSA-8p25-fm45-pjrw",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "RocketChat",
+          "product": "Rocket.Chat",
+          "versions": [
+            {
+              "version": ">= 8.5.0-rc.0, < 8.5.0",
+              "status": "affected"
+            },
+            {
+              "version": ">= 8.4.0-rc.0, < 8.4.1",
+              "status": "affected"
+            },
+            {
+              "version": ">= 8.3.0-rc.0, < 8.3.3",
+              "status": "affected"
+            },
+            {
+              "version": ">= 8.2.0-rc.0, < 8.2.3",
+              "status": "affected"
+            },
+            {
+              "version": ">= 8.1.0-rc.0, < 8.1.4",
+              "status": "affected"
+            },
+            {
+              "version": ">= 8.0.0-rc.0, < 8.0.5",
+              "status": "affected"
+            },
+            {
+              "version": ">= 7.11.0-rc.0, < 7.13.7",
+              "status": "affected"
+            },
+            {
+              "version": "< 7.10.11",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-943: Improper Neutralization of Special Elements in Data Query Logic"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9155",
+      "publishedDate": "2026-06-25T00:25:22.606Z",
+      "lastModifiedDate": "2026-06-25T12:38:23.764Z",
+      "description": "OS Command Injection vulnerability in Rapid7 InsightConnect Sed Plugin on Linux allows authenticated attackers to execute arbitrary OS commands via the expression parameter due to insufficient input validation.",
+      "severity": 8.8,
+      "references": [
+        {
+          "url": "https://extensions.rapid7.com/extension/sed",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Rapid7",
+          "product": "InsightConnect Sed Plugin",
+          "platforms": [
+            "Linux"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "2.0.5",
+              "versionType": "custom"
+            },
+            {
+              "status": "unaffected",
+              "version": "2.0.5",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-78 Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-10086",
+      "publishedDate": "2026-06-25T05:03:58.451Z",
+      "lastModifiedDate": "2026-06-25T12:47:48.564Z",
+      "description": "GitLab has remediated an issue in GitLab EE affecting all versions from 16.4 before 18.11.6, 19.0 before 19.0.3, and 19.1 before 19.1.1 that under certain conditions could have allowed an authenticated user with developer-role permissions to execute arbitrary client-side code in the context of another user's session, due to improper sanitization of user-supplied input.",
+      "severity": 8.7,
+      "references": [
+        {
+          "url": "https://gitlab.com/gitlab-org/gitlab/-/work_items/601634",
+          "type": "reference"
+        },
+        {
+          "url": "https://hackerone.com/reports/3734800",
+          "type": "poc"
+        },
+        {
+          "url": "https://docs.gitlab.com/releases/patches/patch-release-gitlab-19-1-1-released/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "GitLab",
+          "product": "GitLab",
+          "repo": "git://git@gitlab.com:gitlab-org/gitlab.git",
+          "cpes": [
+            "cpe:2.3:a:gitlab:gitlab:*:*:*:*:*:*:*:*"
+          ],
+          "versions": [
+            {
+              "version": "16.4",
+              "status": "affected",
+              "lessThan": "18.11.6",
+              "versionType": "semver"
+            },
+            {
+              "version": "19.0",
+              "status": "affected",
+              "lessThan": "19.0.3",
+              "versionType": "semver"
+            },
+            {
+              "version": "19.1",
+              "status": "affected",
+              "lessThan": "19.1.1",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-52797",
+      "publishedDate": "2026-06-24T20:35:09.235Z",
+      "lastModifiedDate": "2026-06-25T12:37:15.049Z",
+      "description": "Gogs is an open source self-hosted Git service. Prior to 0.14.0, as an authorized user, an intruder can dictate the value which is passed to the git diff command which, together with bypassing the filtering of the passed value, allows the user to bypass the target directory and write the result of the comparison to any arbitrary path. This vulnerability is fixed in 0.14.0.",
+      "severity": 8.5,
+      "references": [
+        {
+          "url": "https://github.com/gogs/gogs/security/advisories/GHSA-pm6v-2h4w-4rp2",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "gogs",
+          "product": "gogs",
+          "versions": [
+            {
+              "version": "< 0.14.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-47267",
+      "publishedDate": "2026-06-24T20:09:02.854Z",
+      "lastModifiedDate": "2026-06-25T12:40:21.287Z",
+      "description": "Gogs is an open source self-hosted Git service. Prior to 0.14.3, the fix for CVE-2022-1285 prevents adding webooks or running webhooks with URLs with a hostname that resolves in localCIDRs. However, webhooks still follow redirects allowing to access hostname inside localCIDRs. This vulnerability is fixed in 0.14.3.",
+      "severity": 8.3,
+      "references": [
+        {
+          "url": "https://github.com/gogs/gogs/security/advisories/GHSA-c4v7-xg93-qf8g",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/gogs/gogs/pull/8263",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/gogs/gogs/commit/199cf4fd5bbe40b92f6dc8d649e241fd7a8d0018",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "gogs",
+          "product": "gogs",
+          "versions": [
+            {
+              "version": "< 0.14.3",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-918: Server-Side Request Forgery (SSRF)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-55762",
+      "publishedDate": "2026-06-24T21:08:01.271Z",
+      "lastModifiedDate": "2026-06-25T12:34:32.535Z",
+      "description": "Rocket.Chat is an open-source, secure, fully customizable communications platform. Prior to 8.5.1, 8.4.4, 8.3.6, 8.2.6, 8.1.6, 8.0.7, and 7.10.13, the POST /api/v1/fingerprint REST endpoint enforces authentication (authRequired: true) but performs no authorization check. Any authenticated user — including a standard user role account — can call this endpoint with {\"setDeploymentAs\": \"new-workspace\"} to permanently deregister the workspace from Rocket.Chat Cloud. This wipes all cloud credentials, removes the workspace license, breaks push notifications for all users, and requires manual re-registration to recover. This vulnerability is fixed in 8.5.1, 8.4.4, 8.3.6, 8.2.6, 8.1.6, 8.0.7, and 7.10.13.",
+      "severity": 8.1,
+      "references": [
+        {
+          "url": "https://github.com/RocketChat/Rocket.Chat/security/advisories/GHSA-8hhc-j325-rxqp",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "RocketChat",
+          "product": "Rocket.Chat",
+          "versions": [
+            {
+              "version": ">= 8.5.0-rc.0, < 8.5.1",
+              "status": "affected"
+            },
+            {
+              "version": ">= 8.4.0-rc.0, < 8.4.4",
+              "status": "affected"
+            },
+            {
+              "version": ">= 8.3.0-rc.0, < 8.3.6",
+              "status": "affected"
+            },
+            {
+              "version": ">= 8.2.0-rc.0, < 8.2.6",
+              "status": "affected"
+            },
+            {
+              "version": ">= 8.1.0-rc.0, < 8.1.6",
+              "status": "affected"
+            },
+            {
+              "version": ">= 7.11.0-rc.0, < 8.0.7",
+              "status": "affected"
+            },
+            {
+              "version": "< 7.10.13",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-862: Missing Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-10712",
+      "publishedDate": "2026-06-25T04:33:54.043Z",
+      "lastModifiedDate": "2026-06-25T12:21:42.298Z",
+      "description": "GitLab has remediated an issue in GitLab CE/EE affecting all versions from 18.10 before 18.11.6, 19.0 before 19.0.3, and 19.1 before 19.1.1 that under certain conditions could have allowed an unauthenticated user to execute arbitrary JavaScript in a user's browser session due to improper path validation under certain conditions.",
+      "severity": 8,
+      "references": [
+        {
+          "url": "https://gitlab.com/gitlab-org/gitlab/-/work_items/601857",
+          "type": "reference"
+        },
+        {
+          "url": "https://hackerone.com/reports/3688717",
+          "type": "poc"
+        },
+        {
+          "url": "https://docs.gitlab.com/releases/patches/patch-release-gitlab-19-1-1-released/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "GitLab",
+          "product": "GitLab",
+          "repo": "git://git@gitlab.com:gitlab-org/gitlab.git",
+          "cpes": [
+            "cpe:2.3:a:gitlab:gitlab:*:*:*:*:*:*:*:*"
+          ],
+          "versions": [
+            {
+              "version": "18.10",
+              "status": "affected",
+              "lessThan": "18.11.6",
+              "versionType": "semver"
+            },
+            {
+              "version": "19.0",
+              "status": "affected",
+              "lessThan": "19.0.3",
+              "versionType": "semver"
+            },
+            {
+              "version": "19.1",
+              "status": "affected",
+              "lessThan": "19.1.1",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-12112",
+      "publishedDate": "2026-06-23T19:40:51.360Z",
+      "lastModifiedDate": "2026-06-25T12:46:15.753Z",
+      "description": "A flaw was found in the foreman-mcp-server. A session management vulnerability in the MCP Server allows unauthenticated attackers to hijack active administrative sessions due to an improper cache of authenticated client connections, by trusting a non-secret session ID without re-validating authentication tokens and by logging all newly created session IDs to standard logs. This issue can result in privilege escalation and infrastructure-wide code execution.",
+      "severity": 7.8,
+      "references": [
+        {
+          "url": "https://access.redhat.com/errata/RHSA-2026:28438",
+          "type": "reference"
+        },
+        {
+          "url": "https://access.redhat.com/security/cve/CVE-2026-12112",
+          "type": "reference"
+        },
+        {
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2488031",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Satellite 6.19",
+          "collectionURL": "https://catalog.redhat.com/software/containers/",
+          "packageName": "satellite/foreman-mcp-server-rhel9",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "1782228692",
+              "lessThan": "*",
+              "versionType": "rpm",
+              "status": "unaffected"
+            }
+          ],
+          "cpes": [
+            "cpe:/a:redhat:satellite:6.19::el9"
+          ]
+        }
+      ],
+      "problemType": [
+        "Improper Authentication"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-8665",
+      "publishedDate": "2026-06-25T01:12:00.562Z",
+      "lastModifiedDate": "2026-06-25T12:16:41.609Z",
+      "description": "OS Command Injection vulnerability in the TR action of Rapid7 InsightConnect Translate Plugin on Linux allows remote attackers to execute arbitrary OS commands via the text or expression parameters due to insufficient input sanitization in shell command construction.",
+      "severity": 7.7,
+      "references": [
+        {
+          "url": "https://extensions.rapid7.com/extension/tr",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Rapid7",
+          "product": "InsightConnect TR Plugin",
+          "platforms": [
+            "Linux"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "2.0.3",
+              "versionType": "custom"
+            },
+            {
+              "status": "unaffected",
+              "version": "2.0.3",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-78 Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-8660",
+      "publishedDate": "2026-06-25T00:52:34.341Z",
+      "lastModifiedDate": "2026-06-25T12:16:20.003Z",
+      "description": "OS Command Injection vulnerability in the ping action of Rapid7 InsightConnect Ping Plugin on Linux allows remote attackers to execute arbitrary OS commands via the host parameter due to insufficient input validation when constructing shell commands.",
+      "severity": 7.7,
+      "references": [
+        {
+          "url": "https://extensions.rapid7.com/extension/ping",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Rapid7",
+          "product": "InsightConnect Ping Plugin",
+          "platforms": [
+            "Linux"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "1.0.4",
+              "versionType": "custom"
+            },
+            {
+              "status": "unaffected",
+              "version": "1.0.4",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-78 Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-33612",
+      "publishedDate": "2026-06-25T12:58:27.132Z",
+      "lastModifiedDate": "2026-06-25T12:58:27.132Z",
+      "description": "A malicious authoritative server can send a crafted zone via the ZoneToCache function that leads to cache poisoning.",
+      "severity": 7.5,
+      "references": [
+        {
+          "url": "https://docs.powerdns.com/recursor/security-advisories/powerdns-advisory-powerdns-2026-08.html",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "PowerDNS",
+          "product": "Recursor",
+          "collectionURL": "https://repo.powerdns.com/",
+          "packageName": "pdns-recursor",
+          "repo": "https://github.com/PowerDNS/pdns",
+          "modules": [
+            "Zone to cache"
+          ],
+          "programFiles": [
+            "rec-zonetocache.cc"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "5.2.0",
+              "lessThan": "5.2.11",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "5.3.0",
+              "lessThan": "5.3.8",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "5.4.0",
+              "lessThan": "5.4.3",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "Acceptance of Extraneous Untrusted Data With Trusted Data"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-13311",
+      "publishedDate": "2026-06-25T04:48:36.351Z",
+      "lastModifiedDate": "2026-06-25T12:49:41.978Z",
+      "description": "shell-quote prior to 1.8.5 finalizes parsed tokens in parse() using Array.prototype.concat as a reduce accumulator, which reallocates and copies the entire growing array on every iteration. As a result parse() runs in O(n^2) time relative to the number of input tokens. An attacker who can supply an attacker-controlled string to any code path that calls parse() (no shell metacharacters are required; plain space-separated words suffice) can block the single-threaded Node.js event loop for an extended period with a small input, resulting in a denial of service. There is no code execution or data disclosure; impact is to availability only. Fixed in 1.8.5.",
+      "severity": 7.5,
+      "references": [
+        {
+          "url": "https://github.com/ljharb/shell-quote/security/advisories/GHSA-395f-4hp3-45gv",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.npmjs.com/package/shell-quote",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "ljharb",
+          "product": "shell-quote",
+          "collectionURL": "https://www.npmjs.com/package",
+          "packageName": "shell-quote",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThanOrEqual": "1.8.4",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-407 Inefficient Algorithmic Complexity"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-54066",
+      "publishedDate": "2026-06-24T21:13:25.461Z",
+      "lastModifiedDate": "2026-06-25T12:33:20.102Z",
+      "description": "SiYuan is an open-source personal knowledge management system. Prior to 3.7.0, the patch for CVE-2026-41894 (\"Path Traversal via Double URL Encoding\") sanitized the /export/ route but the identical root cause remains in the /assets/*path route. In publish mode (anonymous read-only HTTP endpoint, default port 6808), an unauthenticated remote attacker can read arbitrary files inside WorkspaceDir — including conf/conf.json (which contains the AccessAuthCode SHA256 hash, API token, and sync keys), temp/siyuan.db, temp/blocktree.db, and siyuan.log — by double-URL-encoding .. segments. This vulnerability is fixed in 3.7.0.",
+      "severity": 7.5,
+      "references": [
+        {
+          "url": "https://github.com/siyuan-note/siyuan/security/advisories/GHSA-p4m3-mgmm-c664",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "siyuan-note",
+          "product": "siyuan",
+          "versions": [
+            {
+              "version": "< 3.7.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')",
+        "CWE-23: Relative Path Traversal",
+        "CWE-1188: Insecure Default Initialization of Resource"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-57589",
+      "publishedDate": "2026-06-25T00:33:04.749Z",
+      "lastModifiedDate": "2026-06-25T12:35:13.223Z",
+      "description": "sys/kern/sysv_sem.c in OpenBSD through 7.9 has a use-after-free allowing local privilege escalation to root. This is a context switch use-after-free after tsleep in sys_semget().",
+      "severity": 7.4,
+      "references": [
+        {
+          "url": "https://github.com/openbsd/src/commit/1957873d2063db11dab780eca75b5e629d1e838d",
+          "type": "reference"
+        },
+        {
+          "url": "https://openai.com/index/patch-the-planet/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "OpenBSD",
+          "vendor": "OpenBSD",
+          "versions": [
+            {
+              "lessThanOrEqual": "7.9",
+              "status": "affected",
+              "version": "0",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-416 Use After Free"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9154",
+      "publishedDate": "2026-06-25T00:29:29.916Z",
+      "lastModifiedDate": "2026-06-25T12:36:51.431Z",
+      "description": "Arbitrary File Write vulnerability in Rapid7 InsightConnect Sed Plugin on Linux allows authenticated attackers to write attacker-controlled content to arbitrary file paths via the expression parameter.",
+      "severity": 7.1,
+      "references": [
+        {
+          "url": "https://extensions.rapid7.com/extension/sed",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Rapid7",
+          "product": "InsightConnect Sed Plugin",
+          "platforms": [
+            "Linux"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "2.0.5",
+              "versionType": "custom"
+            },
+            {
+              "status": "unaffected",
+              "version": "2.0.5",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-22 Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-54321",
+      "publishedDate": "2026-06-23T18:10:05.521Z",
+      "lastModifiedDate": "2026-06-25T12:43:20.824Z",
+      "description": "Daytona is a secure and elastic infrastructure runtime for AI-generated code execution and agent workflows. From 0.101.0 until 0.184.0, sandbox previews that were switched from public to private could remain reachable without authentication for a short period after the change, due to a cached visibility state that was not invalidated when the sandbox's visibility changed. This vulnerability is fixed in 0.184.0.",
+      "severity": 7,
+      "references": [
+        {
+          "url": "https://github.com/daytonaio/daytona/security/advisories/GHSA-ww63-pv5x-vfc8",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "daytonaio",
+          "product": "daytona",
+          "versions": [
+            {
+              "version": ">= 0.101.0, < 0.184.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-613: Insufficient Session Expiration",
+        "CWE-863: Incorrect Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-2508",
+      "publishedDate": "2026-06-25T03:42:21.685Z",
+      "lastModifiedDate": "2026-06-25T12:20:24.311Z",
+      "description": "The Gravity Forms Booking plugin for WordPress is vulnerable to time-based SQL Injection via the ‘staff_id’ parameter in all versions up to, and including, 2.7.1 due to insufficient escaping on the user supplied parameter and lack of sufficient preparation on the existing SQL query.  This makes it possible for authenticated attackers, with Subscriber-level access and above, to append additional SQL queries into already existing queries that can be used to extract sensitive information from the database.",
+      "severity": 6.5,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/e7fd090d-255b-4a67-9010-9261dd79816a?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "http://gravitybooking.com/",
+          "type": "reference"
+        },
+        {
+          "url": "https://gravitybooking.com/docs/gravity-forms-booking/changelog/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "GravityMore",
+          "product": "Gravity Bookings",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "2.7.1",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9153",
+      "publishedDate": "2026-06-25T00:33:02.961Z",
+      "lastModifiedDate": "2026-06-25T12:37:21.594Z",
+      "description": "Arbitrary File Read vulnerability in Rapid7 InsightConnect Sed Plugin on Linux allows authenticated attackers to read arbitrary files via the expression parameter due to insufficient input validation.",
+      "severity": 6.5,
+      "references": [
+        {
+          "url": "https://extensions.rapid7.com/extension/sed",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Rapid7",
+          "product": "InsightConnect Sed Plugin",
+          "platforms": [
+            "Linux"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "2.0.5",
+              "versionType": "custom"
+            },
+            {
+              "status": "unaffected",
+              "version": "2.0.5",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-22 Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')",
+        "CWE-200 Exposure of Sensitive Information to an Unauthorized Actor"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-54324",
+      "publishedDate": "2026-06-23T18:07:23.745Z",
+      "lastModifiedDate": "2026-06-25T12:42:48.097Z",
+      "description": "Daytona is a secure and elastic infrastructure runtime for AI-generated code execution and agent workflows. Prior to 0.185.0, a cross-tenant authorization flaw in Daytona's notification WebSocket gateway allowed any authenticated user to subscribe to another organization's realtime notification channel and passively receive that organization's events. This vulnerability is fixed in 0.185.0.",
+      "severity": 6.5,
+      "references": [
+        {
+          "url": "https://github.com/daytonaio/daytona/security/advisories/GHSA-qwxf-2m7m-2m3x",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "daytonaio",
+          "product": "daytona",
+          "versions": [
+            {
+              "version": "< 0.185.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-639: Authorization Bypass Through User-Controlled Key",
+        "CWE-863: Incorrect Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-10833",
+      "publishedDate": "2026-06-25T03:42:20.497Z",
+      "lastModifiedDate": "2026-06-25T12:27:38.276Z",
+      "description": "The Gutenberg Essential Blocks – Page Builder for Gutenberg Blocks & Patterns plugin for WordPress is vulnerable to Stored Cross-Site Scripting via the 'configurablePrefix' Block Attribute in all versions up to, and including, 6.1.4 due to insufficient input sanitization and output escaping. This makes it possible for authenticated attackers, with Contributor-level access and above, to inject arbitrary web scripts in pages that will execute whenever a user accesses an injected page.",
+      "severity": 6.4,
+      "references": [
+        {
+          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/0efe8bbd-c1c9-48ed-adab-34c0ac3da8bf?source=cve",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/essential-blocks/tags/6.1.4/includes/Blocks/TableOfContents.php#L245",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/essential-blocks/tags/6.1.4/includes/Blocks/TableOfContents.php#L425",
+          "type": "reference"
+        },
+        {
+          "url": "https://plugins.trac.wordpress.org/browser/essential-blocks/tags/6.1.4/src/blocks/table-of-contents/src/frontend.js#L448",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "wpdevteam",
+          "product": "Gutenberg Essential Blocks – Page Builder for Gutenberg Blocks & Patterns",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "6.1.4",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-46547",
+      "publishedDate": "2026-06-23T20:42:03.511Z",
+      "lastModifiedDate": "2026-06-25T12:50:35.771Z",
+      "description": "NocoDB is software for building databases as spreadsheets. Prior to 2026.04.1, a reflected XSS vulnerability exists in the Page Leaving Warning page. The ncRedirectUrl and ncBackUrl query parameters are used in window.location.href and <a> tag bindings without validation, allowing javascript: URI injection. This vulnerability is fixed in 2026.04.1.",
+      "severity": 6.1,
+      "references": [
+        {
+          "url": "https://github.com/nocodb/nocodb/security/advisories/GHSA-9qgr-6vpg-9gh9",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "nocodb",
+          "product": "nocodb",
+          "versions": [
+            {
+              "version": "< 2026.04.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-8664",
+      "publishedDate": "2026-06-25T01:28:14.832Z",
+      "lastModifiedDate": "2026-06-25T12:16:59.346Z",
+      "description": "OS Command Injection vulnerability in Rapid7 InsightConnect Finger Plugin on Linux allows authenticated attackers to execute arbitrary OS commands via the user or host parameters due to insufficient input validation in shell command construction.",
+      "severity": 6,
+      "references": [
+        {
+          "url": "https://extensions.rapid7.com/extension/finger",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Rapid7",
+          "product": "InsightConnect Finger Plugin",
+          "platforms": [
+            "Linux"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "1.0.3",
+              "versionType": "custom"
+            },
+            {
+              "status": "unaffected",
+              "version": "1.0.3",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-78 Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-8659",
+      "publishedDate": "2026-06-25T00:07:16.768Z",
+      "lastModifiedDate": "2026-06-25T12:36:30.198Z",
+      "description": "OS Command Injection vulnerability in Rapid7 InsightConnect SQLmap Plugin on Linux allows authenticated attackers to execute arbitrary OS commands via the api_host or api_port parameters during connection configuration due to insufficient input validation.",
+      "severity": 6,
+      "references": [
+        {
+          "url": "https://extensions.rapid7.com/extension/sqlmap",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Rapid7",
+          "product": "InsightConnect SQLmap Plugin",
+          "platforms": [
+            "Linux"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "2.0.1",
+              "versionType": "custom"
+            },
+            {
+              "status": "unaffected",
+              "version": "2.0.1",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-78 Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-8663",
+      "publishedDate": "2026-06-24T23:56:50.706Z",
+      "lastModifiedDate": "2026-06-25T12:36:02.381Z",
+      "description": "OS Command Injection vulnerability in Rapid7 InsightConnect RPM Plugin on Linux allows authenticated attackers to execute arbitrary OS commands via the repo, key, or name parameters due to insufficient input sanitization in shell command construction.",
+      "severity": 6,
+      "references": [
+        {
+          "url": "https://extensions.rapid7.com/extension/rpm",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Rapid7",
+          "product": "InsightConnect RPM Plugin",
+          "platforms": [
+            "Linux"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "0",
+              "lessThan": "1.0.2",
+              "versionType": "custom"
+            },
+            {
+              "status": "unaffected",
+              "version": "1.0.2",
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-78 Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-56129",
+      "publishedDate": "2026-06-25T07:03:51.101Z",
+      "lastModifiedDate": "2026-06-25T12:32:05.914Z",
+      "description": "Generic IO & Memory Access driver for PCs provided by TOSHIBA CORPORATION and Dynabook Inc. exposes its IOCTL with insufficient access control. A logged-in user with no administrative privilege may access physical memory.",
+      "severity": 5.5,
+      "references": [
+        {
+          "url": "https://global.sharp/corporate/info/product-security/advisory-list/2026-003/",
+          "type": "reference"
+        },
+        {
+          "url": "https://corporate.jp.sharp/info/product-security/advisory-list/2026-003/",
+          "type": "reference"
+        },
+        {
+          "url": "https://jvn.jp/en/vu/JVNVU91051826/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Dynabook Inc.",
+          "product": "Generic IO & Memory Access driver",
+          "versions": [
+            {
+              "version": "all versions",
+              "status": "affected"
+            }
+          ]
+        },
+        {
+          "vendor": "TOSHIBA CORPORATION",
+          "product": "Generic IO & Memory Access driver",
+          "versions": [
+            {
+              "version": "all versions",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Exposed IOCTL with insufficient access control"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-32315",
+      "publishedDate": "2026-06-24T20:45:34.326Z",
+      "lastModifiedDate": "2026-06-25T12:36:19.974Z",
+      "description": "motionEye (mEye) is an online interface for motion software, a video surveillance program with motion detection. Versions prior to 0.44.0 create the configuration file /etc/motioneye/motion.conf with 644 permissions (-rw-r--r--), making it readable by any local user on the system. This file contains sensitive data including the admin password hash, which can be leveraged by other vulnerabilities to escalate privileges. Additionally, per-camera configuration files (camera-*.conf) are also created with the same 644 permissions, potentially exposing camera-specific credentials and settings. The exposed SHA1 admin password hash can be cracked offline to recover the plaintext password, used directly to forge authenticated admin API requests via the signature authentication weakness (GHSA-45h7-499j-7ww3), and chained with the OS command injection flaw (CVE-2025-60787) to escalate a local unprivileged user to the Motion daemon user (often root), enabling full system compromise. This issue has been fixed in version 0.44.0.",
+      "severity": 5.5,
+      "references": [
+        {
+          "url": "https://github.com/motioneye-project/motioneye/security/advisories/GHSA-rhgp-6wq6-9j67",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/motioneye-project/motioneye/releases/tag/0.44.0",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "motioneye-project",
+          "product": "motioneye",
+          "versions": [
+            {
+              "version": "< 0.44.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-732: Incorrect Permission Assignment for Critical Resource",
+        "CWE-522: Insufficiently Protected Credentials",
+        "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-40211",
+      "publishedDate": "2026-06-25T12:23:55.585Z",
+      "lastModifiedDate": "2026-06-25T12:23:55.585Z",
+      "description": "An attacker can send crafted DNS over HTTP/3 queries, triggering an exception that prevents some buffer from being freed right away. The buffer will be freed at the end of the QUIC connection, but on some setups it might be possible to open enough concurrent DoH3 streams to trigger an out-of-memory condition, resulting in a denial of service.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://www.dnsdist.org/security-advisories/powerdns-advisory-for-dnsdist-2026-09.html",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "PowerDNS",
+          "product": "DNSdist",
+          "collectionURL": "https://repo.powerdns.com/",
+          "packageName": "dnsdist",
+          "repo": "https://github.com/PowerDNS/pdns",
+          "modules": [
+            "DNS over HTTP3"
+          ],
+          "programFiles": [
+            "dnsdist-crypto.cc"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "1.9.0",
+              "lessThan": "1.9.15",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "2.0.0",
+              "lessThan": "2.0.7",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "Allocation of Resources Without Limits or Throttling"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-40209",
+      "publishedDate": "2026-06-25T12:23:05.694Z",
+      "lastModifiedDate": "2026-06-25T12:23:05.694Z",
+      "description": "An attacker might be able to cause outgoing TCP connections to backend to be stuck until a timeout occurs instead of being released immediately, by sending IXFR queries. This could be used to cause a denial of service if there is a limit to the number of concurrent connections to this backend, or if the process runs out of file descriptors.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://www.dnsdist.org/security-advisories/powerdns-advisory-for-dnsdist-2026-09.html",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "PowerDNS",
+          "product": "DNSdist",
+          "collectionURL": "https://repo.powerdns.com/",
+          "packageName": "dnsdist",
+          "repo": "https://github.com/PowerDNS/pdns",
+          "modules": [
+            "DNS over TCP to the backend"
+          ],
+          "programFiles": [
+            "dnsdist-tcp-downstream.cc"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "1.9.0",
+              "lessThan": "1.9.15",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "2.0.0",
+              "lessThan": "2.0.7",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "Missing Release of Resource after Effective Lifetime"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-2238",
+      "publishedDate": "2026-06-25T04:34:54.041Z",
+      "lastModifiedDate": "2026-06-25T12:56:58.304Z",
+      "description": "GitLab has remediated an issue in GitLab CE/EE affecting all versions from 17.5 before 18.11.6, 19.0 before 19.0.3, and 19.1 before 19.1.1 that under certain conditions could have allowed an unauthenticated user to view confidential issue references on public projects due to improper authorization checks.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://hackerone.com/reports/3543011",
+          "type": "poc"
+        },
+        {
+          "url": "https://gitlab.com/gitlab-org/gitlab/-/work_items/589186",
+          "type": "reference"
+        },
+        {
+          "url": "https://docs.gitlab.com/releases/patches/patch-release-gitlab-19-1-1-released/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "GitLab",
+          "product": "GitLab",
+          "repo": "git://git@gitlab.com:gitlab-org/gitlab.git",
+          "cpes": [
+            "cpe:2.3:a:gitlab:gitlab:*:*:*:*:*:*:*:*"
+          ],
+          "versions": [
+            {
+              "version": "17.5",
+              "status": "affected",
+              "lessThan": "18.11.6",
+              "versionType": "semver"
+            },
+            {
+              "version": "19.0",
+              "status": "affected",
+              "lessThan": "19.0.3",
+              "versionType": "semver"
+            },
+            {
+              "version": "19.1",
+              "status": "affected",
+              "lessThan": "19.1.1",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-862: Missing Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-40210",
+      "publishedDate": "2026-06-25T12:23:31.623Z",
+      "lastModifiedDate": "2026-06-25T12:23:31.623Z",
+      "description": "An out-of-bounds read might happen when SetMacAddrAction is used, potentially resulting in uninitialized memory being sent over the network or a crash.",
+      "severity": 4.8,
+      "references": [
+        {
+          "url": "https://www.dnsdist.org/security-advisories/powerdns-advisory-for-dnsdist-2026-09.html",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "PowerDNS",
+          "product": "DNSdist",
+          "collectionURL": "https://repo.powerdns.com/",
+          "packageName": "dnsdist",
+          "repo": "https://github.com/PowerDNS/pdns",
+          "modules": [
+            "SetMacAddrAction"
+          ],
+          "programFiles": [
+            "dnsdist-actions-factory.cc"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "1.9.0",
+              "lessThan": "1.9.15",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "2.0.0",
+              "lessThan": "2.0.7",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "Buffer Over-read"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-1606",
+      "publishedDate": "2026-06-25T04:34:59.038Z",
+      "lastModifiedDate": "2026-06-25T12:55:06.795Z",
+      "description": "GitLab has remediated an issue in GitLab CE/EE affecting all versions from 14.8 before 18.11.6, 19.0 before 19.0.3, and 19.1 before 19.1.1 that under certain conditions could have allowed an authenticated user to conceal content within a Snippet due to improper input validation.",
+      "severity": 4.3,
+      "references": [
+        {
+          "url": "https://hackerone.com/reports/3527473",
+          "type": "poc"
+        },
+        {
+          "url": "https://gitlab.com/gitlab-org/gitlab/-/work_items/588128",
+          "type": "reference"
+        },
+        {
+          "url": "https://docs.gitlab.com/releases/patches/patch-release-gitlab-19-1-1-released/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "GitLab",
+          "product": "GitLab",
+          "repo": "git://git@gitlab.com:gitlab-org/gitlab.git",
+          "cpes": [
+            "cpe:2.3:a:gitlab:gitlab:*:*:*:*:*:*:*:*"
+          ],
+          "versions": [
+            {
+              "version": "14.8",
+              "status": "affected",
+              "lessThan": "18.11.6",
+              "versionType": "semver"
+            },
+            {
+              "version": "19.0",
+              "status": "affected",
+              "lessThan": "19.0.3",
+              "versionType": "semver"
+            },
+            {
+              "version": "19.1",
+              "status": "affected",
+              "lessThan": "19.1.1",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-94: Improper Control of Generation of Code ('Code Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-52846",
+      "publishedDate": "2026-06-23T17:47:30.387Z",
+      "lastModifiedDate": "2026-06-25T12:42:16.519Z",
+      "description": "Caddy is an extensible server platform that uses TLS by default. Prior to 2.11.4, Caddy’s stripHTML template function cannot reliably remove all HTML tags from input strings. Certain malformed HTML, such as <<>img src=x onerror=alert()>, can bypass the tag-stripping logic, potentially leaving dangerous content in the output if it is later rendered as HTML. This may allow client-side XSS in cases where untrusted strings are rendered unsafely. This vulnerability is fixed in 2.11.4.",
+      "severity": 4.2,
+      "references": [
+        {
+          "url": "https://github.com/caddyserver/caddy/security/advisories/GHSA-vcc4-2c75-vc9v",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "caddyserver",
+          "product": "caddy",
+          "versions": [
+            {
+              "version": "< 2.11.4",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-116: Improper Encoding or Escaping of Output"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-0934",
+      "publishedDate": "2026-06-25T04:35:54.038Z",
+      "lastModifiedDate": "2026-06-25T12:50:22.510Z",
+      "description": "GitLab has remediated an issue in GitLab EE affecting all versions from 17.9 before 18.11.6, 19.0 before 19.0.3, and 19.1 before 19.1.1 that under certain conditions could have allowed an authenticated user with custom role permissions to view, create, or delete protected environment configurations despite CI/CD visibility being disabled for the project.",
+      "severity": 3.8,
+      "references": [
+        {
+          "url": "https://hackerone.com/reports/3508760",
+          "type": "poc"
+        },
+        {
+          "url": "https://gitlab.com/gitlab-org/gitlab/-/work_items/585961",
+          "type": "reference"
+        },
+        {
+          "url": "https://docs.gitlab.com/releases/patches/patch-release-gitlab-19-1-1-released/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "GitLab",
+          "product": "GitLab",
+          "repo": "git://git@gitlab.com:gitlab-org/gitlab.git",
+          "cpes": [
+            "cpe:2.3:a:gitlab:gitlab:*:*:*:*:*:*:*:*"
+          ],
+          "versions": [
+            {
+              "version": "17.9",
+              "status": "affected",
+              "lessThan": "18.11.6",
+              "versionType": "semver"
+            },
+            {
+              "version": "19.0",
+              "status": "affected",
+              "lessThan": "19.0.3",
+              "versionType": "semver"
+            },
+            {
+              "version": "19.1",
+              "status": "affected",
+              "lessThan": "19.1.1",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-863: Incorrect Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-42004",
+      "publishedDate": "2026-06-25T12:24:20.140Z",
+      "lastModifiedDate": "2026-06-25T12:24:20.140Z",
+      "description": "An attacker can send a crafted EDNS OPT record that will be ignored by DNSdist’s filtering rules, but will be rewritten as a valid OPT record when EDNS Client Subnet is inserted, causing the backend to see the EDNS option(s) that DNSdist did not filter.",
+      "severity": 3.7,
+      "references": [
+        {
+          "url": "https://www.dnsdist.org/security-advisories/powerdns-advisory-for-dnsdist-2026-09.html",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "PowerDNS",
+          "product": "DNSdist",
+          "collectionURL": "https://repo.powerdns.com/",
+          "packageName": "dnsdist",
+          "repo": "https://github.com/PowerDNS/pdns",
+          "modules": [
+            "EDNS processing"
+          ],
+          "programFiles": [
+            "dnsdist-ecs.cc"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "1.9.0",
+              "lessThan": "1.9.15",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "2.0.0",
+              "lessThan": "2.0.7",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "Misinterpretation of Input"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-40208",
+      "publishedDate": "2026-06-25T12:22:42.722Z",
+      "lastModifiedDate": "2026-06-25T12:22:42.722Z",
+      "description": "An attacker might be able to delay the processing of DoH3 queries by sending DoH3 GET queries with an invalid DATA frame.",
+      "severity": 3.7,
+      "references": [
+        {
+          "url": "https://www.dnsdist.org/security-advisories/powerdns-advisory-for-dnsdist-2026-09.html",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "PowerDNS",
+          "product": "DNSdist",
+          "collectionURL": "https://repo.powerdns.com/",
+          "packageName": "dnsdist",
+          "repo": "https://github.com/PowerDNS/pdns",
+          "modules": [
+            "DNS over HTTP3"
+          ],
+          "programFiles": [
+            "doh3.cc"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "1.9.0",
+              "lessThan": "1.9.15",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "2.0.0",
+              "lessThan": "2.0.7",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "Incorrect Control Flow Scoping"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-40011",
+      "publishedDate": "2026-06-25T12:22:19.248Z",
+      "lastModifiedDate": "2026-06-25T12:22:19.248Z",
+      "description": "An attacker sending a large number of crafted DNS queries might be able to trigger a dynamic block being inserted with a value causing invalid output to be produced in the prometheus endpoint. The prometheus endpoint will then be rejected by the scraper until the dynamic block expires.",
+      "severity": 3.7,
+      "references": [
+        {
+          "url": "https://www.dnsdist.org/security-advisories/powerdns-advisory-for-dnsdist-2026-09.html",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "PowerDNS",
+          "product": "DNSdist",
+          "collectionURL": "https://repo.powerdns.com/",
+          "packageName": "dnsdist",
+          "repo": "https://github.com/PowerDNS/pdns",
+          "modules": [
+            "Prometheus export"
+          ],
+          "programFiles": [
+            "dnsdist-web.cc"
+          ],
+          "versions": [
+            {
+              "status": "affected",
+              "version": "1.9.0",
+              "lessThan": "1.9.15",
+              "versionType": "semver"
+            },
+            {
+              "status": "affected",
+              "version": "2.0.0",
+              "lessThan": "2.0.7",
+              "versionType": "semver"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "Improper Encoding or Escaping of Output"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-56091",
+      "publishedDate": "2026-06-25T08:45:19.426Z",
+      "lastModifiedDate": "2026-06-25T12:10:34.365Z",
+      "description": "When using Apache Shiro with the shiro-guice module in a web servlet context, a specially crafted HTTP request may cause an authentication bypass.\nThis vulnerability is similar to  https://www.cve.org/CVERecord?id=CVE-2020-1957 https://www.cve.org/CVERecord , except that it affects the `shiro-guice` module instead of the `shiro-spring` module.\n\nThis issue affects all Apache Shiro versions through 2.x, and 3.0.0-alpha-1 only when using `shiro-guice` module in a web servlet context.\n\nUpgrade to version 3.0.0 or later, which fixes the issue.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://lists.apache.org/thread/onmtxmy2qonbpx7xlw3o34x8sctv47r7",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "collectionURL": "https://repo.maven.apache.org/maven2",
+          "defaultStatus": "unaffected",
+          "packageName": "org.apache.shiro:shiro-guice",
+          "product": "Apache Shiro",
+          "vendor": "Apache Software Foundation",
+          "versions": [
+            {
+              "lessThanOrEqual": "2.99.99",
+              "status": "affected",
+              "version": "0",
+              "versionType": "semver"
+            },
+            {
+              "lessThanOrEqual": "3.0.0-alpha-1",
+              "status": "affected",
+              "version": "3.0.0-alpha-0",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-289 Authentication Bypass by Alternate Name"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
       "id": "CVE-2026-56130",
       "publishedDate": "2026-06-25T08:44:30.040Z",
-      "lastModifiedDate": "2026-06-25T09:10:12.244Z",
+      "lastModifiedDate": "2026-06-25T12:12:43.666Z",
       "description": "\"Remember me\" cookie age is not verified on the server. This potentially allows an attacker to intercept a valid cookie and reuse it indefinitely, even after the configured expiration time has passed.\nThis issue affects all Apache Shiro versions from 1.2.4 through 2.x, and 3.0.0-alpha-1, only when RememberMe functionality is enabled.\n\n\nUpgrade to version 3.0.0 or later, which fixes the issue.",
       "severity": "N/A",
       "references": [
@@ -56,7 +1724,7 @@
     {
       "id": "CVE-2026-41566",
       "publishedDate": "2026-06-25T08:04:25.631Z",
-      "lastModifiedDate": "2026-06-25T09:09:32.299Z",
+      "lastModifiedDate": "2026-06-25T12:14:55.712Z",
       "description": "Improper Handling of Insufficient Permissions or Privileges vulnerability in Apache Kvrocks.\n\nThis issue affects Apache Kvrocks: 2.8.0.\n\nUsers are recommended to upgrade to version 2.16.0, which fixes the issue.",
       "severity": "N/A",
       "references": [
@@ -88,7 +1756,7 @@
     {
       "id": "CVE-2026-45188",
       "publishedDate": "2026-06-25T08:01:49.945Z",
-      "lastModifiedDate": "2026-06-25T09:09:36.379Z",
+      "lastModifiedDate": "2026-06-25T12:16:45.965Z",
       "description": "Relative Path Traversal vulnerability in Apache Kvrocks.\n\nThis issue affects Apache Kvrocks: from 1.0.0 through 2.15.0.\n\nUsers are recommended to upgrade to version 2.16.0, which fixes the issue.",
       "severity": "N/A",
       "references": [
@@ -122,7 +1790,7 @@
     {
       "id": "CVE-2026-46751",
       "publishedDate": "2026-06-25T08:01:00.294Z",
-      "lastModifiedDate": "2026-06-25T09:09:44.557Z",
+      "lastModifiedDate": "2026-06-25T12:20:03.821Z",
       "description": "A vulnerability in Apache Kvrocks.\n\nThis issue affects Apache Kvrocks: from 2.2.0 through 2.15.0.\n\nUsers are recommended to upgrade to version 2.16.0, which fixes the issue.",
       "severity": "N/A",
       "references": [
@@ -156,7 +1824,7 @@
     {
       "id": "CVE-2026-46752",
       "publishedDate": "2026-06-25T08:00:18.363Z",
-      "lastModifiedDate": "2026-06-25T09:09:46.608Z",
+      "lastModifiedDate": "2026-06-25T12:21:28.528Z",
       "description": "Redis Lua HEAP overflow in cjson library vulnerability in Apache Kvrocks.\n\nThis issue affects Apache Kvrocks: from 2.0.4 through 2.15.0.\n\nUsers are recommended to upgrade to version 2.16.0, which fixes the issue.",
       "severity": "N/A",
       "references": [
@@ -190,7 +1858,7 @@
     {
       "id": "CVE-2026-54226",
       "publishedDate": "2026-06-25T07:59:24.945Z",
-      "lastModifiedDate": "2026-06-25T09:10:00.856Z",
+      "lastModifiedDate": "2026-06-25T12:22:12.509Z",
       "description": "A vulnerability in Apache Kvrocks.\n\nThis issue affects Apache Kvrocks: from 2.6.0 through 2.15.0.\n\nUsers are recommended to upgrade to version 2.16.0, which fixes the issue.",
       "severity": "N/A",
       "references": [
@@ -218,6 +1886,1007 @@
       ],
       "problemType": [
         "Integer Overflow Leads to Remote DoS"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9702",
+      "publishedDate": "2026-06-25T06:00:02.239Z",
+      "lastModifiedDate": "2026-06-25T12:35:25.054Z",
+      "description": "The InPost PL WordPress plugin before 1.9.1 does not verify that the request originates from the legitimate buyer before allowing the WooCommerce order parcel-locker destination to be updated, allowing unauthenticated attackers to silently redirect the shipping destination of any pending or processing order on the site.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://wpscan.com/vulnerability/79b27813-3d75-46a3-98d3-e6d8eb8ad467/",
+          "type": "poc"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Unknown",
+          "product": "InPost PL",
+          "versions": [
+            {
+              "status": "affected",
+              "versionType": "semver",
+              "version": "0",
+              "lessThan": "1.9.1"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-284 Improper Access Control"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-5305",
+      "publishedDate": "2026-06-25T06:00:02.068Z",
+      "lastModifiedDate": "2026-06-25T12:39:14.030Z",
+      "description": "The Email Address Encoder WordPress plugin before 1.0.25, email-encoder-premium WordPress plugin before 0.3.12 does not properly handle email replacement, which could allow unauthenticated users to perform Stored XSS attacks",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://wpscan.com/vulnerability/bf59610b-98ba-4c05-b2fc-85c163e9a389/",
+          "type": "poc"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Unknown",
+          "product": "Email Address Encoder",
+          "versions": [
+            {
+              "status": "affected",
+              "versionType": "semver",
+              "version": "0",
+              "lessThan": "1.0.25"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        },
+        {
+          "vendor": "Unknown",
+          "product": "email-encoder-premium",
+          "versions": [
+            {
+              "status": "affected",
+              "versionType": "semver",
+              "version": "0",
+              "lessThan": "0.3.12"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-79 Cross-Site Scripting (XSS)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-12490",
+      "publishedDate": "2026-06-25T05:24:41.814Z",
+      "lastModifiedDate": "2026-06-25T12:41:18.144Z",
+      "description": "When a provide-xfr is given with a tls-auth-name, a secondary requesting a transfer should provide a client certificate with that name. However, no client certificate is needed when the request comes in over TLS over the regular tls-port (and not the tls-auth-port) or over over TCP over the regular port, when the other conditions of the provide-xfr rule match.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.nlnetlabs.nl/downloads/nsd/CVE-2026-12490.txt",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "NSD",
+          "vendor": "NLnet Labs",
+          "versions": [
+            {
+              "version": "4.10.1",
+              "lessThan": "4.14.3",
+              "status": "affected",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-306: Missing Authentication for Critical Function",
+        "CWE-284: Improper Access Control"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-12246",
+      "publishedDate": "2026-06-25T05:24:29.512Z",
+      "lastModifiedDate": "2026-06-25T12:42:05.428Z",
+      "description": "NSD version 4.14.0 introduced a bug where a specially crafted APL RR, with an adflength larger than permitted for the address family will overwrite the stack when the zone is written to disk, with a maximum of 111 attacker controlled bytes.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.nlnetlabs.nl/downloads/nsd/CVE-2026-12246.txt",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "NSD",
+          "vendor": "NLnet Labs",
+          "versions": [
+            {
+              "version": "4.14.0",
+              "lessThan": "4.14.3",
+              "status": "affected",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-120: Buffer Copy without Checking Size of Input",
+        "CWE-20: Improper Input Validation"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-12245",
+      "publishedDate": "2026-06-25T05:24:18.620Z",
+      "lastModifiedDate": "2026-06-25T12:42:50.104Z",
+      "description": "NSD from version 4.13.0 has a heap use-after-free bug in logging errors on TLS connections, causing a crash of the server process, which can be triggered trivially by sending a DNS query over a DoT connection, and closing the connection without reading the response.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.nlnetlabs.nl/downloads/nsd/CVE-2026-12245.txt",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "NSD",
+          "vendor": "NLnet Labs",
+          "versions": [
+            {
+              "version": "4.13.0",
+              "lessThan": "4.14.3",
+              "status": "affected",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-416: Use After Free"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-12244",
+      "publishedDate": "2026-06-25T05:24:08.548Z",
+      "lastModifiedDate": "2026-06-25T12:45:34.403Z",
+      "description": "If NSD is configured as secondary for a zone, the primary of that zone can crash NSD with an AXFR containing a DNS message with a special crafted SVCB RR with an rdata size of 65512, that let's an (uint16_t) variable that is used to allocate space needed for the RR wrap (because total size > 65535), causing a heap overflow. The attacker can perform a controlled (RCE class) head write of up to 65509 bytes",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.nlnetlabs.nl/downloads/nsd/CVE-2026-12244.txt",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "product": "NSD",
+          "vendor": "NLnet Labs",
+          "versions": [
+            {
+              "version": "4.14.0",
+              "lessThan": "4.14.3",
+              "status": "affected",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-190: Integer Overflow or Wraparound",
+        "CWE-122: Heap-based Buffer Overflow"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-7569",
+      "publishedDate": "2026-06-24T23:15:40.697Z",
+      "lastModifiedDate": "2026-06-25T12:44:04.356Z",
+      "description": "Quest NetVault Backup viewclient Cross-Site Scripting Authentication Bypass Vulnerability. This vulnerability allows remote attackers to bypass authentication on affected installations of Quest NetVault Backup. User interaction is required to exploit this vulnerability in that the target must visit a malicious page or open a malicious file.\n\nThe specific flaw exists within the viewclient webpage. The issue results from the lack of proper validation of user-supplied data, which can lead to the injection of an arbitrary script. An attacker can leverage this in conjunction with other vulnerabilities to execute arbitrary code in the context of SYSTEM. Was ZDI-CAN-28202.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.zerodayinitiative.com/advisories/ZDI-26-377/",
+          "type": "reference"
+        },
+        {
+          "url": "https://support.quest.com/technical-documents/netvault/14.0.2/release-notes#TOPIC-2338529",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Quest",
+          "product": "NetVault Backup",
+          "versions": [
+            {
+              "version": "14.0.1.7",
+              "status": "affected"
+            }
+          ],
+          "defaultStatus": "unknown"
+        }
+      ],
+      "problemType": [
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9787",
+      "publishedDate": "2026-06-24T23:15:19.166Z",
+      "lastModifiedDate": "2026-06-25T12:45:02.492Z",
+      "description": "Quest NetVault Backup NVBULogDaemon Command Injection Remote Code Execution Vulnerability. This vulnerability allows remote attackers to execute arbitrary code on affected installations of Quest NetVault Backup. Although authentication is required to exploit this vulnerability, the existing authentication mechanism can be bypassed.\n\nThe specific flaw exists within the processing of NVBULogDaemon JSON-RPC messages. The issue results from the lack of proper validation of a user-supplied string before using it to execute a system call. An attacker can leverage this vulnerability to execute code in the context of SYSTEM. Was ZDI-CAN-27625.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.zerodayinitiative.com/advisories/ZDI-26-376/",
+          "type": "reference"
+        },
+        {
+          "url": "https://support.quest.com/technical-documents/netvault/14.0.2/release-notes#TOPIC-2338529",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Quest",
+          "product": "NetVault Backup",
+          "versions": [
+            {
+              "version": "14.0.0.19",
+              "status": "affected"
+            }
+          ],
+          "defaultStatus": "unknown"
+        }
+      ],
+      "problemType": [
+        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9786",
+      "publishedDate": "2026-06-24T23:15:05.276Z",
+      "lastModifiedDate": "2026-06-25T12:45:29.776Z",
+      "description": "Quest NetVault Backup NVBUDashboard SQL Injection Remote Code Execution Vulnerability. This vulnerability allows remote attackers to execute arbitrary code on affected installations of Quest NetVault Backup. Although authentication is required to exploit this vulnerability, the existing authentication mechanism can be bypassed.\n\nThe specific flaw exists within the processing of NVBUDashboard JSON-RPC messages. The issue results from the lack of proper validation of a user-supplied string before using it to construct SQL queries. An attacker can leverage this vulnerability to execute code in the context of NETWORK SERVICE. Was ZDI-CAN-27626.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.zerodayinitiative.com/advisories/ZDI-26-375/",
+          "type": "reference"
+        },
+        {
+          "url": "https://support.quest.com/technical-documents/netvault/14.0.2/release-notes#TOPIC-2338529",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Quest",
+          "product": "NetVault Backup",
+          "versions": [
+            {
+              "version": "14.0.0.19",
+              "status": "affected"
+            }
+          ],
+          "defaultStatus": "unknown"
+        }
+      ],
+      "problemType": [
+        "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9785",
+      "publishedDate": "2026-06-24T23:14:57.747Z",
+      "lastModifiedDate": "2026-06-25T12:46:49.053Z",
+      "description": "Quest NetVault Backup NVBULibrarySlot SQL Injection Remote Code Execution Vulnerability. This vulnerability allows remote attackers to execute arbitrary code on affected installations of Quest NetVault Backup. Although authentication is required to exploit this vulnerability, the existing authentication mechanism can be bypassed.\n\nThe specific flaw exists within the processing of NVBULibrarySlot JSON-RPC messages. The issue results from the lack of proper validation of a user-supplied string before using it to construct SQL queries. An attacker can leverage this vulnerability to execute code in the context of NETWORK SERVICE. Was ZDI-CAN-27630.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.zerodayinitiative.com/advisories/ZDI-26-374/",
+          "type": "reference"
+        },
+        {
+          "url": "https://support.quest.com/technical-documents/netvault/14.0.2/release-notes#TOPIC-2338529",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Quest",
+          "product": "NetVault Backup",
+          "versions": [
+            {
+              "version": "14.0.0.19",
+              "status": "affected"
+            }
+          ],
+          "defaultStatus": "unknown"
+        }
+      ],
+      "problemType": [
+        "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9784",
+      "publishedDate": "2026-06-24T23:14:48.646Z",
+      "lastModifiedDate": "2026-06-25T12:43:05.586Z",
+      "description": "Quest NetVault Backup NVBULibraryPort SQL Injection Remote Code Execution Vulnerability. This vulnerability allows remote attackers to execute arbitrary code on affected installations of Quest NetVault Backup. Although authentication is required to exploit this vulnerability, the existing authentication mechanism can be bypassed.\n\nThe specific flaw exists within the processing of NVBULibraryPort JSON-RPC messages. The issue results from the lack of proper validation of a user-supplied string before using it to construct SQL queries. An attacker can leverage this vulnerability to execute code in the context of NETWORK SERVICE. Was ZDI-CAN-27631.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.zerodayinitiative.com/advisories/ZDI-26-373/",
+          "type": "reference"
+        },
+        {
+          "url": "https://support.quest.com/technical-documents/netvault/14.0.2/release-notes#TOPIC-2338529",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Quest",
+          "product": "NetVault Backup",
+          "versions": [
+            {
+              "version": "14.0.0.19",
+              "status": "affected"
+            }
+          ],
+          "defaultStatus": "unknown"
+        }
+      ],
+      "problemType": [
+        "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9783",
+      "publishedDate": "2026-06-24T23:14:39.270Z",
+      "lastModifiedDate": "2026-06-25T12:48:58.428Z",
+      "description": "Quest NetVault Backup NVBURemovableMedia SQL Injection Remote Code Execution Vulnerability. This vulnerability allows remote attackers to execute arbitrary code on affected installations of Quest NetVault Backup. Although authentication is required to exploit this vulnerability, the existing authentication mechanism can be bypassed.\n\nThe specific flaw exists within the processing of NVBURemovableMedia JSON-RPC messages. The issue results from the lack of proper validation of a user-supplied string before using it to construct SQL queries. An attacker can leverage this vulnerability to execute code in the context of NETWORK SERVICE. Was ZDI-CAN-27632.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.zerodayinitiative.com/advisories/ZDI-26-372/",
+          "type": "reference"
+        },
+        {
+          "url": "https://support.quest.com/technical-documents/netvault/14.0.2/release-notes#TOPIC-2338529",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Quest",
+          "product": "NetVault Backup",
+          "versions": [
+            {
+              "version": "14.0.0.19",
+              "status": "affected"
+            }
+          ],
+          "defaultStatus": "unknown"
+        }
+      ],
+      "problemType": [
+        "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9782",
+      "publishedDate": "2026-06-24T23:14:30.557Z",
+      "lastModifiedDate": "2026-06-25T12:49:29.709Z",
+      "description": "Quest NetVault Backup NVBUDeviceDrive SQL Injection Remote Code Execution Vulnerability. This vulnerability allows remote attackers to execute arbitrary code on affected installations of Quest NetVault Backup. Although authentication is required to exploit this vulnerability, the existing authentication mechanism can be bypassed.\n\nThe specific flaw exists within the processing of NVBUDeviceDrive JSON-RPC messages. The issue results from the lack of proper validation of a user-supplied string before using it to construct SQL queries. An attacker can leverage this vulnerability to execute code in the context of NETWORK SERVICE. Was ZDI-CAN-27633.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.zerodayinitiative.com/advisories/ZDI-26-371/",
+          "type": "reference"
+        },
+        {
+          "url": "https://support.quest.com/technical-documents/netvault/14.0.2/release-notes#TOPIC-2338529",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Quest",
+          "product": "NetVault Backup",
+          "versions": [
+            {
+              "version": "14.0.0.19",
+              "status": "affected"
+            }
+          ],
+          "defaultStatus": "unknown"
+        }
+      ],
+      "problemType": [
+        "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9781",
+      "publishedDate": "2026-06-24T23:14:05.456Z",
+      "lastModifiedDate": "2026-06-25T12:49:58.373Z",
+      "description": "Quest NetVault Backup NVBURASDevice SQL Injection Remote Code Execution Vulnerability. This vulnerability allows remote attackers to execute arbitrary code on affected installations of Quest NetVault Backup. Although authentication is required to exploit this vulnerability, the existing authentication mechanism can be bypassed.\n\nThe specific flaw exists within the processing of NVBURASDevice JSON-RPC messages. The issue results from the lack of proper validation of a user-supplied string before using it to construct SQL queries. An attacker can leverage this vulnerability to execute code in the context of NETWORK SERVICE. Was ZDI-CAN-27648.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.zerodayinitiative.com/advisories/ZDI-26-370/",
+          "type": "reference"
+        },
+        {
+          "url": "https://support.quest.com/technical-documents/netvault/14.0.2/release-notes#TOPIC-2338529",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Quest",
+          "product": "NetVault Backup",
+          "versions": [
+            {
+              "version": "14.0.0.19",
+              "status": "affected"
+            }
+          ],
+          "defaultStatus": "unknown"
+        }
+      ],
+      "problemType": [
+        "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9780",
+      "publishedDate": "2026-06-24T23:13:55.522Z",
+      "lastModifiedDate": "2026-06-25T12:48:17.796Z",
+      "description": "Quest NetVault Backup addclient3 Cross-Site Scripting Authentication Bypass Vulnerability. This vulnerability allows remote attackers to bypass authentication on affected installations of Quest NetVault Backup. User interaction is required to exploit this vulnerability in that the target must visit a malicious page or open a malicious file.\n\nThe specific flaw exists within the addclient3 webpage. The issue results from the lack of proper validation of user-supplied data, which can lead to the injection of an arbitrary script. An attacker can leverage this in conjunction with other vulnerabilities to execute arbitrary code in the context of SYSTEM. Was ZDI-CAN-27666.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.zerodayinitiative.com/advisories/ZDI-26-369/",
+          "type": "reference"
+        },
+        {
+          "url": "https://support.quest.com/technical-documents/netvault/14.0.2/release-notes#TOPIC-2338529",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Quest",
+          "product": "NetVault Backup",
+          "versions": [
+            {
+              "version": "14.0.1.7",
+              "status": "affected"
+            }
+          ],
+          "defaultStatus": "unknown"
+        }
+      ],
+      "problemType": [
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-39900",
+      "publishedDate": "2026-06-24T22:37:17.768Z",
+      "lastModifiedDate": "2026-06-25T12:28:13.758Z",
+      "description": "Cacti is an open source performance and fault management framework. Versions 1.2.30 and prior are vulnerable to Reflected XSS via tab parameter in the auth_profile.php JavaScript context. This issue has been fixed in version 1.2.31.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/Cacti/cacti/security/advisories/GHSA-34rf-frc3-v48r",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/Cacti/cacti/commit/891344a5c10b8687a3d2a5d26e6de20f13069e2a",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Cacti",
+          "product": "cacti",
+          "versions": [
+            {
+              "version": "< 1.2.31",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9778",
+      "publishedDate": "2026-06-24T21:37:09.008Z",
+      "lastModifiedDate": "2026-06-25T12:50:45.882Z",
+      "description": "ATEN Unizon ImportDeviceList Directory Traversal Remote Code Execution Vulnerability. This vulnerability allows remote attackers to execute arbitrary code on affected installations of ATEN Unizon. Authentication is required to exploit this vulnerability.\n\nThe specific flaw exists within the ImportDeviceList method. The issue results from the lack of proper validation of a user-supplied path prior to using it in file operations. An attacker can leverage this vulnerability to execute code in the context of SYSTEM. Was ZDI-CAN-28579.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.zerodayinitiative.com/advisories/ZDI-26-382/",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.aten.com/global/en/supportcenter/info/security-advisory/31/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "ATEN",
+          "product": "Unizon",
+          "versions": [
+            {
+              "version": "2.7.262.002",
+              "status": "affected"
+            }
+          ],
+          "defaultStatus": "unknown"
+        }
+      ],
+      "problemType": [
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9777",
+      "publishedDate": "2026-06-24T21:36:58.559Z",
+      "lastModifiedDate": "2026-06-25T12:51:23.536Z",
+      "description": "ATEN Unizon restoreDB Directory Traversal Remote Code Execution Vulnerability. This vulnerability allows remote attackers to execute arbitrary code on affected installations of ATEN Unizon. Authentication is required to exploit this vulnerability.\n\nThe specific flaw exists within the restoreDB method. The issue results from the lack of proper validation of a user-supplied path prior to using it in file operations. An attacker can leverage this vulnerability to execute code in the context of SYSTEM. Was ZDI-CAN-28578.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.zerodayinitiative.com/advisories/ZDI-26-381/",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.aten.com/global/en/supportcenter/info/security-advisory/30/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "ATEN",
+          "product": "Unizon",
+          "versions": [
+            {
+              "version": "2.7.262.002",
+              "status": "affected"
+            }
+          ],
+          "defaultStatus": "unknown"
+        }
+      ],
+      "problemType": [
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9776",
+      "publishedDate": "2026-06-24T21:36:49.727Z",
+      "lastModifiedDate": "2026-06-25T12:52:29.205Z",
+      "description": "ATEN Unizon writeFileToHttpServletResponse Directory Traversal Information Disclosure Vulnerability. This vulnerability allows remote attackers to disclose sensitive information on affected installations of ATEN Unizon. Authentication is not required to exploit this vulnerability.\n\nThe specific flaw exists within the writeFileToHttpServletResponse method. The issue results from the lack of proper validation of a user-supplied path prior to using it in file operations. An attacker can leverage this vulnerability to disclose information in the context of SYSTEM. Was ZDI-CAN-28505.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.zerodayinitiative.com/advisories/ZDI-26-380/",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.aten.com/global/en/supportcenter/info/security-advisory/29/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "ATEN",
+          "product": "Unizon",
+          "versions": [
+            {
+              "version": "2.7.262.002",
+              "status": "affected"
+            }
+          ],
+          "defaultStatus": "unknown"
+        }
+      ],
+      "problemType": [
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9775",
+      "publishedDate": "2026-06-24T21:36:42.866Z",
+      "lastModifiedDate": "2026-06-25T12:54:05.906Z",
+      "description": "ATEN Unizon uploadSSL Directory Traversal Arbitrary File Deletion Vulnerability. This vulnerability allows remote attackers to delete arbitrary files on affected installations of ATEN Unizon. Authentication is required to exploit this vulnerability.\n\nThe specific flaw exists within the uploadSSL method. The issue results from the lack of proper validation of a user-supplied path prior to using it in file operations. An attacker can leverage this vulnerability to delete files or create a denial-of-service condition on the system. Was ZDI-CAN-28503.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.zerodayinitiative.com/advisories/ZDI-26-379/",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.aten.com/global/en/supportcenter/info/security-advisory/28/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "ATEN",
+          "product": "Unizon",
+          "versions": [
+            {
+              "version": "2.7.262.002",
+              "status": "affected"
+            }
+          ],
+          "defaultStatus": "unknown"
+        }
+      ],
+      "problemType": [
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9774",
+      "publishedDate": "2026-06-24T21:36:35.595Z",
+      "lastModifiedDate": "2026-06-25T12:54:42.836Z",
+      "description": "ATEN Unizon updateLicense Directory Traversal Arbitrary File Deletion Vulnerability. This vulnerability allows remote attackers to delete arbitrary files on affected installations of ATEN Unizon. Authentication is required to exploit this vulnerability.\n\nThe specific flaw exists within the updateLicense method. The issue results from the lack of proper validation of a user-supplied path prior to using it in file operations. An attacker can leverage this vulnerability to delete files or create a denial-of-service condition on the system. Was ZDI-CAN-28502.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.zerodayinitiative.com/advisories/ZDI-26-378/",
+          "type": "reference"
+        },
+        {
+          "url": "https://www.aten.com/global/en/supportcenter/info/security-advisory/27/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "ATEN",
+          "product": "Unizon",
+          "versions": [
+            {
+              "version": "2.7.262.002",
+              "status": "affected"
+            }
+          ],
+          "defaultStatus": "unknown"
+        }
+      ],
+      "problemType": [
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-10043",
+      "publishedDate": "2026-06-24T21:36:05.969Z",
+      "lastModifiedDate": "2026-06-25T12:55:24.767Z",
+      "description": "MosaicML Composer Deserialization of Untrusted Data Remote Code Execution Vulnerability. This vulnerability allows remote attackers to execute arbitrary code on affected installations of MosaicML Composer. User interaction is required to exploit this vulnerability in that the target must visit a malicious page or open a malicious file.\n\nThe specific flaw exists within the parsing of checkpoints. The issue results from the lack of proper validation of user-supplied data, which can result in deserialization of untrusted data. An attacker can leverage this vulnerability to execute code in the context of the current process. Was ZDI-CAN-27990.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.zerodayinitiative.com/advisories/ZDI-26-384/",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/mosaicml/composer/commit/6405188805a0054b4551ec49e4919c54c971d0e8",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "MosaicML",
+          "product": "Composer",
+          "versions": [
+            {
+              "version": "0.32.1",
+              "status": "affected"
+            }
+          ],
+          "defaultStatus": "unknown"
+        }
+      ],
+      "problemType": [
+        "CWE-502: Deserialization of Untrusted Data"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-9773",
+      "publishedDate": "2026-06-24T21:35:35.679Z",
+      "lastModifiedDate": "2026-06-25T12:56:59.903Z",
+      "description": "Unraid Web Server ToggleState Command Injection Remote Code Execution Vulnerability. This vulnerability allows remote attackers to execute arbitrary code on affected installations of Unraid. Authentication is required to exploit this vulnerability.\n\nThe specific flaw exists within ToggleState.php. The issue results from the lack of proper validation of a user-supplied string before using it to execute a system call. An attacker can leverage this vulnerability to execute code in the context of the www-data user. Was ZDI-CAN-30134.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://www.zerodayinitiative.com/advisories/ZDI-26-386/",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Unraid",
+          "product": "Unraid",
+          "versions": [
+            {
+              "version": "1161ec120",
+              "status": "affected"
+            }
+          ],
+          "defaultStatus": "unknown"
+        }
+      ],
+      "problemType": [
+        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-54759",
+      "publishedDate": "2026-06-24T21:21:57.842Z",
+      "lastModifiedDate": "2026-06-25T12:32:38.000Z",
+      "description": "SiYuan is an open-source personal knowledge management system. Prior to 3.7.0, Lute's HTML sanitizer does not remove <iframe> elements. Combined with the SiYuan Electron client's permissive security configuration, an attacker can include a malicious <iframe> in a Bazaar package README that executes arbitrary commands on the victim's machine when the package details are viewed. No package installation is required. This vulnerability is fixed in 3.7.0.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/siyuan-note/siyuan/security/advisories/GHSA-r6v5-4c66-f6pw",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "siyuan-note",
+          "product": "siyuan",
+          "versions": [
+            {
+              "version": "< 3.7.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-46553",
+      "publishedDate": "2026-06-23T20:37:12.238Z",
+      "lastModifiedDate": "2026-06-25T12:48:27.742Z",
+      "description": "NocoDB is software for building databases as spreadsheets. Prior to 2026.04.1, the upload-by-URL path did not enforce NC_ATTACHMENT_FIELD_SIZE against either the remote file's advertised Content-Length or the decoded length of a data: URI, allowing an authenticated user to bypass the configured per-file size limit. This vulnerability is fixed in 2026.04.1.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/nocodb/nocodb/security/advisories/GHSA-8rwr-f68v-cvw6",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "nocodb",
+          "product": "nocodb",
+          "versions": [
+            {
+              "version": "< 2026.04.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-770: Allocation of Resources Without Limits or Throttling"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-47378",
+      "publishedDate": "2026-06-23T20:34:10.037Z",
+      "lastModifiedDate": "2026-06-25T12:47:59.125Z",
+      "description": "NocoDB is software for building databases as spreadsheets. Prior to 2026.04.1, Public shared-view endpoints exposed values from columns that the view owner had hidden, via three independent paths: groupBy returned raw values for any column named in the request, filter and sort arrays operated on hidden columns enabling boolean-blind extraction, and the related-data list accepted arbitrary link-column IDs from other tables in the same base. This vulnerability is fixed in 2026.04.1.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/nocodb/nocodb/security/advisories/GHSA-4w6r-5c2j-qf5f",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "nocodb",
+          "product": "nocodb",
+          "versions": [
+            {
+              "version": "< 2026.04.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-639: Authorization Bypass Through User-Controlled Key"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-47383",
+      "publishedDate": "2026-06-23T20:15:56.168Z",
+      "lastModifiedDate": "2026-06-25T12:47:27.310Z",
+      "description": "NocoDB is software for building databases as spreadsheets. Prior to 2026.05.1, an authenticated commenter could store HTML in row comments that executed as script when other users hovered over the comment in the expanded form view. The comment write paths persisted the raw comment body with no server-side sanitisation; the expanded-form sidebar then rendered the stored body and fed its data-tooltip attribute to Tippy with allowHTML: true. Even when the editor stripped script tags at write time, attribute-level payloads re-entered the DOM as live HTML on hover. This vulnerability is fixed in 2026.05.1.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/nocodb/nocodb/security/advisories/GHSA-jf3g-4gwg-4h66",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "nocodb",
+          "product": "nocodb",
+          "versions": [
+            {
+              "version": "< 2026.05.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-53926",
+      "publishedDate": "2026-06-23T20:08:19.230Z",
+      "lastModifiedDate": "2026-06-25T12:46:54.371Z",
+      "description": "NocoDB is software for building databases as spreadsheets. Prior to 2026.05.1, revokeAllOAuthTokensByUser in the users service is an empty stub being called from passwordChange, passwordForgot, and passwordReset. OAuth access and refresh tokens were not revoked when the user changed, reset, or recovered their password, leaving an attacker-issued OAuth grant valid after the user believed they had locked the attacker out. This vulnerability is fixed in 2026.05.1.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/nocodb/nocodb/security/advisories/GHSA-g72g-r7m4-9x4g",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "nocodb",
+          "product": "nocodb",
+          "versions": [
+            {
+              "version": "< 2026.05.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-613: Insufficient Session Expiration"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-54761",
+      "publishedDate": "2026-06-23T19:15:38.410Z",
+      "lastModifiedDate": "2026-06-25T12:45:24.775Z",
+      "description": "Traefik is an HTTP reverse proxy and load balancer. Prior to 3.6.21 and 3.7.5, there is a high severity vulnerability in Traefik's Kubernetes Gateway provider affecting the crossProviderNamespaces allowlist. For HTTPRoute rules that declare multiple (WRR) backendRefs, Traefik evaluates the allowlist against the target backendRef.namespace instead of the route's own namespace. As a result, an HTTPRoute created in a namespace that is not allow-listed can reference a cross-provider TraefikService such as api@internal, dashboard@internal or rest@internal by pointing backendRef.namespace at an allow-listed namespace covered by a Gateway API ReferenceGrant, exposing internal Traefik services on the data plane. Exploitation requires the ability to create an accepted HTTPRoute and a matching ReferenceGrant from an allow-listed namespace; it does not require any change to Traefik static configuration, RBAC, or the deployment itself. This vulnerability is fixed in 3.6.21 and 3.7.5.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/traefik/traefik/security/advisories/GHSA-3g6v-2r68-prfc",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/traefik/traefik/releases/tag/v3.6.21",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/traefik/traefik/releases/tag/v3.7.5",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "traefik",
+          "product": "traefik",
+          "versions": [
+            {
+              "version": "< 3.6.21",
+              "status": "affected"
+            },
+            {
+              "version": ">= 3.7.0-ea.1, < 3.7.5",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-284: Improper Access Control",
+        "CWE-863: Incorrect Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-53622",
+      "publishedDate": "2026-06-23T19:13:28.844Z",
+      "lastModifiedDate": "2026-06-25T12:44:19.114Z",
+      "description": "Traefik is an HTTP reverse proxy and load balancer. Prior to 3.7.3, there is a critical vulnerability in Traefik's HTTP/3 (QUIC) TLS configuration selection that allows unauthenticated clients to bypass router-specific mTLS enforcement. When HTTP/3 is enabled on an entrypoint, the TLS handshake selects the applicable TLS configuration through an exact, case-sensitive lookup on the SNI value, which fails to match wildcard host patterns (e.g., *.example.com) or case variants of the configured hostname. Because the handshake falls back to the default TLS configuration — which may not require client certificates — a client can complete the QUIC handshake without presenting a certificate, while the subsequent HTTP routing layer still dispatches the request to a backend protected by a router-specific mTLS policy. The issue affects deployments where HTTP/3 is enabled, a router uses a wildcard Host rule or case-insensitive hostname matching, a router-specific TLSOptions enforces client certificate authentication, and UDP access to the entrypoint is reachable by an attacker. This vulnerability is fixed in 3.7.3.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/traefik/traefik/security/advisories/GHSA-9cr8-q42q-g8m7",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/traefik/traefik/releases/tag/v3.7.3",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "traefik",
+          "product": "traefik",
+          "versions": [
+            {
+              "version": "< 3.7.3",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-288: Authentication Bypass Using an Alternate Path or Channel"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
