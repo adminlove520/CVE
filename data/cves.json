@@ -2,1339 +2,592 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 31,
-    "last_updated": "2026-06-25T23:45:42.124830",
+    "total_count": 15,
+    "last_updated": "2026-06-26T01:54:51.470704",
     "severity_distribution": {
-      "critical": 3,
-      "high": 11,
-      "medium": 11,
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
       "low": 0,
-      "none": 6
+      "none": 15
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-54158",
-      "publishedDate": "2026-06-24T21:19:16.988Z",
-      "lastModifiedDate": "2026-06-25T23:12:30.943Z",
-      "description": "SiYuan is an open-source personal knowledge management system. Prior to 3.7.0, the attribute-view (database) cell renderer genAVValueHTML interpolates cell content raw in four of its branches: text, url, phone, and mAsset. A cell value like </textarea><img src=x onerror=\"...\"> or \"><img src=x onerror=\"...\"> breaks out of its surrounding tag and runs arbitrary JavaScript in the renderer when the victim opens the block-attribute panel. On Electron desktop the renderer runs with nodeIntegration:true, so the XSS chains to host RCE via require('child_process'). AV files live under the workspace and ride normal sync, so an attacker with write access to any synced workspace plants the payload once and it fires on every device that opens a panel containing that row.he kernel doesn't escape on the way in either, so the malicious cell persists byte-for-byte. There's no equivalent of the html.EscapeAttrVal call that protects block IAL attributes at kernel/model/blockial.go:261. This vulnerability is fixed in 3.7.0.",
-      "severity": 9.9,
+      "id": "CVE-2026-48930",
+      "publishedDate": "2026-06-26T01:14:37.006Z",
+      "lastModifiedDate": "2026-06-26T01:14:37.006Z",
+      "description": "A flaw in Node.js TLS hostname handling can cause Embedded-nul hostnames can lead to silent authority rebinding due to c-string truncation in resolver bindings.\r\n\r\nThis vulnerability affects all supported release lines: **Node.js 22**, **Node.js 24**, and **Node.js 26**.",
+      "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/siyuan-note/siyuan/security/advisories/GHSA-5xfx-xj4h-5p7r",
+          "url": "https://nodejs.org/en/blog/vulnerability/june-2026-security-releases",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "siyuan-note",
-          "product": "siyuan",
-          "versions": [
-            {
-              "version": "< 3.7.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
-        "CWE-1188: Insecure Default Initialization of Resource"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-54836",
-      "publishedDate": "2026-06-25T13:17:25.186Z",
-      "lastModifiedDate": "2026-06-25T23:23:53.973Z",
-      "description": "Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection') vulnerability in YMC Filter allows SQL Injection.\n\nThis issue affects YMC Filter: from n/a through 3.11.5.",
-      "severity": 9.3,
-      "references": [
-        {
-          "url": "https://patchstack.com/database/wordpress/plugin/ymc-smart-filter/vulnerability/wordpress-filter-grids-plugin-3-11-5-sql-injection-vulnerability?_s_id=cve",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "YMC",
-          "product": "YMC Filter",
-          "collectionURL": "https://wordpress.org/plugins",
-          "packageName": "ymc-smart-filter",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "n/a",
-              "lessThanOrEqual": "3.11.5",
-              "changes": [
-                {
-                  "at": "3.11.6",
-                  "status": "unaffected"
-                }
-              ],
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-45688",
-      "publishedDate": "2026-06-24T20:56:44.843Z",
-      "lastModifiedDate": "2026-06-25T23:06:57.734Z",
-      "description": "Rocket.Chat is an open-source, secure, fully customizable communications platform. Prior to 8.5.0, 8.4.1, 8.3.3, 8.2.3, 8.1.4, 8.0.5, 7.13.7, and 7.10.11, Rocket.Chat's CAS login handler forwards the client-supplied options.cas.credentialToken value straight into a MongoDB findOne({_id: ...}) query without any runtime type check. TypeScript's string parameter annotation is erased at runtime, so an unauthenticated attacker can substitute a MongoDB query operator ({\"$gt\": \"\"}, {\"$ne\": null}, etc.) for what the server expects to be an opaque ticket string. The injected operator matches the first unexpired document in the credential_tokens collection, bypassing the CAS ticket check entirely. When any legitimate CAS or SAML SSO login is in flight, the attacker's next DDP login call matches the same credential-token row via the NoSQL operator and is issued a full Meteor auth token (userId + token) bound to the victim. The token is immediately usable against the complete REST and DDP surface as that user. If the victim is an administrator, this escalates to full instance compromise via Apps-Engine app install. This vulnerability is fixed in 8.5.0, 8.4.1, 8.3.3, 8.2.3, 8.1.4, 8.0.5, 7.13.7, and 7.10.11.",
-      "severity": 9.1,
-      "references": [
-        {
-          "url": "https://github.com/RocketChat/Rocket.Chat/security/advisories/GHSA-rr54-jf4h-6cj9",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "RocketChat",
-          "product": "Rocket.Chat",
-          "versions": [
-            {
-              "version": ">= 8.5.0-rc.0, < 8.5.0",
-              "status": "affected"
-            },
-            {
-              "version": ">= 8.4.0-rc.0, < 8.4.1",
-              "status": "affected"
-            },
-            {
-              "version": ">= 8.3.0-rc.0, < 8.3.3",
-              "status": "affected"
-            },
-            {
-              "version": ">= 8.2.0-rc.0, < 8.2.3",
-              "status": "affected"
-            },
-            {
-              "version": ">= 8.1.0-rc.0, < 8.1.4",
-              "status": "affected"
-            },
-            {
-              "version": ">= 8.0.0-rc.0, < 8.0.5",
-              "status": "affected"
-            },
-            {
-              "version": ">= 7.11.0-rc.0, < 7.13.7",
-              "status": "affected"
-            },
-            {
-              "version": "< 7.10.11",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-943: Improper Neutralization of Special Elements in Data Query Logic"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-56053",
-      "publishedDate": "2026-06-25T13:12:42.844Z",
-      "lastModifiedDate": "2026-06-25T23:23:16.436Z",
-      "description": "Subscriber PHP Object Injection in EventPrime <= 4.3.4.1 versions.",
-      "severity": 8.8,
-      "references": [
-        {
-          "url": "https://patchstack.com/database/wordpress/plugin/eventprime-event-calendar-management/vulnerability/wordpress-eventprime-plugin-4-3-4-1-php-object-injection-vulnerability?_s_id=cve",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "EventPrime",
-          "collectionURL": "https://wordpress.org/plugins",
           "defaultStatus": "unaffected",
-          "packageName": "eventprime-event-calendar-management",
-          "product": "EventPrime",
+          "vendor": "nodejs",
+          "product": "node",
           "versions": [
             {
-              "lessThanOrEqual": "4.3.4.1",
+              "version": "22.22.3",
               "status": "affected",
-              "version": "n/a",
-              "versionType": "custom",
-              "changes": [
-                {
-                  "at": "4.3.4.2",
-                  "status": "unaffected"
-                }
-              ]
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-502 Deserialization of Untrusted Data"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-9222",
-      "publishedDate": "2026-06-25T23:29:03.046Z",
-      "lastModifiedDate": "2026-06-25T23:29:03.046Z",
-      "description": "Setracker2 Android Companion App com.tgelec.setracker versions 3.1.5 and prior only require the password hash when authenticating with backend services from the client. This could allow an attacker, who knows the hash, to authenticate and gain full access.",
-      "severity": 8.1,
-      "references": [
-        {
-          "url": "https://raw.githubusercontent.com/cisagov/CSAF/refs/heads/develop/csaf_files/VA/white/2026/va-26-176-01.json",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Shenzhen i365-Tech Co. Ltd.",
-          "product": "Setracker2 Parental Control App (Android) package com.tgelec.setracker",
-          "versions": [
+              "lessThanOrEqual": "22.22.3",
+              "versionType": "semver"
+            },
             {
+              "version": "24.16.0",
               "status": "affected",
-              "version": "0",
-              "lessThanOrEqual": "3.1.5",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-836 Use of password hash instead of password for authentication"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-22879",
-      "publishedDate": "2026-06-25T21:46:00.057Z",
-      "lastModifiedDate": "2026-06-25T23:29:39.650Z",
-      "description": "vtk vtk-dicom vtkDICOMItem::NewDataElement heap-based buffer overflow vulnerability",
-      "severity": 8.1,
-      "references": [
-        {
-          "url": "https://talosintelligence.com/vulnerability_reports/TALOS-2026-2366",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "vtk",
-          "product": "vtk",
-          "versions": [
+              "lessThanOrEqual": "24.16.0",
+              "versionType": "semver"
+            },
             {
+              "version": "26.3.0",
               "status": "affected",
-              "version": "9.5.2"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-129: Improper Validation of Array Index"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-54845",
-      "publishedDate": "2026-06-25T13:12:36.187Z",
-      "lastModifiedDate": "2026-06-25T23:21:07.580Z",
-      "description": "Unauthenticated Local File Inclusion in MDTF <= 1.3.8 versions.",
-      "severity": 8.1,
-      "references": [
-        {
-          "url": "https://patchstack.com/database/wordpress/plugin/wp-meta-data-filter-and-taxonomy-filter/vulnerability/wordpress-mdtf-plugin-1-3-8-local-file-inclusion-vulnerability?_s_id=cve",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "PluginUs.Net",
-          "collectionURL": "https://wordpress.org/plugins",
-          "defaultStatus": "unaffected",
-          "packageName": "wp-meta-data-filter-and-taxonomy-filter",
-          "product": "MDTF",
-          "versions": [
-            {
-              "lessThanOrEqual": "1.3.8",
-              "status": "affected",
-              "version": "n/a",
-              "versionType": "custom",
-              "changes": [
-                {
-                  "at": "1.3.9",
-                  "status": "unaffected"
-                }
-              ]
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-98 Improper Control of Filename for Include/Require Statement in PHP Program ('PHP Remote File Inclusion')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-46733",
-      "publishedDate": "2026-06-25T13:17:39.256Z",
-      "lastModifiedDate": "2026-06-25T23:25:26.406Z",
-      "description": "Dell Display and Peripheral Manager (DDPM Windows), versions prior to 2.3, contain an Improper Access Control vulnerability. A low privileged attacker with local access could potentially exploit this vulnerability, leading to Code execution.",
-      "severity": 7.8,
-      "references": [
-        {
-          "url": "https://www.dell.com/support/kbdoc/en-fm/000477679/dsa-2026-277?msockid=3021cac2195069ed3194ddad186a68f9",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Dell",
-          "product": "Display and Peripheral Manager",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThan": "Version 2.3 and later",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-284: Improper Access Control"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-9221",
-      "publishedDate": "2026-06-25T23:27:26.905Z",
-      "lastModifiedDate": "2026-06-25T23:27:26.905Z",
-      "description": "The Setracker2 Android Companion App (com.tgelec.setracker) versions 3.1.5 and earlier uses MD5 to generate a request signature for authenticating communications between the mobile client and the backend REST API. Attackers could potentially reverse the signature to recover the session ID. With the session ID exposed, an attacker could impersonate the legitimate user and issue authenticated API requests.",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://raw.githubusercontent.com/cisagov/CSAF/refs/heads/develop/csaf_files/VA/white/2026/va-26-176-01.json",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Shenzhen i365-Tech Co. Ltd.",
-          "product": "Setracker2 Parental Control App (Android) package com.tgelec.setracker",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThanOrEqual": "3.1.5",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-327 Use of a Broken or Risky Cryptographic Algorithm"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-9220",
-      "publishedDate": "2026-06-25T23:13:41.275Z",
-      "lastModifiedDate": "2026-06-25T23:13:41.275Z",
-      "description": "Setracker2 Android Companion App com.tgelec.setracker versions 3.1.5 and prior encrypts requests between the watch and its backend with static hardcoded AES keys and initialization vectors. This allows an attacker to decrypt Setracker2 watch traffic.",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://raw.githubusercontent.com/cisagov/CSAF/refs/heads/develop/csaf_files/VA/white/2026/va-26-176-01.json",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Shenzhen i365-Tech Co. Ltd.",
-          "product": "Setracker2 Parental Control App (Android) package com.tgelec.setracker",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThanOrEqual": "3.1.5",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-321 Use of hard-coded cryptographic key"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-54821",
-      "publishedDate": "2026-06-25T13:12:30.317Z",
-      "lastModifiedDate": "2026-06-25T23:20:16.128Z",
-      "description": "Subscriber Sensitive Data Exposure in Visual Link Preview <= 2.3.1 versions.",
-      "severity": 7.4,
-      "references": [
-        {
-          "url": "https://patchstack.com/database/wordpress/plugin/visual-link-preview/vulnerability/wordpress-visual-link-preview-plugin-2-3-1-sensitive-data-exposure-vulnerability?_s_id=cve",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Bootstrapped Ventures",
-          "collectionURL": "https://wordpress.org/plugins",
-          "defaultStatus": "unaffected",
-          "packageName": "visual-link-preview",
-          "product": "Visual Link Preview",
-          "versions": [
-            {
-              "lessThanOrEqual": "2.3.1",
-              "status": "affected",
-              "version": "n/a",
-              "versionType": "custom",
-              "changes": [
-                {
-                  "at": "2.4.0",
-                  "status": "unaffected"
-                }
-              ]
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-201 Insertion of Sensitive Information Into Sent Data"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-55759",
-      "publishedDate": "2026-06-24T21:07:29.331Z",
-      "lastModifiedDate": "2026-06-25T23:10:28.449Z",
-      "description": "Rocket.Chat is an open-source, secure, fully customizable communications platform. Prior to 8.5.1, 8.4.4, 8.3.6, 8.2.6, 8.1.6, 8.0.7, and 7.10.13, Rocket.Chat's Apple Sign-In handler verifies JWT signatures but skips claims validation. Any Apple-signed JWT with a non-empty iss is accepted regardless of aud, exp, nbf, or nonce. An attacker who obtains a target user's Apple identity token (from server logs, an intercepted sign-in flow, or another application sharing the same Apple developer team) can replay it to authenticate as that user, with no expiration on the replay window. This vulnerability is fixed in 8.5.1, 8.4.4, 8.3.6, 8.2.6, 8.1.6, 8.0.7, and 7.10.13.",
-      "severity": 7.4,
-      "references": [
-        {
-          "url": "https://github.com/RocketChat/Rocket.Chat/security/advisories/GHSA-c75c-5hc7-j4vp",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "RocketChat",
-          "product": "Rocket.Chat",
-          "versions": [
-            {
-              "version": ">= 8.5.0-rc.0, < 8.5.1",
-              "status": "affected"
-            },
-            {
-              "version": ">= 8.4.0-rc.0, < 8.4.4",
-              "status": "affected"
-            },
-            {
-              "version": ">= 8.3.0-rc.0, < 8.3.6",
-              "status": "affected"
-            },
-            {
-              "version": ">= 8.2.0-rc.0, < 8.2.6",
-              "status": "affected"
-            },
-            {
-              "version": ">= 8.1.0-rc.0, < 8.1.6",
-              "status": "affected"
-            },
-            {
-              "version": ">= 7.11.0-rc.0, < 8.0.7",
-              "status": "affected"
-            },
-            {
-              "version": "< 7.10.13",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-287: Improper Authentication",
-        "CWE-294: Authentication Bypass by Capture-replay"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-13201",
-      "publishedDate": "2026-06-24T20:39:00.173Z",
-      "lastModifiedDate": "2026-06-25T23:23:24.879Z",
-      "description": "A flaw was found in KubeVirt's safepath package used by virt-handler. The OpenAtNoFollow function uses O_PATH|O_NOFOLLOW to obtain a file descriptor to a path leaf, but downstream operations resolve the path via /proc/self/fd/N using link-following syscalls. When the leaf is a symlink, the kernel dereferences it, defeating the intended no-follow protection. An attacker with access to a virt-launcher pod can exploit this to redirect virt-handler's IPC socket connections, including the notify socket used for VM domain lifecycle events. By hijacking this socket, the attacker can inject arbitrary domain events into virt-handler, causing it to take incorrect lifecycle actions, corrupt VM state in the Kubernetes API, or crash — resulting in sustained denial of VM management services for all virtual machines on the affected node. Additionally, the same symlink following flaw allows virt-handler to apply file ownership or permission changes to unintended host paths.",
-      "severity": 7.3,
-      "references": [
-        {
-          "url": "https://access.redhat.com/security/cve/CVE-2026-13201",
-          "type": "reference"
-        },
-        {
-          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2492203",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat OpenShift Virtualization 4",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "container-native-virtualization/virt-handler",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/a:redhat:container_native_virtualization:4"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat OpenShift Virtualization 4",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "container-native-virtualization/virt-handler-rhel9",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/a:redhat:container_native_virtualization:4"
-          ]
-        }
-      ],
-      "problemType": [
-        "UNIX Symbolic Link (Symlink) Following"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-56014",
-      "publishedDate": "2026-06-25T13:12:39.551Z",
-      "lastModifiedDate": "2026-06-25T23:21:47.151Z",
-      "description": "Unauthenticated Cross Site Scripting (XSS) in Master Slider <= 3.11.2 versions.",
-      "severity": 7.1,
-      "references": [
-        {
-          "url": "https://patchstack.com/database/wordpress/plugin/master-slider/vulnerability/wordpress-master-slider-plugin-3-11-2-cross-site-scripting-xss-vulnerability?_s_id=cve",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Averta",
-          "collectionURL": "https://wordpress.org/plugins",
-          "defaultStatus": "unaffected",
-          "packageName": "master-slider",
-          "product": "Master Slider",
-          "versions": [
-            {
-              "lessThanOrEqual": "3.11.2",
-              "status": "affected",
-              "version": "n/a",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-13083",
-      "publishedDate": "2026-06-25T23:23:42.386Z",
-      "lastModifiedDate": "2026-06-25T23:23:42.386Z",
-      "description": "A flaw was found in the Pen Drive report generator. Cluster-sourced data is rendered into HTML reports without proper escaping or sanitization. An attacker with cluster administrator privileges can inject a stored cross-site scripting (XSS) payload into cluster objects (such as ClusterVersion spec.channel) that executes in the browser of any user who opens the generated HTML report.",
-      "severity": 6.9,
-      "references": [
-        {
-          "url": "https://access.redhat.com/security/cve/CVE-2026-13083",
-          "type": "reference"
-        },
-        {
-          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2491886",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Red Hat",
-          "product": "Pen Drive Powered by Red Hat Lightspeed",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "pen-drive/pen-drive-scanner-rhel9",
-          "defaultStatus": "unknown",
-          "cpes": [
-            "cpe:/a:redhat:pdrive_lightspeed:0"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Pen Drive Powered by Red Hat Lightspeed",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "pen-drive/pen-drive-scanner-rhel9",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/a:redhat:pdrive_lightspeed:1"
-          ]
-        }
-      ],
-      "problemType": [
-        "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-49278",
-      "publishedDate": "2026-06-24T21:05:33.587Z",
-      "lastModifiedDate": "2026-06-25T23:08:45.222Z",
-      "description": "Rocket.Chat is an open-source, secure, fully customizable communications platform. Prior to 8.5.0, 8.4.2, 8.3.4, 8.2.4, 8.1.5, 8.0.6, 7.13.8, and 7.10.12, in the visitors.info endpoint, https://developer.rocket.chat/apidocs/get-visitor-information-by-id-1, token is returned in the response. It looks like there's no use case for the token to be present in the response and it would be a good security practice to remove it altogether. This vulnerability is fixed in 8.5.0, 8.4.2, 8.3.4, 8.2.4, 8.1.5, 8.0.6, 7.13.8, and 7.10.12.",
-      "severity": 6.7,
-      "references": [
-        {
-          "url": "https://github.com/RocketChat/Rocket.Chat/security/advisories/GHSA-cqj7-h8cj-jmf2",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "RocketChat",
-          "product": "Rocket.Chat",
-          "versions": [
-            {
-              "version": ">= 8.5.0-rc.0, < 8.5.0",
-              "status": "affected"
-            },
-            {
-              "version": ">= 8.4.0-rc.0, < 8.4.2",
-              "status": "affected"
-            },
-            {
-              "version": ">= 8.3.0-rc.0, < 8.3.4",
-              "status": "affected"
-            },
-            {
-              "version": ">= 8.2.0-rc.0, < 8.2.4",
-              "status": "affected"
-            },
-            {
-              "version": ">= 8.1.0-rc.0, < 8.1.5",
-              "status": "affected"
-            },
-            {
-              "version": ">= 8.0.0-rc.0, < 8.0.6",
-              "status": "affected"
-            },
-            {
-              "version": ">= 7.11.0-rc.0, < 7.13.8",
-              "status": "affected"
-            },
-            {
-              "version": "< 7.10.12",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-285: Improper Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-12993",
-      "publishedDate": "2026-06-25T23:23:20.902Z",
-      "lastModifiedDate": "2026-06-25T23:23:20.902Z",
-      "description": "A flaw was found in Apicurio Registry. The DocumentBuilderAccessor correctly blocks external DTD and schema access but does not disable DOCTYPE declarations or enable FEATURE_SECURE_PROCESSING. An attacker with artifact-write permission can upload XML documents with internal entity-expansion payloads (billion-laughs variant) that cause CPU and heap exhaustion, partially mitigated by the JAXP default 64,000 entity-expansion limit.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://access.redhat.com/security/cve/CVE-2026-12993",
-          "type": "reference"
-        },
-        {
-          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2491692",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat build of Apicurio Registry 3",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "apicurio/apicurio-registry-rhel8",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/a:redhat:apicurio_registry:3"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat build of Apicurio Registry 3",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "apicurio/apicurio-registry-rhel9",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/a:redhat:apicurio_registry:3"
-          ]
-        }
-      ],
-      "problemType": [
-        "Improper Restriction of Recursive Entity References in DTDs ('XML Entity Expansion')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-9219",
-      "publishedDate": "2026-06-25T23:10:19.862Z",
-      "lastModifiedDate": "2026-06-25T23:10:19.862Z",
-      "description": "Setracker2 Android Companion App com.tgelec.setracker versions 3.1.5 and prior have a predictable registration ID derived from IMEI. The enrollment system lacks additional authentication before assignment. If an attacker is able to obtain the registration ID, they would be able to arbitrarily enroll watches belonging to other users.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://raw.githubusercontent.com/cisagov/CSAF/refs/heads/develop/csaf_files/VA/white/2026/va-26-176-01.json",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Shenzhen i365-Tech Co. Ltd.",
-          "product": "Setracker2 Parental Control App (Android) package com.tgelec.setracker",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "0",
-              "lessThanOrEqual": "3.1.5",
-              "versionType": "custom"
-            }
-          ],
-          "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-340 Generation of Predictable Numbers or Identifiers"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-9705",
-      "publishedDate": "2026-06-25T16:17:46.330Z",
-      "lastModifiedDate": "2026-06-25T23:02:47.773Z",
-      "description": "A flaw was found in Keycloak's client registration service. A remote attacker, possessing a previously issued Registration Access Token (RAT), could exploit this vulnerability to re-enable a client that an administrator had explicitly disabled. This bypasses security controls, allowing the attacker to reset the client's secret and potentially regain privileged API access. The primary impact includes unauthorized information disclosure and potential integrity compromise.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://access.redhat.com/errata/RHSA-2026:30083",
-          "type": "reference"
-        },
-        {
-          "url": "https://access.redhat.com/errata/RHSA-2026:30084",
-          "type": "reference"
-        },
-        {
-          "url": "https://access.redhat.com/security/cve/CVE-2026-9705",
-          "type": "reference"
-        },
-        {
-          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2481878",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat build of Keycloak 26.6",
-          "collectionURL": "https://catalog.redhat.com/software/containers/",
-          "packageName": "rhbk/keycloak-operator-bundle",
-          "defaultStatus": "affected",
-          "versions": [
-            {
-              "version": "26.6.4-2",
-              "lessThan": "*",
-              "versionType": "rpm",
-              "status": "unaffected"
-            }
-          ],
-          "cpes": [
-            "cpe:/a:redhat:build_keycloak:26.6::el9"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat build of Keycloak 26.6",
-          "collectionURL": "https://catalog.redhat.com/software/containers/",
-          "packageName": "rhbk/keycloak-rhel9",
-          "defaultStatus": "affected",
-          "versions": [
-            {
-              "version": "26.6-8",
-              "lessThan": "*",
-              "versionType": "rpm",
-              "status": "unaffected"
-            }
-          ],
-          "cpes": [
-            "cpe:/a:redhat:build_keycloak:26.6::el9"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat build of Keycloak 26.6",
-          "collectionURL": "https://catalog.redhat.com/software/containers/",
-          "packageName": "rhbk/keycloak-rhel9-operator",
-          "defaultStatus": "affected",
-          "versions": [
-            {
-              "version": "26.6-8",
-              "lessThan": "*",
-              "versionType": "rpm",
-              "status": "unaffected"
-            }
-          ],
-          "cpes": [
-            "cpe:/a:redhat:build_keycloak:26.6::el9"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat build of Keycloak 26.6.4",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "defaultStatus": "unaffected",
-          "packageName": "rhbk/keycloak-rhel9",
-          "cpes": [
-            "cpe:/a:redhat:build_keycloak:26.6::el9"
-          ]
-        }
-      ],
-      "problemType": [
-        "Insufficient Session Expiration"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-12079",
-      "publishedDate": "2026-06-25T03:42:20.989Z",
-      "lastModifiedDate": "2026-06-25T23:18:52.368Z",
-      "description": "The Dokan Pro plugin for WordPress is vulnerable to time-based SQL Injection via the ’orderby’ parameter in all versions up to, and including, 5.0.4 due to insufficient escaping on the user supplied parameter and lack of sufficient preparation on the existing SQL query.  This makes it possible for authenticated attackers, with Subscriber-level access and above, to append additional SQL queries into already existing queries that can be used to extract sensitive information from the database.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://www.wordfence.com/threat-intel/vulnerabilities/id/5bf95020-ac4f-4fb2-8fb4-a9998005991c?source=cve",
-          "type": "reference"
-        },
-        {
-          "url": "https://dokan.co/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "wedevs",
-          "product": "Dokan Pro",
-          "versions": [
-            {
-              "version": "0",
-              "status": "affected",
-              "lessThanOrEqual": "5.0.4",
+              "lessThanOrEqual": "26.3.0",
               "versionType": "semver"
             }
-          ],
-          "defaultStatus": "unaffected"
+          ]
         }
       ],
       "problemType": [
-        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+        "CWE-284 Improper Access Control - Generic"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-11820",
-      "publishedDate": "2026-06-23T19:53:19.664Z",
-      "lastModifiedDate": "2026-06-25T23:23:47.329Z",
-      "description": "A flaw was found in the community.general Ansible collection's nexmo module.\nThe module constructs HTTP requests to the Vonage/Nexmo SMS API by encoding\nAPI credentials (api_key and api_secret) into URL query parameters and\nsending them via GET requests. This causes credentials to be exposed in web\nserver access logs, proxy logs, HTTP Referer headers, and network monitoring\ntools, despite the Ansible argument specification marking these parameters\nas no_log. An attacker with access to any of these logging or monitoring\npoints can obtain the full API credentials and gain unauthorized access to\nthe victim's Vonage/Nexmo account.",
-      "severity": 6.5,
+      "id": "CVE-2026-48928",
+      "publishedDate": "2026-06-26T01:14:36.981Z",
+      "lastModifiedDate": "2026-06-26T01:14:36.981Z",
+      "description": "A inconsistency in Node.js hostname matching can cause a trust-policy bypass in multi-context mTLS setups.\r\n\r\nThis vulnerability affects all supported release lines: **Node.js 22**, **Node.js 24**, and **Node.js 26**.",
+      "severity": "N/A",
       "references": [
         {
-          "url": "https://access.redhat.com/security/cve/CVE-2026-11820",
-          "type": "reference"
-        },
-        {
-          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2488970",
+          "url": "https://nodejs.org/en/blog/vulnerability/june-2026-security-releases",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Red Hat",
-          "product": "Red Hat Enterprise Linux 10",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "rhel-system-roles",
-          "defaultStatus": "unknown",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:10"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat Enterprise Linux 8",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "rhc-worker-playbook",
-          "defaultStatus": "unknown",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:8"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat Enterprise Linux 8",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "rhel-system-roles",
-          "defaultStatus": "unknown",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:8"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat Enterprise Linux 9",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "rhel-system-roles",
-          "defaultStatus": "unknown",
-          "cpes": [
-            "cpe:/o:redhat:enterprise_linux:9"
-          ]
-        }
-      ],
-      "problemType": [
-        "Insertion of Sensitive Information into Log File"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-13318",
-      "publishedDate": "2026-06-25T23:23:38.121Z",
-      "lastModifiedDate": "2026-06-25T23:23:38.121Z",
-      "description": "A server-side request forgery (SSRF) flaw was found in KubeVirt's virt-api port-forward handler. When processing a port-forward request to a VirtualMachineInstance (VMI), virt-api reads the target IP from vmi.Status.Interfaces[0].IP and passes it directly to net.Dial() without validation. For VMIs using non-masquerade network bindings (bridge or secondary-only), this IP is reported by the QEMU guest agent running inside the VM and is fully controllable by the VM owner. An attacker with kubevirt.io:edit permissions can create a VM with a modified guest agent that reports an arbitrary IP address, then request port-forward to establish a bidirectional TCP tunnel from virt-api's cluster-internal network position to any routable destination, bypassing NetworkPolicy isolation.",
-      "severity": 6.4,
-      "references": [
-        {
-          "url": "https://access.redhat.com/security/cve/CVE-2026-13318",
-          "type": "reference"
-        },
-        {
-          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2492659",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat OpenShift Virtualization 4",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "container-native-virtualization/virt-api",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/a:redhat:container_native_virtualization:4"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat OpenShift Virtualization 4",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "container-native-virtualization/virt-api-rhel9",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/a:redhat:container_native_virtualization:4"
-          ]
-        }
-      ],
-      "problemType": [
-        "Server-Side Request Forgery (SSRF)"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-53766",
-      "publishedDate": "2026-06-24T21:29:29.003Z",
-      "lastModifiedDate": "2026-06-25T23:14:04.013Z",
-      "description": "Chrome DevTools for agents (chrome-devtools-mcp) lets your coding agent control and inspect a live Chrome browser. From 0.24.0 until 1.1.0, McpContext.validatePath() enforces workspace roots by checking whether path.resolve(filePath) textually falls under one of the configured root paths. path.resolve() does not canonicalize symbolic links. As a result, a symlink inside a configured workspace root can point to a file outside that root, pass validation, and then be followed by downstream file read/write operations. This bypass applies even when the MCP client correctly declares the roots capability with a non-empty list. It is separate from the documented legacy behavior where missing roots capability allows all paths. The practical impact is a workspace-boundary bypass. In the write direction, filePath-writing tools can overwrite out-of-root files through an in-root symlink. In the read direction, upload_file can read through the symlink and send the file to the currently selected web page. This vulnerability is fixed in 1.1.0.",
-      "severity": 6.1,
-      "references": [
-        {
-          "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp/security/advisories/GHSA-8qf9-62x2-82pp",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "ChromeDevTools",
-          "product": "chrome-devtools-mcp",
-          "versions": [
-            {
-              "version": ">= 0.24.0, < 1.1.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')",
-        "CWE-59: Improper Link Resolution Before File Access ('Link Following')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-9799",
-      "publishedDate": "2026-06-25T16:17:48.486Z",
-      "lastModifiedDate": "2026-06-25T23:02:55.759Z",
-      "description": "A flaw was found in org.keycloak.authorization. An authenticated user with a granted User-Managed Access (UMA) permission ticket for one resource can exploit this by using a specific permission request prefix to bypass per-resource access control. This allows the user to gain unauthorized access to all resources of that type within the same resource server, even if they do not have a ticket for those specific resources. This vulnerability requires the resource server to be configured in PERMISSIVE policy enforcement mode and affects typed resources with ownerManagedAccess enabled, where no explicit policy protects the resource type. The primary consequence is unauthorized information disclosure or modification of resources.",
-      "severity": 4.6,
-      "references": [
-        {
-          "url": "https://access.redhat.com/errata/RHSA-2026:30083",
-          "type": "reference"
-        },
-        {
-          "url": "https://access.redhat.com/errata/RHSA-2026:30084",
-          "type": "reference"
-        },
-        {
-          "url": "https://access.redhat.com/security/cve/CVE-2026-9799",
-          "type": "reference"
-        },
-        {
-          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2482471",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat build of Keycloak 26.6",
-          "collectionURL": "https://catalog.redhat.com/software/containers/",
-          "packageName": "rhbk/keycloak-operator-bundle",
-          "defaultStatus": "affected",
-          "versions": [
-            {
-              "version": "26.6.4-2",
-              "lessThan": "*",
-              "versionType": "rpm",
-              "status": "unaffected"
-            }
-          ],
-          "cpes": [
-            "cpe:/a:redhat:build_keycloak:26.6::el9"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat build of Keycloak 26.6",
-          "collectionURL": "https://catalog.redhat.com/software/containers/",
-          "packageName": "rhbk/keycloak-rhel9",
-          "defaultStatus": "affected",
-          "versions": [
-            {
-              "version": "26.6-8",
-              "lessThan": "*",
-              "versionType": "rpm",
-              "status": "unaffected"
-            }
-          ],
-          "cpes": [
-            "cpe:/a:redhat:build_keycloak:26.6::el9"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat build of Keycloak 26.6",
-          "collectionURL": "https://catalog.redhat.com/software/containers/",
-          "packageName": "rhbk/keycloak-rhel9-operator",
-          "defaultStatus": "affected",
-          "versions": [
-            {
-              "version": "26.6-8",
-              "lessThan": "*",
-              "versionType": "rpm",
-              "status": "unaffected"
-            }
-          ],
-          "cpes": [
-            "cpe:/a:redhat:build_keycloak:26.6::el9"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat build of Keycloak 26.6.4",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
           "defaultStatus": "unaffected",
-          "packageName": "rhbk/keycloak-rhel9",
-          "cpes": [
-            "cpe:/a:redhat:build_keycloak:26.6::el9"
-          ]
-        }
-      ],
-      "problemType": [
-        "Authorization Bypass Through User-Controlled Key"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-13218",
-      "publishedDate": "2026-06-25T23:23:23.228Z",
-      "lastModifiedDate": "2026-06-25T23:23:23.228Z",
-      "description": "A flaw was found in KubeVirt's virt-handler network cache handling. The WriteToCachedFile function writes data to a launcher-rooted path using os.WriteFile and os.Chown without symlink protection. A user with access to the virt-launcher container can plant a symlink at the cache file path, causing virt-handler to follow it and overwrite an arbitrary host file with JSON content and change its ownership.",
-      "severity": 4.2,
-      "references": [
-        {
-          "url": "https://access.redhat.com/security/cve/CVE-2026-13218",
-          "type": "reference"
-        },
-        {
-          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2492654",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat OpenShift Virtualization 4",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "container-native-virtualization/virt-handler",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/a:redhat:container_native_virtualization:4"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat OpenShift Virtualization 4",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "container-native-virtualization/virt-handler-rhel9",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/a:redhat:container_native_virtualization:4"
-          ]
-        }
-      ],
-      "problemType": [
-        "UNIX Symbolic Link (Symlink) Following"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-43920",
-      "publishedDate": "2026-06-25T23:06:43.546Z",
-      "lastModifiedDate": "2026-06-25T23:06:43.546Z",
-      "description": "FOSSBilling is a free, open-source billing and client management system. In versions 0.5.4 through 0.7.2, the /run-patcher maintenance endpoint in FOSSBilling was accessible without authentication, which allowed unauthenticated remote users to trigger update patch routines that modify configuration files, execute database schema changes, perform filesystem mutations, and clear caches. The /run-patcher endpoint executes privileged maintenance operations - configuration migrations, database patch execution (including ALTER TABLE, DROP TABLE, UPDATE statements), filesystem deletions and renames, and cache clearing - without requiring administrator authentication, CSRF validation, or CLI context. An unauthenticated remote attacker can trigger these operations by sending a simple HTTP GET request to /run-patcher, which can be abused for denial-of-service attacks. Certain patches (e.g., batch token regeneration for all admin and client accounts in patch 53, and session invalidation) are disruptive even when re-executed against an already-patched instance. Repeated or concurrent requests may also cause inconsistent database state. This issue has been fixed in version 0.8.0.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/FOSSBilling/FOSSBilling/security/advisories/GHSA-prx6-m547-rfmg",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/FOSSBilling/FOSSBilling/releases/tag/0.8.0",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "FOSSBilling",
-          "product": "FOSSBilling",
+          "vendor": "nodejs",
+          "product": "node",
           "versions": [
             {
-              "version": ">= 0.5.4, < 0.8.0",
-              "status": "affected"
+              "version": "22.22.3",
+              "status": "affected",
+              "lessThanOrEqual": "22.22.3",
+              "versionType": "semver"
+            },
+            {
+              "version": "24.16.0",
+              "status": "affected",
+              "lessThanOrEqual": "24.16.0",
+              "versionType": "semver"
+            },
+            {
+              "version": "26.3.0",
+              "status": "affected",
+              "lessThanOrEqual": "26.3.0",
+              "versionType": "semver"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-306: Missing Authentication for Critical Function"
+        "CWE-284 Improper Access Control - Generic"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-57455",
-      "publishedDate": "2026-06-25T15:22:37.949Z",
-      "lastModifiedDate": "2026-06-25T23:30:00.892Z",
-      "description": "Vim is an open source, command line text editor. Prior to 9.2.0698, the single-byte branch of spell_soundfold_sofo() in src/spell.c translates a word through a spell file's SOFO (sound-folding) byte map into a caller-owned result buffer. Its copy loop advances the output index ri with no upper bound and terminates only on the input NUL, writing one byte per input byte into the MAXWLEN-element stack buffer the caller provides. A word longer than MAXWLEN, passed to soundfold() (or reached via sound-based spell suggestion) while a SOFO-based spell language is active, therefore writes past the end of that buffer. This is a stack out-of-bounds write that corrupts the call frame and crashes the editor. This vulnerability is fixed in 9.2.0698.",
+      "id": "CVE-2026-48934",
+      "publishedDate": "2026-06-26T01:14:36.894Z",
+      "lastModifiedDate": "2026-06-26T01:14:36.894Z",
+      "description": "A flaw in Node.js TLS host verification can cause an attacker to bypass certification validation.\r\n\r\nThis vulnerability affects all supported release lines: **Node.js 22**, **Node.js 24**, and **Node.js 26**.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/vim/vim/security/advisories/GHSA-q8mh-6qm3-25g4",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/vim/vim/commit/497f931f85339d175d7f69588dd249e8ccfed41b",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/vim/vim/releases/tag/v9.2.0698",
+          "url": "https://nodejs.org/en/blog/vulnerability/june-2026-security-releases",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "vim",
-          "product": "vim",
+          "defaultStatus": "unaffected",
+          "vendor": "nodejs",
+          "product": "node",
           "versions": [
             {
-              "version": "< 9.2.0698",
-              "status": "affected"
+              "version": "22.22.3",
+              "status": "affected",
+              "lessThanOrEqual": "22.22.3",
+              "versionType": "semver"
+            },
+            {
+              "version": "24.16.0",
+              "status": "affected",
+              "lessThanOrEqual": "24.16.0",
+              "versionType": "semver"
+            },
+            {
+              "version": "26.3.0",
+              "status": "affected",
+              "lessThanOrEqual": "26.3.0",
+              "versionType": "semver"
             }
           ]
         }
       ],
-      "problemType": [
-        "CWE-787: Out-of-bounds Write"
-      ],
+      "problemType": [],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-57436",
-      "publishedDate": "2026-06-25T14:33:29.496Z",
-      "lastModifiedDate": "2026-06-25T23:27:34.410Z",
-      "description": "Nokogiri is an open source XML and HTML library for the Ruby programming language. Prior to 1.19.4, Nokogiri::XML::Document#root= validated only that the new root was a Nokogiri::XML::Node, allowing a DTD node to be set as the document root. The result is a heap use-after-free during garbage collection or finalization, leading to an invalid memory read or potentially a segfault. This vulnerability is fixed in 1.19.4.",
+      "id": "CVE-2026-48936",
+      "publishedDate": "2026-06-26T01:14:36.878Z",
+      "lastModifiedDate": "2026-06-26T01:14:36.878Z",
+      "description": "A flaw in Node.js Permission API can cause a local server to be started (via a Unix domain socket), even without the `--allow-net` permission.\r\n\r\nThis vulnerability affects one supported release line: **Node.js 26**.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/sparklemotion/nokogiri/security/advisories/GHSA-wjv4-x9w8-wm3h",
+          "url": "https://nodejs.org/en/blog/vulnerability/june-2026-security-releases",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "sparklemotion",
-          "product": "nokogiri",
+          "defaultStatus": "unaffected",
+          "vendor": "nodejs",
+          "product": "node",
           "versions": [
             {
-              "version": "< 1.19.4",
-              "status": "affected"
+              "version": "26.3.0",
+              "status": "affected",
+              "lessThanOrEqual": "26.3.0",
+              "versionType": "semver"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-416: Use After Free"
+        "CWE-284 Improper Access Control - Generic"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-40079",
-      "publishedDate": "2026-06-24T23:26:40.623Z",
-      "lastModifiedDate": "2026-06-25T23:17:29.519Z",
-      "description": "Cacti is an open source performance and fault management framework. Versions 1.2.30 and prior are vulnerable to Command Injection due to lack of sanitization in the escape_command() function. The escape_command() function at lib/rrd.php is a no-op: it returns $command unchanged. The command line built by rrdtool_function_graph() is passed through this function and then to shell_exec($full_commandline). The risk is in __rrd_execute() where text_format values from graph templates (which may contain host variable substitutions) reach shell_exec without adequate escaping. This issue has been addressed in version 1.2.31.",
+      "id": "CVE-2026-48618",
+      "publishedDate": "2026-06-26T01:14:36.868Z",
+      "lastModifiedDate": "2026-06-26T01:14:36.868Z",
+      "description": "A flaw in Node.js TLS hostname handling can cause Node.js unicode dot separator handling can lead to tls wildcard-depth authentication bypass due to resolver and verifier hostname normalization mismat.\r\n\r\nThis can lead to confidentiality impact or bypass of the intended security boundary under affected configurations.\r\n\r\nThis vulnerability affects all supported release lines: **Node.js 22**, **Node.js 24**, and **Node.js 26**.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/Cacti/cacti/security/advisories/GHSA-xq98-376r-hv9j",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/Cacti/cacti/commit/4c09efaebf3a9faec66969d0b5c4aceaf397f37f",
+          "url": "https://nodejs.org/en/blog/vulnerability/june-2026-security-releases",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Cacti",
-          "product": "cacti",
+          "defaultStatus": "unaffected",
+          "vendor": "nodejs",
+          "product": "node",
           "versions": [
             {
-              "version": "< 1.2.31",
-              "status": "affected"
+              "version": "22.22.3",
+              "status": "affected",
+              "lessThanOrEqual": "22.22.3",
+              "versionType": "semver"
+            },
+            {
+              "version": "24.16.0",
+              "status": "affected",
+              "lessThanOrEqual": "24.16.0",
+              "versionType": "semver"
+            },
+            {
+              "version": "26.3.0",
+              "status": "affected",
+              "lessThanOrEqual": "26.3.0",
+              "versionType": "semver"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')",
-        "CWE-88: Improper Neutralization of Argument Delimiters in a Command ('Argument Injection')"
+        "CWE-176 Improper Handling of Unicode Encoding"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-39899",
-      "publishedDate": "2026-06-24T22:33:14.099Z",
-      "lastModifiedDate": "2026-06-25T23:15:40.859Z",
-      "description": "Cacti is an open source performance and fault management framework. Versions 1.2.30 and prior are vulnerable to Path Traversal via filename parameter in package_import.php. This issue has been fixed in version 1.2.31.",
+      "id": "CVE-2026-48933",
+      "publishedDate": "2026-06-26T01:14:36.823Z",
+      "lastModifiedDate": "2026-06-26T01:14:36.823Z",
+      "description": "A flaw in Node.js WebCrypto implementation can crash the process if the input of `subtle.encrypt()` is a multiple of 2GiB.\r\n\r\nThis vulnerability affects all supported release lines: **Node.js 22**, **Node.js 24**, and **Node.js 26**.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/Cacti/cacti/security/advisories/GHSA-pr9x-34w8-4mf7",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/Cacti/cacti/pull/6899",
+          "url": "https://nodejs.org/en/blog/vulnerability/june-2026-security-releases",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Cacti",
-          "product": "cacti",
+          "defaultStatus": "unaffected",
+          "vendor": "nodejs",
+          "product": "node",
           "versions": [
             {
-              "version": "< 1.2.31",
-              "status": "affected"
+              "version": "22.22.3",
+              "status": "affected",
+              "lessThanOrEqual": "22.22.3",
+              "versionType": "semver"
+            },
+            {
+              "version": "24.16.0",
+              "status": "affected",
+              "lessThanOrEqual": "24.16.0",
+              "versionType": "semver"
+            },
+            {
+              "version": "26.3.0",
+              "status": "affected",
+              "lessThanOrEqual": "26.3.0",
+              "versionType": "semver"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
+        "CWE-190 Integer Overflow"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-52812",
-      "publishedDate": "2026-06-24T20:32:51.608Z",
-      "lastModifiedDate": "2026-06-25T23:03:37.203Z",
-      "description": "Gogs is an open source self-hosted Git service. Prior to 0.14.3, Git LFS storage is content-addressed by OID alone (<LFS-root>/<oid[0]>/<oid[1]>/<oid>) but per-repo authorization lives in the lfs_object table keyed (repo_id, oid). serveUpload skips re-uploading when the OID file already exists on disk and inserts a new (repo_id, oid) row pointing at it without verifying the request body hashes to the OID being claimed. Any user with write access to one repo can bind their repo to an OID owned by a private repo and download the original bytes via their own download endpoint. This vulnerability is fixed in 0.14.3.",
+      "id": "CVE-2026-48935",
+      "publishedDate": "2026-06-26T01:14:36.641Z",
+      "lastModifiedDate": "2026-06-26T01:14:36.641Z",
+      "description": "A flaw in Node.js Permission API can cause a file metadata to be modified even on a path that was set as read-only with e.g. `--allow-fs-read`.\r\n\r\nThis vulnerability affects all supported release lines: **Node.js 22**, **Node.js 24**, and **Node.js 26**.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/gogs/gogs/security/advisories/GHSA-6p9m-q3jp-47h4",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/gogs/gogs/pull/8333",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/gogs/gogs/commit/f35a767af74e05342bafc6fdda02c791816426f8",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/gogs/gogs/releases/tag/v0.14.3",
+          "url": "https://nodejs.org/en/blog/vulnerability/june-2026-security-releases",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "gogs",
-          "product": "gogs",
+          "defaultStatus": "unaffected",
+          "vendor": "nodejs",
+          "product": "node",
           "versions": [
             {
-              "version": "< 0.14.3",
-              "status": "affected"
+              "version": "22.22.3",
+              "status": "affected",
+              "lessThanOrEqual": "22.22.3",
+              "versionType": "semver"
+            },
+            {
+              "version": "24.16.0",
+              "status": "affected",
+              "lessThanOrEqual": "24.16.0",
+              "versionType": "semver"
+            },
+            {
+              "version": "26.3.0",
+              "status": "affected",
+              "lessThanOrEqual": "26.3.0",
+              "versionType": "semver"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-345: Insufficient Verification of Data Authenticity",
-        "CWE-639: Authorization Bypass Through User-Controlled Key",
-        "CWE-862: Missing Authorization"
+        "CWE-276 Incorrect Default Permissions"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-48619",
+      "publishedDate": "2026-06-26T01:14:36.541Z",
+      "lastModifiedDate": "2026-06-26T01:14:36.541Z",
+      "description": "A flaw in Node.js HTTP/2 client allows a server to send an unlimited number of ORIGIN frames, which could lead to an Out of Memory error on the client.\r\n\r\nThis vulnerability affects all supported release lines: **Node.js 22**, **Node.js 24**, and **Node.js 26**.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://nodejs.org/en/blog/vulnerability/june-2026-security-releases",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "vendor": "nodejs",
+          "product": "node",
+          "versions": [
+            {
+              "version": "22.22.3",
+              "status": "affected",
+              "lessThanOrEqual": "22.22.3",
+              "versionType": "semver"
+            },
+            {
+              "version": "24.16.0",
+              "status": "affected",
+              "lessThanOrEqual": "24.16.0",
+              "versionType": "semver"
+            },
+            {
+              "version": "26.3.0",
+              "status": "affected",
+              "lessThanOrEqual": "26.3.0",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-400 Uncontrolled Resource Consumption"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-48615",
+      "publishedDate": "2026-06-26T01:14:36.524Z",
+      "lastModifiedDate": "2026-06-26T01:14:36.524Z",
+      "description": "A flaw in Node.js proxy tunnel error handling could expose proxy credentials in `ERR_PROXY_TUNNEL` error messages.\r\n\r\nWhen proxy credentials are embedded in the proxy URL, they may be exposed through error handling paths and captured by logs, diagnostics, or other error consumers.\r\n\r\nThis vulnerability affects all supported release lines: **Node.js 22**, **Node.js 24**, and **Node.js 26**.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://nodejs.org/en/blog/vulnerability/june-2026-security-releases",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "vendor": "nodejs",
+          "product": "node",
+          "versions": [
+            {
+              "version": "22.22.3",
+              "status": "affected",
+              "lessThanOrEqual": "22.22.3",
+              "versionType": "semver"
+            },
+            {
+              "version": "24.16.0",
+              "status": "affected",
+              "lessThanOrEqual": "24.16.0",
+              "versionType": "semver"
+            },
+            {
+              "version": "26.3.0",
+              "status": "affected",
+              "lessThanOrEqual": "26.3.0",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-359 Privacy Violation"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-50745",
+      "publishedDate": "2026-06-26T01:11:14.310Z",
+      "lastModifiedDate": "2026-06-26T01:11:14.310Z",
+      "description": "A missing sanitisation vulnerability exists with user input in the stats-video.php script. The way URLs to this script were constructed did not follow best practices, and the output of the Smarty custom helper function url was neither properly encoded nor sanitised, allowing user‑supplied input to be reflected without escaping.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://hackerone.com/reports/3793243",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "vendor": "Revive",
+          "product": "Adserver",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "6.0.7",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79 Cross-site Scripting (XSS) - Reflected"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-50740",
+      "publishedDate": "2026-06-26T01:11:14.295Z",
+      "lastModifiedDate": "2026-06-26T01:11:14.295Z",
+      "description": "A missing sanitisation vulnerability of user input in the zone-include.php script exists in Revive Adserver 6.0.7 and earlier. A low‑privileged user could exploit the refresh parameter of the iFrame invocation tag to perform reflected XSS attacks.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://hackerone.com/reports/3780806",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "vendor": "Revive",
+          "product": "Adserver",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "6.0.7",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79 Cross-site Scripting (XSS) - Reflected"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-50742",
+      "publishedDate": "2026-06-26T01:11:14.243Z",
+      "lastModifiedDate": "2026-06-26T01:11:14.243Z",
+      "description": "A stored XSS vulnerabilities exists in the `maintenance-acl-check.php` and `maintenance-banners-check.php` tools of Revive Adserver 6.0.7. The issue was caused by entity names being displayed without proper escaping when inconsistencies were detected. Whether the XSS payload is executed when an administrator uses the affected maintenance tools is not entirely under the attacker's control.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://hackerone.com/reports/3781311",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "vendor": "Revive",
+          "product": "Adserver",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "6.0.7",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79 Cross-site Scripting (XSS) - Stored"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-50741",
+      "publishedDate": "2026-06-26T01:11:14.108Z",
+      "lastModifiedDate": "2026-06-26T01:11:14.108Z",
+      "description": "Bypass to the fix for CVE-2026-34916. Variants of such vectors have been also reported by phucrio and offsetmd. The fix can be bypassed either by sending a disallowed but otherwise valid plugin identifier as `type`, or using the `ox.setChannelTargeting` XML-RPC API method.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://hackerone.com/reports/3780854",
+          "type": "reference"
+        },
+        {
+          "url": "https://hackerone.com/reports/3781492",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "vendor": "Revive",
+          "product": "Adserver",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "6.0.7",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-94 Code Injection"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-50739",
+      "publishedDate": "2026-06-26T01:11:14.071Z",
+      "lastModifiedDate": "2026-06-26T01:11:14.071Z",
+      "description": "A bypass for CVE‑2026‑34913 exists with proper ownership validation that had not been applied to the reverse operation of linking campaigns and trackers through the `tracker-campaigns.php` script in Revive Adserver 6.0.7 and earlier. As a result, a low‑privileged user could link their trackers to campaigns owned by other managers on the same instance, leading to inconsistent ownership relationships.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://hackerone.com/reports/3780709",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "vendor": "Revive",
+          "product": "Adserver",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "6.0.7",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-284 Improper Access Control - Generic"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-50744",
+      "publishedDate": "2026-06-26T01:11:14.060Z",
+      "lastModifiedDate": "2026-06-26T01:11:14.060Z",
+      "description": "A bypass to the admin‑only restriction of the XML‑RPC API in Revive Adserver 6.0.7. The API response for the ox.login method returned a session ID cookie in the HTTP headers, and although the method correctly returned an error, the associated session was not invalidated. As a result, the leaked session ID could be used to perform subsequent API calls without restrictions.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://hackerone.com/reports/3783738",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "defaultStatus": "unaffected",
+          "vendor": "Revive",
+          "product": "Adserver",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThanOrEqual": "6.0.7",
+              "versionType": "semver"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-284 Improper Access Control - Generic"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
