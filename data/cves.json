@@ -2,270 +2,446 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 49,
-    "last_updated": "2026-06-26T19:02:39.833233",
+    "total_count": 39,
+    "last_updated": "2026-06-26T20:52:01.369794",
     "severity_distribution": {
-      "critical": 2,
-      "high": 15,
-      "medium": 15,
-      "low": 1,
-      "none": 16
+      "critical": 4,
+      "high": 19,
+      "medium": 9,
+      "low": 0,
+      "none": 7
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-45406",
-      "publishedDate": "2026-06-26T16:22:17.290Z",
-      "lastModifiedDate": "2026-06-26T18:30:50.240Z",
-      "description": "Dokku is a docker-powered PaaS. Prior to 0.38.2, the openresty-vhosts plugin copies files from an app's openresty/http-includes/ git repository directory to the host and then interpolates their filenames, unescaped, into a single-quoted shell string that is later parsed by eval. A filename containing a single quote breaks the quoting and allows command substitution to execute arbitrary commands on the host as the dokku user during the app's next deploy. This vulnerability is fixed in 0.38.2.",
-      "severity": 9,
+      "id": "CVE-2026-54350",
+      "publishedDate": "2026-06-26T20:44:00.337Z",
+      "lastModifiedDate": "2026-06-26T20:44:00.337Z",
+      "description": "Budibase is an open-source low-code platform. Prior to 3.39.12,  an unauthenticated visitor of any published Budibase app reads every document of the backing MongoDB, CouchDB, Elasticsearch, DynamoDB-PartiQL, or REST-with-JSON-body collection and, where the builder has published a PUBLIC write query, modifies every document of that collection with one HTTP request. enrichContext at packages/server/src/sdk/workspace/queries/queries.ts:121-138 substitutes parameter values into the raw JSON body of a query, then JSON.parses the result. The validator validateQueryInputs at packages/server/src/api/controllers/query/index.ts:61-71 rejects only Handlebars markers ({{, }}) in user input and does not escape JSON metacharacters (\", \\, }). A parameter value containing a closing quote and additional keys lifts attacker-controlled fields into the parsed filter object. For Mongo find, the parsed filter passes directly to collection.find() (packages/server/src/integrations/mongodb.ts:506-510). Duplicate-key JSON parsing overrides the builder's {name: \"...\"} with {name: {$exists: true}} and returns every document. The same primitive against an updateMany query (mongodb.ts:577-585) widens the filter scope to the full collection while the builder-controlled $set body runs against every matched document. The authorized middleware at packages/server/src/middleware/authorized.ts:141-148 short-circuits when the query's role is PUBLIC. CSRF is not enforced on this path. POST /api/v2/queries/:queryId (packages/server/src/api/routes/query.ts:63) accepts the call with no session, only an x-budibase-app-id header that is public from the published-app URL. This vulnerability is fixed in 3.39.12.",
+      "severity": 10,
       "references": [
         {
-          "url": "https://github.com/dokku/dokku/security/advisories/GHSA-ggqh-98fj-8mg9",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/dokku/dokku/pull/8588",
+          "url": "https://github.com/Budibase/budibase/security/advisories/GHSA-8qv3-p479-cj62",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "dokku",
-          "product": "dokku",
+          "vendor": "Budibase",
+          "product": "budibase",
           "versions": [
             {
-              "version": "< 0.38.2",
+              "version": "< 3.39.12",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-95: Improper Neutralization of Directives in Dynamically Evaluated Code ('Eval Injection')"
+        "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')",
+        "CWE-943: Improper Neutralization of Special Elements in Data Query Logic"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-45408",
-      "publishedDate": "2026-06-26T16:19:56.118Z",
-      "lastModifiedDate": "2026-06-26T18:41:32.788Z",
-      "description": "Dokku is a docker-powered PaaS. Prior to 0.38.2, the app name validation regex (^[a-z0-9][^/:_A-Z]*$) permits shell metacharacters. When an authenticated user pushes to a git remote with a crafted app name, the name is embedded unquoted into a bash pre-receive hook script via an unquoted heredoc (<<EOF instead of <<'EOF') in fn-git-create-hook() at plugins/git/internal-functions:378. On git push, bash interprets the semicolon as a command separator, executing arbitrary commands as the dokku user. This vulnerability is fixed in 0.38.2.",
-      "severity": 9,
+      "id": "CVE-2026-54352",
+      "publishedDate": "2026-06-26T20:32:51.458Z",
+      "lastModifiedDate": "2026-06-26T20:32:51.458Z",
+      "description": "Budibase is an open-source low-code platform. Prior to 3.39.9, `POST /api/pwa/process-zip` at packages/server/src/api/routes/static.ts:24 accepts a builder-uploaded .zip, extracts it with extract-zip@2.0.1 into a temp directory, then for each entry listed in icons.json validates the icon path, opens it, and streams the bytes into MinIO. The resulting object is served back via GET /api/assets/{appId}/pwa/{uuid}.png. extract-zip@2.0.1 preserves absolute symlink targets when restoring symlink entries. The icon-source validator at packages/server/src/api/controllers/static/index.ts:259-268 resolves the icon source string against baseDir (path.resolve), checks resolvedSrc.startsWith(baseDir + path.sep) against that string, and calls fs.existsSync(resolvedSrc) which follows symbolic links to confirm the target exists. None of the three calls reject symbolic-link entries. packages/backend-core/src/objectStore/objectStore.ts:302 then calls (await fsp.open(path)).createReadStream() on the resolved path. fsp.open follows the symlink, the target file's bytes stream into MinIO, and the response of the asset-fetch endpoint returns those bytes verbatim. Result: a workspace-level builder reads any file the server process can open. This vulnerability is fixed in 3.39.9.",
+      "severity": 9.6,
       "references": [
         {
-          "url": "https://github.com/dokku/dokku/security/advisories/GHSA-9x85-7gxq-fcr3",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/dokku/dokku/pull/8590",
+          "url": "https://github.com/Budibase/budibase/security/advisories/GHSA-w7mq-r738-x278",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "dokku",
-          "product": "dokku",
+          "vendor": "Budibase",
+          "product": "budibase",
           "versions": [
             {
-              "version": "< 0.38.2",
+              "version": "< 3.39.9",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')",
+        "CWE-59: Improper Link Resolution Before File Access ('Link Following')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-57518",
-      "publishedDate": "2026-06-26T15:58:20.847Z",
-      "lastModifiedDate": "2026-06-26T18:41:46.008Z",
-      "description": "Pagekit CMS 1.0.18 contains a privilege escalation vulnerability that allows authenticated users with the 'user: manage users' permission to escalate privileges by assigning arbitrary custom roles to themselves due to missing authorization checks in UserApiController::saveAction(). Attackers can assign themselves a custom role with the 'system: manage packages' permission and then upload and install a malicious PHP package through the admin package installer to achieve remote code execution.",
+      "id": "CVE-2026-56062",
+      "publishedDate": "2026-06-26T14:52:49.362Z",
+      "lastModifiedDate": "2026-06-26T20:17:38.123Z",
+      "description": "Unauthenticated SQL Injection in Quotes llama <= 3.1.5 versions.",
+      "severity": 9.3,
+      "references": [
+        {
+          "url": "https://patchstack.com/database/wordpress/plugin/quotes-llama/vulnerability/wordpress-quotes-llama-plugin-3-1-5-sql-injection-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "oooorgle",
+          "collectionURL": "https://wordpress.org/plugins",
+          "defaultStatus": "unaffected",
+          "packageName": "quotes-llama",
+          "product": "Quotes llama",
+          "versions": [
+            {
+              "lessThanOrEqual": "3.1.5",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom",
+              "changes": [
+                {
+                  "at": "3.1.6",
+                  "status": "unaffected"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-54827",
+      "publishedDate": "2026-06-26T14:52:21.779Z",
+      "lastModifiedDate": "2026-06-26T20:19:14.295Z",
+      "description": "Unauthenticated SQL Injection in Real Estate 7 <= 3.5.9 versions.",
+      "severity": 9.3,
+      "references": [
+        {
+          "url": "https://patchstack.com/database/wordpress/theme/realestate-7/vulnerability/wordpress-real-estate-7-theme-3-5-9-sql-injection-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "contempoinc",
+          "collectionURL": "https://wordpress.org/themes",
+          "defaultStatus": "unaffected",
+          "packageName": "realestate-7",
+          "product": "Real Estate 7",
+          "versions": [
+            {
+              "lessThanOrEqual": "3.5.9",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom",
+              "changes": [
+                {
+                  "at": "3.6.0",
+                  "status": "unaffected"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-56055",
+      "publishedDate": "2026-06-26T14:52:45.439Z",
+      "lastModifiedDate": "2026-06-26T20:17:51.689Z",
+      "description": "Subscriber PHP Object Injection in RealHomes <= 4.5.3 versions.",
       "severity": 8.8,
       "references": [
         {
-          "url": "https://gist.github.com/sermikr0/6f0a67e9d101746fcdb04827de137847",
-          "type": "poc"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/pagekit-cms-privilege-escalation-via-userapicontroller",
+          "url": "https://patchstack.com/database/wordpress/theme/realhomes/vulnerability/wordpress-realhomes-theme-4-5-3-php-object-injection-vulnerability?_s_id=cve",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "defaultStatus": "affected",
-          "vendor": "pagekit",
-          "product": "pagekit",
-          "repo": "https://github.com/pagekit/pagekit",
+          "vendor": "InspiryThemes",
+          "collectionURL": "https://wordpress.org/themes",
+          "defaultStatus": "unaffected",
+          "packageName": "realhomes",
+          "product": "RealHomes",
           "versions": [
             {
+              "lessThanOrEqual": "4.5.3",
               "status": "affected",
-              "version": "0",
-              "versionType": "semver",
-              "lessThanOrEqual": "1.0.18"
+              "version": "n/a",
+              "versionType": "custom",
+              "changes": [
+                {
+                  "at": "4.5.4",
+                  "status": "unaffected"
+                }
+              ]
             }
           ]
         }
       ],
       "problemType": [
-        "Missing Authorization"
+        "CWE-502 Deserialization of Untrusted Data"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-55441",
-      "publishedDate": "2026-06-26T16:48:23.194Z",
-      "lastModifiedDate": "2026-06-26T18:41:26.486Z",
-      "description": "mise manages dev tools like node, python, cmake, and terraform. Prior to 2026.6.4, mise's trust feature gates config files (mise.toml, .tool-versions) through trust_check, but task-include files are loaded on a path that never reaches it. When a directory has a task-include dir (mise-tasks/, .mise/tasks/, …) but no config file, mise falls back to the default includes and renders each task's tera fields — and that tera environment has exec() registered. A {{ exec(command='…') }} in any rendered field runs arbitrary commands the moment the tasks are merely listed. There's no config file to gate on, so no trust prompt ever appears. Read-only commands trigger it: mise tasks, mise task ls, mise run, mise tasks --usage (the query shell completion runs on Tab). The victim only has to cd into a cloned repo and list or tab-complete a task. This vulnerability is fixed in 2026.6.4.",
+      "id": "CVE-2026-56010",
+      "publishedDate": "2026-06-26T14:52:29.594Z",
+      "lastModifiedDate": "2026-06-26T20:18:47.172Z",
+      "description": "Subscriber Privilege Escalation in Abandoned Cart Pro for WooCommerce <= 10.4.0 versions.",
+      "severity": 8.8,
+      "references": [
+        {
+          "url": "https://patchstack.com/database/wordpress/plugin/woocommerce-abandon-cart-pro/vulnerability/wordpress-abandoned-cart-pro-for-woocommerce-plugin-10-4-0-privilege-escalation-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Tyche Softwares.",
+          "collectionURL": "https://wordpress.org/plugins",
+          "defaultStatus": "unaffected",
+          "packageName": "woocommerce-abandon-cart-pro",
+          "product": "Abandoned Cart Pro for WooCommerce",
+          "versions": [
+            {
+              "lessThanOrEqual": "10.4.0",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom",
+              "changes": [
+                {
+                  "at": "10.4.1",
+                  "status": "unaffected"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-266 Incorrect Privilege Assignment"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-56035",
+      "publishedDate": "2026-06-26T14:52:37.531Z",
+      "lastModifiedDate": "2026-06-26T20:18:20.295Z",
+      "description": "Unauthenticated Multiple Vulnerabilities in BitFire Security <= 5.0.3 versions.",
       "severity": 8.6,
       "references": [
         {
-          "url": "https://github.com/jdx/mise/security/advisories/GHSA-77g9-363w-rccq",
+          "url": "https://patchstack.com/database/wordpress/plugin/bitfire/vulnerability/wordpress-bitfire-security-plugin-5-0-3-multiple-vulnerabilities-vulnerability?_s_id=cve",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "jdx",
-          "product": "mise",
+          "vendor": "Cory Marsh",
+          "collectionURL": "https://wordpress.org/plugins",
+          "defaultStatus": "unaffected",
+          "packageName": "bitfire",
+          "product": "BitFire Security",
           "versions": [
             {
-              "version": "< 2026.6.4",
-              "status": "affected"
+              "lessThanOrEqual": "5.0.3",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom",
+              "changes": [
+                {
+                  "at": "5.0.4",
+                  "status": "unaffected"
+                }
+              ]
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')",
-        "CWE-94: Improper Control of Generation of Code ('Code Injection')",
-        "CWE-732: Incorrect Permission Assignment for Critical Resource"
+        "CWE-1284 Improper Validation of Specified Quantity in Input"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-56663",
-      "publishedDate": "2026-06-26T16:04:54.364Z",
-      "lastModifiedDate": "2026-06-26T18:13:02.468Z",
-      "description": "AutoGPT is a workflow automation platform for creating, deploying, and managing continuous artificial intelligence agents. Prior to 0.6.52, an authenticated user can bypass the SSRF / private-IP protections in SendWebRequestBlock and reach internal network services. _is_ip_blocked() in backend/backend/util/request.py does not normalize IPv4-mapped IPv6 addresses before checking resolved IPs against the blocked IPv4 ranges, and does not block special-use ranges such as 100.64.0.0/10 (CGNAT, RFC 6598). A hostname that resolves to an IPv4-mapped IPv6 address therefore passes validation and the request reaches the embedded internal IPv4 endpoint. This affects all AutoGPT Platform deployments. This vulnerability is fixed in 0.6.52.",
+      "id": "CVE-2026-54353",
+      "publishedDate": "2026-06-26T20:44:52.069Z",
+      "lastModifiedDate": "2026-06-26T20:44:52.069Z",
+      "description": "Budibase is an open-source low-code platform. Prior to 3.39.9, authenticated users with automation permissions can bypass Budibase's SSRF blacklist through DNS rebinding. The outbound fetch flow validates a hostname against the blacklist before the request is sent, but the actual socket connection later performs a separate DNS lookup through node-fetch. Since the validated IPs are never pinned to the connection, an attacker-controlled hostname can return a public IP during validation and a private/internal IP during the real connection. This results in a non-blind SSRF primitive against internal services reachable from the Budibase host, including loopback, RFC1918 ranges, and cloud metadata endpoints. This vulnerability is fixed in 3.39.9.",
       "severity": 8.5,
       "references": [
         {
-          "url": "https://github.com/Significant-Gravitas/AutoGPT/security/advisories/GHSA-8qc5-rhmg-r6r6",
+          "url": "https://github.com/Budibase/budibase/security/advisories/GHSA-gfq7-5x4g-3xhf",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Significant-Gravitas",
-          "product": "AutoGPT",
+          "vendor": "Budibase",
+          "product": "budibase",
           "versions": [
             {
-              "version": "< 0.6.52",
+              "version": "< 3.39.9",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
+        "CWE-367: Time-of-check Time-of-use (TOCTOU) Race Condition",
         "CWE-918: Server-Side Request Forgery (SSRF)"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-13325",
-      "publishedDate": "2026-06-26T10:41:01.791Z",
-      "lastModifiedDate": "2026-06-26T18:42:00.736Z",
-      "description": "A flaw was found in KubeVirt's migration proxy. When spec.configuration.migrations.disableTLS is set to true on the KubeVirt custom resource, the target virt-handler binds a plain TCP listener on all interfaces (0.0.0.0/::) on a random port with no authentication, peer allow-list, or handshake token. This listener proxies directly into the target virt-launcher's virtqemud control socket. An attacker with a running pod on the cluster network can connect to this listener and issue unfiltered libvirt RPC commands against another tenant's virtual machine, including reading VM memory and configuration, modifying VM state via QMP, or destroying the VM. The bind address is unconditionally 0.0.0.0 — configuring a dedicated migration network via migrations.network only changes the advertised migration IP, not the listener bind address, so the port remains reachable on the pod network even when a dedicated migration network is configured. The API documentation describes disableTLS as removing \"the additional layer of live migration encryption\" without disclosing that it also removes all mutual authentication.",
+      "id": "CVE-2026-57643",
+      "publishedDate": "2026-06-26T14:53:17.058Z",
+      "lastModifiedDate": "2026-06-26T20:16:00.217Z",
+      "description": "Contributor SQL Injection in WP Post Author <= 3.9.1 versions.",
       "severity": 8.5,
       "references": [
         {
-          "url": "https://access.redhat.com/security/cve/CVE-2026-13325",
-          "type": "reference"
-        },
-        {
-          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2493378",
+          "url": "https://patchstack.com/database/wordpress/plugin/wp-post-author/vulnerability/wordpress-wp-post-author-plugin-3-9-1-sql-injection-vulnerability?_s_id=cve",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Red Hat",
-          "product": "Red Hat OpenShift Virtualization 4",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "container-native-virtualization/virt-handler",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/a:redhat:container_native_virtualization:4"
-          ]
-        },
-        {
-          "vendor": "Red Hat",
-          "product": "Red Hat OpenShift Virtualization 4",
-          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
-          "packageName": "container-native-virtualization/virt-handler-rhel9",
-          "defaultStatus": "affected",
-          "cpes": [
-            "cpe:/a:redhat:container_native_virtualization:4"
+          "vendor": "AF themes",
+          "collectionURL": "https://wordpress.org/plugins",
+          "defaultStatus": "unaffected",
+          "packageName": "wp-post-author",
+          "product": "WP Post Author",
+          "versions": [
+            {
+              "lessThanOrEqual": "3.9.1",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom",
+              "changes": [
+                {
+                  "at": "3.10.0",
+                  "status": "unaffected"
+                }
+              ]
+            }
           ]
         }
       ],
       "problemType": [
-        "Missing Authentication for Critical Function"
+        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-45687",
-      "publishedDate": "2026-06-24T20:55:25.918Z",
-      "lastModifiedDate": "2026-06-26T18:43:50.524Z",
-      "description": "Rocket.Chat is an open-source, secure, fully customizable communications platform. Prior to 8.5.0, 8.4.1, 8.3.3, 8.2.3, 8.1.4, 8.0.5, 7.13.7, and 7.10.11, Rocket.Chat's sendFileMessage DDP method passes the entire attacker-supplied file object into Uploads.updateFileComplete, which merges it directly into a MongoDB $set update via Object.assign. There is no allow-list of writable fields. An attacker can therefore rewrite any column on their own upload record, notably store and the store-specific path fields. This vulnerability is fixed in 8.5.0, 8.4.1, 8.3.3, 8.2.3, 8.1.4, 8.0.5, 7.13.7, and 7.10.11.",
+      "id": "CVE-2026-57636",
+      "publishedDate": "2026-06-26T14:53:13.087Z",
+      "lastModifiedDate": "2026-06-26T20:16:14.624Z",
+      "description": "Contributor SQL Injection in wpForo Forum <= 3.0.9 versions.",
       "severity": 8.5,
       "references": [
         {
-          "url": "https://github.com/RocketChat/Rocket.Chat/security/advisories/GHSA-fhc2-x8cp-c5ch",
+          "url": "https://patchstack.com/database/wordpress/plugin/wpforo/vulnerability/wordpress-wpforo-forum-plugin-3-0-9-sql-injection-vulnerability?_s_id=cve",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "RocketChat",
-          "product": "Rocket.Chat",
+          "vendor": "Tomdever",
+          "collectionURL": "https://wordpress.org/plugins",
+          "defaultStatus": "unaffected",
+          "packageName": "wpforo",
+          "product": "wpForo Forum",
           "versions": [
             {
-              "version": ">= 8.5.0-rc.0, < 8.5.0",
-              "status": "affected"
-            },
+              "lessThanOrEqual": "3.0.9",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom",
+              "changes": [
+                {
+                  "at": "3.1.0",
+                  "status": "unaffected"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-89 Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-57315",
+      "publishedDate": "2026-06-26T14:52:57.384Z",
+      "lastModifiedDate": "2026-06-26T20:17:10.083Z",
+      "description": "Contributor Remote Code Execution (RCE) in Blocksy Companion Pro <= 2.1.45 versions.",
+      "severity": 8.5,
+      "references": [
+        {
+          "url": "https://patchstack.com/database/wordpress/plugin/blocksy-companion-pro/vulnerability/wordpress-blocksy-companion-pro-plugin-2-1-45-remote-code-execution-rce-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Creative Themes",
+          "collectionURL": "https://wordpress.org/plugins",
+          "defaultStatus": "unaffected",
+          "packageName": "blocksy-companion-pro",
+          "product": "Blocksy Companion Pro",
+          "versions": [
             {
-              "version": ">= 8.4.0-rc.0, < 8.4.1",
-              "status": "affected"
-            },
+              "lessThanOrEqual": "2.1.45",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom",
+              "changes": [
+                {
+                  "at": "2.1.46",
+                  "status": "unaffected"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-94 Improper Control of Generation of Code ('Code Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-54351",
+      "publishedDate": "2026-06-26T20:45:35.017Z",
+      "lastModifiedDate": "2026-06-26T20:45:35.017Z",
+      "description": "Budibase is an open-source low-code platform. Prior to 3.39.9, the webhook trigger endpoint in Budibase is publicly accessible and passes the full HTTP request body into automation execution parameters. A mass assignment vulnerability in externalTrigger() allows an attacker to overwrite the internal appId property by including it in the webhook POST body. When the automation is processed asynchronously (the default path for webhooks without a collect step), the worker executes the attacker-defined automation in the context of the victim's workspace, granting full read/write access to the victim's database. This vulnerability is fixed in 3.39.9.",
+      "severity": 8.2,
+      "references": [
+        {
+          "url": "https://github.com/Budibase/budibase/security/advisories/GHSA-rgvg-3wpc-h44p",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Budibase",
+          "product": "budibase",
+          "versions": [
             {
-              "version": ">= 8.3.0-rc.0, < 8.3.3",
-              "status": "affected"
-            },
-            {
-              "version": ">= 8.2.0-rc.0, < 8.2.3",
-              "status": "affected"
-            },
-            {
-              "version": ">= 8.1.0-rc.0, < 8.1.4",
-              "status": "affected"
-            },
-            {
-              "version": ">= 8.0.0-rc.0, < 8.0.5",
-              "status": "affected"
-            },
-            {
-              "version": ">= 7.11.0-rc.0, < 7.13.7",
-              "status": "affected"
-            },
-            {
-              "version": "< 7.10.11",
+              "version": "< 3.39.9",
               "status": "affected"
             }
           ]
@@ -277,177 +453,690 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-71335",
-      "publishedDate": "2026-06-25T21:41:06.213Z",
-      "lastModifiedDate": "2026-06-26T18:42:15.493Z",
-      "description": "Flowise before 3.0.10 (affected versions 3.0.7 and earlier) fails to invalidate existing sessions and session tokens after a user changes their password. An attacker who already holds an active session, for example via a stolen session token or a device left logged in, remains authenticated as the legitimate user even after the user rotates their credentials, undermining the security purpose of the password change.",
-      "severity": 8.1,
+      "id": "CVE-2026-57655",
+      "publishedDate": "2026-06-26T14:53:24.884Z",
+      "lastModifiedDate": "2026-06-26T20:15:32.578Z",
+      "description": "Unauthenticated Cross Site Request Forgery (CSRF) in Child Theme Wizard <= 1.4 versions.",
+      "severity": 8.2,
       "references": [
         {
-          "url": "https://github.com/FlowiseAI/Flowise/security/advisories/GHSA-x7rp-qj2h-ghgw",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/flowise-session-invalidation-failure-after-password-change",
+          "url": "https://patchstack.com/database/wordpress/plugin/child-theme-wizard/vulnerability/wordpress-child-theme-wizard-plugin-1-4-cross-site-request-forgery-csrf-vulnerability?_s_id=cve",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Flowise",
-          "product": "Flowise",
+          "vendor": "Jay Versluis",
+          "collectionURL": "https://wordpress.org/plugins",
           "defaultStatus": "unaffected",
-          "packageURL": "pkg:npm/flowise",
+          "packageName": "child-theme-wizard",
+          "product": "Child Theme Wizard",
           "versions": [
             {
-              "version": "0",
+              "lessThanOrEqual": "1.4",
               "status": "affected",
-              "versionType": "semver",
-              "lessThan": "3.0.10"
-            },
-            {
-              "version": "3.0.10",
-              "status": "unaffected",
-              "versionType": "semver"
+              "version": "n/a",
+              "versionType": "custom",
+              "changes": [
+                {
+                  "at": "1.5",
+                  "status": "unaffected"
+                }
+              ]
             }
           ]
         }
       ],
       "problemType": [
-        "Insufficient Session Expiration"
+        "CWE-352 Cross-Site Request Forgery (CSRF)"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-39951",
-      "publishedDate": "2026-06-24T23:14:39.024Z",
-      "lastModifiedDate": "2026-06-26T18:43:21.645Z",
-      "description": "Cacti is an open source performance and fault management framework. Versions 1.2.30 and prior have a Stored SQL Injection vulnerability through graph_name_regexp in the Reports feature. This issue has been fixed in version 1.2.31.",
-      "severity": 7.6,
+      "id": "CVE-2026-48778",
+      "publishedDate": "2026-06-26T20:21:17.254Z",
+      "lastModifiedDate": "2026-06-26T20:21:17.254Z",
+      "description": "Notepad++ is a free and open-source source code editor. Prior to 8.9.6.1, the <GUIConfig name=\"commandLineInterpreter\"> tag in config.xml is read by NppXml::value() (Parameters.cpp:6430) and stored in _nppGUI._commandLineInterpreter without any validation, whitelist, or digital signature check. When the user triggers IDM_FILE_OPEN_CMD (File → Open Containing Folder → cmd), NppCommands.cpp:228 creates a Command object with this value and calls run(), which invokes ShellExecute (RunDlg.cpp:221) with the attacker-controlled string as the executable path. This vulnerability is fixed in 8.9.6.1.",
+      "severity": 7.8,
       "references": [
         {
-          "url": "https://github.com/Cacti/cacti/security/advisories/GHSA-pf37-v86f-5xwp",
+          "url": "https://github.com/notepad-plus-plus/notepad-plus-plus/security/advisories/GHSA-7hm3-wp5q-ccv9",
           "type": "reference"
         },
         {
-          "url": "https://github.com/Cacti/cacti/commit/4c09efaebf3a9faec66969d0b5c4aceaf397f37f",
+          "url": "https://github.com/notepad-plus-plus/notepad-plus-plus/commit/24c7b5c63cece76dbc8c4f2607a27ebfe22fa614",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Cacti",
-          "product": "cacti",
+          "vendor": "notepad-plus-plus",
+          "product": "notepad-plus-plus",
           "versions": [
             {
-              "version": "< 1.2.31",
+              "version": "< 8.9.6.1",
               "status": "affected"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-47220",
-      "publishedDate": "2026-06-26T18:02:17.679Z",
-      "lastModifiedDate": "2026-06-26T18:02:17.679Z",
-      "description": "Envoy is an open source edge and service proxy designed for cloud-native applications. From 1.37.0 until 1.37.5 and 1.38.3, when the %REQUESTED_SERVER_NAME(X:Y)% is used in log format and host related options is specified, like HOST_FIRST, SNI_FIRST, it's possible to crash Envoy when the specified host header is missing in the request headers. This vulnerability is fixed in 1.37.5 and 1.38.3.",
-      "severity": 7.5,
+      "id": "CVE-2026-48800",
+      "publishedDate": "2026-06-26T20:12:43.955Z",
+      "lastModifiedDate": "2026-06-26T20:12:43.955Z",
+      "description": "Notepad++ is a free and open-source source code editor. Prior to 8.9.6.1, the <Command> tag text content inside <UserDefinedCommands> in shortcuts.xml is read by NppXml::value(aNode) (Parameters.cpp:3658) in the feedUserCmds() function and stored in UserCommand._cmd without any validation. When the user clicks the corresponding entry in the Run menu, NppCommands.cpp:4264 creates a Command object with string2wstring(ucmd.getCmd()) and calls run(), which invokes ShellExecute (RunDlg.cpp:221) with the attacker-controlled string as the executable path. The injected command appears as a normal menu item in the Run menu, making it a viable persistence mechanism.  This vulnerability is fixed in 8.9.6.1.",
+      "severity": 7.8,
       "references": [
         {
-          "url": "https://github.com/envoyproxy/envoy/security/advisories/GHSA-j9wh-4qfm-wf2v",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "envoyproxy",
-          "product": "envoy",
-          "versions": [
-            {
-              "version": ">= 1.38.0, < 1.38.3",
-              "status": "affected"
-            },
-            {
-              "version": ">= 1.37.0, < 1.37.5",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-476: NULL Pointer Dereference"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-48044",
-      "publishedDate": "2026-06-26T17:31:37.602Z",
-      "lastModifiedDate": "2026-06-26T18:31:20.280Z",
-      "description": "Envoy is an open source edge and service proxy designed for cloud-native applications. From 1.23.0 until 1.35.11, 1.36.7, 1.37.3, and 1.38.1, a  vulnerability has been identified in Envoy's zstd decompressor implementation (ZstdDecompressorImpl). When zstd decompression is enabled, processing a specially crafted, highly compressed zstd payload can lead to massive memory allocation. An attacker can exploit this to cause severe memory exhaustion, potentially resulting in an Out-Of-Memory (OOM) kill and Denial of Service (DoS) for the Envoy proxy. This vulnerability is fixed in 1.35.11, 1.36.7, 1.37.3, and 1.38.1.",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://github.com/envoyproxy/envoy/security/advisories/GHSA-m3p9-47wh-88wg",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "envoyproxy",
-          "product": "envoy",
-          "versions": [
-            {
-              "version": ">= 1.38.0, < 1.38.1",
-              "status": "affected"
-            },
-            {
-              "version": ">= 1.37.0, < 1.37.3",
-              "status": "affected"
-            },
-            {
-              "version": ">= 1.36.0, < 1.36.7",
-              "status": "affected"
-            },
-            {
-              "version": ">= 1.23.0, < 1.35.11",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-409: Improper Handling of Highly Compressed Data (Data Amplification)"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-54341",
-      "publishedDate": "2026-06-26T16:42:15.298Z",
-      "lastModifiedDate": "2026-06-26T18:32:22.364Z",
-      "description": "Dragonfly is an in-memory data store built for modern application workloads. Prior to 1.39.0, a crafted RESTORE payload triggers an out-of-bounds read in DragonflyDB's listpack collection loaders, crashing the entire server process (SIGSEGV). Because DragonflyDB requires no authentication by default and RESTORE is a normal keyspace command, an unauthenticated remote attacker can crash the server with a single ~24-byte command — a remote, repeatable denial of service. This vulnerability is fixed in 1.39.0.",
-      "severity": 7.5,
-      "references": [
-        {
-          "url": "https://github.com/dragonflydb/dragonfly/security/advisories/GHSA-cwjr-j869-h8q9",
+          "url": "https://github.com/notepad-plus-plus/notepad-plus-plus/security/advisories/GHSA-3x3f-3j39-pj3v",
           "type": "reference"
         },
         {
-          "url": "https://github.com/dragonflydb/dragonfly/pull/7502",
+          "url": "https://github.com/notepad-plus-plus/notepad-plus-plus/commit/6b3dc52a9245c6d8c6287a8d6d93a30981c05feb",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "dragonflydb",
-          "product": "dragonfly",
+          "vendor": "notepad-plus-plus",
+          "product": "notepad-plus-plus",
           "versions": [
             {
-              "version": "< 1.39.0",
+              "version": "< 8.9.6.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-78: Improper Neutralization of Special Elements used in an OS Command ('OS Command Injection')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-52884",
+      "publishedDate": "2026-06-26T20:11:40.227Z",
+      "lastModifiedDate": "2026-06-26T20:11:40.227Z",
+      "description": "Notepad++ is a free and open-source source code editor. In v8.9.6.1, isInTrustedDirectory() does NOT canonicalize the path before checking. It uses a prefix-based check (PathIsPrefix() or equivalent) that matches paths starting with trusted directory strings. A path traversal using ..\\..\\ after a trusted directory prefix passes the check while resolving to an untrusted location. The CVE-2026-48800 patch adds isInTrustedDirectory() validation in Command::run() (RunDlg.cpp) before calling ShellExecute(). This function checks whether the resolved executable path is under a trusted directory.  This vulnerability is fixed in 8.9.6.2.",
+      "severity": 7.8,
+      "references": [
+        {
+          "url": "https://github.com/notepad-plus-plus/notepad-plus-plus/security/advisories/GHSA-p58x-r3c9-x9p6",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/notepad-plus-plus/notepad-plus-plus/commit/ea1508855e9c4528f6198ce9d345f13cb759ebf4",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "notepad-plus-plus",
+          "product": "notepad-plus-plus",
+          "versions": [
+            {
+              "version": "= 8.9.6.1",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-42: Path Equivalence: 'filename.' (Trailing Dot)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-56069",
+      "publishedDate": "2026-06-26T14:52:53.450Z",
+      "lastModifiedDate": "2026-06-26T20:17:24.275Z",
+      "description": "Unauthenticated Insecure Direct Object References (IDOR) in Toolset Forms <= 2.6.24 versions.",
+      "severity": 7.5,
+      "references": [
+        {
+          "url": "https://patchstack.com/database/wordpress/plugin/cred-frontend-editor/vulnerability/wordpress-toolset-forms-plugin-2-6-24-insecure-direct-object-references-idor-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Site Building with Toolset",
+          "collectionURL": "https://wordpress.org/plugins",
+          "defaultStatus": "unaffected",
+          "packageName": "cred-frontend-editor",
+          "product": "Toolset Forms",
+          "versions": [
+            {
+              "lessThanOrEqual": "2.6.24",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom",
+              "changes": [
+                {
+                  "at": "2.6.25",
+                  "status": "unaffected"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-639 Authorization Bypass Through User-Controlled Key"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-56029",
+      "publishedDate": "2026-06-26T14:52:33.630Z",
+      "lastModifiedDate": "2026-06-26T20:18:33.762Z",
+      "description": "Unauthenticated Broken Authentication in CorvusPay WooCommerce Payment Gateway <= 2.7.4 versions.",
+      "severity": 7.5,
+      "references": [
+        {
+          "url": "https://patchstack.com/database/wordpress/plugin/corvuspay-woocommerce-integration/vulnerability/wordpress-corvuspay-woocommerce-payment-gateway-plugin-2-7-4-broken-authentication-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "corvuspay",
+          "collectionURL": "https://wordpress.org/plugins",
+          "defaultStatus": "unaffected",
+          "packageName": "corvuspay-woocommerce-integration",
+          "product": "CorvusPay WooCommerce Payment Gateway",
+          "versions": [
+            {
+              "lessThanOrEqual": "2.7.4",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom",
+              "changes": [
+                {
+                  "at": "2.7.5",
+                  "status": "unaffected"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-288 Authentication Bypass Using an Alternate Path or Channel"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-54837",
+      "publishedDate": "2026-06-26T14:52:25.702Z",
+      "lastModifiedDate": "2026-06-26T20:19:01.084Z",
+      "description": "Unauthenticated Broken Access Control in Intranet &amp; Private Site &#8211; All-In-One Intranet <= 1.8.1 versions.",
+      "severity": 7.5,
+      "references": [
+        {
+          "url": "https://patchstack.com/database/wordpress/plugin/all-in-one-intranet/vulnerability/wordpress-intranet-private-site-all-in-one-intranet-plugin-1-8-1-broken-access-control-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Syed Balkhi",
+          "collectionURL": "https://wordpress.org/plugins",
+          "defaultStatus": "unaffected",
+          "packageName": "all-in-one-intranet",
+          "product": "Intranet &amp; Private Site &#8211; All-In-One Intranet",
+          "versions": [
+            {
+              "lessThanOrEqual": "1.8.1",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom",
+              "changes": [
+                {
+                  "at": "1.9.0",
+                  "status": "unaffected"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-862 Missing Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-50136",
+      "publishedDate": "2026-06-26T20:36:54.016Z",
+      "lastModifiedDate": "2026-06-26T20:36:54.016Z",
+      "description": "Budibase is an open-source low-code platform. Prior to 3.39.3, the application server exposes an unauthenticated endpoint that generates S3 PutObject presigned URLs using credentials stored in a workspace datasource. The route is protected only by the recaptcha middleware and does not require authentication, table permission, datasource permission, or builder access. A public caller who knows a workspace ID and S3 datasource ID can request a signed upload URL for attacker-controlled bucket and key values. This vulnerability is fixed in 3.39.3.",
+      "severity": 7.4,
+      "references": [
+        {
+          "url": "https://github.com/Budibase/budibase/security/advisories/GHSA-jj36-r9w3-3pfh",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Budibase",
+          "product": "budibase",
+          "versions": [
+            {
+              "version": "< 3.39.3",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-306: Missing Authentication for Critical Function"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-50132",
+      "publishedDate": "2026-06-26T20:34:30.304Z",
+      "lastModifiedDate": "2026-06-26T20:34:30.304Z",
+      "description": "Budibase is an open-source low-code platform. Prior to 3.39.0, `GET /api/chat-links/:instance/:token/handoff` is a public endpoint (no auth required) that performs a permanent, state-changing operation: it binds an external chat identity (Slack/Discord/MS Teams) to an authenticated Budibase user account, with no consent UI and no CSRF protection. The session token in the URL is created by the attacker (from their own /link slash command) and embeds the attacker's externalUserId. When an authenticated Budibase victim visits the URL, their account is silently and permanently linked to the attacker's Slack/Discord identity. The server responds with \"Authentication succeeded.\" — no indication of what was linked. This vulnerability is fixed in 3.39.0.",
+      "severity": 7.3,
+      "references": [
+        {
+          "url": "https://github.com/Budibase/budibase/security/advisories/GHSA-v7j5-vc4m-723w",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Budibase",
+          "product": "budibase",
+          "versions": [
+            {
+              "version": "< 3.39.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-284: Improper Access Control",
+        "CWE-352: Cross-Site Request Forgery (CSRF)"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-57322",
+      "publishedDate": "2026-06-26T14:53:01.332Z",
+      "lastModifiedDate": "2026-06-26T20:16:55.873Z",
+      "description": "Unauthenticated Cross Site Scripting (XSS) in weMail <= 2.1.2 versions.",
+      "severity": 7.1,
+      "references": [
+        {
+          "url": "https://patchstack.com/database/wordpress/plugin/wemail/vulnerability/wordpress-wemail-plugin-2-1-2-reflected-cross-site-scripting-xss-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "weDevs",
+          "collectionURL": "https://wordpress.org/plugins",
+          "defaultStatus": "unaffected",
+          "packageName": "wemail",
+          "product": "weMail",
+          "versions": [
+            {
+              "lessThanOrEqual": "2.1.2",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom",
+              "changes": [
+                {
+                  "at": "2.1.3",
+                  "status": "unaffected"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-56043",
+      "publishedDate": "2026-06-26T14:52:41.497Z",
+      "lastModifiedDate": "2026-06-26T20:18:06.738Z",
+      "description": "Unauthenticated Cross Site Scripting (XSS) in Customer Reviews for WooCommerce <= 5.110.1 versions.",
+      "severity": 7.1,
+      "references": [
+        {
+          "url": "https://patchstack.com/database/wordpress/plugin/customer-reviews-woocommerce/vulnerability/wordpress-customer-reviews-for-woocommerce-plugin-5-110-1-cross-site-scripting-xss-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "CusRev",
+          "collectionURL": "https://wordpress.org/plugins",
+          "defaultStatus": "unaffected",
+          "packageName": "customer-reviews-woocommerce",
+          "product": "Customer Reviews for WooCommerce",
+          "versions": [
+            {
+              "lessThanOrEqual": "5.110.1",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom",
+              "changes": [
+                {
+                  "at": "5.111.0",
+                  "status": "unaffected"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2024-23581",
+      "publishedDate": "2026-06-26T20:39:48.964Z",
+      "lastModifiedDate": "2026-06-26T20:39:48.964Z",
+      "description": "The HCL Traveler for Microsoft Outlook libraries are being flagged as potentially malicious software or an unrecognized application.",
+      "severity": 6.7,
+      "references": [
+        {
+          "url": "https://support.hcl-software.com/csm?id=kb_article&sysparm_article=KB0131417",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "HCLSoftware",
+          "product": "Traveler for Microsoft Outlook",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "< 3.0.9"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-1104 Use of unmaintained third party components"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-57617",
+      "publishedDate": "2026-06-26T14:53:05.256Z",
+      "lastModifiedDate": "2026-06-26T20:16:42.414Z",
+      "description": "Contributor Cross Site Scripting (XSS) in SeedProd Pro < 6.19.5 versions.",
+      "severity": 6.5,
+      "references": [
+        {
+          "url": "https://patchstack.com/database/wordpress/plugin/seedprod-coming-soon-pro-5/vulnerability/wordpress-seedprod-pro-plugin-6-19-5-cross-site-scripting-xss-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "SeedProd LLC.",
+          "collectionURL": "https://wordpress.org/plugins",
+          "defaultStatus": "unaffected",
+          "packageName": "seedprod-coming-soon-pro-5",
+          "product": "SeedProd Pro",
+          "versions": [
+            {
+              "lessThan": "6.19.5",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom",
+              "changes": [
+                {
+                  "at": "6.19.5",
+                  "status": "unaffected"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-57620",
+      "publishedDate": "2026-06-26T11:41:36.957Z",
+      "lastModifiedDate": "2026-06-26T20:19:55.180Z",
+      "description": "Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting') vulnerability in Tim Strifler Exclusive Addons Elementor allows Stored XSS.\n\nThis issue affects Exclusive Addons Elementor: from n/a through 2.7.9.8.",
+      "severity": 6.5,
+      "references": [
+        {
+          "url": "https://patchstack.com/database/wordpress/plugin/exclusive-addons-for-elementor/vulnerability/wordpress-exclusive-addons-elementor-plugin-2-7-9-8-cross-site-scripting-xss-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Tim Strifler",
+          "product": "Exclusive Addons Elementor",
+          "collectionURL": "https://wordpress.org/plugins",
+          "packageName": "exclusive-addons-for-elementor",
+          "versions": [
+            {
+              "status": "affected",
+              "version": "n/a",
+              "lessThanOrEqual": "2.7.9.8",
+              "changes": [
+                {
+                  "at": "2.7.9.9",
+                  "status": "unaffected"
+                }
+              ],
+              "versionType": "custom"
+            }
+          ],
+          "defaultStatus": "unaffected"
+        }
+      ],
+      "problemType": [
+        "CWE-79 Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-57661",
+      "publishedDate": "2026-06-26T14:53:28.777Z",
+      "lastModifiedDate": "2026-06-26T20:15:19.229Z",
+      "description": "Subscriber Broken Access Control in WPComplete <= 2.9.5.5 versions.",
+      "severity": 5.4,
+      "references": [
+        {
+          "url": "https://patchstack.com/database/wordpress/plugin/wpcomplete/vulnerability/wordpress-wpcomplete-plugin-2-9-5-5-broken-access-control-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Nexcess",
+          "collectionURL": "https://wordpress.org/plugins",
+          "defaultStatus": "unaffected",
+          "packageName": "wpcomplete",
+          "product": "WPComplete",
+          "versions": [
+            {
+              "lessThanOrEqual": "2.9.5.5",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom",
+              "changes": [
+                {
+                  "at": "2.9.5.6",
+                  "status": "unaffected"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-862 Missing Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-57630",
+      "publishedDate": "2026-06-26T14:53:09.171Z",
+      "lastModifiedDate": "2026-06-26T20:16:28.803Z",
+      "description": "Unauthenticated Insecure Direct Object References (IDOR) in Blocksy Companion Pro <= 2.1.46 versions.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://patchstack.com/database/wordpress/plugin/blocksy-companion-pro/vulnerability/wordpress-blocksy-companion-pro-plugin-2-1-46-insecure-direct-object-references-idor-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Creative Themes",
+          "collectionURL": "https://wordpress.org/plugins",
+          "defaultStatus": "unaffected",
+          "packageName": "blocksy-companion-pro",
+          "product": "Blocksy Companion Pro",
+          "versions": [
+            {
+              "lessThanOrEqual": "2.1.46",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom",
+              "changes": [
+                {
+                  "at": "2.1.47",
+                  "status": "unaffected"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-639 Authorization Bypass Through User-Controlled Key"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-24547",
+      "publishedDate": "2026-06-26T14:52:17.799Z",
+      "lastModifiedDate": "2026-06-26T20:19:27.737Z",
+      "description": "Unauthenticated Broken Access Control in SiteGround Email Marketing <= 1.7.5 versions.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://patchstack.com/database/wordpress/plugin/siteground-email-marketing/vulnerability/wordpress-siteground-email-marketing-plugin-1-7-5-broken-access-control-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "SiteGround",
+          "collectionURL": "https://wordpress.org/plugins",
+          "defaultStatus": "unaffected",
+          "packageName": "siteground-email-marketing",
+          "product": "SiteGround Email Marketing",
+          "versions": [
+            {
+              "lessThanOrEqual": "1.7.5",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom",
+              "changes": [
+                {
+                  "at": "1.7.6",
+                  "status": "unaffected"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-862 Missing Authorization"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2025-66123",
+      "publishedDate": "2026-06-26T14:52:13.859Z",
+      "lastModifiedDate": "2026-06-26T20:19:41.689Z",
+      "description": "Unauthenticated Insecure Direct Object References (IDOR) in BookPro <= 1.1.0 versions.",
+      "severity": 5.3,
+      "references": [
+        {
+          "url": "https://patchstack.com/database/wordpress/plugin/ovabookpro/vulnerability/wordpress-bookpro-plugin-1-1-0-insecure-direct-object-references-idor-vulnerability?_s_id=cve",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "About Envato",
+          "collectionURL": "https://wordpress.org/plugins",
+          "defaultStatus": "unaffected",
+          "packageName": "ovabookpro",
+          "product": "BookPro",
+          "versions": [
+            {
+              "lessThanOrEqual": "1.1.0",
+              "status": "affected",
+              "version": "n/a",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-639 Authorization Bypass Through User-Controlled Key"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-48770",
+      "publishedDate": "2026-06-26T20:22:17.683Z",
+      "lastModifiedDate": "2026-06-26T20:22:17.683Z",
+      "description": "Notepad++ is a free and open-source source code editor. Prior to 8.9.6.1, a local process in the same interactive Windows session can send a malformed WM_COPYDATA message to Notepad++ using the COPYDATA_FULL_CMDLINE path. The handler appears to process COPYDATASTRUCT.lpData as an unbounded NUL-terminated wchar_t* instead of enforcing COPYDATASTRUCT.cbData. This vulnerability is fixed in 8.9.6.1.",
+      "severity": 5,
+      "references": [
+        {
+          "url": "https://github.com/notepad-plus-plus/notepad-plus-plus/security/advisories/GHSA-r39g-3mcw-xcg2",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/notepad-plus-plus/notepad-plus-plus/commit/f20a0888a92ce557a339b833cd9d9d8e97dc797d",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "notepad-plus-plus",
+          "product": "notepad-plus-plus",
+          "versions": [
+            {
+              "version": "< 8.9.6.1",
               "status": "affected"
             }
           ]
@@ -459,665 +1148,64 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2021-47987",
-      "publishedDate": "2026-06-25T21:41:02.187Z",
-      "lastModifiedDate": "2026-06-26T18:42:21.725Z",
-      "description": "Parse Server before 4.10.0 was affected by a supply chain incident in which incorrect version tags were pushed to the official repository pointing to an unreviewed personal fork of a contributor with write access. No releases were published with these tags; a project was exposed only if it defined a git-based dependency referencing one of the affected tags (for example, parse-server#4.9.3). The code behind the tags was not reviewed or approved, and although no malicious code was identified, the introduction of security vulnerabilities could not be ruled out.",
-      "severity": 7.5,
+      "id": "CVE-2026-57649",
+      "publishedDate": "2026-06-26T14:53:20.966Z",
+      "lastModifiedDate": "2026-06-26T20:15:46.693Z",
+      "description": "Subscriber Broken Access Control in Shoppable Images Lite <= 1.3 versions.",
+      "severity": 4.3,
       "references": [
         {
-          "url": "https://github.com/parse-community/parse-server/security/advisories/GHSA-593v-wcqx-hq2w",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.vulncheck.com/advisories/parse-server-arbitrary-code-execution-via-malicious-version-tags",
+          "url": "https://patchstack.com/database/wordpress/plugin/mabel-shoppable-images-lite/vulnerability/wordpress-shoppable-images-lite-plugin-1-3-broken-access-control-vulnerability?_s_id=cve",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "parse-community",
-          "product": "parse-server",
+          "vendor": "studiowombat",
+          "collectionURL": "https://wordpress.org/plugins",
           "defaultStatus": "unaffected",
-          "packageURL": "pkg:npm/parse-server",
+          "packageName": "mabel-shoppable-images-lite",
+          "product": "Shoppable Images Lite",
           "versions": [
             {
-              "version": "0",
+              "lessThanOrEqual": "1.3",
               "status": "affected",
-              "versionType": "semver",
-              "lessThan": "4.10.0"
-            },
-            {
-              "version": "4.10.0",
-              "status": "unaffected",
-              "versionType": "semver"
+              "version": "n/a",
+              "versionType": "custom",
+              "changes": [
+                {
+                  "at": "1.3.1",
+                  "status": "unaffected"
+                }
+              ]
             }
           ]
         }
       ],
       "problemType": [
-        "Download of Code Without Integrity Check"
+        "CWE-862 Missing Authorization"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-54091",
-      "publishedDate": "2026-06-25T17:43:04.664Z",
-      "lastModifiedDate": "2026-06-26T18:42:39.910Z",
-      "description": "File Browser is a file managing interface for uploading, deleting, previewing, renaming, and editing files within a specified directory. Prior to 2.63.6, File Browser's public share handlers rebase the share owner's filesystem root to the shared directory and then evaluate descendant paths against the owner's global and per-user rules using the rebased relative path instead of the original path relative to the owner's scope. As a result, an attacker who knows a public directory share URL can access files and subdirectories that the owner explicitly blocked with rules, as long as those blocked paths are located underneath the shared directory. In the simplest case this is an unauthenticated information disclosure through `GET /api/public/share/*` and `GET /api/public/dl/*`. This vulnerability is fixed in 2.63.6.",
-      "severity": 7.5,
+      "id": "CVE-2026-50137",
+      "publishedDate": "2026-06-26T20:41:03.443Z",
+      "lastModifiedDate": "2026-06-26T20:41:03.443Z",
+      "description": "Budibase is an open-source low-code platform. Prior to 3.39.0, an anonymous attacker who knows or can enumerate a workspace id (app_...) and an S3-source datasource id (ds_...) can call this endpoint with no auth and obtain a 15-minute pre-signed PUT URL minted on the victim's IAM identity. The endpoint also returns the publicUrl so the attacker knows exactly where their PUT lands. Because bucket is attacker-controlled, the attacker can write to any bucket those IAM credentials can write to, not only the bucket the datasource was configured for. The Budibase server route POST /api/attachments/:datasourceId/url (packages/server/src/api/routes/static.ts) is registered with only the recaptcha middleware. There is no authorized(...) middleware in the chain. The controller (packages/server/src/api/controllers/static/index.ts::getSignedUploadURL) looks the requested datasource up, instantiates an AWS S3 client with the datasource's stored accessKeyId / secretAccessKey, and returns an AWS Signature V4 pre-signed PutObjectCommand URL for the caller-supplied bucket and key. The bucket is not pinned to the datasource's configured bucket. The workspace context required by sdk.datasources.get is sourced by getWorkspaceIdFromCtx (packages/backend-core/src/utils/utils.ts) from any of: the x-budibase-app-id header, the JSON body appId, a path segment that begins with the workspace prefix, or ?appId=. auth.buildAuthMiddleware([], { publicAllowed: true }) runs before any of this and explicitly allows anonymous requests. The currentWorkspace middleware's \"deny access to dev preview\" branch only triggers under isBrowser(ctx) && !isApiKey(ctx); isBrowser checks the parsed User-Agent for a recognised browser, so any non-browser client (curl, the supplied PoC, any tool not setting a browser UA) is neither and reaches dev workspaces too. This vulnerability is fixed in 3.39.0.",
+      "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/filebrowser/filebrowser/security/advisories/GHSA-j9jx-hp4c-ghhh",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/filebrowser/filebrowser/commit/e07c59df0b850f5924d5b1683e8609661ddcf534",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/filebrowser/filebrowser/releases/tag/v2.63.6",
+          "url": "https://github.com/Budibase/budibase/security/advisories/GHSA-35c4-rvc8-frhm",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "filebrowser",
-          "product": "filebrowser",
+          "vendor": "Budibase",
+          "product": "budibase",
           "versions": [
             {
-              "version": "< 2.63.6",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-863: Incorrect Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-46608",
-      "publishedDate": "2026-06-25T18:05:48.123Z",
-      "lastModifiedDate": "2026-06-26T18:42:27.698Z",
-      "description": "Glances is an open-source system cross-platform monitoring tool. Prior to 4.5.5, the Glances XML-RPC server (glances -s) introduced a configurable CORS origin list in version 4.5.3 as a mitigation for CVE-2026-33533. However, the implementation silently falls back to Access-Control-Allow-Origin: * whenever cors_origins contains more than one entry. An operator who configures an explicit two-entry allowlist (e.g. two internal dashboard origins) intending to restrict browser access instead receives the unrestricted wildcard. A malicious web page served from any origin can issue a CORS simple request to /RPC2 and read the full system monitoring dataset without the victim's knowledge. This vulnerability is fixed in 4.5.5.",
-      "severity": 7.4,
-      "references": [
-        {
-          "url": "https://github.com/nicolargo/glances/security/advisories/GHSA-87qc-fj39-wccr",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/nicolargo/glances/releases/tag/v4.5.5",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "nicolargo",
-          "product": "glances",
-          "versions": [
-            {
-              "version": "< 4.5.5",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-183: Permissive List of Allowed Inputs",
-        "CWE-942: Permissive Cross-domain Policy with Untrusted Domains"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-47214",
-      "publishedDate": "2026-06-26T15:45:04.659Z",
-      "lastModifiedDate": "2026-06-26T18:41:52.977Z",
-      "description": "Docling simplifies document processing by parsing diverse formats and providing integrations with the generative AI ecosystem. Prior to 2.94.0, the HTML backend has unsafe URI and path handling. This vulnerability is fixed in 2.94.0.",
-      "severity": 7.1,
-      "references": [
-        {
-          "url": "https://github.com/docling-project/docling/security/advisories/GHSA-q29v-xc37-wh5m",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/docling-project/docling/releases/tag/v2.94.0",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "docling-project",
-          "product": "docling",
-          "versions": [
-            {
-              "version": "< 2.94.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-73: External Control of File Name or Path",
-        "CWE-400: Uncontrolled Resource Consumption"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-54070",
-      "publishedDate": "2026-06-24T21:18:24.160Z",
-      "lastModifiedDate": "2026-06-26T18:43:38.331Z",
-      "description": "SiYuan is an open-source personal knowledge management system. Prior to 3.7.0, renderPackageREADME in kernel/bazaar/readme.go renders a Bazaar package README from Markdown to HTML with the lute engine and SetSanitize(true). The lute sanitizer is an event-handler blocklist: allowAttr rejects only attribute names present in a fixed eventAttrs map copied from the w3schools legacy handler list. That map omits modern event handlers. onpointerover, onpointerdown, onauxclick, onbeforetoggle, onfocusin, onanimationstart, and ontransitionend are not in the list, so the sanitizer passes them through verbatim on any tag. The frontend assigns the rendered HTML to mdElement.innerHTML in app/src/config/bazaar.ts with no client-side DOMPurify on this path, into a normal element in the main document (no iframe, no sandbox). The kernel sends no Content-Security-Policy, X-Frame-Options, or X-Content-Type-Options header on any response, so an inline handler runs when its event fires. The README is rendered when an Administrator opens a package in Settings → Marketplace, after the one-time marketplace trust consent. Install is not required. Result: a third-party Bazaar package author runs JavaScript in the Administrator's authenticated SiYuan origin when the Administrator views and interacts with the package listing, and gains full control of the workspace. This vulnerability is fixed in 3.7.0.",
-      "severity": 7.1,
-      "references": [
-        {
-          "url": "https://github.com/siyuan-note/siyuan/security/advisories/GHSA-w7cg-whh7-xp28",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "siyuan-note",
-          "product": "siyuan",
-          "versions": [
-            {
-              "version": "< 3.7.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-79: Improper Neutralization of Input During Web Page Generation ('Cross-site Scripting')",
-        "CWE-184: Incomplete List of Disallowed Inputs"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-47207",
-      "publishedDate": "2026-06-26T17:52:27.739Z",
-      "lastModifiedDate": "2026-06-26T18:30:08.843Z",
-      "description": "Envoy is an open source edge and service proxy designed for cloud-native applications. From 1.34.0 until 1.35.13, 1.36.9, 1.37.5, and 1.38.3, Envoy crashes if an ext_proc server sends a single gRPC message containing multiple, specially crafted ProcessingResponse messages. This can occur when the first response in the batch causes the gRPC stream object to be destroyed, leading to a use-after-free error when Envoy attempts to process subsequent responses in the same gRPC message. This vulnerability is fixed in 1.35.13, 1.36.9, 1.37.5, and 1.38.3.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://github.com/envoyproxy/envoy/security/advisories/GHSA-68cv-hq5f-g6xv",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "envoyproxy",
-          "product": "envoy",
-          "versions": [
-            {
-              "version": ">= 1.38.0, < 1.38.3",
-              "status": "affected"
-            },
-            {
-              "version": ">= 1.37.0, < 1.37.5",
-              "status": "affected"
-            },
-            {
-              "version": ">= 1.36.0, < 1.36.9",
-              "status": "affected"
-            },
-            {
-              "version": ">= 1.34.0, < 1.35.13",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-416: Use After Free"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-53765",
-      "publishedDate": "2026-06-24T21:30:42.954Z",
-      "lastModifiedDate": "2026-06-26T18:43:32.810Z",
-      "description": "Chrome DevTools for agents (chrome-devtools-mcp) lets your coding agent control and inspect a live Chrome browser. From 0.20.0 until 1.1.0, The chrome-devtools-mcp daemon writes its PID file with fs.writeFileSync() to a deterministic runtime path. On typical macOS environments, and on Linux sessions where $XDG_RUNTIME_DIR is unset, that runtime path falls back to /tmp/chrome-devtools-mcp-<uid>/daemon.pid. Because the write does not use O_NOFOLLOW, a local low-privilege user on the same POSIX host can pre-create /tmp/chrome-devtools-mcp-<victim_uid>/daemon.pid as a symlink to a file writable by the victim. When the victim later starts daemon mode, fs.writeFileSync() follows the symlink and truncates the target file to the daemon PID string. This vulnerability is fixed in  1.1.0.",
-      "severity": 6.1,
-      "references": [
-        {
-          "url": "https://github.com/ChromeDevTools/chrome-devtools-mcp/security/advisories/GHSA-3pvj-jv98-qhjq",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "ChromeDevTools",
-          "product": "chrome-devtools-mcp",
-          "versions": [
-            {
-              "version": ">= 0.20.0, <  1.1.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-59: Improper Link Resolution Before File Access ('Link Following')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-54753",
-      "publishedDate": "2026-06-26T18:13:34.371Z",
-      "lastModifiedDate": "2026-06-26T18:13:34.371Z",
-      "description": "Nx is a monorepo solution for TypeScript and polyglot codebases. From 17.0.4 until 22.7.2 and 23.0.0-beta.2, the local HTTP server started by nx graph sent Access-Control-Allow-Origin: * on every response, letting any website a developer visited read the server's responses cross-origin — including the full project graph and the output of the /help endpoint, which runs a target's configured help command. The practical impact is typically cross-origin information disclosure, but can be arbitrary command injection in rare cases. This vulnerability is fixed in 22.7.2 and 23.0.0-beta.2.",
-      "severity": 5.9,
-      "references": [
-        {
-          "url": "https://github.com/nrwl/nx/security/advisories/GHSA-g2r8-wvmj-jf5w",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/nrwl/nx/pull/35494",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "nrwl",
-          "product": "nx",
-          "versions": [
-            {
-              "version": ">= 17.0.4, < 22.7.2",
-              "status": "affected"
-            },
-            {
-              "version": ">= 23.0.0-beta.0, < 23.0.0-beta.2",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-749: Exposed Dangerous Method or Function",
-        "CWE-942: Permissive Cross-domain Policy with Untrusted Domains"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-48090",
-      "publishedDate": "2026-06-26T18:03:05.257Z",
-      "lastModifiedDate": "2026-06-26T18:03:05.257Z",
-      "description": "Envoy is an open source edge and service proxy designed for cloud-native applications. From 1.37.0 until 1.37.5 and 1.38.3, the HTTP OAuth2 filter (envoy.filters.http.oauth2) can leave an in-flight async token exchange attached to a downstream stream that has already been torn down. A late AsyncClient completion can still invoke OAuth2Filter methods that use StreamDecoderFilterCallbacks after that object’s lifetime has ended, causing undefined behavior, worker crashes (availability loss), and use-after-free / invalid-vptr failures under AddressSanitizer. This is a memory-safety / lifetime issue in the data plane, not a trivial config bug. Remote code execution is not claimed here; the primary demonstrated impact is DoS via crash and UB; any further impact would be deployment- and allocator-dependent.  This vulnerability is fixed in 1.37.5 and 1.38.3.",
-      "severity": 5.9,
-      "references": [
-        {
-          "url": "https://github.com/envoyproxy/envoy/security/advisories/GHSA-3cj2-c63f-q26f",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "envoyproxy",
-          "product": "envoy",
-          "versions": [
-            {
-              "version": ">= 1.38.0, < 1.38.3",
-              "status": "affected"
-            },
-            {
-              "version": ">= 1.37.0, < 1.37.5",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-416: Use After Free"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-47205",
-      "publishedDate": "2026-06-26T18:01:07.766Z",
-      "lastModifiedDate": "2026-06-26T18:01:07.766Z",
-      "description": "Envoy is an open source edge and service proxy designed for cloud-native applications. From 1.36.0 until 1.36.9, 1.37.5, and 1.38.3, a Use-After-Free (UAF) vulnerability leading to a sudden segmentation fault exists in Envoy's ext_authz HTTP filter when processing per-route authorization overrides concurrently with rapid downstream client disconnects. During standard request lifecycles, Envoy instantiates the ext_authz filter with a foundational authorization client object (client_). If a matched route dictates a dynamic per-route HTTP or gRPC authorization service override, the filter generates a localized client. In the vulnerable implementation, this transient client aggressively overwrote the default client_ unique pointer by executing client_ = std::move(per_route_client). When a client rapidly establishes and subsequently tears down a stream (such as rapidly refreshing a protected WebSocket endpoint), the downstream triggers the ConnectionManagerImpl::doDeferredStreamDestroy() -> ActiveStream::onResetStream() lifecycle. Envoy immediately sequences Filter::onDestroy() in an attempt to securely abort dispatched asynchronous authorization check transactions via client_->cancel(). By destructing the default client abruptly during initiateCall, a memory lifecycle misalignment occurs within the async client manager. The stream teardown fails to reliably track and cancel the dynamically bound asynchronous authorization tasks, orchestrating a sequence where a late asynchronous callback from the network evaluates against a heavily destroyed ActiveStream validation span, generating a UAF process crash. This vulnerability is fixed in 1.36.9, 1.37.5, and 1.38.3.",
-      "severity": 5.9,
-      "references": [
-        {
-          "url": "https://github.com/envoyproxy/envoy/security/advisories/GHSA-mvh9-767w-x47j",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "envoyproxy",
-          "product": "envoy",
-          "versions": [
-            {
-              "version": ">= 1.38.0, < 1.38.3",
-              "status": "affected"
-            },
-            {
-              "version": ">= 1.37.0, < 1.37.5",
-              "status": "affected"
-            },
-            {
-              "version": ">= 1.36.0, < 1.36.9",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-416: Use After Free"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-47221",
-      "publishedDate": "2026-06-26T17:35:29.518Z",
-      "lastModifiedDate": "2026-06-26T18:33:34.507Z",
-      "description": "Envoy is an open source edge and service proxy designed for cloud-native applications. From 1.18.0 until 1.35.13, 1.36.9, 1.37.5, and 1.38.3, the router filter contains a null pointer dereference vulnerability when handling HTTP 303 (See Other) internal redirects for body-less non-GET/HEAD requests. When a POST, PUT, DELETE, or PATCH request without a body is sent to a route configured with internal redirect policy that includes 303 in redirect_response_codes, and the upstream responds with HTTP 303, the redirect handling code attempts to drain a request body buffer that was never allocated. This results in a segmentation fault that crashes the entire Envoy process. When route configured with internal_redirect_policy including 303 in redirect_response_codes and upstream must return HTTP 303 response, an unauthenticated attacker can exploit this to cause complete denial of service, terminating all active connections. This vulnerability is fixed in 1.35.13, 1.36.9, 1.37.5, and 1.38.3.",
-      "severity": 5.9,
-      "references": [
-        {
-          "url": "https://github.com/envoyproxy/envoy/security/advisories/GHSA-rcff-gw58-pjpr",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "envoyproxy",
-          "product": "envoy",
-          "versions": [
-            {
-              "version": ">= 1.38.0, < 1.38.3",
-              "status": "affected"
-            },
-            {
-              "version": ">= 1.37.0, < 1.37.5",
-              "status": "affected"
-            },
-            {
-              "version": ">= 1.36.0, < 1.36.9",
-              "status": "affected"
-            },
-            {
-              "version": ">= 1.18.0, < 1.35.13",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-476: NULL Pointer Dereference"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-48497",
-      "publishedDate": "2026-06-26T17:32:58.310Z",
-      "lastModifiedDate": "2026-06-26T18:32:51.626Z",
-      "description": "Envoy is an open source edge and service proxy designed for cloud-native applications. Prior to 1.35.11, 1.36.7, 1.37.3, and 1.38.1, in cases where UDP DNS filter is configured with local resolution containing a name with the length of 255 octets or remote resolution for a name of 255 octets long can complete successfully, a query with such name will result in abnormal process termination. The abnormal process termination is triggered by an invalid runtime precondition that the query name is strictly less than 255 octets, contradicting DNS specification rfc1035#section-2.3.4 that the name can be 255 or less octets. This vulnerability is fixed in 1.35.11, 1.36.7, 1.37.3, and 1.38.1.",
-      "severity": 5.9,
-      "references": [
-        {
-          "url": "https://github.com/envoyproxy/envoy/security/advisories/GHSA-j6g2-wf95-q66q",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "envoyproxy",
-          "product": "envoy",
-          "versions": [
-            {
-              "version": ">= 1.38.0, < 1.38.1",
-              "status": "affected"
-            },
-            {
-              "version": ">= 1.37.0, < 1.37.3",
-              "status": "affected"
-            },
-            {
-              "version": ">= 1.36.0, < 1.36.7",
-              "status": "affected"
-            },
-            {
-              "version": "< 1.35.11",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-480: Use of Incorrect Operator"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-54250",
-      "publishedDate": "2026-06-25T17:56:56.747Z",
-      "lastModifiedDate": "2026-06-26T18:42:33.835Z",
-      "description": "K3s is a fully conformant production-ready Kubernetes distribution. Prior to 1.35.3+k3s1, 1.34.6+k3s1, v1.33.10+k3s1, a path traversal vulnerability exists in K3s's etcd snapshot decompression functionality. Zip files containing archive members with maliciously crafted names can be written to arbitrary locations on the filesystem when an administrator restores the archive as a compressed etcd snapshot. This vulnerability is fixed in 1.35.3+k3s1, 1.34.6+k3s1, v1.33.10+k3s1.",
-      "severity": 5.8,
-      "references": [
-        {
-          "url": "https://github.com/k3s-io/k3s/security/advisories/GHSA-jxr7-mqhw-9p98",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "k3s-io",
-          "product": "k3s",
-          "versions": [
-            {
-              "version": ">= 1.35.0-rc1+k3s1, < 1.35.3+k3s1",
-              "status": "affected"
-            },
-            {
-              "version": ">= 1.34.0-rc1+k3s1, < 1.34.6+k3s1",
-              "status": "affected"
-            },
-            {
-              "version": "< 1.33.10+k3s1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-22: Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-55892",
-      "publishedDate": "2026-06-25T15:32:41.238Z",
-      "lastModifiedDate": "2026-06-26T18:43:09.878Z",
-      "description": "Vim is an open source, command line text editor. Prior to 9.2.0662, the dump_prefixes() function in src/spell.c walks a spell-file prefix trie iteratively with a depth counter while dumping the prefixes that apply to a word. The counter is bounded only by the trie structure itself; it is never checked against the size of the fixed MAXWLEN-element stack arrays it indexes (prefix[], arridx[], curi[]). A crafted .spl file, loaded when the user dumps the word list, can drive the descent arbitrarily deep, so the function writes past the end of those arrays. This is a stack out-of-bounds write that corrupts the call frame and crashes the editor. This vulnerability is fixed in 9.2.0662.",
-      "severity": 5.5,
-      "references": [
-        {
-          "url": "https://github.com/vim/vim/security/advisories/GHSA-qm9w-fmpj-879h",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/vim/vim/commit/8325b193bba5f01e7a7d8241f",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/vim/vim/releases/tag/v9.2.0662",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "vim",
-          "product": "vim",
-          "versions": [
-            {
-              "version": "< 9.2.0662",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-787: Out-of-bounds Write"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-56823",
-      "publishedDate": "2026-06-26T16:02:59.340Z",
-      "lastModifiedDate": "2026-06-26T18:41:38.833Z",
-      "description": "AutoGPT is a workflow automation platform for creating, deploying, and managing continuous artificial intelligence agents. Prior to , the `POST /api/integrations/webhooks/{webhook_id}/ping` endpoint fetches the target webhook by primary key alone without verifying that the webhook belongs to the authenticated user. Any authenticated user can supply an arbitrary webhook_id to confirm webhook existence, leak the webhook's OAuth provider type, and in some cases trigger a ping delivery on behalf of another user. This vulnerability is fixed in .",
-      "severity": 5.4,
-      "references": [
-        {
-          "url": "https://github.com/Significant-Gravitas/AutoGPT/security/advisories/GHSA-rq9m-xvc7-v9h6",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Significant-Gravitas",
-          "product": "AutoGPT",
-          "versions": [
-            {
-              "version": "< 0.6.64",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-284: Improper Access Control",
-        "CWE-639: Authorization Bypass Through User-Controlled Key"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-40082",
-      "publishedDate": "2026-06-25T22:33:45.871Z",
-      "lastModifiedDate": "2026-06-26T18:42:09.149Z",
-      "description": "Cacti is an open source performance and fault management framework. Versions 1.2.30 and prior have missing session_regenerate_id() after login, leading to Session Fixation. session_regenerate_id() is NOT called after successful login. The login flow at auth_login.php:203-207 directly sets $_SESSION[SESS_USER_ID] without rotating the session ID. The session cookie configuration is otherwise good (httponly=true, samesite=Strict, secure=true for HTTPS at include/global.php:513-537), but these do not prevent session fixation via same-site vectors. This issue has been fixed in version 1.2.31.",
-      "severity": 5.4,
-      "references": [
-        {
-          "url": "https://github.com/Cacti/cacti/security/advisories/GHSA-273r-qr93-wgcp",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/Cacti/cacti/commit/2fa404e70a5702be10682555911228e8e51ba198",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/Cacti/cacti/releases/tag/release%2F1.2.31",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Cacti",
-          "product": "cacti",
-          "versions": [
-            {
-              "version": "< 1.2.31",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-384: Session Fixation"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-45692",
-      "publishedDate": "2026-06-23T17:55:11.317Z",
-      "lastModifiedDate": "2026-06-26T18:16:37.211Z",
-      "description": "Caddy is an extensible server platform that uses TLS by default. From 2.4.0 until 2.11.3, the authorization layer and the /config traversal layer do not agree on what object the path refers to. In this case, a path authorized for one config object is accepted, but then resolves to a different config object during traversal. This happens because the authorization layer uses string prefix matching and the /config traversal layer parses array indices numerically using strconv.Atoi(). This vulnerability is fixed in 2.11.3.",
-      "severity": 5.4,
-      "references": [
-        {
-          "url": "https://github.com/caddyserver/caddy/security/advisories/GHSA-x5w9-xh9r-mvfc",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "caddyserver",
-          "product": "caddy",
-          "versions": [
-            {
-              "version": ">= 2.4.0, < 2.11.3",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-187: Partial String Comparison",
-        "CWE-863: Incorrect Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-55686",
-      "publishedDate": "2026-06-26T16:30:41.345Z",
-      "lastModifiedDate": "2026-06-26T18:31:36.842Z",
-      "description": "Podman is a tool for managing OCI containers and pods. From 3.0.0 until 5.7.1, running a malicious container image where the WORKDIR path contains a symlink can create a directory or modify ownership on the host filesystem. Modified ownership is less likely to happen as that requires help from an untrusted/malicious process that mutates the host filesystem tree during dereferencing of the WORKDIR path, to trigger a race condition. This vulnerability is fixed in 5.7.1.",
-      "severity": 5.3,
-      "references": [
-        {
-          "url": "https://github.com/podman-container-tools/podman/security/advisories/GHSA-q6r4-3wmg-fwcq",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/podman-container-tools/podman/commit/d18e44e9abb3bf5b7294aa70806e1368fdddfdd0",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "podman-container-tools",
-          "product": "podman",
-          "versions": [
-            {
-              "version": ">= 3.0.0, < 5.7.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-61: UNIX Symbolic Link (Symlink) Following"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-54029",
-      "publishedDate": "2026-06-25T15:51:23.822Z",
-      "lastModifiedDate": "2026-06-26T18:43:04.154Z",
-      "description": "LibreChat is an enhanced ChatGPT clone that supports multiple AI providers. Prior to 0.8.4-rc1, the DELETE /api/messages/:conversationId/:messageId endpoint allows any authenticated user to delete any other user's messages. The validateMessageReq middleware only validates that the conversationId belongs to the requesting user, but the handler calls deleteMessages({ messageId }) using only the messageId as the MongoDB filter — without adding a user constraint. An attacker provides their own valid conversationId (to pass validation) and the victim's messageId (to target deletion), resulting in permanent, irrecoverable message deletion. This vulnerability is fixed in 0.8.4-rc1.",
-      "severity": 5.3,
-      "references": [
-        {
-          "url": "https://github.com/danny-avila/LibreChat/security/advisories/GHSA-8892-xj8q-59xc",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "danny-avila",
-          "product": "LibreChat",
-          "versions": [
-            {
-              "version": "< 0.8.4-rc1",
+              "version": "< 3.39.0",
               "status": "affected"
             }
           ]
@@ -1129,447 +1217,45 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-45407",
-      "publishedDate": "2026-06-26T16:21:25.215Z",
-      "lastModifiedDate": "2026-06-26T18:06:03.092Z",
-      "description": "Dokku is a docker-powered PaaS. Prior to 0.38.2, the git:auth command creates $DOKKU_ROOT/.netrc using bash's touch command, which applies the default umask of 0644. This pre-creation defeats the netrc binary's built-in 0600 permission setting, leaving git credentials readable by any local user who can traverse the dokku home directory. This vulnerability is fixed in 0.38.2.",
-      "severity": 5,
-      "references": [
-        {
-          "url": "https://github.com/dokku/dokku/security/advisories/GHSA-xh7p-9crg-pchr",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/dokku/dokku/pull/8589",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "dokku",
-          "product": "dokku",
-          "versions": [
-            {
-              "version": "< 0.38.2",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-522: Insufficiently Protected Credentials"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-54327",
-      "publishedDate": "2026-06-23T19:28:22.503Z",
-      "lastModifiedDate": "2026-06-26T18:09:58.763Z",
-      "description": "Pi is a minimal terminal coding harness. From 0.74.0 until 0.78.1, Pi stored API keys and OAuth credentials in auth.json. A race condition in the file write path could briefly create or rewrite this file with permissions derived from the process umask before tightening the file to owner-only permissions. This vulnerability is fixed in 0.78.1.",
-      "severity": 2.2,
-      "references": [
-        {
-          "url": "https://github.com/earendil-works/pi/security/advisories/GHSA-r95r-rj6r-c39x",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/earendil-works/pi/commit/135fb545f99106a4a249274f129b90bc0a77d347",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/earendil-works/pi/releases/tag/v0.78.1",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "earendil-works",
-          "product": "pi",
-          "versions": [
-            {
-              "version": ">= 0.74.0, < 0.78.1",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-367: Time-of-check Time-of-use (TOCTOU) Race Condition",
-        "CWE-732: Incorrect Permission Assignment for Critical Resource"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-13372",
-      "publishedDate": "2026-06-26T18:22:02.763Z",
-      "lastModifiedDate": "2026-06-26T18:22:02.763Z",
-      "description": "Incorrect link resolution by display name in the custom PowerShell VPN editor in Devolutions Remote Desktop Manager 2026.2.5 through 2026.2.11 allows an authenticated attacker with write access to a shared workspace to execute a PowerShell script in another user's context via a display name collision with an existing VPN script link.",
+      "id": "CVE-2026-46604",
+      "publishedDate": "2026-06-26T20:22:46.377Z",
+      "lastModifiedDate": "2026-06-26T20:22:46.377Z",
+      "description": "The TIFF decoder can panic when decoding an invalid image with an out-of-bounds strip offset.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://devolutions.net/security/advisories/DEVO-2026-0021/",
+          "url": "https://go.dev/cl/788421",
+          "type": "reference"
+        },
+        {
+          "url": "https://go.dev/issue/80122",
+          "type": "reference"
+        },
+        {
+          "url": "https://pkg.go.dev/vuln/GO-2026-5066",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "Devolutions",
-          "product": "Remote Desktop Manager",
+          "vendor": "golang.org/x/image",
+          "product": "golang.org/x/image/tiff",
+          "collectionURL": "https://pkg.go.dev",
+          "packageName": "golang.org/x/image/tiff",
           "versions": [
             {
+              "version": "0",
+              "lessThan": "0.43.0",
               "status": "affected",
-              "version": "2026.2.5",
-              "lessThan": "2026.2.11",
-              "versionType": "custom"
+              "versionType": "semver"
+            }
+          ],
+          "programRoutines": [
+            {
+              "name": "Decode"
             }
           ],
           "defaultStatus": "unaffected"
-        }
-      ],
-      "problemType": [
-        "CWE-706"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-5757",
-      "publishedDate": "2026-06-26T15:15:28.464Z",
-      "lastModifiedDate": "2026-06-26T18:38:23.503Z",
-      "description": "Unauthenticated remote information disclosure vulnerability in Ollama's model quantization engine allows an attacker to read and exfiltrate the server's heap memory, potentially leading to sensitive data exposure, further compromise, and stealthy persistence.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://kb.cert.org/vuls/id/518910",
-          "type": "reference"
-        },
-        {
-          "url": "https://ollama.com",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Ollama AI",
-          "product": "Ollama",
-          "versions": [
-            {
-              "status": "affected",
-              "version": "v0.13.5"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-125 Out-of-bounds Read",
-        "CWE-416 Use After Free",
-        "CWE-306 Missing Authentication for Critical Function"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-64152",
-      "publishedDate": "2026-06-26T12:16:28.295Z",
-      "lastModifiedDate": "2026-06-26T18:36:29.179Z",
-      "description": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability in Apache IoTDB.\n\nThis issue affects Apache IoTDB: from 1.0.0 before 1.3.6, from 2.0.0 before 2.0.7.\n\nUsers are recommended to upgrade to version 1.3.6 and 2.0.7, which fixes the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://lists.apache.org/thread/sjms84rlt4g78fwmjcowxmtjp1q8b9q4",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Apache IoTDB",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThan": "1.3.6",
-              "status": "affected",
-              "version": "1.0.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "2.0.7",
-              "status": "affected",
-              "version": "2.0.0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-22 Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-55017",
-      "publishedDate": "2026-06-26T12:15:53.226Z",
-      "lastModifiedDate": "2026-06-26T18:35:21.837Z",
-      "description": "Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal') vulnerability in Apache IoTDB.\n\nThis issue affects Apache IoTDB: from 2.0.0 before 2.0.6, from 1.0.0 before 1.3.6.\n\nUsers are recommended to upgrade to version 1.3.6 and 2.0.6, which fixes the issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://lists.apache.org/thread/lk08wlxq9sp64mo8hw6wvjxd3bh3lpqg",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "defaultStatus": "unaffected",
-          "product": "Apache IoTDB",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThan": "2.0.6",
-              "status": "affected",
-              "version": "2.0.0",
-              "versionType": "semver"
-            },
-            {
-              "lessThan": "1.3.6",
-              "status": "affected",
-              "version": "1.0.0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-22 Improper Limitation of a Pathname to a Restricted Directory ('Path Traversal')"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-57915",
-      "publishedDate": "2026-06-26T12:09:54.850Z",
-      "lastModifiedDate": "2026-06-26T18:36:17.839Z",
-      "description": "It is possible to bypass the Kerberos pre-authentication check in Apache Kerby by sending a PA-DATA with an unrecognized or unsupported type. Users are recommended to upgrade to version 2.1.2, which fixes this issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://lists.apache.org/thread/1y3glgh3kzwoxo5m2lq504cjlh1dsrfh",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://repo.maven.apache.org/maven2",
-          "defaultStatus": "unaffected",
-          "packageName": "org.apache.kerby:kerb-server",
-          "product": "Apache Kerby",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThan": "2.1.2",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-304 Missing Critical Step in Authentication"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-57914",
-      "publishedDate": "2026-06-26T11:28:26.849Z",
-      "lastModifiedDate": "2026-06-26T18:36:16.816Z",
-      "description": "By sending a deeply nested ASN1 structure to a Apache Kerby client or service, it's possible to trigger a StackOverFlow Exception which can lead to denial of service issues. Users are recommended to upgrade to version 2.1.2, which fixes this issue.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://lists.apache.org/thread/w98h2q8wz0bq97vhz4vf55hqomcb2j1m",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://repo.maven.apache.org/maven2",
-          "defaultStatus": "unaffected",
-          "packageName": "org.apache.kerby:kerby-asn1",
-          "product": "Apache Kerby",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThan": "2.1.2",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-400 Uncontrolled Resource Consumption"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-49486",
-      "publishedDate": "2026-06-26T07:05:39.182Z",
-      "lastModifiedDate": "2026-06-26T18:36:15.852Z",
-      "description": "The Apache Airflow FTP provider's `FTPSHook.get_conn()` created an `ftplib.FTP_TLS` connection but never called `prot_p()`, so although the control channel was TLS-protected the data channel was transmitted in cleartext. Any deployment using `FTPSHook` or `FTPSFileTransmitOperator` to move files over FTPS exposed file contents and credentials-in-transit to a network attacker able to observe the data connection. Upgrade apache-airflow-providers-ftp to `3.15.1` or later, which issues `PROT P` to encrypt the data channel.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/apache/airflow/pull/67946",
-          "type": "reference"
-        },
-        {
-          "url": "https://lists.apache.org/thread/gwnsxlt9hfj5pc543wxtogbnjdn04xj1",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "collectionURL": "https://pypi.python.org",
-          "defaultStatus": "unaffected",
-          "packageName": "apache-airflow-providers-ftp",
-          "product": "Apache Airflow FTP provider",
-          "vendor": "Apache Software Foundation",
-          "versions": [
-            {
-              "lessThan": "3.15.1",
-              "status": "affected",
-              "version": "0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-319: Cleartext Transmission of Sensitive Information"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-47770",
-      "publishedDate": "2026-06-25T17:22:21.531Z",
-      "lastModifiedDate": "2026-06-26T18:42:45.982Z",
-      "description": "jq is a command-line JSON processor. Prior to 1.8.2, comparing two sufficiently deeply nested arrays with the == operator exhausts the C stack on jq's ordinary command-line surface, resulting in denial of service via stack exhaustion (uncontrolled recursion). The crash occurs in jq's recursive structural comparison code, with the recursion repeating through jvp_array_equal() and jv_equal() in src/jv.c when comparing deeply nested arrays; a nearby sort comparator path through jv_cmp() in src/jv_aux.c overflows the stack at a larger nesting depth from  the same missing recursion guard. Anyone running jq comparisons on attacker-controlled deeply nested JSON values, or embedding jq in a context  where untrusted data can reach the == comparison path, is affected. This vulnerability is fixed in 1.8.2.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/jqlang/jq/security/advisories/GHSA-3pgx-frr7-3jxp",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "jqlang",
-          "product": "jq",
-          "versions": [
-            {
-              "version": "< 1.8.2",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-674: Uncontrolled Recursion"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-50017",
-      "publishedDate": "2026-06-25T16:56:04.836Z",
-      "lastModifiedDate": "2026-06-26T18:42:51.869Z",
-      "description": "pnpm is a package manager. Prior to 10.34.0 and 11.4.0, pnpm can send user-level unscoped npm authentication credentials to a registry chosen by a repository-local .npmrc file. In the reproduced case, the user's npm config contains a default registry and an unscoped _authToken. The repository does not provide a token-bearing auth line. It only sets registry= to a different registry URL. During normal pnpm metadata/install workflows, pnpm binds the user-origin unscoped credential to the repository-selected registry and sends it as an Authorization header. This vulnerability is fixed in 10.34.0 and 11.4.0.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/pnpm/pnpm/security/advisories/GHSA-cjhr-43r9-cfmw",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "pnpm",
-          "product": "pnpm",
-          "versions": [
-            {
-              "version": "< 10.33.4",
-              "status": "affected"
-            },
-            {
-              "version": ">= 11.0.0, < 11.4.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor",
-        "CWE-522: Insufficiently Protected Credentials"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-54573",
-      "publishedDate": "2026-06-25T15:59:35.297Z",
-      "lastModifiedDate": "2026-06-26T18:42:57.082Z",
-      "description": "Outline is a service that allows for collaborative documentation. Prior to 1.8.0, the AuthenticationHelper.canAccess function uses ctx.originalUrl to verify if an API key or OAuth token has the required scopes for a request. It extracts the resource by splitting the URL by / and taking the last segment. However, it fails to strip the URL fragment (#). Because Koa's router uses ctx.path (which strips the fragment) for routing, an attacker can append a fragment containing a permitted path (e.g., #foo/api/documents.info) to a restricted endpoint (e.g., /api/documents.create). The router will route the request to the restricted endpoint, but canAccess will evaluate the permitted path in the fragment, bypassing the API key scope restrictions and allowing privilege escalation. This vulnerability is fixed in 1.8.0.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/outline/outline/security/advisories/GHSA-5x79-rj4g-qrh8",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "outline",
-          "product": "outline",
-          "versions": [
-            {
-              "version": "< 1.8.0",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-863: Incorrect Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-57454",
-      "publishedDate": "2026-06-25T15:24:54.196Z",
-      "lastModifiedDate": "2026-06-26T18:43:15.704Z",
-      "description": "Vim is an open source, command line text editor. From 9.2.0320 until 9.2.0679, a crafted undo or swap file can store a virtual-text property whose offset and length point outside the line's property data. When Vim restores or displays such a line it converts the offset into a pointer and reads the virtual text without bounds checking, causing an out-of-bounds read that can crash Vim or disclose adjacent heap memory. This vulnerability is fixed in 9.2.0679.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/vim/vim/security/advisories/GHSA-ww8h-47xp-hp4w",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/vim/vim/commit/b3faeecc976d3031d7c0675623516ec60c30f949",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/vim/vim/releases/tag/v9.2.0679",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "vim",
-          "product": "vim",
-          "versions": [
-            {
-              "version": ">= 9.2.0320, < 9.2.0679",
-              "status": "affected"
-            }
-          ]
         }
       ],
       "problemType": [
@@ -1578,30 +1264,92 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-60464",
-      "publishedDate": "2026-06-25T00:00:00.000Z",
-      "lastModifiedDate": "2026-06-26T18:36:13.799Z",
-      "description": "A use-after-free in the gf_sei_load_from_state_internal function (/filters/sei_load.c) of GPAC Project/MP4Box before 26.02.0 allows attackers to cause a Denial of Service (DoS) via supplying a crafted MPEG-2 TS file.",
+      "id": "CVE-2026-52885",
+      "publishedDate": "2026-06-26T20:19:04.456Z",
+      "lastModifiedDate": "2026-06-26T20:19:04.456Z",
+      "description": "Notepad++ is a free and open-source source code editor. Prior to 8.9.6.4, NppCommands.cpp checks the HMAC of the on-disk shortcuts.xml at the moment a user command fires (Time-of-Check). However, the command payload is taken from the in-memory _userCommands vector, which is populated at application startup and never re-synchronized with the on-disk file (Time-of-Use). Swapping shortcuts.xml between startup and command execution causes the HMAC check to validate a clean file while a malicious command runs. An attacker with write access to shortcuts.xml places a malicious version on disk before launch, then immediately restores the legitimate file. The HMAC check at execution time validates the restored legitimate file (check passes), while the malicious payload executes from memory. This vulnerability is fixed in 8.9.6.4.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/gpac/gpac/issues/3278",
+          "url": "https://github.com/notepad-plus-plus/notepad-plus-plus/security/advisories/GHSA-qm4c-qg8p-qfcr",
           "type": "reference"
         },
         {
-          "url": "https://github.com/gpac/gpac/commit/8f404bd581e455267482f86272169a742f654b97",
+          "url": "https://github.com/notepad-plus-plus/notepad-plus-plus/commit/4f7563c7c7f8ffa0d795ec86a7777067c7d644b5",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "notepad-plus-plus",
+          "product": "notepad-plus-plus",
+          "versions": [
+            {
+              "version": "< 8.9.6.4",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-367: Time-of-check Time-of-use (TOCTOU) Race Condition"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-46710",
+      "publishedDate": "2026-06-26T20:16:16.022Z",
+      "lastModifiedDate": "2026-06-26T20:16:16.022Z",
+      "description": "Notepad++ is a free and open-source source code editor. From 8.9.4 until 8.9.6, Notepad++ contains a local privilege escalation vulnerability in the installer. During installation, the installer invokes powershell.exe without using an absolute path after setting the working directory to the installation contextMenu directory. If an attacker can pre-place a malicious powershell.exe in a user-writable custom installation directory, and a privileged user later runs the installer and selects that directory, the attacker-controlled executable is launched with the elevated privileges of the installer. This vulnerability is fixed in 8.9.6.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://github.com/notepad-plus-plus/notepad-plus-plus/security/advisories/GHSA-6f8f-vmfc-r8c5",
           "type": "reference"
         },
         {
-          "url": "https://github.com/sigdevel/pocs/blob/main/res/gpac/MP4Box/32/32_filters_sei_load_c_225_in_gf_sei_load_from_state_internal",
+          "url": "https://github.com/notepad-plus-plus/notepad-plus-plus/commit/1d4aabe2102d982667ead2dd974bee5e0b1f2d9c",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "notepad-plus-plus",
+          "product": "notepad-plus-plus",
+          "versions": [
+            {
+              "version": ">= 8.9.4, < 8.9.6",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "CWE-426: Untrusted Search Path"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-38639",
+      "publishedDate": "2026-06-26T00:00:00.000Z",
+      "lastModifiedDate": "2026-06-26T20:27:23.689Z",
+      "description": "An issue in the parse_month function (/time/strptime.rs) of relibc commit ab6a2e allows attackers to cause a Denial of Service (DoS) via parsing a crafted input.",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://gitlab.redox-os.org/redox-os/relibc/-/issues/265",
           "type": "reference"
         },
         {
-          "url": "https://github.com/sigdevel/pocs/blob/main/res/gpac/MP4Box/32/README.md",
+          "url": "https://gitlab.redox-os.org/redox-os/relibc/-/merge_requests/990",
           "type": "reference"
         },
         {
-          "url": "https://infosec.exchange/@sigdevel/116778370895014131",
+          "url": "https://github.com/Marsman1996/pocs/tree/master/redox/CVE-2026-38639",
+          "type": "reference"
+        },
+        {
+          "url": "https://gitlab.redox-os.org/redox-os/relibc/-/work_items/265",
           "type": "reference"
         }
       ],
@@ -1623,117 +1371,18 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-49979",
-      "publishedDate": "2026-06-24T21:38:50.890Z",
-      "lastModifiedDate": "2026-06-26T18:43:27.057Z",
-      "description": "Appsmith is a platform to build admin panels, internal tools, and dashboards. Prior to 1.99, the POST /api/v1/admin/send-test-email endpoint accepts attacker-controlled smtpHost and smtpPort values and establishes a raw JavaMail TCP connection without any IP validation. This completely bypasses WebClientUtils.IP_CHECK_FILTER, which only applies to Spring WebClient HTTP requests. Additionally, the raw MailException.getMessage() is returned verbatim in the API error response, enabling error-based internal port scanning and service banner enumeration. This vulnerability is fixed in 1.99.",
+      "id": "CVE-2026-39031",
+      "publishedDate": "2026-06-26T00:00:00.000Z",
+      "lastModifiedDate": "2026-06-26T20:43:01.496Z",
+      "description": "Lansweeper lsrunase 2.0 and lsencrypt 2.0 use RC4 encryption with a hardcoded 142-byte static key array to encrypt credentials. An 8-character prefix is stored in cleartext alongside the ciphertext. This allows an attacker with local access to recover any encrypted password to plaintext using a single SHA-1 hash and RC4 decryption operation, with no brute force required.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/appsmithorg/appsmith/security/advisories/GHSA-vvxf-f8q9-86gh",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "appsmithorg",
-          "product": "appsmith",
-          "versions": [
-            {
-              "version": "< 1.99",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-209: Generation of Error Message Containing Sensitive Information",
-        "CWE-918: Server-Side Request Forgery (SSRF)"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-49277",
-      "publishedDate": "2026-06-24T21:04:09.602Z",
-      "lastModifiedDate": "2026-06-26T18:43:44.484Z",
-      "description": "Rocket.Chat is an open-source, secure, fully customizable communications platform. Prior to 8.5.0, 8.4.2, 8.3.4, 8.2.4, 8.1.5, 8.0.6, 7.13.8, and 7.10.12, Rocket.Chat does not revoke OAuth bearer or refresh tokens when a user is deactivated. A deactivated user can continue using an existing OAuth access token, and can also mint a fresh access token from an existing refresh token. This vulnerability is fixed in 8.5.0, 8.4.2, 8.3.4, 8.2.4, 8.1.5, 8.0.6, 7.13.8, and 7.10.12.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/RocketChat/Rocket.Chat/security/advisories/GHSA-39hg-492f-3c4f",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "RocketChat",
-          "product": "Rocket.Chat",
-          "versions": [
-            {
-              "version": ">= 8.5.0-rc.0, < 8.5.0",
-              "status": "affected"
-            },
-            {
-              "version": ">= 8.4.0-rc.0, < 8.4.2",
-              "status": "affected"
-            },
-            {
-              "version": ">= 8.3.0-rc.0, < 8.3.4",
-              "status": "affected"
-            },
-            {
-              "version": ">= 8.2.0-rc.0, < 8.2.4",
-              "status": "affected"
-            },
-            {
-              "version": ">= 8.1.0-rc.0, < 8.1.5",
-              "status": "affected"
-            },
-            {
-              "version": ">= 8.0.0-rc.0, < 8.0.6",
-              "status": "affected"
-            },
-            {
-              "version": ">= 7.11.0-rc.0, < 7.13.8",
-              "status": "affected"
-            },
-            {
-              "version": "< 7.10.12",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-613: Insufficient Session Expiration"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2025-60471",
-      "publishedDate": "2026-06-24T00:00:00.000Z",
-      "lastModifiedDate": "2026-06-26T18:36:14.800Z",
-      "description": "A use-after-free in the gf_filter_pid_reconfigure_task_discard function (/filter_core/filter_pid.c) of GPAC Project/MP4Box before 26.02.0 allows attackers to cause a Denial of Service (DoS) via supplying a crafted media file.",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://github.com/gpac/gpac/issues/3279",
+          "url": "https://usermode.net/cve/lansweeper_lsrunase2_lsencrypt2_cve.pdf",
           "type": "reference"
         },
         {
-          "url": "https://github.com/gpac/gpac/commit/868c6801c226e9964cace54cfd5a759f152780b4",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/sigdevel/pocs/blob/main/res/gpac/MP4Box/31/31_gf_filter_pid_reconfigure_task_discard_filter_core_filter_pid_c_1341",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/sigdevel/pocs/blob/main/res/gpac/MP4Box/31/README.md",
-          "type": "reference"
-        },
-        {
-          "url": "https://infosec.exchange/@sigdevel/116778301425195980",
+          "url": "https://github.com/user6400/cve-2026-39031-lansweeper-lsrunase2-lsencrypt2",
           "type": "reference"
         }
       ],
@@ -1755,26 +1404,26 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2025-55639",
-      "publishedDate": "2026-06-23T00:00:00.000Z",
-      "lastModifiedDate": "2026-06-26T18:36:12.718Z",
-      "description": "GPAC MP4Box v2.4 was discovered to contain a NULL pointer dereference in the gf_isom_add_track_kind() function at isomedia/isom_write.c. This vulnerability allows attackers to cause a Denial of Service (DoS) via a crafted MP4 file.",
+      "id": "CVE-2026-38641",
+      "publishedDate": "2026-06-26T00:00:00.000Z",
+      "lastModifiedDate": "2026-06-26T20:31:50.983Z",
+      "description": "An issue in the DSO::mmap_and_copy function of relibc commit 61f42d allows attackers to cause a Denial of Service (DoS) via loading a crafted shared library.",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/gpac/gpac/issues/3260",
+          "url": "https://gitlab.redox-os.org/redox-os/relibc/-/issues/263",
           "type": "reference"
         },
         {
-          "url": "https://github.com/sigdevel/pocs/blob/main/res/gpac/MP4Box/23/23_poc.mp4",
+          "url": "https://gitlab.redox-os.org/redox-os/relibc/-/merge_requests/1046",
           "type": "reference"
         },
         {
-          "url": "https://github.com/gpac/gpac/commit/027ce139dda498ee95df36db9f9f6f3cadce8ec9",
+          "url": "https://github.com/Marsman1996/pocs/tree/master/redox/CVE-2026-38641",
           "type": "reference"
         },
         {
-          "url": "https://infosec.exchange/@sigdevel/116769184815236865",
+          "url": "https://gitlab.redox-os.org/redox-os/relibc/-/work_items/263",
           "type": "reference"
         }
       ],
