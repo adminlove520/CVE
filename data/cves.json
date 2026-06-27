@@ -2,187 +2,54 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 2,
-    "last_updated": "2026-06-27T15:34:48.567621",
+    "total_count": 1,
+    "last_updated": "2026-06-27T16:43:57.228552",
     "severity_distribution": {
-      "critical": 0,
+      "critical": 1,
       "high": 0,
       "medium": 0,
       "low": 0,
-      "none": 2
+      "none": 0
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-53070",
-      "publishedDate": "2026-06-24T16:30:11.816Z",
-      "lastModifiedDate": "2026-06-27T10:25:26.505Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nsctp: disable BH before calling udp_tunnel_xmit_skb()\n\nudp_tunnel_xmit_skb() / udp_tunnel6_xmit_skb() are expected to run with\nBH disabled.  After commit 6f1a9140ecda (\"add xmit recursion limit to\ntunnel xmit functions\"), on the path:\n\n  udp(6)_tunnel_xmit_skb() -> ip(6)tunnel_xmit()\n\ndev_xmit_recursion_inc()/dec() must stay balanced on the same CPU.\n\nWithout local_bh_disable(), the context may move between CPUs, which can\nbreak the inc/dec pairing. This may lead to incorrect recursion level\ndetection and cause packets to be dropped in ip(6)_tunnel_xmit() or\n__dev_queue_xmit().\n\nFix it by disabling BH around both IPv4 and IPv6 SCTP UDP xmit paths.\n\nIn my testing, after enabling the SCTP over UDP:\n\n  # ip net exec ha sysctl -w net.sctp.udp_port=9899\n  # ip net exec ha sysctl -w net.sctp.encap_port=9899\n  # ip net exec hb sysctl -w net.sctp.udp_port=9899\n  # ip net exec hb sysctl -w net.sctp.encap_port=9899\n\n  # ip net exec ha iperf3 -s\n\n- without this patch:\n\n  # ip net exec hb iperf3 -c 192.168.0.1 --sctp\n  [  5]   0.00-10.00  sec  37.2 MBytes  31.2 Mbits/sec  sender\n  [  5]   0.00-10.00  sec  37.1 MBytes  31.1 Mbits/sec  receiver\n\n- with this patch:\n\n  # ip net exec hb iperf3 -c 192.168.0.1 --sctp\n  [  5]   0.00-10.00  sec  3.14 GBytes  2.69 Gbits/sec  sender\n  [  5]   0.00-10.00  sec  3.14 GBytes  2.69 Gbits/sec  receiver",
-      "severity": "N/A",
+      "id": "CVE-2026-12866",
+      "publishedDate": "2026-06-23T05:00:00.763Z",
+      "lastModifiedDate": "2026-06-27T15:25:05.793Z",
+      "description": "All versions of the package expr-eval are vulnerable to Code Execution via the toJSFunction() API. An attacker can execute arbitrary JavaScript by supplying crafted expressions that are compiled into native code using new Function(). Because user-controlled expressions are transformed directly into executable JavaScript, attackers can escape the intended expression sandbox and run arbitrary code within the application's context.",
+      "severity": 9.8,
       "references": [
         {
-          "url": "https://git.kernel.org/stable/c/0de7db2eb27e82b983157016fa604b1ba664ae5f",
+          "url": "https://security.snyk.io/vuln/SNYK-JS-EXPREVAL-15054690",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/790093245e35040c2adb15f48970020425aa3f47",
+          "url": "https://github.com/silentmatt/expr-eval/blob/master/src/expression.js%23L55",
           "type": "reference"
         },
         {
-          "url": "https://git.kernel.org/stable/c/2cd7e6971fc2787408ceef17906ea152791448cf",
+          "url": "https://github.com/silentmatt/expr-eval/issues/292",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "net/sctp/ipv6.c",
-            "net/sctp/protocol.c"
-          ],
+          "product": "expr-eval",
           "versions": [
-            {
-              "version": "046c052b475e7119b6a30e3483e2888fc606a2f8",
-              "lessThan": "0de7db2eb27e82b983157016fa604b1ba664ae5f",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "046c052b475e7119b6a30e3483e2888fc606a2f8",
-              "lessThan": "790093245e35040c2adb15f48970020425aa3f47",
-              "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "046c052b475e7119b6a30e3483e2888fc606a2f8",
-              "lessThan": "2cd7e6971fc2787408ceef17906ea152791448cf",
-              "status": "affected",
-              "versionType": "git"
-            }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "net/sctp/ipv6.c",
-            "net/sctp/protocol.c"
-          ],
-          "versions": [
-            {
-              "version": "5.11",
-              "status": "affected"
-            },
             {
               "version": "0",
-              "lessThan": "5.11",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "6.18.37",
-              "lessThanOrEqual": "6.18.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.0.10",
-              "lessThanOrEqual": "7.0.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.1",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
-            }
-          ]
-        }
-      ],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-52938",
-      "publishedDate": "2026-06-24T07:14:27.952Z",
-      "lastModifiedDate": "2026-06-27T10:25:25.035Z",
-      "description": "In the Linux kernel, the following vulnerability has been resolved:\n\nbpf: Fix NULL pointer dereference in bpf_sk_storage_clone and diag paths\n\nbpf_selem_unlink_nofail() sets SDATA(selem)->smap to NULL before\nremoving the selem from the storage hlist. A concurrent RCU reader in\nbpf_sk_storage_clone() can observe the selem still on the list with\nsmap already NULL, causing a NULL pointer dereference.\n\n general protection fault, probably for non-canonical address 0xdffffc000000000a:\n KASAN: null-ptr-deref in range [0x0000000000000050-0x0000000000000057]\n RIP: 0010:bpf_sk_storage_clone+0x1cd/0xaa0 net/core/bpf_sk_storage.c:174\n Call Trace:\n  <IRQ>\n  sk_clone+0xfed/0x1980 net/core/sock.c:2591\n  inet_csk_clone_lock+0x30/0x760 net/ipv4/inet_connection_sock.c:1222\n  tcp_create_openreq_child+0x35/0x2680 net/ipv4/tcp_minisocks.c:571\n  tcp_v4_syn_recv_sock+0x123/0xf90 net/ipv4/tcp_ipv4.c:1729\n  tcp_check_req+0x8e1/0x2580 include/net/tcp.h:855\n  tcp_v4_rcv+0x1845/0x3b80 net/ipv4/tcp_ipv4.c:2347\n\nAdd a NULL check for smap in bpf_sk_storage_clone().\n\nbpf_sk_storage_diag_put_all() has the same issue. Add a NULL check\nand pass the validated smap directly to diag_get(), which is refactored\nto take smap as a parameter instead of reading it internally.\n\nbpf_sk_storage_diag_put() uses diag->maps[i] which is always valid\nunder its refcount, so diag->maps[i] is passed directly to diag_get().",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://git.kernel.org/stable/c/16af24fea29c209dea53595c99f6da9398548e1b",
-          "type": "reference"
-        },
-        {
-          "url": "https://git.kernel.org/stable/c/375e4e33c18dfa05c5dfd5f3dfffeb29343dd4c7",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "unaffected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "net/core/bpf_sk_storage.c"
-          ],
-          "versions": [
-            {
-              "version": "5d800f87d0a5ea1b156c47a4b9fd128479335153",
-              "lessThan": "16af24fea29c209dea53595c99f6da9398548e1b",
+              "lessThan": "*",
               "status": "affected",
-              "versionType": "git"
-            },
-            {
-              "version": "5d800f87d0a5ea1b156c47a4b9fd128479335153",
-              "lessThan": "375e4e33c18dfa05c5dfd5f3dfffeb29343dd4c7",
-              "status": "affected",
-              "versionType": "git"
+              "versionType": "semver"
             }
-          ]
-        },
-        {
-          "product": "Linux",
-          "vendor": "Linux",
-          "defaultStatus": "affected",
-          "repo": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
-          "programFiles": [
-            "net/core/bpf_sk_storage.c"
           ],
-          "versions": [
-            {
-              "version": "7.0",
-              "status": "affected"
-            },
-            {
-              "version": "0",
-              "lessThan": "7.0",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.0.14",
-              "lessThanOrEqual": "7.0.*",
-              "status": "unaffected",
-              "versionType": "semver"
-            },
-            {
-              "version": "7.1",
-              "lessThanOrEqual": "*",
-              "status": "unaffected",
-              "versionType": "original_commit_for_fix"
-            }
-          ]
+          "vendor": "n/a"
         }
       ],
-      "problemType": [],
+      "problemType": [
+        "Code Execution"
+      ],
       "fix_suggestion": "无法生成修复建议"
     }
   ]
