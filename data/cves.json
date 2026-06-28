@@ -2,228 +2,74 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 4,
-    "last_updated": "2026-06-28T06:28:47.253426",
+    "total_count": 1,
+    "last_updated": "2026-06-28T09:44:02.573069",
     "severity_distribution": {
       "critical": 0,
-      "high": 1,
-      "medium": 2,
-      "low": 1,
+      "high": 0,
+      "medium": 1,
+      "low": 0,
       "none": 0
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-10646",
-      "publishedDate": "2026-06-28T04:04:11.008Z",
-      "lastModifiedDate": "2026-06-28T04:04:11.008Z",
-      "description": "Zephyr's BSD-sockets getaddrinfo() implementation (subsys/net/lib/sockets/getaddrinfo.c) passes a pointer to a stack-allocated state object (struct getaddrinfo_state ai_state) as the user_data of an asynchronous DNS resolver query. The socket layer waits on a semaphore with a timeout deliberately set slightly longer than the resolver's own per-query timeout. When that semaphore wait nonetheless times out (-EAGAIN) - which can occur when the resolver's timeout work is delayed by workqueue contention, or in the documented multi-retry configuration where CONFIG_NET_SOCKETS_DNS_TIMEOUT exceeds CONFIG_NET_SOCKETS_DNS_BACKOFF_INTERVAL - the pre-fix code retries the query (goto again) without cancelling the previous one and without resetting the semaphore. The previous query slot remains active in the resolver with its callback and the stack pointer as user_data, and ai_state-dns_id is overwritten so the stale query can no longer be cancelled. A subsequent DNS response delivered over UDP and matched by its 16-bit transaction id (in dispatcher_cb()/dns_read()), or the resolver's own delayed query-timeout work, then invokes dns_resolve_cb() against the now out-of-scope stack frame, writing through the stale pointer (state-status, state-idx, state-ai_arr[], and k_sem_give()). Because the triggering response is network-delivered and its 16-bit id is spoofable/replayable by an on- or off-path attacker, this is a network-influenceable use-after-return that can corrupt reused stack memory, leading to crashes/denial of service or memory corruption. The fix cancels the timed-out query by name and type before retrying and resets the local semaphore, eliminating the stale callback path. Affected: Zephyr v4.0.0 through v4.4.0.",
-      "severity": 7.4,
+      "id": "CVE-2026-13484",
+      "publishedDate": "2026-06-28T08:30:09.086Z",
+      "lastModifiedDate": "2026-06-28T08:30:09.086Z",
+      "description": "A vulnerability has been found in MLflow up to 4666cffc7912ea606d592fc38d6a75e2935f65e7. The impacted element is an unknown function of the component Experiment-scoped Label Schema CRUD API. Such manipulation leads to missing authorization. It is possible to launch the attack remotely. A high complexity level is associated with this attack. The exploitability is regarded as difficult. The exploit has been disclosed to the public and may be used. A reply to the GitHub issue explains, that \"[t]he labeling schema PR has not been merged yet. The auth handlers will be added before the release.\"",
+      "severity": 5,
       "references": [
         {
-          "url": "https://github.com/zephyrproject-rtos/zephyr/commit/cd27da58eedb8d0fe380dd340b81ca5afa35de45",
+          "url": "https://vuldb.com/vuln/374481",
           "type": "reference"
         },
         {
-          "url": "https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-h752-vhmf-29w6",
+          "url": "https://vuldb.com/vuln/374481/cti",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/cve/CVE-2026-13484",
+          "type": "reference"
+        },
+        {
+          "url": "https://vuldb.com/submit/837658",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/mlflow/mlflow/issues/23608",
+          "type": "poc"
+        },
+        {
+          "url": "https://github.com/mlflow/mlflow/issues/23608#issuecomment-4560963877",
+          "type": "reference"
+        },
+        {
+          "url": "https://github.com/mlflow/mlflow/",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "zephyrproject",
-          "product": "zephyr",
-          "collectionURL": "https://github.com/zephyrproject-rtos/zephyr",
-          "packageName": "zephyr",
-          "defaultStatus": "unaffected",
+          "vendor": "n/a",
+          "product": "MLflow",
           "versions": [
             {
-              "version": "4.0.0",
-              "status": "affected",
-              "lessThan": "4.5.0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "use-after-free"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-10593",
-      "publishedDate": "2026-06-28T04:28:22.888Z",
-      "lastModifiedDate": "2026-06-28T04:28:22.888Z",
-      "description": "The Zephyr Bluetooth LE Audio Basic Audio Profile (BAP) unicast client mishandles peer-supplied ASE state notifications. In unicast_client_ep_qos_state() (subsys/bluetooth/audio/bap_unicast_client.c), the handler writes attacker-controlled QoS fields (interval, framing, phy, sdu, rtn, latency, pd) through the stream-qos pointer with only a stream != NULL guard. stream-qos is NULL for any stream that has been codec-configured via bt_bap_stream_config() but not yet added to a unicast group (it is set only by unicast_group_add_stream()). A malicious or buggy remote ASCS server, to which the local device is connected as a BAP unicast client, can send a GATT notification announcing the ASE has entered the QoS Configured state while the local endpoint is still in the Codec Configured state — a transition the dispatcher explicitly permits — during that window, causing a write through a NULL pointer and a crash (denial of service). The data written is itself remote-controlled. The defect shipped in v4.3.0 and v4.4.0 (and earlier). The fix re-points all BAP QoS storage to the always-valid embedded ep-qos struct, eliminating the NULL dereference.",
-      "severity": 6.5,
-      "references": [
-        {
-          "url": "https://github.com/zephyrproject-rtos/zephyr/commit/52f25c903f2926cb1281b50fd79654668e2d483f",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-22q8-m94g-2pwh",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "zephyrproject",
-          "product": "zephyr",
-          "collectionURL": "https://github.com/zephyrproject-rtos/zephyr",
-          "packageName": "zephyr",
-          "defaultStatus": "unaffected",
-          "versions": [
-            {
-              "version": "4.3.0",
-              "status": "affected",
-              "lessThan": "4.5.0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "memory-safety"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-10644",
-      "publishedDate": "2026-06-28T04:02:47.441Z",
-      "lastModifiedDate": "2026-06-28T04:02:47.441Z",
-      "description": "The Microchip SERCOM-G1 UART driver (drivers/serial/uart_mchp_sercom_g1.c), used by the PIC32CM-JH SoC family, contains an out-of-bounds write in its asynchronous (DMA) receive path. When uart_rx_enable() is invoked with a one-byte receive buffer (len == 1) and CONFIG_UART_MCHP_ASYNC is enabled, the RX-complete ISR starts a single-beat DMA transfer while a received byte is already pending in the SERCOM DATA register. On this SoC the peripheral-triggered DMA start sequencing then writes one byte past the end of the caller-supplied buffer (CWE-787). The overflowed byte's value is the UART RX data supplied by the connected serial peer (adjacent attacker), while its size and location are fixed at one byte immediately after the buffer. Exploitation requires the async UART config (not enabled by default on the in-tree PIC32CM-JH boards) and a consumer that enables RX with a one-byte buffer; impact is limited single-byte memory corruption adjacent to the RX buffer (possible crash / denial of service). The defect shipped in v4.4.0. The fix reads the first byte with the CPU and, for one-byte buffers, performs no DMA at all; for larger buffers it sizes the DMA for the remaining len-1 bytes.",
-      "severity": 4.2,
-      "references": [
-        {
-          "url": "https://github.com/zephyrproject-rtos/zephyr/commit/5251d2bc0070be801769fb7ce7b9066fef5d9f81",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/zephyrproject-rtos/zephyr/security/advisories/GHSA-xv2x-56j7-6wc3",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "zephyrproject",
-          "product": "zephyr",
-          "collectionURL": "https://github.com/zephyrproject-rtos/zephyr",
-          "packageName": "zephyr",
-          "defaultStatus": "unaffected",
-          "versions": [
-            {
-              "version": "4.4.0",
-              "status": "affected",
-              "lessThan": "4.5.0",
-              "versionType": "semver"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "bounds"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-13482",
-      "publishedDate": "2026-06-28T04:30:10.004Z",
-      "lastModifiedDate": "2026-06-28T04:30:10.004Z",
-      "description": "A vulnerability was detected in skypilot-org skypilot up to 0.12.0. Impacted is the function username.encode of the file sky/users/server.py of the component User ID Handler. The manipulation results in use of weak hash. The attack may be performed from remote. This attack is characterized by high complexity. The exploitability is considered difficult. The exploit is now public and may be used. The vendor was contacted early about this disclosure.",
-      "severity": 3.7,
-      "references": [
-        {
-          "url": "https://vuldb.com/vuln/374479",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/vuln/374479/cti",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/cve/CVE-2026-13482",
-          "type": "reference"
-        },
-        {
-          "url": "https://vuldb.com/submit/789927",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/skypilot-org/skypilot/issues/9194",
-          "type": "reference"
-        },
-        {
-          "url": "https://github.com/skypilot-org/skypilot/",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "skypilot-org",
-          "product": "skypilot",
-          "versions": [
-            {
-              "version": "0.1",
-              "status": "affected"
-            },
-            {
-              "version": "0.2",
-              "status": "affected"
-            },
-            {
-              "version": "0.3",
-              "status": "affected"
-            },
-            {
-              "version": "0.4",
-              "status": "affected"
-            },
-            {
-              "version": "0.5",
-              "status": "affected"
-            },
-            {
-              "version": "0.6",
-              "status": "affected"
-            },
-            {
-              "version": "0.7",
-              "status": "affected"
-            },
-            {
-              "version": "0.8",
-              "status": "affected"
-            },
-            {
-              "version": "0.9",
-              "status": "affected"
-            },
-            {
-              "version": "0.10",
-              "status": "affected"
-            },
-            {
-              "version": "0.11",
-              "status": "affected"
-            },
-            {
-              "version": "0.12.0",
+              "version": "4666cffc7912ea606d592fc38d6a75e2935f65e7",
               "status": "affected"
             }
           ],
           "cpes": [
-            "cpe:2.3:a:skypilot-org:skypilot:*:*:*:*:*:*:*:*"
+            "cpe:2.3:a:mlflow:mlflow:*:*:*:*:*:*:*:*"
           ],
           "modules": [
-            "User ID Handler"
+            "Experiment-scoped Label Schema CRUD API"
           ]
         }
       ],
       "problemType": [
-        "Use of Weak Hash",
-        "Risky Cryptographic Algorithm"
+        "Missing Authorization",
+        "Incorrect Authorization"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
