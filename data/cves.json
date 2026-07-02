@@ -2,105 +2,142 @@
   "dataType": "CVE_RECORD",
   "dataVersion": "5.1",
   "cveMetadata": {
-    "total_count": 56,
-    "last_updated": "2026-07-01T23:12:02.328522",
+    "total_count": 30,
+    "last_updated": "2026-07-02T01:26:32.734587",
     "severity_distribution": {
       "critical": 0,
       "high": 0,
-      "medium": 0,
+      "medium": 1,
       "low": 0,
-      "none": 56
+      "none": 29
     }
   },
   "cves": [
     {
-      "id": "CVE-2026-11950",
-      "publishedDate": "2026-07-01T23:11:44.759555+00:00",
-      "lastModifiedDate": "2026-07-01T22:20:16.873Z",
-      "description": "",
-      "severity": "N/A",
-      "references": [],
-      "affected": [],
-      "problemType": [],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-50284",
-      "publishedDate": "2026-07-01T22:37:30.334Z",
-      "lastModifiedDate": "2026-07-01T22:37:30.334Z",
-      "description": "Craft CMS is a content management system (CMS). In versions 5.0.0-RC1 through 5.9.21 and 4.0.0-RC1 through 4.17.14, theAssetsController::actionDeleteFolder() only requires the deleteAssets:<volume-uid> permission for the target folder. It never enforces deletePeerAssets:<volume-uid>, even though Assets::deleteFoldersByIds() cascades deletion to every descendant folder and every asset inside, regardless of the uploader's assigned privileges. A low-privilege user who has been granted folder-management rights on a shared volume can therefore destroy assets uploaded by other users (peer assets), bypassing the per-asset peer-permission check that the sibling actionDeleteAsset endpoint correctly applies. This issue has been fixed in versions 4.17.15 and 5.9.22.",
-      "severity": "N/A",
+      "id": "CVE-2026-58015",
+      "publishedDate": "2026-06-30T13:02:45.854Z",
+      "lastModifiedDate": "2026-07-02T00:42:47.467Z",
+      "description": "A flaw was found in GLib. The D-Bus client-side implementation of the DBUS_COOKIE_SHA1 SASL authentication mechanism does not validate the cookie_context parameter received from the server. A malicious D-Bus server can supply a cookie_context containing path traversal sequences, causing the client to read an arbitrary file and exfiltrate sensitive data by verifying guessed file contents against a generated hash.",
+      "severity": 5.9,
       "references": [
         {
-          "url": "https://github.com/craftcms/cms/security/advisories/GHSA-7h62-6v23-v8fm",
+          "url": "https://access.redhat.com/security/cve/CVE-2026-58015",
           "type": "reference"
         },
         {
-          "url": "https://github.com/craftcms/cms/commit/b4e08977f0c9bdf002a77f9f6d1346cd55ac0598",
+          "url": "https://bugzilla.redhat.com/show_bug.cgi?id=2492256",
+          "type": "reference"
+        },
+        {
+          "url": "https://gitlab.gnome.org/GNOME/glib/-/issues/3931",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "craftcms",
-          "product": "cms",
-          "versions": [
-            {
-              "version": "=>= 5.0.0-RC1, < 5.9.22",
-              "status": "affected"
-            },
-            {
-              "version": ">= 4.0.0-RC1, < 4.17.15",
-              "status": "affected"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "CWE-862: Missing Authorization"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-14440",
-      "publishedDate": "2026-07-01T22:35:10.353Z",
-      "lastModifiedDate": "2026-07-01T22:35:10.353Z",
-      "description": "Description:\n\n\n\n\nTo issue and renew TLS certificates on behalf of customers, Cloudflare's Universal SSL feature automatically manages the CAA RRset for the customer's zone. This auto-managed RRset is permissive by design (e.g. 'issue \"letsencrypt.org\"' without parameters). On Universal SSL zones, Cloudflare's authoritative DNS serves this auto-managed RRset at query time, superseding any customer-configured CAA records on the zone. When a customer publishes a stricter CAA record using the RFC 8657 accounturi or validationmethods parameters, the Certificate Authority does not observe those parameters when evaluating the served RRset under RFC 8659. As a result, the RFC 8657 account-binding and validation-method-binding protections are not enforced end-to-end on Universal SSL zones. Successful exploitation could result in issuance of a browser-trusted TLS certificate to an attacker, enabling MITM against the affected domain.\n\n\n\n\nExploitation is non-trivial in practice: an attacker would need to hold an ACME account at one of the Certificate Authorities in the served CAA RRset and to simultaneously satisfy domain control validation across the multiple geographically distinct Network Perspectives the CA relies on for Multi-Perspective Issuance Corroboration. Cloudflare prefixes are anycast-announced from hundreds of locations globally, raising the bar against single-vantage-point BGP hijacks. Any resulting misissuance of a browser-trusted certificate is subject to Certificate Transparency logging required by major browsers, and would be visible to CT monitoring.\n\n\n\n\n\n\n\n\nMitigation: \n\n\n\nCustomers requiring strict RFC 8657 enforcement need to disable Universal SSL on the affected zone.\n\n\n\nUniversal SSL's automatic CAA management and customer-set RFC 8657 accounturi and validationmethods enforcement are mutually exclusive by the nature of the issue, so there is no in-product workaround that preserves both. \n\n\n\nCertificate Transparency monitoring is recommended for all customers as a general detection control.\n\n\n\n\n\n\n\n\nCredits:\n\n\n\nDavid Osipov (ORCID: https://orcid.org/0009-0005-2713-9242), independent researcher",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://developers.cloudflare.com/ssl/edge-certificates/caa-records/",
-          "type": "reference"
-        },
-        {
-          "url": "https://developers.cloudflare.com/ssl/edge-certificates/universal-ssl/limitations/",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.rfc-editor.org/rfc/rfc8657",
-          "type": "reference"
-        },
-        {
-          "url": "https://www.rfc-editor.org/rfc/rfc8659",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Cloudflare",
-          "product": "Universal SSL",
-          "platforms": [
-            "Cloud Service"
-          ],
+          "vendor": "GNOME",
+          "product": "GLib",
           "versions": [
             {
               "status": "affected",
               "version": "0",
-              "lessThanOrEqual": "current",
-              "versionType": "custom"
+              "lessThan": "2.88.1",
+              "versionType": "semver"
             }
           ],
+          "packageName": "GLib",
+          "collectionURL": "https://gitlab.gnome.org/GNOME/glib/",
           "defaultStatus": "unaffected"
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 10",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "glib2",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:10"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 10",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "mingw-glib2",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:10"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 6",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "glib2",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:6"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 7",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "glib2",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:7"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 8",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "glib2",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:8"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 8",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "mingw-glib2",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:8"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 9",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "glib2",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Enterprise Linux 9",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "mingw-glib2",
+          "defaultStatus": "affected",
+          "cpes": [
+            "cpe:/o:redhat:enterprise_linux:9"
+          ]
+        },
+        {
+          "vendor": "Red Hat",
+          "product": "Red Hat Hardened Images",
+          "collectionURL": "https://access.redhat.com/downloads/content/package-browser/",
+          "packageName": "glib2",
+          "defaultStatus": "unaffected",
+          "cpes": [
+            "cpe:/a:redhat:hummingbird:1"
+          ]
         }
       ],
       "problemType": [],
@@ -109,7 +146,7 @@
     {
       "id": "CVE-2026-14426",
       "publishedDate": "2026-07-01T22:22:07.471Z",
-      "lastModifiedDate": "2026-07-01T22:22:07.471Z",
+      "lastModifiedDate": "2026-07-02T00:12:44.121Z",
       "description": "Use after free in V8 in Google Chrome prior to 150.0.7871.46 allowed a remote attacker who convinced a user to engage in specific UI gestures to execute arbitrary code inside a sandbox via a crafted HTML page. (Chromium security severity: High)",
       "severity": "N/A",
       "references": [
@@ -142,44 +179,9 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-14394",
-      "publishedDate": "2026-07-01T22:22:06.880Z",
-      "lastModifiedDate": "2026-07-01T22:22:06.880Z",
-      "description": "Use after free in V8 in Google Chrome prior to 150.0.7871.46 allowed a remote attacker to potentially exploit heap corruption via a crafted HTML page. (Chromium security severity: Low)",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://chromereleases.googleblog.com/2026/06/stable-channel-update-for-desktop_0175352312.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://issues.chromium.org/issues/511263221",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Google",
-          "product": "Chrome",
-          "versions": [
-            {
-              "version": "150.0.7871.46",
-              "status": "affected",
-              "lessThan": "150.0.7871.46",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Use after free"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
       "id": "CVE-2026-14432",
       "publishedDate": "2026-07-01T22:22:06.356Z",
-      "lastModifiedDate": "2026-07-01T22:22:06.356Z",
+      "lastModifiedDate": "2026-07-02T00:19:20.200Z",
       "description": "Use after free in V8 in Google Chrome prior to 150.0.7871.46 allowed a remote attacker to execute arbitrary code inside a sandbox via a crafted HTML page. (Chromium security severity: Medium)",
       "severity": "N/A",
       "references": [
@@ -214,7 +216,7 @@
     {
       "id": "CVE-2026-14393",
       "publishedDate": "2026-07-01T22:22:05.837Z",
-      "lastModifiedDate": "2026-07-01T22:22:05.837Z",
+      "lastModifiedDate": "2026-07-02T00:18:46.230Z",
       "description": "Use after free in V8 in Google Chrome prior to 150.0.7871.46 allowed a remote attacker to execute arbitrary code inside a sandbox via a crafted HTML page. (Chromium security severity: Medium)",
       "severity": "N/A",
       "references": [
@@ -249,7 +251,7 @@
     {
       "id": "CVE-2026-14403",
       "publishedDate": "2026-07-01T22:22:05.291Z",
-      "lastModifiedDate": "2026-07-01T22:22:05.291Z",
+      "lastModifiedDate": "2026-07-02T00:18:08.460Z",
       "description": "Use after free in V8 in Google Chrome prior to 150.0.7871.46 allowed a remote attacker to execute arbitrary code inside a sandbox via a crafted HTML page. (Chromium security severity: Low)",
       "severity": "N/A",
       "references": [
@@ -282,254 +284,9 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-14419",
-      "publishedDate": "2026-07-01T22:22:04.747Z",
-      "lastModifiedDate": "2026-07-01T22:22:04.747Z",
-      "description": "Use after free in Skia in Google Chrome prior to 150.0.7871.46 allowed a remote attacker to potentially perform a sandbox escape via a crafted HTML page. (Chromium security severity: Critical)",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://chromereleases.googleblog.com/2026/06/stable-channel-update-for-desktop_0175352312.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://issues.chromium.org/issues/516981393",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Google",
-          "product": "Chrome",
-          "versions": [
-            {
-              "version": "150.0.7871.46",
-              "status": "affected",
-              "lessThan": "150.0.7871.46",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Use after free"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-14417",
-      "publishedDate": "2026-07-01T22:22:04.158Z",
-      "lastModifiedDate": "2026-07-01T22:22:04.158Z",
-      "description": "Use after free in Dawn in Google Chrome prior to 150.0.7871.46 allowed a remote attacker to potentially perform a sandbox escape via a crafted HTML page. (Chromium security severity: Critical)",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://chromereleases.googleblog.com/2026/06/stable-channel-update-for-desktop_0175352312.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://issues.chromium.org/issues/516649133",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Google",
-          "product": "Chrome",
-          "versions": [
-            {
-              "version": "150.0.7871.46",
-              "status": "affected",
-              "lessThan": "150.0.7871.46",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Use after free"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-14424",
-      "publishedDate": "2026-07-01T22:22:03.616Z",
-      "lastModifiedDate": "2026-07-01T22:22:03.616Z",
-      "description": "Use after free in Dawn in Google Chrome on Mac prior to 150.0.7871.46 allowed a remote attacker to potentially perform a sandbox escape via a crafted HTML page. (Chromium security severity: High)",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://chromereleases.googleblog.com/2026/06/stable-channel-update-for-desktop_0175352312.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://issues.chromium.org/issues/517692772",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Google",
-          "product": "Chrome",
-          "versions": [
-            {
-              "version": "150.0.7871.46",
-              "status": "affected",
-              "lessThan": "150.0.7871.46",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Use after free"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-14425",
-      "publishedDate": "2026-07-01T22:22:03.047Z",
-      "lastModifiedDate": "2026-07-01T22:22:03.047Z",
-      "description": "Use after free in ANGLE in Google Chrome prior to 150.0.7871.46 allowed a remote attacker to potentially perform a sandbox escape via a crafted HTML page. (Chromium security severity: High)",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://chromereleases.googleblog.com/2026/06/stable-channel-update-for-desktop_0175352312.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://issues.chromium.org/issues/517935753",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Google",
-          "product": "Chrome",
-          "versions": [
-            {
-              "version": "150.0.7871.46",
-              "status": "affected",
-              "lessThan": "150.0.7871.46",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Use after free"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-14390",
-      "publishedDate": "2026-07-01T22:22:02.404Z",
-      "lastModifiedDate": "2026-07-01T22:22:02.404Z",
-      "description": "Use after free in ANGLE in Google Chrome prior to 150.0.7871.46 allowed a remote attacker to potentially perform a sandbox escape via a crafted HTML page. (Chromium security severity: High)",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://chromereleases.googleblog.com/2026/06/stable-channel-update-for-desktop_0175352312.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://issues.chromium.org/issues/503054174",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Google",
-          "product": "Chrome",
-          "versions": [
-            {
-              "version": "150.0.7871.46",
-              "status": "affected",
-              "lessThan": "150.0.7871.46",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Use after free"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-14398",
-      "publishedDate": "2026-07-01T22:22:01.799Z",
-      "lastModifiedDate": "2026-07-01T22:22:01.799Z",
-      "description": "Use after free in ANGLE in Google Chrome prior to 150.0.7871.46 allowed a remote attacker to potentially perform a sandbox escape via a crafted HTML page. (Chromium security severity: Critical)",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://chromereleases.googleblog.com/2026/06/stable-channel-update-for-desktop_0175352312.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://issues.chromium.org/issues/512995785",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Google",
-          "product": "Chrome",
-          "versions": [
-            {
-              "version": "150.0.7871.46",
-              "status": "affected",
-              "lessThan": "150.0.7871.46",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Use after free"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-14405",
-      "publishedDate": "2026-07-01T22:22:01.246Z",
-      "lastModifiedDate": "2026-07-01T22:22:01.246Z",
-      "description": "Uninitialized Use in V8 in Google Chrome prior to 150.0.7871.46 allowed a remote attacker to execute arbitrary code inside a sandbox via a crafted HTML page. (Chromium security severity: Low)",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://chromereleases.googleblog.com/2026/06/stable-channel-update-for-desktop_0175352312.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://issues.chromium.org/issues/513376037",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Google",
-          "product": "Chrome",
-          "versions": [
-            {
-              "version": "150.0.7871.46",
-              "status": "affected",
-              "lessThan": "150.0.7871.46",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Uninitialized Use"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
       "id": "CVE-2026-14399",
       "publishedDate": "2026-07-01T22:22:00.708Z",
-      "lastModifiedDate": "2026-07-01T22:22:00.708Z",
+      "lastModifiedDate": "2026-07-02T00:31:01.602Z",
       "description": "Uninitialized Use in Dawn in Google Chrome prior to 150.0.7871.46 allowed a remote attacker to obtain potentially sensitive information from process memory via a crafted HTML page. (Chromium security severity: Medium)",
       "severity": "N/A",
       "references": [
@@ -564,7 +321,7 @@
     {
       "id": "CVE-2026-14408",
       "publishedDate": "2026-07-01T22:22:00.125Z",
-      "lastModifiedDate": "2026-07-01T22:22:00.125Z",
+      "lastModifiedDate": "2026-07-02T00:34:09.115Z",
       "description": "Uninitialized Use in Dawn in Google Chrome prior to 150.0.7871.46 allowed a remote attacker to obtain potentially sensitive information from process memory via a crafted HTML page. (Chromium security severity: Medium)",
       "severity": "N/A",
       "references": [
@@ -599,7 +356,7 @@
     {
       "id": "CVE-2026-14421",
       "publishedDate": "2026-07-01T22:21:59.566Z",
-      "lastModifiedDate": "2026-07-01T22:21:59.566Z",
+      "lastModifiedDate": "2026-07-02T00:31:27.782Z",
       "description": "Uninitialized Use in Dawn in Google Chrome on ChromeOS prior to 150.0.7871.46 allowed a remote attacker to obtain potentially sensitive information from process memory via a crafted HTML page. (Chromium security severity: Medium)",
       "severity": "N/A",
       "references": [
@@ -632,44 +389,9 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-14413",
-      "publishedDate": "2026-07-01T22:21:59.017Z",
-      "lastModifiedDate": "2026-07-01T22:21:59.017Z",
-      "description": "Uninitialized Use in ANGLE in Google Chrome prior to 150.0.7871.46 allowed a remote attacker who had compromised the renderer process to potentially perform a sandbox escape via a crafted HTML page. (Chromium security severity: High)",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://chromereleases.googleblog.com/2026/06/stable-channel-update-for-desktop_0175352312.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://issues.chromium.org/issues/513922055",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Google",
-          "product": "Chrome",
-          "versions": [
-            {
-              "version": "150.0.7871.46",
-              "status": "affected",
-              "lessThan": "150.0.7871.46",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Uninitialized Use"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
       "id": "CVE-2026-14418",
       "publishedDate": "2026-07-01T22:21:58.436Z",
-      "lastModifiedDate": "2026-07-01T22:21:58.436Z",
+      "lastModifiedDate": "2026-07-02T00:31:57.538Z",
       "description": "Uninitialized Use in ANGLE in Google Chrome prior to 150.0.7871.46 allowed a remote attacker to leak cross-origin data via a crafted HTML page. (Chromium security severity: High)",
       "severity": "N/A",
       "references": [
@@ -704,7 +426,7 @@
     {
       "id": "CVE-2026-14402",
       "publishedDate": "2026-07-01T22:21:57.886Z",
-      "lastModifiedDate": "2026-07-01T22:21:57.886Z",
+      "lastModifiedDate": "2026-07-02T00:32:25.504Z",
       "description": "Uninitialized Use in ANGLE in Google Chrome on Windows prior to 150.0.7871.46 allowed a remote attacker to obtain potentially sensitive information from process memory via a crafted HTML page. (Chromium security severity: High)",
       "severity": "N/A",
       "references": [
@@ -739,7 +461,7 @@
     {
       "id": "CVE-2026-14431",
       "publishedDate": "2026-07-01T22:21:57.301Z",
-      "lastModifiedDate": "2026-07-01T22:21:57.301Z",
+      "lastModifiedDate": "2026-07-02T00:17:30.969Z",
       "description": "Type Confusion in V8 in Google Chrome prior to 150.0.7871.46 allowed a remote attacker to execute arbitrary code inside a sandbox via a crafted HTML page. (Chromium security severity: High)",
       "severity": "N/A",
       "references": [
@@ -772,44 +494,9 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-14423",
-      "publishedDate": "2026-07-01T22:21:56.787Z",
-      "lastModifiedDate": "2026-07-01T22:21:56.787Z",
-      "description": "Type Confusion in Tint in Google Chrome prior to 150.0.7871.46 allowed a remote attacker to potentially perform a sandbox escape via a crafted HTML page. (Chromium security severity: High)",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://chromereleases.googleblog.com/2026/06/stable-channel-update-for-desktop_0175352312.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://issues.chromium.org/issues/517522769",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Google",
-          "product": "Chrome",
-          "versions": [
-            {
-              "version": "150.0.7871.46",
-              "status": "affected",
-              "lessThan": "150.0.7871.46",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Type Confusion"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
       "id": "CVE-2026-14395",
       "publishedDate": "2026-07-01T22:21:56.246Z",
-      "lastModifiedDate": "2026-07-01T22:21:56.246Z",
+      "lastModifiedDate": "2026-07-02T00:16:47.669Z",
       "description": "Out of bounds write in V8 in Google Chrome prior to 150.0.7871.46 allowed a remote attacker to execute arbitrary code inside a sandbox via a crafted HTML page. (Chromium security severity: Low)",
       "severity": "N/A",
       "references": [
@@ -842,114 +529,9 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-14392",
-      "publishedDate": "2026-07-01T22:21:55.690Z",
-      "lastModifiedDate": "2026-07-01T22:21:55.690Z",
-      "description": "Out of bounds write in Tint in Google Chrome prior to 150.0.7871.46 allowed a remote attacker to potentially perform a sandbox escape via a crafted HTML page. (Chromium security severity: High)",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://chromereleases.googleblog.com/2026/06/stable-channel-update-for-desktop_0175352312.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://issues.chromium.org/issues/508265321",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Google",
-          "product": "Chrome",
-          "versions": [
-            {
-              "version": "150.0.7871.46",
-              "status": "affected",
-              "lessThan": "150.0.7871.46",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Out of bounds write"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-14400",
-      "publishedDate": "2026-07-01T22:21:55.158Z",
-      "lastModifiedDate": "2026-07-01T22:21:55.158Z",
-      "description": "Out of bounds write in ANGLE in Google Chrome prior to 150.0.7871.46 allowed a remote attacker who had compromised the renderer process to potentially perform a sandbox escape via a crafted HTML page. (Chromium security severity: High)",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://chromereleases.googleblog.com/2026/06/stable-channel-update-for-desktop_0175352312.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://issues.chromium.org/issues/513010645",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Google",
-          "product": "Chrome",
-          "versions": [
-            {
-              "version": "150.0.7871.46",
-              "status": "affected",
-              "lessThan": "150.0.7871.46",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Out of bounds write"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-14397",
-      "publishedDate": "2026-07-01T22:21:54.590Z",
-      "lastModifiedDate": "2026-07-01T22:21:54.590Z",
-      "description": "Out of bounds write in ANGLE in Google Chrome on Mac prior to 150.0.7871.46 allowed a remote attacker to potentially perform a sandbox escape via a crafted HTML page. (Chromium security severity: Medium)",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://chromereleases.googleblog.com/2026/06/stable-channel-update-for-desktop_0175352312.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://issues.chromium.org/issues/511772608",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Google",
-          "product": "Chrome",
-          "versions": [
-            {
-              "version": "150.0.7871.46",
-              "status": "affected",
-              "lessThan": "150.0.7871.46",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Out of bounds write"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
       "id": "CVE-2026-14406",
       "publishedDate": "2026-07-01T22:21:53.998Z",
-      "lastModifiedDate": "2026-07-01T22:21:53.998Z",
+      "lastModifiedDate": "2026-07-02T00:33:00.247Z",
       "description": "Out of bounds read in V8 in Google Chrome prior to 150.0.7871.46 allowed an attacker who convinced a user to install a malicious extension to obtain potentially sensitive information from process memory via a crafted Chrome Extension. (Chromium security severity: Medium)",
       "severity": "N/A",
       "references": [
@@ -982,44 +564,9 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-14416",
-      "publishedDate": "2026-07-01T22:21:53.436Z",
-      "lastModifiedDate": "2026-07-01T22:21:53.436Z",
-      "description": "Out of bounds read in Dawn in Google Chrome prior to 150.0.7871.46 allowed a remote attacker to potentially perform a sandbox escape via a crafted HTML page. (Chromium security severity: Low)",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://chromereleases.googleblog.com/2026/06/stable-channel-update-for-desktop_0175352312.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://issues.chromium.org/issues/515428315",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Google",
-          "product": "Chrome",
-          "versions": [
-            {
-              "version": "150.0.7871.46",
-              "status": "affected",
-              "lessThan": "150.0.7871.46",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Out of bounds read"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
       "id": "CVE-2026-14388",
       "publishedDate": "2026-07-01T22:21:52.836Z",
-      "lastModifiedDate": "2026-07-01T22:21:52.836Z",
+      "lastModifiedDate": "2026-07-02T00:33:26.711Z",
       "description": "Out of bounds read in ANGLE in Google Chrome prior to 150.0.7871.46 allowed a remote attacker to obtain potentially sensitive information from process memory via a crafted HTML page. (Chromium security severity: Medium)",
       "severity": "N/A",
       "references": [
@@ -1054,7 +601,7 @@
     {
       "id": "CVE-2026-14386",
       "publishedDate": "2026-07-01T22:21:52.250Z",
-      "lastModifiedDate": "2026-07-01T22:21:52.250Z",
+      "lastModifiedDate": "2026-07-02T00:34:42.907Z",
       "description": "Out of bounds read in ANGLE in Google Chrome prior to 150.0.7871.46 allowed a remote attacker to obtain potentially sensitive information from process memory via a crafted HTML page. (Chromium security severity: High)",
       "severity": "N/A",
       "references": [
@@ -1087,149 +634,9 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-14396",
-      "publishedDate": "2026-07-01T22:21:51.344Z",
-      "lastModifiedDate": "2026-07-01T22:21:51.344Z",
-      "description": "Out of bounds read in ANGLE in Google Chrome prior to 150.0.7871.46 allowed a remote attacker to leak cross-origin data via a crafted HTML page. (Chromium security severity: High)",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://chromereleases.googleblog.com/2026/06/stable-channel-update-for-desktop_0175352312.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://issues.chromium.org/issues/511737097",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Google",
-          "product": "Chrome",
-          "versions": [
-            {
-              "version": "150.0.7871.46",
-              "status": "affected",
-              "lessThan": "150.0.7871.46",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Out of bounds read"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-14384",
-      "publishedDate": "2026-07-01T22:21:50.812Z",
-      "lastModifiedDate": "2026-07-01T22:21:50.812Z",
-      "description": "Out of bounds read in ANGLE in Google Chrome on Windows prior to 150.0.7871.46 allowed a remote attacker to leak cross-origin data via a crafted HTML page. (Chromium security severity: Medium)",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://chromereleases.googleblog.com/2026/06/stable-channel-update-for-desktop_0175352312.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://issues.chromium.org/issues/497543485",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Google",
-          "product": "Chrome",
-          "versions": [
-            {
-              "version": "150.0.7871.46",
-              "status": "affected",
-              "lessThan": "150.0.7871.46",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Out of bounds read"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-14422",
-      "publishedDate": "2026-07-01T22:21:50.264Z",
-      "lastModifiedDate": "2026-07-01T22:21:50.264Z",
-      "description": "Out of bounds read and write in Tint in Google Chrome prior to 150.0.7871.46 allowed a remote attacker to potentially perform out of bounds memory access via a crafted HTML page. (Chromium security severity: High)",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://chromereleases.googleblog.com/2026/06/stable-channel-update-for-desktop_0175352312.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://issues.chromium.org/issues/517225032",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Google",
-          "product": "Chrome",
-          "versions": [
-            {
-              "version": "150.0.7871.46",
-              "status": "affected",
-              "lessThan": "150.0.7871.46",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Out of bounds read and write"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-14420",
-      "publishedDate": "2026-07-01T22:21:49.727Z",
-      "lastModifiedDate": "2026-07-01T22:21:49.727Z",
-      "description": "Out of bounds read and write in Dawn in Google Chrome prior to 150.0.7871.46 allowed a remote attacker to potentially perform a sandbox escape via a crafted HTML page. (Chromium security severity: Critical)",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://chromereleases.googleblog.com/2026/06/stable-channel-update-for-desktop_0175352312.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://issues.chromium.org/issues/517031505",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Google",
-          "product": "Chrome",
-          "versions": [
-            {
-              "version": "150.0.7871.46",
-              "status": "affected",
-              "lessThan": "150.0.7871.46",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Out of bounds read and write"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
       "id": "CVE-2026-14430",
       "publishedDate": "2026-07-01T22:21:49.181Z",
-      "lastModifiedDate": "2026-07-01T22:21:49.181Z",
+      "lastModifiedDate": "2026-07-02T00:16:05.480Z",
       "description": "Integer overflow in V8 in Google Chrome prior to 150.0.7871.46 allowed a remote attacker to execute arbitrary code inside a sandbox via a crafted HTML page. (Chromium security severity: High)",
       "severity": "N/A",
       "references": [
@@ -1262,79 +669,9 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-14389",
-      "publishedDate": "2026-07-01T22:21:48.639Z",
-      "lastModifiedDate": "2026-07-01T22:21:48.639Z",
-      "description": "Integer overflow in Skia in Google Chrome prior to 150.0.7871.46 allowed a remote attacker who had compromised the renderer process to potentially perform a sandbox escape via a crafted HTML page. (Chromium security severity: Medium)",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://chromereleases.googleblog.com/2026/06/stable-channel-update-for-desktop_0175352312.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://issues.chromium.org/issues/500505046",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Google",
-          "product": "Chrome",
-          "versions": [
-            {
-              "version": "150.0.7871.46",
-              "status": "affected",
-              "lessThan": "150.0.7871.46",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Integer overflow"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-14387",
-      "publishedDate": "2026-07-01T22:21:48.111Z",
-      "lastModifiedDate": "2026-07-01T22:21:48.111Z",
-      "description": "Integer overflow in Skia in Google Chrome prior to 150.0.7871.46 allowed a remote attacker to potentially perform a sandbox escape via a crafted HTML page. (Chromium security severity: Medium)",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://chromereleases.googleblog.com/2026/06/stable-channel-update-for-desktop_0175352312.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://issues.chromium.org/issues/500305404",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Google",
-          "product": "Chrome",
-          "versions": [
-            {
-              "version": "150.0.7871.46",
-              "status": "affected",
-              "lessThan": "150.0.7871.46",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Integer overflow"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
       "id": "CVE-2026-14391",
       "publishedDate": "2026-07-01T22:21:47.563Z",
-      "lastModifiedDate": "2026-07-01T22:21:47.563Z",
+      "lastModifiedDate": "2026-07-02T00:35:10.876Z",
       "description": "Integer overflow in ANGLE in Google Chrome on Windows prior to 150.0.7871.46 allowed a remote attacker who had compromised the renderer process to obtain potentially sensitive information from process memory via a crafted HTML page. (Chromium security severity: Medium)",
       "severity": "N/A",
       "references": [
@@ -1367,44 +704,9 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-14429",
-      "publishedDate": "2026-07-01T22:21:46.962Z",
-      "lastModifiedDate": "2026-07-01T22:21:46.962Z",
-      "description": "Insufficient validation of untrusted input in Skia in Google Chrome prior to 150.0.7871.46 allowed a remote attacker who had compromised the renderer process to potentially perform a sandbox escape via a crafted HTML page. (Chromium security severity: High)",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://chromereleases.googleblog.com/2026/06/stable-channel-update-for-desktop_0175352312.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://issues.chromium.org/issues/520571816",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Google",
-          "product": "Chrome",
-          "versions": [
-            {
-              "version": "150.0.7871.46",
-              "status": "affected",
-              "lessThan": "150.0.7871.46",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Insufficient validation of untrusted input"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
       "id": "CVE-2026-14414",
       "publishedDate": "2026-07-01T22:21:46.219Z",
-      "lastModifiedDate": "2026-07-01T22:21:46.219Z",
+      "lastModifiedDate": "2026-07-02T00:35:41.684Z",
       "description": "Insufficient validation of untrusted input in Skia in Google Chrome prior to 150.0.7871.46 allowed a remote attacker who had compromised the renderer process to obtain potentially sensitive information from process memory via a crafted HTML page. (Chromium security severity: Medium)",
       "severity": "N/A",
       "references": [
@@ -1437,254 +739,9 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-14428",
-      "publishedDate": "2026-07-01T22:21:45.642Z",
-      "lastModifiedDate": "2026-07-01T22:21:45.642Z",
-      "description": "Insufficient validation of untrusted input in Dawn in Google Chrome on Android prior to 150.0.7871.46 allowed a remote attacker who had compromised the renderer process to potentially perform a sandbox escape via a crafted HTML page. (Chromium security severity: High)",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://chromereleases.googleblog.com/2026/06/stable-channel-update-for-desktop_0175352312.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://issues.chromium.org/issues/520180257",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Google",
-          "product": "Chrome",
-          "versions": [
-            {
-              "version": "150.0.7871.46",
-              "status": "affected",
-              "lessThan": "150.0.7871.46",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Insufficient validation of untrusted input"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-14412",
-      "publishedDate": "2026-07-01T22:21:45.091Z",
-      "lastModifiedDate": "2026-07-01T22:21:45.091Z",
-      "description": "Insufficient validation of untrusted input in ANGLE in Google Chrome prior to 150.0.7871.46 allowed a remote attacker who had compromised the renderer process to potentially perform a sandbox escape via a crafted HTML page. (Chromium security severity: High)",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://chromereleases.googleblog.com/2026/06/stable-channel-update-for-desktop_0175352312.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://issues.chromium.org/issues/513920834",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Google",
-          "product": "Chrome",
-          "versions": [
-            {
-              "version": "150.0.7871.46",
-              "status": "affected",
-              "lessThan": "150.0.7871.46",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Insufficient validation of untrusted input"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-14411",
-      "publishedDate": "2026-07-01T22:21:44.570Z",
-      "lastModifiedDate": "2026-07-01T22:21:44.570Z",
-      "description": "Insufficient validation of untrusted input in ANGLE in Google Chrome prior to 150.0.7871.46 allowed a remote attacker to potentially perform a sandbox escape via a crafted HTML page. (Chromium security severity: High)",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://chromereleases.googleblog.com/2026/06/stable-channel-update-for-desktop_0175352312.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://issues.chromium.org/issues/513919827",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Google",
-          "product": "Chrome",
-          "versions": [
-            {
-              "version": "150.0.7871.46",
-              "status": "affected",
-              "lessThan": "150.0.7871.46",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Insufficient validation of untrusted input"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-14382",
-      "publishedDate": "2026-07-01T22:21:44.011Z",
-      "lastModifiedDate": "2026-07-01T22:21:44.011Z",
-      "description": "Insufficient validation of untrusted input in ANGLE in Google Chrome prior to 150.0.7871.46 allowed a remote attacker to potentially perform a sandbox escape via a crafted HTML page. (Chromium security severity: High)",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://chromereleases.googleblog.com/2026/06/stable-channel-update-for-desktop_0175352312.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://issues.chromium.org/issues/492218546",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Google",
-          "product": "Chrome",
-          "versions": [
-            {
-              "version": "150.0.7871.46",
-              "status": "affected",
-              "lessThan": "150.0.7871.46",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Insufficient validation of untrusted input"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-14401",
-      "publishedDate": "2026-07-01T22:21:43.441Z",
-      "lastModifiedDate": "2026-07-01T22:21:43.441Z",
-      "description": "Insufficient validation of untrusted input in ANGLE in Google Chrome on Android prior to 150.0.7871.46 allowed a remote attacker who had compromised the renderer process to potentially perform a sandbox escape via a crafted HTML page. (Chromium security severity: High)",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://chromereleases.googleblog.com/2026/06/stable-channel-update-for-desktop_0175352312.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://issues.chromium.org/issues/513048822",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Google",
-          "product": "Chrome",
-          "versions": [
-            {
-              "version": "150.0.7871.46",
-              "status": "affected",
-              "lessThan": "150.0.7871.46",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Insufficient validation of untrusted input"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-14381",
-      "publishedDate": "2026-07-01T22:21:42.848Z",
-      "lastModifiedDate": "2026-07-01T22:21:42.848Z",
-      "description": "Incorrect security UI in WebAppInstalls in Google Chrome prior to 150.0.7871.46 allowed a remote attacker to perform UI spoofing via a crafted HTML page. (Chromium security severity: Medium)",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://chromereleases.googleblog.com/2026/06/stable-channel-update-for-desktop_0175352312.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://issues.chromium.org/issues/407283320",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Google",
-          "product": "Chrome",
-          "versions": [
-            {
-              "version": "150.0.7871.46",
-              "status": "affected",
-              "lessThan": "150.0.7871.46",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Incorrect security UI"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
-      "id": "CVE-2026-14415",
-      "publishedDate": "2026-07-01T22:21:42.193Z",
-      "lastModifiedDate": "2026-07-01T22:21:42.193Z",
-      "description": "Inappropriate implementation in V8 in Google Chrome prior to 150.0.7871.46 allowed a remote attacker who convinced a user to engage in specific UI gestures to potentially exploit heap corruption via a crafted HTML page. (Chromium security severity: Low)",
-      "severity": "N/A",
-      "references": [
-        {
-          "url": "https://chromereleases.googleblog.com/2026/06/stable-channel-update-for-desktop_0175352312.html",
-          "type": "reference"
-        },
-        {
-          "url": "https://issues.chromium.org/issues/515086856",
-          "type": "reference"
-        }
-      ],
-      "affected": [
-        {
-          "vendor": "Google",
-          "product": "Chrome",
-          "versions": [
-            {
-              "version": "150.0.7871.46",
-              "status": "affected",
-              "lessThan": "150.0.7871.46",
-              "versionType": "custom"
-            }
-          ]
-        }
-      ],
-      "problemType": [
-        "Inappropriate implementation"
-      ],
-      "fix_suggestion": "无法生成修复建议"
-    },
-    {
       "id": "CVE-2026-14409",
       "publishedDate": "2026-07-01T22:21:41.596Z",
-      "lastModifiedDate": "2026-07-01T22:21:41.596Z",
+      "lastModifiedDate": "2026-07-02T00:13:29.705Z",
       "description": "Inappropriate implementation in V8 in Google Chrome prior to 150.0.7871.46 allowed a remote attacker who convinced a user to engage in specific UI gestures to execute arbitrary code inside a sandbox via a crafted HTML page. (Chromium security severity: Low)",
       "severity": "N/A",
       "references": [
@@ -1719,7 +776,7 @@
     {
       "id": "CVE-2026-14407",
       "publishedDate": "2026-07-01T22:21:41.028Z",
-      "lastModifiedDate": "2026-07-01T22:21:41.028Z",
+      "lastModifiedDate": "2026-07-02T00:20:55.684Z",
       "description": "Inappropriate implementation in V8 in Google Chrome prior to 150.0.7871.46 allowed a remote attacker to execute arbitrary code inside a sandbox via a crafted HTML page. (Chromium security severity: Medium)",
       "severity": "N/A",
       "references": [
@@ -1754,7 +811,7 @@
     {
       "id": "CVE-2026-14383",
       "publishedDate": "2026-07-01T22:21:40.462Z",
-      "lastModifiedDate": "2026-07-01T22:21:40.462Z",
+      "lastModifiedDate": "2026-07-02T00:14:59.701Z",
       "description": "Inappropriate implementation in V8 in Google Chrome prior to 150.0.7871.46 allowed a remote attacker to execute arbitrary code inside a sandbox via a crafted HTML page. (Chromium security severity: Medium)",
       "severity": "N/A",
       "references": [
@@ -1787,10 +844,10 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-14410",
-      "publishedDate": "2026-07-01T22:21:39.904Z",
-      "lastModifiedDate": "2026-07-01T22:21:39.904Z",
-      "description": "Inappropriate implementation in Skia in Google Chrome prior to 150.0.7871.46 allowed a remote attacker who had compromised the renderer process to perform UI spoofing via a crafted HTML page. (Chromium security severity: Low)",
+      "id": "CVE-2026-13980",
+      "publishedDate": "2026-06-30T22:38:43.913Z",
+      "lastModifiedDate": "2026-07-02T00:41:46.385Z",
+      "description": "Inappropriate implementation in Chrome for iOS in Google Chrome on iOS prior to 150.0.7871.47 allowed a remote attacker to perform UI spoofing via a crafted HTML page. (Chromium security severity: Medium)",
       "severity": "N/A",
       "references": [
         {
@@ -1798,7 +855,7 @@
           "type": "reference"
         },
         {
-          "url": "https://issues.chromium.org/issues/513836996",
+          "url": "https://issues.chromium.org/issues/513989973",
           "type": "reference"
         }
       ],
@@ -1808,9 +865,44 @@
           "product": "Chrome",
           "versions": [
             {
-              "version": "150.0.7871.46",
+              "version": "150.0.7871.47",
               "status": "affected",
-              "lessThan": "150.0.7871.46",
+              "lessThan": "150.0.7871.47",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Incorrect security UI"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-13979",
+      "publishedDate": "2026-06-30T22:38:43.557Z",
+      "lastModifiedDate": "2026-07-02T00:37:59.876Z",
+      "description": "Inappropriate implementation in Paint in Google Chrome prior to 150.0.7871.47 allowed a remote attacker to perform UI spoofing via a crafted HTML page. (Chromium security severity: Medium)",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://chromereleases.googleblog.com/2026/06/stable-channel-update-for-desktop_0175352312.html",
+          "type": "reference"
+        },
+        {
+          "url": "https://issues.chromium.org/issues/513988889",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Google",
+          "product": "Chrome",
+          "versions": [
+            {
+              "version": "150.0.7871.47",
+              "status": "affected",
+              "lessThan": "150.0.7871.47",
               "versionType": "custom"
             }
           ]
@@ -1822,10 +914,10 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-14404",
-      "publishedDate": "2026-07-01T22:21:39.035Z",
-      "lastModifiedDate": "2026-07-01T22:21:39.035Z",
-      "description": "Inappropriate implementation in PDFium in Google Chrome prior to 150.0.7871.46 allowed a remote attacker to perform UI spoofing via a crafted PDF file. (Chromium security severity: Medium)",
+      "id": "CVE-2026-13978",
+      "publishedDate": "2026-06-30T22:38:43.179Z",
+      "lastModifiedDate": "2026-07-02T00:39:00.223Z",
+      "description": "Insufficient policy enforcement in PageInfo in Google Chrome prior to 150.0.7871.47 allowed a remote attacker to perform UI spoofing via a crafted HTML page. (Chromium security severity: Medium)",
       "severity": "N/A",
       "references": [
         {
@@ -1833,7 +925,7 @@
           "type": "reference"
         },
         {
-          "url": "https://issues.chromium.org/issues/513337989",
+          "url": "https://issues.chromium.org/issues/513866949",
           "type": "reference"
         }
       ],
@@ -1843,9 +935,44 @@
           "product": "Chrome",
           "versions": [
             {
-              "version": "150.0.7871.46",
+              "version": "150.0.7871.47",
               "status": "affected",
-              "lessThan": "150.0.7871.46",
+              "lessThan": "150.0.7871.47",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Insufficient policy enforcement"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-13972",
+      "publishedDate": "2026-06-30T22:38:40.985Z",
+      "lastModifiedDate": "2026-07-02T00:40:05.564Z",
+      "description": "Inappropriate implementation in Paint in Google Chrome prior to 150.0.7871.47 allowed a remote attacker to perform UI spoofing via a crafted HTML page. (Chromium security severity: Medium)",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://chromereleases.googleblog.com/2026/06/stable-channel-update-for-desktop_0175352312.html",
+          "type": "reference"
+        },
+        {
+          "url": "https://issues.chromium.org/issues/513792140",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Google",
+          "product": "Chrome",
+          "versions": [
+            {
+              "version": "150.0.7871.47",
+              "status": "affected",
+              "lessThan": "150.0.7871.47",
               "versionType": "custom"
             }
           ]
@@ -1857,10 +984,10 @@
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-14427",
-      "publishedDate": "2026-07-01T22:21:38.469Z",
-      "lastModifiedDate": "2026-07-01T22:21:38.469Z",
-      "description": "Heap buffer overflow in Skia in Google Chrome prior to 150.0.7871.46 allowed a remote attacker who had compromised the renderer process to potentially perform a sandbox escape via a crafted HTML page. (Chromium security severity: Critical)",
+      "id": "CVE-2026-13966",
+      "publishedDate": "2026-06-30T22:38:38.830Z",
+      "lastModifiedDate": "2026-07-02T00:38:32.209Z",
+      "description": "Inappropriate implementation in History in Google Chrome prior to 150.0.7871.47 allowed a remote attacker to perform UI spoofing via a crafted HTML page. (Chromium security severity: Medium)",
       "severity": "N/A",
       "references": [
         {
@@ -1868,7 +995,7 @@
           "type": "reference"
         },
         {
-          "url": "https://issues.chromium.org/issues/520113415",
+          "url": "https://issues.chromium.org/issues/513741393",
           "type": "reference"
         }
       ],
@@ -1878,24 +1005,24 @@
           "product": "Chrome",
           "versions": [
             {
-              "version": "150.0.7871.46",
+              "version": "150.0.7871.47",
               "status": "affected",
-              "lessThan": "150.0.7871.46",
+              "lessThan": "150.0.7871.47",
               "versionType": "custom"
             }
           ]
         }
       ],
       "problemType": [
-        "Heap buffer overflow"
+        "Inappropriate implementation"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-14385",
-      "publishedDate": "2026-07-01T22:21:37.417Z",
-      "lastModifiedDate": "2026-07-01T22:21:37.417Z",
-      "description": "Heap buffer overflow in ANGLE in Google Chrome on Mac prior to 150.0.7871.46 allowed a remote attacker to perform out of bounds memory access via a crafted HTML page. (Chromium security severity: High)",
+      "id": "CVE-2026-13960",
+      "publishedDate": "2026-06-30T22:38:36.579Z",
+      "lastModifiedDate": "2026-07-02T00:40:55.042Z",
+      "description": "Inappropriate implementation in Passwords in Google Chrome prior to 150.0.7871.47 allowed a remote attacker to perform UI spoofing via a crafted HTML page. (Chromium security severity: Medium)",
       "severity": "N/A",
       "references": [
         {
@@ -1903,7 +1030,7 @@
           "type": "reference"
         },
         {
-          "url": "https://issues.chromium.org/issues/499006005",
+          "url": "https://issues.chromium.org/issues/513714023",
           "type": "reference"
         }
       ],
@@ -1913,54 +1040,121 @@
           "product": "Chrome",
           "versions": [
             {
-              "version": "150.0.7871.46",
+              "version": "150.0.7871.47",
               "status": "affected",
-              "lessThan": "150.0.7871.46",
+              "lessThan": "150.0.7871.47",
               "versionType": "custom"
             }
           ]
         }
       ],
       "problemType": [
-        "Heap buffer overflow"
+        "Inappropriate implementation"
       ],
       "fix_suggestion": "无法生成修复建议"
     },
     {
-      "id": "CVE-2026-50283",
-      "publishedDate": "2026-07-01T22:20:01.949Z",
-      "lastModifiedDate": "2026-07-01T22:20:01.949Z",
-      "description": "Craft CMS is a content management system (CMS). Versions 5.0.0-RC1 through 5.9.20, and 4.0.0-RC1 through 4.17.13 contain an authorization issue in the AssetsController::actionReplaceFile that can delete a source asset without source delete permission by supplying both assetId and sourceAssetId. AssetsController::actionReplaceFile() supports replacing a target asset file using another existing asset as the source. The action loads: assetId -> $assetToReplace and sourceAssetId -> $sourceAsset, then enforces replace permissions using ($assetToReplace ?: $sourceAsset). When both IDs are provided, this expression resolves to the target asset so no permission check is performed against the source asset volume. When both assets are present, Craft copies the source file into the target and then deletes the source asset. There is no deletion check for for the source asset. An authenticated user who can replace files in one volume can delete assets in another volume where they do not have delete permission, as long as they can obtain a sourceAssetId, leading to broken content references and data loss. This issue has been fixed in versions 4.17.14 and 5.9.21.",
+      "id": "CVE-2026-13948",
+      "publishedDate": "2026-06-30T22:38:32.207Z",
+      "lastModifiedDate": "2026-07-02T00:41:18.701Z",
+      "description": "Insufficient policy enforcement in Extensions in Google Chrome prior to 150.0.7871.47 allowed an attacker who convinced a user to install a malicious extension to perform UI spoofing via a crafted Chrome Extension. (Chromium security severity: Medium)",
       "severity": "N/A",
       "references": [
         {
-          "url": "https://github.com/craftcms/cms/security/advisories/GHSA-qh45-9g5p-m2v4",
+          "url": "https://chromereleases.googleblog.com/2026/06/stable-channel-update-for-desktop_0175352312.html",
           "type": "reference"
         },
         {
-          "url": "https://github.com/craftcms/cms/commit/2c2579c7f1030872423f268d0c8b48377101961d",
+          "url": "https://issues.chromium.org/issues/513286820",
           "type": "reference"
         }
       ],
       "affected": [
         {
-          "vendor": "craftcms",
-          "product": "cms",
+          "vendor": "Google",
+          "product": "Chrome",
           "versions": [
             {
-              "version": ">= 5.0.0-RC1, < 5.9.21",
-              "status": "affected"
-            },
-            {
-              "version": ">= 4.0.0-RC1, < 4.17.14",
-              "status": "affected"
+              "version": "150.0.7871.47",
+              "status": "affected",
+              "lessThan": "150.0.7871.47",
+              "versionType": "custom"
             }
           ]
         }
       ],
       "problemType": [
-        "CWE-862: Missing Authorization",
-        "CWE-639: Authorization Bypass Through User-Controlled Key"
+        "Insufficient policy enforcement"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-13945",
+      "publishedDate": "2026-06-30T22:38:31.142Z",
+      "lastModifiedDate": "2026-07-02T00:39:29.387Z",
+      "description": "Insufficient policy enforcement in Extensions in Google Chrome on Linux prior to 150.0.7871.47 allowed an attacker who convinced a user to install a malicious extension to perform UI spoofing via a crafted Chrome Extension. (Chromium security severity: Medium)",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://chromereleases.googleblog.com/2026/06/stable-channel-update-for-desktop_0175352312.html",
+          "type": "reference"
+        },
+        {
+          "url": "https://issues.chromium.org/issues/513226551",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Google",
+          "product": "Chrome",
+          "versions": [
+            {
+              "version": "150.0.7871.47",
+              "status": "affected",
+              "lessThan": "150.0.7871.47",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Insufficient policy enforcement"
+      ],
+      "fix_suggestion": "无法生成修复建议"
+    },
+    {
+      "id": "CVE-2026-13941",
+      "publishedDate": "2026-06-30T22:38:29.655Z",
+      "lastModifiedDate": "2026-07-02T00:40:30.800Z",
+      "description": "Inappropriate implementation in SiteSettings in Google Chrome on Android prior to 150.0.7871.47 allowed a remote attacker to perform UI spoofing via a crafted HTML page. (Chromium security severity: Medium)",
+      "severity": "N/A",
+      "references": [
+        {
+          "url": "https://chromereleases.googleblog.com/2026/06/stable-channel-update-for-desktop_0175352312.html",
+          "type": "reference"
+        },
+        {
+          "url": "https://issues.chromium.org/issues/513183855",
+          "type": "reference"
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Google",
+          "product": "Chrome",
+          "versions": [
+            {
+              "version": "150.0.7871.47",
+              "status": "affected",
+              "lessThan": "150.0.7871.47",
+              "versionType": "custom"
+            }
+          ]
+        }
+      ],
+      "problemType": [
+        "Inappropriate implementation"
       ],
       "fix_suggestion": "无法生成修复建议"
     }
